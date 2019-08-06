@@ -1,0 +1,39 @@
+[2019-08-06 18:06:01:383][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 7537 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-06 18:06:01:385][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-06 18:06:04:3422][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.21 seconds (JVM running for 8.72)
+[2019-08-06 18:06:33:32577][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-06 18:06:33:32581][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-06 18:06:33:32581][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-06 18:06:35:33771][http-nio-8080-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-06 18:06:39:38280][http-nio-8080-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-06 18:06:39:38382][http-nio-8080-exec-6] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
+[2019-08-06 18:06:44:43183][http-nio-8080-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-06 18:06:44:43189][http-nio-8080-exec-7] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
+[2019-08-06 18:06:46:45028][http-nio-8080-exec-8] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-06 18:06:46:45031][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-06 18:06:46:45031][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-06 18:06:47:46150][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-06 18:06:48:47489][http-nio-8080-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-06 18:06:48:47495][http-nio-8080-exec-1] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
+[2019-08-06 18:06:51:50300][http-nio-8080-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-06 18:06:56:54951][http-nio-8080-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-06 18:06:56:54989][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-06 18:06:56:54989][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2d36e1db 
+[2019-08-06 18:06:56:54998][http-nio-8080-exec-6] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-06 18:06:56:55000][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-06 18:06:56:55000][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-06 18:07:03:62162][http-nio-8080-exec-1] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-06 18:07:03:62176][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-06 18:07:03:62176][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
+[2019-08-06 18:07:03:62179][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.article.domain.Article@20} 
+[2019-08-06 18:07:03:62179][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20, comments=[]} 
+[2019-08-06 18:07:04:63274][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-06 18:07:04:63275][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
+[2019-08-06 18:07:07:66288][http-nio-8080-exec-8] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-06 18:07:07:66292][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-06 18:07:07:66293][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
+[2019-08-06 18:07:07:66294][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.article.domain.Article@20} 
+[2019-08-06 18:07:07:66294][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20, comments=[]} 
+[2019-08-06 18:07:30:384][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 7554 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-06 18:07:30:386][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-06 18:07:33:3222][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.014 seconds (JVM running for 8.542)

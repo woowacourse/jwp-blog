@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOGS_ABSOLUTE_PATH" value="./logs"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>target/logback.log</file>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>target/logback.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <logger name="techcourse" level="INFO">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- RollingFileAppender: 특정 크기 제한에 도달하거나 날짜/시간 패턴이 더 이상 적용되지 않으면 로그 파일을 롤오버하는 파일 첨부 프로그램 -->
+
+<!--    <appender name="roll-by-time-and-size" class="org.apache.log4j.rolling.RollingFileAppender">-->
+<!--        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">-->
+<!--            <param name="ActiveFileName" value="log4j/roll-by-time-and-size/app.log"/>-->
+<!--            <param name="FileNamePattern" value="log4j/roll-by-time-and-size/app.%d{MM-dd HH:mm}.%i.log.gz"/>-->
+<!--        </rollingPolicy>-->
+<!--        <triggeringPolicy-->
+<!--                class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">-->
+<!--            <param name="MaxFileSize" value="100"/>-->
+<!--        </triggeringPolicy>-->
+<!--        <layout class="org.apache.log4j.PatternLayout">-->
+<!--            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n"/>-->
+<!--        </layout>-->
+<!--    </appender>-->
+<!--    <appender-ref ref="roll-by-time-and-size"/>-->
+
+
+    <!-- 특정 크기에 도달했을 때마다 로그파일 쓰기: 10KB마다 -->
+    <!--<appender name="rollingFileOnSize" class="org.apache.log4j.rolling.RollingFileAppender">
+        <param name="file" value="${LOGS_ABSOLUTE_PATH}/application.log"/>
+        <param name="MaxFileSize" value="10KB"/>
+        <param name="MaxBackupIndex" value="5"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n"/>
+        </layout>
+    </appender>-->
+
+    <!-- 특정 시간 단위마다 로그파일 쓰기: 매시간마다 -->
+    <!--<appender name="rollingFileOnDateTime" class="org.apache.log4j.rolling.RollingFileAppender">
+        <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+            <param name="FileNamePattern" value="${LOGS_ABSOLUTE_PATH}/application.%d{yyyy-MM-dd HH:mm}.log.gz"/>
+        </rollingPolicy>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n"/>
+        </layout>
+    </appender>-->
+
+</configuration>
