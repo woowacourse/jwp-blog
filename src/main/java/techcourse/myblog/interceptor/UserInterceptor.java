@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Component
 public class UserInterceptor extends HandlerInterceptorAdapter {
+    //TODO : argumentResolver 유저가 필요한 부분만.......
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) request.getSession().getAttribute("user"));

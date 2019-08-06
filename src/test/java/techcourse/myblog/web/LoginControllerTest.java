@@ -6,36 +6,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.AbstractTest;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-public class LoginControllerTest extends AbstractTest {
-    private String cookie;
+public class LoginControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange();
-
-        cookie = webTestClient.post().uri("/login")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(BodyInserters
-                .fromFormData("email", "email@gmail.com")
-                .with("password", "password1234!"))
-            .exchange()
-            .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+        init();
     }
 
     @Test
     void 로그인_페이지_이동_테스트() {
         webTestClient.get().uri("/login")
-                .exchange()
-                .expectStatus().isOk();
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -49,12 +33,12 @@ public class LoginControllerTest extends AbstractTest {
     @Test
     void 로그인_요청_성공_테스트() {
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!"))
-                .exchange()
-                .expectStatus().isFound();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", "password1234!"))
+            .exchange()
+            .expectStatus().isFound();
     }
 
     @Test
@@ -74,12 +58,12 @@ public class LoginControllerTest extends AbstractTest {
         String noneEmail = "none@gamil.com";
 
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", noneEmail)
-                        .with("password", "password1234!"))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", noneEmail)
+                .with("password", "password1234!"))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test
@@ -87,12 +71,12 @@ public class LoginControllerTest extends AbstractTest {
         String wrongPassword = "wrongPassword";
 
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", wrongPassword))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", wrongPassword))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test

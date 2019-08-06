@@ -16,7 +16,7 @@ public class LoginController {
     private final UserService userService;
 
     @GetMapping("/login")
-    public String renderLoginPage(HttpSession httpSession) {
+    public String renderLoginPage() {
         return "login";
     }
 

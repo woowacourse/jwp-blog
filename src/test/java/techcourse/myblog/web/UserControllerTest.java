@@ -6,37 +6,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.AbstractTest;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-public class UserControllerTest extends AbstractTest {
-    private String cookie;
+public class UserControllerTest extends ControllerTest {
     private static long userId = 1;
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange();
-
-        cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+        init();
     }
 
     @Test
     void 회원가입_페이지_이동_테스트() {
         webTestClient.get().uri("/signup")
-                .exchange()
-                .expectStatus().isOk();
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -52,13 +36,13 @@ public class UserControllerTest extends AbstractTest {
         String duplicatedEmail = "email@gmail.com";
 
         webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", duplicatedEmail)
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", duplicatedEmail)
+                .with("password", "password1234!")
+                .with("name", "name"))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test
@@ -66,13 +50,13 @@ public class UserControllerTest extends AbstractTest {
         String wrongName = "a";
 
         webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password")
-                        .with("name", wrongName))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", "password")
+                .with("name", wrongName))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test
@@ -80,13 +64,13 @@ public class UserControllerTest extends AbstractTest {
         String wrongPassword = "password";
 
         webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", wrongPassword)
-                        .with("name", "name"))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", wrongPassword)
+                .with("name", "name"))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test
@@ -94,13 +78,13 @@ public class UserControllerTest extends AbstractTest {
         String wrongEmail = "email";
 
         webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", wrongEmail)
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", wrongEmail)
+                .with("password", "password1234!")
+                .with("name", "name"))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test
@@ -121,9 +105,9 @@ public class UserControllerTest extends AbstractTest {
     @Test
     void 로그인_후_회원_정보_전체_조회_테스트() {
         webTestClient.get().uri("/users")
-                .header("Cookie", cookie)
-                .exchange()
-                .expectStatus().isOk();
+            .header("Cookie", cookie)
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -136,9 +120,9 @@ public class UserControllerTest extends AbstractTest {
     @Test
     void MyPage_이동_테스트() {
         webTestClient.get().uri("/mypage/" + userId)
-                .header("Cookie", cookie)
-                .exchange()
-                .expectStatus().isOk();
+            .header("Cookie", cookie)
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -166,12 +150,12 @@ public class UserControllerTest extends AbstractTest {
     @Test
     void 회원_정보_수정_성공_테스트() {
         webTestClient.put().uri("/users/" + userId)
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", "newName"))
-                .exchange()
-                .expectStatus().isFound();
+            .header("Cookie", cookie)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("name", "newName"))
+            .exchange()
+            .expectStatus().isFound();
     }
 
     @Test
@@ -187,12 +171,12 @@ public class UserControllerTest extends AbstractTest {
     @Test
     void 회원_정보_수정_실패_테스트() {
         webTestClient.put().uri("/users/" + userId)
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", "A"))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .header("Cookie", cookie)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("name", "A"))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test
@@ -205,8 +189,8 @@ public class UserControllerTest extends AbstractTest {
     @AfterEach
     void 회원_탈퇴_성공_테스트() {
         webTestClient.delete().uri("/users/" + userId++)
-                .header("Cookie", cookie)
-                .exchange()
-                .expectStatus().isFound();
+            .header("Cookie", cookie)
+            .exchange()
+            .expectStatus().isFound();
     }
 }

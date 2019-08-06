@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -9,7 +9,6 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @ControllerAdvice
 public class ExceptionAdvice {
@@ -17,7 +16,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotFoundArticleException(NotFoundArticleException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/";
+        return "forward:/";
     }
 
     @ExceptionHandler(InvalidSignUpFormException.class)
@@ -30,10 +29,8 @@ public class ExceptionAdvice {
     @ExceptionHandler(InvalidEditFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelInvalidEditFormException(InvalidEditFormException e, HttpSession httpSession, Model model) {
-        Optional<UserDto.Response> user = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (user.isPresent()) {
-            model.addAttribute("user", user.get());
-        }
+        UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
+        model.addAttribute("user", userDto);
         model.addAttribute("errorMessage", e.getMessage());
         return "mypage";
     }
@@ -42,20 +39,37 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelDuplicatedUserException(DuplicatedUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/signup";
+        return "signup";
     }
 
     @ExceptionHandler(NotFoundUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotFoundUserException(NotFoundUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/login";
+        return "login";
     }
 
     @ExceptionHandler(NotMatchPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotMatchPasswordException(NotMatchPasswordException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/login";
+        return "login";
+    }
+
+    @ExceptionHandler(NotMatchAuthorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleNotMatchAuthorException(NotMatchAuthorException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        model.addAttribute("path", "/");
+        return "error";
+    }
+
+    //TODO : article페이지
+    @ExceptionHandler(NotMatchUserException.class) //TODO: Exeception에 id / error or exception
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //TODO : 403, 404 .html, RedirectionAttributes
+    public String handleNotMatchUserException(NotMatchUserException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        model.addAttribute("path", "/");
+        return "error";
     }
 }

@@ -3,67 +3,82 @@ package techcourse.myblog.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import techcourse.myblog.AbstractTest;
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleDetails;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.NotMatchAuthorException;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-class ArticleServiceTest extends AbstractTest {
-    private static long articleId = 1;
-
-    @Autowired
-    private ArticleService articleService;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    private Article article;
-
+class ArticleServiceTest extends ServiceTest {
     @BeforeEach
     void setUp() {
-        article = Article.builder()
-                .id(articleId)
-                .title("title")
-                .coverUrl("coverUrl")
-                .contents("contents")
-                .build();
-
-        articleService.save(modelMapper.map(article, ArticleDto.Create.class));
-    }
-
-    @Test
-    void 게시글_전체_조회_테스트() {
-        assertThat(articleService.findAll()).isEqualTo(
-                Arrays.asList(modelMapper.map(article, ArticleDto.Response.class)));
-    }
-
-    @Test
-    void 게시글_단건_조회_테스트() {
-        assertThat(articleService.findById(articleId)).isEqualTo(modelMapper.map(article, ArticleDto.Response.class));
-    }
-
-    @Test
-    void 게시글_수정_테스트() {
-        Article updatedUser = Article.builder()
-                .id(articleId)
-                .title("updatedTitle")
-                .coverUrl("updatedCoverUrl")
-                .contents("updatedContents")
-                .build();
-        long updatedArticleId = articleService.update(articleId, modelMapper.map(updatedUser, ArticleDto.Update.class));
-        assertThat(articleService.findById(updatedArticleId))
-                .isEqualTo(modelMapper.map(updatedUser, ArticleDto.Response.class));
+        init();
     }
 
     @AfterEach
     void tearDown() {
-        articleService.deleteById(articleId++);
+        terminate();
+    }
+
+    @Test
+    void 게시글_전체_조회_테스트() {
+        assertThat(articleService.findAll()).isEqualTo(Arrays.asList(articleDto));
+    }
+
+    @Test
+    void 게시글_단건_조회_테스트() {
+        assertThat(articleService.findById(articleId)).isEqualTo(articleDto);
+    }
+
+    @Test
+    void 작석자_확인_게시글_단건_조회_테스트() {
+        assertThat(articleService.findById(userDto, articleId)).isEqualTo(articleDto);
+    }
+
+    @Test
+    void 다른_작석자_확인_게시글_단건_조회_테스트() {
+        assertThrows(NotMatchAuthorException.class, () ->
+            articleService.findById(otherUserDto, articleId));
+    }
+
+    @Test
+    void 게시글_수정_테스트() {
+        Article updatedArticle = Article.builder()
+            .id(articleId)
+            .articleDetails(new ArticleDetails("updatedTitle",
+                "updatedCoverUrl",
+                "updatedContents"))
+            .author(user)
+            .build();
+
+        ArticleDto updatedArticleDto =
+            articleService.update(userDto, articleId, modelMapper.map(updatedArticle, ArticleDetails.class));
+
+        assertThat(updatedArticleDto)
+            .isEqualTo(modelMapper.map(updatedArticle, ArticleDto.class));
+    }
+
+    @Test
+    void 다른_작성자_게시글_수정_테스트() {
+        Article updatedArticle = Article.builder()
+            .id(articleId)
+            .articleDetails(new ArticleDetails("updatedTitle",
+                "updatedCoverUrl",
+                "updatedContents"))
+            .author(user)
+            .build();
+
+        assertThrows(NotMatchAuthorException.class, () ->
+            articleService.update(otherUserDto, articleId, modelMapper.map(updatedArticle, ArticleDetails.class)));
+    }
+
+    @Test
+    void 다른_작성자_게시글_삭제_테스트() {
+        assertThrows(NotMatchAuthorException.class, () ->
+            articleService.deleteById(otherUserDto, articleId));
     }
 }
