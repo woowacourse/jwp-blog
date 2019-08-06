@@ -23,6 +23,9 @@
 
     <logger name="techcourse.myblog" level="DEBUG">
         <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="techcourse.myblog" level="INFO">
         <appender-ref ref="FILE"/>
     </logger>
 
