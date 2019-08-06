@@ -2,7 +2,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread][%logger{0}] %m%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %cyan([%logger{0}]) %m%n</pattern>
         </encoder>
     </appender>
 
@@ -24,5 +24,6 @@
     <root level="INFO">
         <appender-ref ref="roll-by-time-and-size"/>
         <appender-ref ref="STDOUT"/>
+
     </root>
 </configuration>
