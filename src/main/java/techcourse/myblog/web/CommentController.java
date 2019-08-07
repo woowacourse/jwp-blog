@@ -29,7 +29,7 @@ public class CommentController {
         log.debug("begin");
 
         Comment comment = commentService.save(commentRequest, sessionUser);
-        log.info("comment: {}", comment);
+        log.info("Insert comment: {}", comment);
 
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
@@ -47,7 +47,7 @@ public class CommentController {
         log.debug("begin");
 
         commentService.deleteById(commentId, sessionUser);
-        log.info("commentId: {}", commentId);
+        log.info("Deleted commentId: {}", commentId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
