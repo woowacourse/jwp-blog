@@ -131,7 +131,7 @@ function addCommentFetch(e) {
             };
             addComment(articleId, commentDto);
         })
-        .catch(response => response.json().then((json) => alert(json.errorMessage))
+        .catch(response => response.json().then((json) => alert(json.message))
         );
 }
 
@@ -154,7 +154,7 @@ function deleteCommentFetch(articleId, commentId, targetComment) {
             targetComment.remove();
         })
         .catch(
-            response => response.json().then((json) => alert(json.errorMessage))
+            response => response.json().then((json) => alert(json.message))
         )
 }
 
@@ -179,7 +179,7 @@ function updateCommentFetch(articleId, commentId, editParagraph, contents) {
             document.querySelectorAll('.edit-comment-form').forEach(e => e.parentNode.removeChild(e));
         })
         .catch(
-            response => response.json().then((json) => alert(json.errorMessage))
+            response => response.json().then((json) => alert(json.message))
         )
 }
 
