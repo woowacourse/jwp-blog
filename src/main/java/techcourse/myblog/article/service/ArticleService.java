@@ -18,8 +18,8 @@ import techcourse.myblog.user.service.UserAssembler;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static techcourse.myblog.article.service.ArticleAssembler.convertToEntity;
 
 @Service
@@ -38,7 +38,7 @@ public class ArticleService {
 
         return Collections.unmodifiableList(articles.stream()
                 .map(ArticleAssembler::convertToDto)
-                .collect(Collectors.toList()));
+                .collect(toList()));
     }
 
     public ArticleResponse findById(final Long id) {
@@ -48,15 +48,15 @@ public class ArticleService {
     }
 
     public UserResponse findAuthor(final Long id) {
-        return UserAssembler.convertToDto(articleRepository.findById(id)
-                .orElseThrow(ArticleNotFoundException::new)
-                .getAuthor());
+        Article retrieveArticle = articleRepository.findById(id)
+                .orElseThrow(ArticleNotFoundException::new);
+        return UserAssembler.convertToDto(retrieveArticle.getAuthor());
     }
 
-    public Long save(final ArticleRequest articleDTO, final Long authorId) {
+    public Long save(final ArticleRequest articleRequest, final Long authorId) {
         User author = userRepository.findById(authorId)
                 .orElseThrow(UserNotFoundException::new);
-        Article article = convertToEntity(articleDTO, author);
+        Article article = convertToEntity(articleRequest, author);
         Article persistArticle = articleRepository.save(article);
         return persistArticle.getId();
     }

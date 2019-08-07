@@ -65,15 +65,11 @@ public class Comment {
     }
 
     public void update(Comment comment) {
-        if (matchAuthor(comment)) {
+        if (matchAuthor(comment.getAuthor())) {
             this.contents = comment.getContents();
             return;
         }
         throw new UserHasNotAuthorityException();
-    }
-
-    private boolean matchAuthor(Comment comment) {
-        return author.equals(comment.getAuthor());
     }
 
     public boolean matchAuthor(User user) {

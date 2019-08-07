@@ -33,12 +33,11 @@ public class UserResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserResponse that = (UserResponse) o;
-        return Objects.equals(email, that.email) &&
-                Objects.equals(name, that.name);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, name);
+        return Objects.hash(id);
     }
 }

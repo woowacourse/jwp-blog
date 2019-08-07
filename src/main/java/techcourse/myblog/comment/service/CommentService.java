@@ -38,8 +38,9 @@ public class CommentService {
         return convertToDto(commentRepository.findById(id).orElseThrow(CommentNotFoundException::new));
     }
 
-    public List<CommentResponse> findByArticleId(Long articleId) {
-        return commentRepository.findByArticleId(articleId).stream()
+    public List<CommentResponse> findByArticleId(final Long articleId) {
+        Article retrieveArticle = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
+        return retrieveArticle.getComments().stream()
                 .map(CommentAssembler::convertToDto)
                 .collect(toList());
     }

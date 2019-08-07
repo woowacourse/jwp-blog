@@ -29,12 +29,12 @@ public class LoginService {
     }
 
     private void validatePassword(final String password, final User user) {
-        if (!user.getPassword().equals(password)) {
+        if (!user.match(password)) {
             throw new InvalidPasswordException();
         }
     }
 
-    public UserResponse findByEmail(String email) {
+    public UserResponse findByEmail(final String email) {
         return convertToDto(userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new));
     }
 }

@@ -48,7 +48,7 @@ public class ArticleController {
     @GetMapping("/{id}/edit")
     public ModelAndView showEditPage(@PathVariable final Long id, final AccessUserInfo accessUserInfo) {
         ModelAndView modelAndView = new ModelAndView();
-        if (!accessUserInfo.getUser().getId().equals(articleService.findAuthor(id).getId())) {
+        if (!accessUserInfo.match(articleService.findAuthor(id))) {
             modelAndView.setView(new RedirectView("/articles/" + id));
             return modelAndView;
         }
