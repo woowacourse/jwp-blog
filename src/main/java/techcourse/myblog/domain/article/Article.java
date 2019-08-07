@@ -21,6 +21,7 @@ public class Article {
 	private String coverUrl;
 
 	@Column(nullable = false, length = CONTENTS_LENGTH)
+	@Lob
 	private String contents;
 
 	@ManyToOne(fetch = FetchType.LAZY)
