@@ -168,31 +168,35 @@
                 const node = document.createElement("LI");
                 node.setAttribute("class", "comment-item border bottom mrg-btm-30");
 
-                node.innerHTML = '<form id="comment-update-form' + json.commentId + '" method="post"' +
-                    'action="/comment/' + json.commentId + '">' +
-                    '<input id="comment-update" type="hidden" name="_method" value="put"/>' +
-                    '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
-                    '<div class="info">' +
-                    '<span class="text-bold inline-block">' + json.userName + '</span>' +
-                    '<span class="sub-title inline-block pull-right">' +
-                    '<a onclick="showCommentInput(event, ' + json.commentId + ')">' +
-                    '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
-                    '</a>' +
-                    '<a onclick="deleteComment(event, ' + json.commentId + ')">' +
-                    '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
-                    '</a>' +
-                    '</span>' +
-                    '<p id="comment-contents-p-' + json.commentId + '" class="width-80">' + json.contents + '</p>' +
-                    '<div id="comment-edit-' + json.commentId + '"></div>' +
-                    '</div>' +
-                    '</form>';
+                node.innerHTML = generateCommentBy(json);
 
                 document.getElementById("comment-ul-tag").appendChild(node);
 
                 editor.setValue('');
 
                 updateCommentSizeBy(1);
-            })
+            });
+
+        function generateCommentBy(json) {
+            return `<form id="comment-update-form${json.commentId}" method="post"
+                action="/comment/${json.commentId}">
+                <input id="comment-update" type="hidden" name="_method" value="put"/>
+                <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                <div class="info">
+                <span class="text-bold inline-block">${json.userName}</span>
+                <span class="sub-title inline-block pull-right">
+                <a onclick="showCommentInput(event, ${json.commentId})">
+                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                </a>
+                <a onclick="deleteComment(event, ${json.commentId})">
+                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                </a>
+                </span>
+                <p id="comment-contents-p-${json.commentId}" class="width-80">${json.contents}</p>
+                <div id="comment-edit-${json.commentId}"></div>
+                </div>
+                </form>`;
+        }
     }
 
     function updateCommentSizeBy(addedSize) {
@@ -201,7 +205,8 @@
     }
 
     function showCommentInput(event, commentId) {
-        event.preventDefault()
+        event.preventDefault();
+        
         const e = document.createElement('span');
         e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="button" class="btn btn-tumblr" onclick="updateComment(' + commentId + ')">수정</button>';
         e.setAttribute("id", "comment-update-span-" + commentId);
@@ -234,7 +239,7 @@
     }
 
     function deleteComment(event, commentId) {
-        event.preventDefault()
+        event.preventDefault();
 
         fetch('/comment/' + commentId, {
             method: "DELETE",
