@@ -23,12 +23,6 @@ public class SessionUtil {
         log.info(AFTER_SESSION, session);
     }
 
-    public static Object getAttribute(HttpSession session, String attribute) {
-        Object sessionInfo = session.getAttribute(attribute);
-        log.info("Session : {} ", sessionInfo);
-        return sessionInfo;
-    }
-
     public static boolean isNull(HttpSession session) {
         return session.getAttribute(SessionContext.USER) == null;
     }

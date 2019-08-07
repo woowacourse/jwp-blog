@@ -7,8 +7,8 @@ import techcourse.myblog.dto.article.ArticleRequest;
 import techcourse.myblog.dto.article.ArticleResponse;
 import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.utils.custum.LoginUser;
 import techcourse.myblog.utils.model.ModelUtil;
-import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -64,17 +64,15 @@ public class ArticleController {
     }
 
     @PutMapping(ARTICLES + "/{articleId}")
-    public String modifyArticle(@PathVariable long articleId, @Valid ArticleRequest articleRequest) {
-        UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
-        articleService.update(articleId, articleRequest, userResponse);
+    public String modifyArticle(@PathVariable long articleId, @Valid ArticleRequest articleRequest, @LoginUser UserResponse loginUser) {
+        articleService.update(articleId, articleRequest, loginUser);
 
         return REDIRECT + ARTICLES + "/" + articleId;
     }
 
     @DeleteMapping(ARTICLES + "/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
-        UserResponse userResponseDto = (UserResponse) SessionUtil.getAttribute(session, USER);
-        articleService.delete(articleId, userResponseDto);
+    public String deleteArticle(@PathVariable long articleId, @LoginUser UserResponse loginUser) {
+        articleService.delete(articleId, loginUser);
 
         return REDIRECT;
     }
