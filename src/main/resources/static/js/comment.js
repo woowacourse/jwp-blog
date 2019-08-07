@@ -42,16 +42,11 @@ const COMMENT = (function () {
                 const contentsId = 'comment-contents' + commentId;
                 const buttonId = 'comment-edit-finish-button' + commentId;
 
-                const commentEditTemplate =
-                    `<div class="add-comment edit-comment-form">
-                    <input id="${contentsId}" name="contents" type="hidden">
-                    <div id="${editorId}" class = "comment-editor"></div>
-                    <button class="btn btn-default comment-edit-finish-button" id="${buttonId}" type="button">댓글 수정
-                    </button></div>
-                    `;
+
+                const template = commentEditTemplate(contentsId, editorId, buttonId)
 
                 parent.insertAdjacentHTML(
-                    'beforeend', commentEditTemplate
+                    'beforeend', template
                 );
                 const editor2 = new tui.Editor({
                     el: document.querySelector('#' + editorId),
@@ -136,10 +131,7 @@ function addCommentFetch(e) {
             };
             addComment(articleId, commentDto);
         })
-        .catch((response) =>
-            response.json().then(json =>
-                alert(json.errorMessage)
-            )
+        .catch(response => response.json().then((json) => alert(json.errorMessage))
         );
 }
 
@@ -192,34 +184,10 @@ function updateCommentFetch(articleId, commentId, editParagraph, contents) {
 }
 
 function addComment(articleId, commentDto) {
-    console.log("abcd");
-    let buttonTemplate = `
-            <button class="btn btn-icon float-right pointer comment-del-button"
-                    type="button">
-                <i class="ti-trash text-dark font-size-16 pdd-horizon-5 comment-del-button"></i>
-            </button>
-        
-        <button class="comment-edit float-right pointer btn btn-icon">
-            <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-        </button>`;
+    let buttonTemplate = commentButtonTemplate()
 
-    let commentTemplate = `
-        <li class="comment-item border bottom mrg-btm-30" data-comment-id ="${commentDto.id}">
-            <img alt=""
-                 class="thumb-img img-circle"
-                 src="https://avatars2.githubusercontent.com/u/3433096?v=4">
-            <div class="info">
-                <span class="text-bold inline-block" >${commentDto.userName}</span>
-
-                <span class="sub-title inline-block pull-right">
-        <i class="ti-timer pdd-right-5"></i>p
-        <span>6 min ago</span>
-    </span>
-                ${buttonTemplate}
-                <p class="width-80">${commentDto.contents}</p>
-            </div>
-        </li>`;
+    let template = commentTemplate(commentDto, buttonTemplate)
 
     const comments = document.querySelector('#comment-list');
-    comments.insertAdjacentHTML('beforeend', commentTemplate);
+    comments.insertAdjacentHTML('beforeend', template);
 }
