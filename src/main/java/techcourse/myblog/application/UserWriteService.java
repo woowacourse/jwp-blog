@@ -2,9 +2,9 @@ package techcourse.myblog.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.exception.DuplicatedEmailException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
-import techcourse.myblog.application.exception.DuplicatedEmailException;
 
 @Service
 @Transactional

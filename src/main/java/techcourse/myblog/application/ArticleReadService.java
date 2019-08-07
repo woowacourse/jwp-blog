@@ -2,11 +2,10 @@ package techcourse.myblog.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.article.exception.MismatchArticleAuthorException;
 import techcourse.myblog.application.exception.NotFoundArticleException;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
 
 import java.util.Collections;
 import java.util.List;

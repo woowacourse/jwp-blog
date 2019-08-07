@@ -8,12 +8,12 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.ArticleWriteService;
 import techcourse.myblog.application.CommentReadService;
 import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.presentation.support.LoginUser;
 
 import javax.validation.groups.Default;

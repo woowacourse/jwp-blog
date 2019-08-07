@@ -1,7 +1,6 @@
 package techcourse.myblog.application.dto;
 
 import lombok.Getter;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.validation.UserInfo;
 import techcourse.myblog.domain.user.validation.UserPattern;
