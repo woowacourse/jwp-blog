@@ -73,7 +73,8 @@ public class CommentService {
         Boolean isValidUser = userService.checkValidity(commentJsonDto.getEmail(), loginUserEmail);
 
         Article article = articleService.findById(commentJsonDto.getArticleId());
-        Comment savedComment = commentRepository.save(commentConverter.toEntity(commentJsonDto.getContents(), commentUser, article));
+        Comment savedComment = commentRepository.save(commentConverter.toEntity(commentJsonDto.getContents(),
+                commentUser, article));
 
         return commentConverter.toCommentJsonDto(savedComment, isValidUser);
     }
