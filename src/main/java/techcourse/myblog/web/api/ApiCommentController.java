@@ -29,10 +29,10 @@ public class ApiCommentController {
 
     @PostMapping
     public ResponseEntity<List<Comment>> create(@PathVariable long articleId,
-                                                @RequestBody CommentDto.JSON json,
+                                                @RequestBody CommentDto commentDto,
                                                 @SessionInfo UserSessionInfo userSessionInfo) {
-        log.debug("[Comment] [Create] API: ArticleId = {} Comment = {}", articleId, json.getContents());
-        commentService.add(articleId, userSessionInfo.toUser(), json.toDto());
+        log.debug("[Comment] [Create] API: ArticleId = {} Comment = {}", articleId, commentDto.getContents());
+        commentService.add(articleId, userSessionInfo.toUser(), commentDto);
         List<Comment> comments = articleService.findArticle(articleId).getComments();
         return new ResponseEntity<>(comments, HttpStatus.CREATED);
     }
@@ -40,10 +40,10 @@ public class ApiCommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<Comment> update(@PathVariable long articleId,
                                           @PathVariable long commentId,
-                                          @RequestBody CommentDto.JSON json,
+                                          @RequestBody CommentDto commentDto,
                                           @SessionInfo UserSessionInfo userSessionInfo) {
-        log.debug("[Comment] [Update] API: ArticleId = {} Comment = {}", commentId, json.getContents());
-        Comment comment = commentService.update(commentId, userSessionInfo.toUser(), json.toDto());
+        log.debug("[Comment] [Update] API: ArticleId = {} Comment = {}", commentId, commentDto.getContents());
+        Comment comment = commentService.update(commentId, userSessionInfo.toUser(), commentDto);
         return new ResponseEntity<>(comment, HttpStatus.ACCEPTED);
     }
 

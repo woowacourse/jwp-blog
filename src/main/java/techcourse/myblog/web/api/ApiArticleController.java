@@ -26,17 +26,17 @@ public class ApiArticleController {
     }
 
     @PostMapping
-    public ResponseEntity<Article> create(@RequestBody ArticleDto.JSON json,
+    public ResponseEntity<Article> create(@RequestBody ArticleDto articleDto,
                                           @SessionInfo UserSessionInfo userSessionInfo) {
-        Article article = articleService.add(json.toDto(), userSessionInfo.toUser());
+        Article article = articleService.add(articleDto, userSessionInfo.toUser());
         return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
 
     @PutMapping("/{articleId}")
     public ResponseEntity<Article> update(@PathVariable long articleId,
-                                          @RequestBody ArticleDto.JSON json,
+                                          @RequestBody ArticleDto articleDto,
                                           @SessionInfo UserSessionInfo userSessionInfo) {
-        Article article = articleService.update(articleId, json.toDto(), userSessionInfo.toUser());
+        Article article = articleService.update(articleId, articleDto, userSessionInfo.toUser());
         return new ResponseEntity<>(article, HttpStatus.ACCEPTED);
     }
 }

@@ -45,47 +45,4 @@ public class ArticleDto {
     public Article toEntity(User author) {
         return new Article(title, contents, coverUrl, author);
     }
-
-    public static class JSON {
-        private String title;
-        private String contents;
-        private String coverUrl;
-
-        public JSON() {
-        }
-
-        public JSON(String title, String contents, String coverUrl) {
-            this.title = title;
-            this.contents = contents;
-            this.coverUrl = coverUrl;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getContents() {
-            return contents;
-        }
-
-        public void setContents(String contents) {
-            this.contents = contents;
-        }
-
-        public String getCoverUrl() {
-            return coverUrl;
-        }
-
-        public void setCoverUrl(String coverUrl) {
-            this.coverUrl = coverUrl;
-        }
-
-        public ArticleDto toDto() {
-            return new ArticleDto(title, contents, coverUrl);
-        }
-    }
 }

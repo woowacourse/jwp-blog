@@ -20,9 +20,9 @@ class ApiCommentControllerTest extends AuthedWebTestClient {
 
     @Test
     void create() throws IOException {
-        CommentDto.JSON commentJson = new CommentDto.JSON("comment");
+        CommentDto commentDto = new CommentDto("comment");
         EntityExchangeResult<byte[]> result = postJson("/api/articles/1/comments")
-                .body(Mono.just(commentJson), CommentDto.JSON.class)
+                .body(Mono.just(commentDto), CommentDto.class)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody().returnResult();
@@ -34,9 +34,9 @@ class ApiCommentControllerTest extends AuthedWebTestClient {
 
     @Test
     void updateAndDelete() throws IOException {
-        CommentDto.JSON commentJson = new CommentDto.JSON("edited");
+        CommentDto commentJson = new CommentDto("edited");
         putJson("/api/articles/1/comments/1")
-                .body(Mono.just(commentJson), CommentDto.JSON.class)
+                .body(Mono.just(commentJson), CommentDto.class)
                 .exchange()
                 .expectBody()
                 .jsonPath("contents").isEqualTo("edited");
