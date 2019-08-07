@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.annotation.UserFromSession;
+import techcourse.myblog.annotation.UserFromSessionThatCanBeNull;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
@@ -17,7 +18,6 @@ import techcourse.myblog.service.dto.ArticleDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/articles")
@@ -30,7 +30,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String show(@PathVariable Long articleId, HttpSession session, Model model) {
+    public String show(@PathVariable Long articleId, @UserFromSessionThatCanBeNull User user, Model model) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -38,8 +38,9 @@ public class ArticleController {
         model.addAttribute("article", article);
         model.addAttribute("comments", article.getComments());
 
-        Optional<User> user = Optional.ofNullable((User) session.getAttribute("user"));
-        user.ifPresent(value -> model.addAttribute("user", value));
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
 
         return "article";
     }
