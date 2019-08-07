@@ -21,4 +21,4 @@ sudo docker run \
     laterality/jenkins
 
 # Show jenkins initial password
-sudo docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+echo $(sudo docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword)
