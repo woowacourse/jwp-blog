@@ -1,5 +1,6 @@
 #!/bin/bash
-docker stop myblog || true && docker rm myblog || true
+sudo docker stop $(sudo docker ps -a -q --filter name=elastic_hypatia)
+sudo docker rm $(sudo docker ps -a -q --filter name=elastic_hypatia)
 docker start -itd \
     --name myblog \
     -p 8080:8080 \
