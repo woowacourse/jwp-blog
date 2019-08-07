@@ -1,36 +1,34 @@
 package techcourse.myblog.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.exception.ArticleInputException;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArticleTest {
-    private Article article;
-    private Long testId = 1L;
-    private String testTitle = "Hello World!";
-    private String testCoverUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxeXn0MrNFeiv4vBrMSTJWC24F2OZrygOE0h__bEuVXPFANvWB";
-    private String invalidCoverUrl = "hello";
-    private String testContents = "모두들 안녕!";
+	private Article article;
+	private User author;
 
-    @Test
-    void url이_정상적으로_입력됐을_때_테스트() {
-        Article testArticle = Article.builder()
-                .id(testId)
-                .title(testTitle)
-                .coverUrl(testCoverUrl)
-                .contents(testContents)
-                .build();
-    }
+	@BeforeEach
+	public void setUp() {
+		author = new User("name", "test@test.test", "passWORD1!");
+		article = new Article("title", "url", "contents", author);
+	}
 
-    @Test
-    void url이_정상적으로_입력안됐을_때_테스트() {
-        assertThrows(ArticleInputException.class,
-                () -> Article.builder()
-                        .id(testId)
-                        .title(testTitle)
-                        .coverUrl(invalidCoverUrl)
-                        .contents(testContents)
-                        .build());
-    }
+	@Test
+	public void updateArticle() {
+		String newTitle = "new Title";
+		String newCoverUrl = "new CoverUrl";
+		String newContents = "new Contents";
+		ArticleDto updatedArticleDto = new ArticleDto(1L, author.getId(), newTitle, newCoverUrl, newContents);
+
+		article.updateArticle(updatedArticleDto.toEntity());
+
+		assertThat(article.getTitle()).isEqualTo(newTitle);
+		assertThat(article.getCoverUrl()).isEqualTo(newCoverUrl);
+		assertThat(article.getContents()).isEqualTo(newContents);
+	}
 }

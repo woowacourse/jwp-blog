@@ -1,108 +1,113 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.CommentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
-import java.util.Optional;
+import java.util.List;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentServiceTest {
-    @Mock
-    private ArticleRepository articleRepository;
-    @Mock
-    private CommentRepository commentRepository;
+	private static final Long BASE_USER_ID = 1L;
+	private static final Long MISMATCH_USER_ID = 2L;
+	public static final String TEST_COMMENT = "TEST Comment";
+	public static final String UPDATE_COMMENT = "UPDATE Comment";
 
-    private CommentService commentService;
+	@Autowired
+	private CommentService commentService;
 
-    @BeforeEach
-    void setUp() {
-        commentService = new CommentService(articleRepository, commentRepository);
-    }
+	@Autowired
+	private ArticleService articleService;
 
-    @Test
-    void 댓글_생성_테스트() {
-        Comment comment = new Comment();
-        Article article = new Article();
-        given(articleRepository.findById(1L)).willReturn(Optional.of(article));
-        given(commentRepository.save(any(Comment.class))).willReturn(comment);
+	@Autowired
+	private UserService userService;
 
-        User user = new User();
-        UserDto userDto = new UserDto();
-        userDto.setId(1L);
-        userDto.setEmail("van@naver.com");
-        userDto.setName("vab");
-        userDto.setPassword("!234Qwer");
-        Comment createdComment = commentService.create(1L, userDto, comment);
+	private Long articleId;
+	private UserSessionDto baseUserSessionDto;
 
-        assertThat(createdComment.getUser().equals("van@naver.com")).isTrue();
-        assertThat(createdComment.getArticle()).isEqualTo(article);
-    }
+	@BeforeEach
+	public void setUp() {
+		baseUserSessionDto = new UserSessionDto(BASE_USER_ID, null, null);
+		ArticleDto articleDto = articleService.save(baseUserSessionDto,
+				new ArticleDto(null, BASE_USER_ID, "title", "url", "contents"));
+		articleId = articleDto.getId();
 
-    @Test
-    void 댓글_수정_테스트() {
-        UserDto userDto = new UserDto();
-        User user = User.builder()
-                .id(1L)
-                .name("van")
-                .email("van@naver.com")
-                .password("!234Qwer")
-                .build();
+	}
 
-        Article article = new Article();
-        Comment comment = new Comment();
-        comment.initialize(user, article);
+	@Test
+	public void saveComment() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment comment = commentService.save(baseUserSessionDto, commentRequestDto);
 
-        given(articleRepository.findById(1L)).willReturn(Optional.of(article));
-        given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
+		assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
+	}
 
-        userDto.setId(1L);
-        userDto.setEmail("van@naver.com");
-        userDto.setName("van");
-        userDto.setPassword("!234Qwer");
-        commentService.update("hello", 1L, userDto);
+	@Test
+	public void findCommentsByArticleId() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment comment1 = commentService.save(baseUserSessionDto, commentRequestDto);
+		Comment comment2 = commentService.save(baseUserSessionDto, commentRequestDto);
+		List<CommentResponseDto> comments = commentService.findCommentsByArticleId(articleId);
 
-        assertThat(comment.getContent()).isEqualTo("hello");
-    }
+		assertThat(comments.size()).isEqualTo(2);
+		assertThat(comments.get(0).getComment()).isEqualTo(comment1.getComment());
+		assertThat(comments.get(0).getAuthorName()).isEqualTo(comment1.getAuthorName());
+		assertThat(comments.get(1).getComment()).isEqualTo(comment2.getComment());
+		assertThat(comments.get(1).getAuthorName()).isEqualTo(comment2.getAuthorName());
+	}
 
-    @Test
-    void 유저_정보가_일치하지_않을때_댓글_수정_예외_테스트() {
-        User user = User.builder()
-                .id(1L)
-                .name("van")
-                .email("van@naver.com")
-                .password("!234Qwer")
-                .build();
-        UserDto userDto = new UserDto();
-        Article article = new Article();
-        Comment comment = new Comment();
-        comment.initialize(user, article);
+	@Test
+	@DisplayName("정상 수정 테스트")
+	public void updateComment() {
+		Comment comment = commentService.findById(BASE_USER_ID);
+		CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, UPDATE_COMMENT);
 
-        userDto.setId(2L);
-        userDto.setEmail("aaaaaaa@naver.com");
-        userDto.setName("vab");
-        userDto.setPassword("!234Qwer");
+		Comment updatedComment = commentService.update(baseUserSessionDto, comment.getId(), updateRequestDto);
+		assertThat(updatedComment.getComment()).isEqualTo(UPDATE_COMMENT);
+	}
 
-        given(articleRepository.findById(1L)).willReturn(Optional.of(article));
-        given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
+	@Test
+	@DisplayName("Comment를 등록한 User가 다를때 수정 실패")
+	public void failUpdatingCommentWhenMismatchUser() {
+		Comment comment = commentService.findById(BASE_USER_ID);
+		CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, UPDATE_COMMENT);
 
-        assertThrows(NotMatchAuthenticationException.class, () -> commentService.update("hello", 1L, userDto));
-    }
+		UserSessionDto mismatchUserSession = new UserSessionDto(MISMATCH_USER_ID, null, null);
+		commentService.update(mismatchUserSession, comment.getId(), updateRequestDto);
+		Comment updatedComment = commentService.findById(BASE_USER_ID);
+		assertThat(updatedComment.getComment()).isEqualTo(comment.getComment());
+	}
+
+	@Test
+	@DisplayName("정상 삭제 테스트")
+	public void deleteComment() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment deletedComment = commentService.save(baseUserSessionDto, commentRequestDto);
+
+		commentService.delete(baseUserSessionDto, deletedComment.getId());
+		assertThatThrownBy(() -> commentService.findById(deletedComment.getId()))
+				.isInstanceOf(NotFoundCommentException.class);
+	}
+
+	@Test
+	@DisplayName("Comment를 등록한 User가 다를때 삭제 실패")
+	public void failDeletingCommentWhenMismatchUser() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment deletedComment = commentService.save(baseUserSessionDto, commentRequestDto);
+		UserSessionDto mismatchUserSessionDto = new UserSessionDto(MISMATCH_USER_ID, null, null);
+
+		commentService.delete(mismatchUserSessionDto, deletedComment.getId());
+		assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(1);
+	}
 }

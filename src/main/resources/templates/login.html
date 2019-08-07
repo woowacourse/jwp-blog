@@ -1,75 +1,78 @@
 <!DOCTYPE html>
-<html lang="ko"
-      layout:decorate="~{layout/layout}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-<th:block layout:fragment="content">
-    <div class="app">
-        <div class="header navbar bg-transparent no-border">
-            <div class="header-container pdd-right-15">
-                <ul class="nav-left mrg-left-0">
-                    <li>
-                        <a href="/">
-                            <div class="logo logo-dark d-none"
-                                 style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                            <div class="logo logo-white"
-                                 style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>우아한 크루의 블로그</title>
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/article-edit.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
+</head>
+<body>
+<div class="app">
+    <div class="header navbar bg-transparent no-border">
+        <div class="header-container pdd-right-15">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <div class="authentication">
-            <div class="sign-in-2">
-                <div class="container-fluid no-pdd-horizon overlay-dark bg"
-                     style="background-image: url('/images/default/bg.jpg')">
-                    <div class="row">
-                        <div class="col-md-10 col-sm-12 mx-auto">
-                            <div class="row">
-                                <div class="mx-auto full-height col-md-4">
-                                    <div class="vertical-align full-height">
-                                        <div class="table-cell padding-20">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="pdd-horizon-30 pdd-vertical-30">
-                                                        <div class="mrg-btm-30">
-                                                            <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
-                                                                로그인</h2>
+    </div>
+    <div class="authentication">
+        <div class="sign-in-2">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                 style="background-image: url('/images/default/bg.jpg')">
+                <div class="row">
+                    <div class="col-md-10 col-sm-12 mx-auto">
+                        <div class="row">
+                            <div class="mx-auto full-height col-md-4">
+                                <div class="vertical-align full-height">
+                                    <div class="table-cell padding-20">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="pdd-horizon-30 pdd-vertical-30">
+                                                    <div class="mrg-btm-30">
+                                                        <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
+                                                            로그인</h2>
+                                                    </div>
+                                                    <form action="/login" method="post">
+                                                        <div class="form-group">
+                                                            <input type="email" name="email" class="form-control"
+                                                                   placeholder="Email">
                                                         </div>
-                                                        <form action="/auth/login" method="post">
-                                                            <div class="form-group">
-                                                                <input class="form-control" name="email"
-                                                                       placeholder="Email"
-                                                                       type="email">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <input class="form-control" name="password"
-                                                                       placeholder="Password"
-                                                                       type="password">
-                                                            </div>
-                                                            <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
-                                                                <input id="agreement" name="agreement" type="checkbox">
-                                                                <label for="agreement">로그인 유지</label>
-                                                            </div>
-                                                            <div class="pull-right mrg-left-10">
-                                                                <a href="">Forgot Password?</a>
-                                                            </div>
-                                                            <div class="mrg-top-20 text-right">
-                                                                <button class="btn btn-tumblr" type="submit">로그인
-                                                                </button>
-                                                            </div>
-                                                            <div class="alert alert-danger" role="alert"
-                                                                 th:if="${errorMessage} != null"
-                                                                 th:text="${errorMessage}">
-                                                        </form>
-                                                        <div class="alert alert-danger" role="alert"
-                                                             th:if="${errorMessage} != ''"
-                                                             th:text="${errorMessage}"></div>
-                                                        <div class="text-dark">
-                                                            <span>아직 회원이 아니신가요?</span>
-                                                            <a class="text-info pointer mrg-left-5"
-                                                               href="/users/signup">회원가입</a>
+                                                        <div class="form-group">
+                                                            <input type="password" name="password" class="form-control"
+                                                                   placeholder="Password">
                                                         </div>
+                                                        <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
+                                                            <input id="agreement" name="agreement" type="checkbox">
+                                                            <label for="agreement">로그인 유지</label>
+                                                        </div>
+                                                        <div class="pull-right mrg-left-10">
+                                                            <a href="">Forgot Password?</a>
+                                                        </div>
+                                                        <div th:text="${errorMessage}" class="alert alert-danger"
+                                                             role="alert">
+                                                        </div>
+                                                        <div class="mrg-top-20 text-right">
+                                                            <button type="submit" class="btn btn-tumblr">로그인</button>
+                                                        </div>
+                                                    </form>
+                                                    <div class="text-dark">
+                                                        <span>아직 회원이 아니신가요?</span>
+                                                        <a href="/users/sign-up"
+                                                           class="text-info pointer mrg-left-5">회원가입</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -83,5 +86,15 @@
             </div>
         </div>
     </div>
-</th:block>
+</div>
+
+<th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script th:inline="javascript">
+    if ([[${errorMessage}]]) {
+        $('.alert').alert()
+    } else {
+        $('.alert').alert('close')
+    }
+</script>
+</body>
 </html>

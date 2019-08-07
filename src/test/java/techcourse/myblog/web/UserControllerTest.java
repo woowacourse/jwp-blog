@@ -1,188 +1,343 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.dto.UserDto;
 
-import static techcourse.myblog.web.AuthControllerTest.*;
-import static techcourse.myblog.web.UserController.USER_DEFAULT_URL;
+import java.net.URI;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.domain.exception.UserArgumentException.*;
+import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
+import static techcourse.myblog.service.exception.SignUpException.SIGN_UP_FAIL_MESSAGE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
-class UserControllerTest {
-    @Autowired
-    private WebTestClient webTestClient;
+public class UserControllerTest {
 
-    private UserDto testUserDto;
+	@LocalServerPort
+	int randomPortNumber;
 
-    static WebTestClient.ResponseSpec 회원_등록(WebTestClient webTestClient, UserDto userDto) {
-        return webTestClient.post().uri(USER_DEFAULT_URL)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(
-                        BodyInserters.fromFormData("name", userDto.getName())
-                                .with("email", userDto.getEmail())
-                                .with("password", userDto.getPassword())
-                ).exchange();
-    }
+	@Autowired
+	WebTestClient webTestClient;
 
-    @BeforeEach
-    void setUp() {
-        testUserDto = new UserDto();
-        testUserDto.setName("pkch");
-        testUserDto.setEmail("pkch@woowa.com");
-        testUserDto.setPassword("!234Qwer");
-    }
+	@Test
+	@DisplayName("회원가입 페이지를 보여준다.")
+	public void showRegisterPage() {
+		webTestClient.get()
+				.uri("/users/sign-up")
+				.exchange()
+				.expectStatus().isOk();
+	}
 
-    @Test
-    void 회원가입_페이지_접근_테스트() {
-        webTestClient.get().uri(USER_DEFAULT_URL + "/signup")
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
+	@Test
+	@DisplayName("유저 목록을 보여준다.")
+	public void showUserList() {
+		webTestClient.get()
+				.uri("/users")
+				.exchange()
+				.expectStatus().isOk();
+	}
 
-    @Test
-    void 회원_목록_페이지_접근_테스트() {
-        webTestClient.get().uri(USER_DEFAULT_URL)
-                .exchange()
-                .expectStatus().isOk();
-    }
+	@Test
+	@DisplayName("회원 가입 페이지에서 유저 정보를 넘겨받아 새로운 유저를 생성한다.")
+	public void createUser() {
+		String name = "hibri";
+		String email = "test1@woowa.com";
+		String password = VALID_PASSWORD;
+		String passwordConfirm = VALID_PASSWORD;
 
-    @Test
-    void 같은_이메일의_회원이_등록되는_경우_회원가입_페이지_리다이렉팅_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        회원_등록(webTestClient, testUserDto).expectStatus().isFound()
-                .expectHeader()
-                .valueMatches("Location", ".*/users/signup");
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isFound()
+				.expectBody()
+				.consumeWith(response -> {
+					URI location = response.getResponseHeaders().getLocation();
+					assertThat(location.toString())
+							.isEqualTo("http://localhost:" + randomPortNumber + "/login");
+				});
+	}
 
-    @Test
-    void 회원가입시_이름이_10자_넘어가는_경우_회원가입_페이지_리다이렉팅_테스트() {
-        testUserDto.setName("내이름은열글자가넘어요");
-        회원_등록(webTestClient, testUserDto)
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/users/signup");
-    }
+	@Test
+	@DisplayName("email이 중복되는 경우 error message를 담은 페이지를 되돌려준다.")
+	public void isDuplicatedEmail() {
+		String name = "Deock";
+		String email = "test2@woowa.com";
+		String password = VALID_PASSWORD;
+		String passwordConfirm = VALID_PASSWORD;
 
-    @Test
-    void 회원가입시_비밀번호가_8자_이하인_경우_회원가입_페이지_리다이렉팅_테스트() {
-        testUserDto.setPassword("hellopk");
-        회원_등록(webTestClient, testUserDto)
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/users/signup");
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isFound();
 
-    @Test
-    void 로그인_된_상태에서_회원가입_페이지_접근시_메인_페이지_리다이텍팅_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        String sessionId = getJSessionId(webTestClient, testEmail, testPassword);
-        webTestClient.get().uri(USER_DEFAULT_URL + "/signup")
-                .header("cookie", sessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/");
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, EMAIL_DUPLICATION_MESSAGE);
+				});
+	}
 
-    @Test
-    void 로그인_상태에서_마이페이지_접근_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        String jSessionId = getJSessionId(webTestClient, "pkch@woowa.com", "!234Qwer");
-        webTestClient.get().uri(USER_DEFAULT_URL + "/pkch@woowa.com")
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().isOk();
-    }
+	@Test
+	@DisplayName("이름이 2자 미만인 경우 error message를 담은 페이지를 되돌려준다.")
+	public void underValidNameLength() {
+		String name = "a";
+		String email = "test3@woowa.com";
+		String password = VALID_PASSWORD;
+		String passwordConfirm = VALID_PASSWORD;
 
-    @Test
-    void 비로그인_상태에서_임의의_email로_마이페이지_접근시_로그인페이지_리다이렉팅_테스트() {
-        webTestClient.get().uri(USER_DEFAULT_URL + "/pkch@woowa.com")
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/auth/login");
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_NAME_LENGTH_MESSAGE);
+				});
+	}
 
-    @Test
-    void 로그인_상태에서_로그인_된_이메일이_아닌_다른_이메일uri로_접근시_메인페이지_리다이렉팅_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        String jSessionId = getJSessionId(webTestClient, "pkch@woowa.com", "!234Qwer");
-        webTestClient.get().uri(USER_DEFAULT_URL + "/park@woowa.com")
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/");
-    }
+	@Test
+	@DisplayName("이름이 10자 초과인 경우 error message를 담은 페이지를 되돌려준다.")
+	public void exceedValidNameLength() {
+		String name = "abcdefghijk";
+		String email = "test4@woowa.com";
+		String password = VALID_PASSWORD;
+		String passwordConfirm = VALID_PASSWORD;
 
-    @Test
-    void 로그인_상태에서_개인정보_수정페이지_접근_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        String jSessionId = getJSessionId(webTestClient, "pkch@woowa.com", "!234Qwer");
-        webTestClient.get().uri(USER_DEFAULT_URL + "/pkch@woowa.com/edit")
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().isOk();
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_NAME_LENGTH_MESSAGE);
+				});
+	}
 
-    @Test
-    void 비로그인_상태에서_임의의_email로_개인정보_수정페이지_접근시_로그인페이지_리다이렉팅_테스트() {
-        webTestClient.get().uri(USER_DEFAULT_URL + "/pkch@woowa.com/edit")
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/auth/login");
-    }
+	@Test
+	@DisplayName("잘못된 이름인 경우 error message를 담은 페이지를 되돌려준다.")
+	public void checkInvalidName() {
+		String name = "afghij1";
+		String email = "test4@woowa.com";
+		String password = VALID_PASSWORD;
+		String passwordConfirm = VALID_PASSWORD;
 
-    @Test
-    void 로그인_상태에서_로그인_된_이메일이_아닌_다른_이메일uri로_수정페이지_접근시_메인페이지_리다이렉팅_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        String jSessionId = getJSessionId(webTestClient, "pkch@woowa.com", "!234Qwer");
-        webTestClient.get().uri(USER_DEFAULT_URL + "/park@woowa.com/edit")
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/");
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
+				});
+	}
 
-    @Test
-    void 수정_정상_흐름_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        String jSessionId = getJSessionId(webTestClient, "pkch@woowa.com", "!234Qwer");
-        webTestClient.put().uri(USER_DEFAULT_URL + "/pkch@woowa.com")
-                .header("cookie", jSessionId)
-                .body(BodyInserters.fromFormData("name", "park"))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/users/pkch@woowa.com");
-    }
+	@Test
+	@DisplayName("비밀번호 길이가 8자 미만인 경우 error message를 담은 페이지를 되돌려준다.")
+	public void checkInvalidPasswordLength() {
+		String name = "name";
+		String email = "test5@woowa.com";
+		String password = "passwor";
+		String passwordConfirm = "passwor";
 
-    @Test
-    void 비로그인_상태에서_수정_요청시_로그인_페이지_리다이렉팅_테스트() {
-        webTestClient.put().uri(USER_DEFAULT_URL + "/park@woowa.com")
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/auth/login");
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_PASSWORD_LENGTH_MESSAGE);
+				});
+	}
 
-    @Test
-    void 회원_탈퇴_정상_흐름_테스트() {
-        회원_등록(webTestClient, testUserDto);
-        String jSessionId = getJSessionId(webTestClient, "pkch@woowa.com", "!234Qwer");
-        webTestClient.delete().uri(USER_DEFAULT_URL + "/pkch@woowa.com")
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/");
-    }
+	@Test
+	@DisplayName("잘못된 비밀번호인 경우 error message를 담은 페이지를 되돌려준다.")
+	public void checkInvalidPassword() {
+		String name = "name";
+		String email = "test5@woowa.com";
+		String password = "wrong password";
+		String passwordConfirm = "wrong password";
 
-    @Test
-    void 비로그인_상테에서_회원_탈퇴시_로그인_페이지_리다이렉팅_테스트() {
-        webTestClient.delete().uri(USER_DEFAULT_URL + "/pkch@woowa.com")
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/auth/login");
-    }
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_PASSWORD_MESSAGE);
+				});
+	}
+
+	@Test
+	@DisplayName("비밀번호 확인과 비밀번호가 다른 경우 에러 메시지를 담은 페이지를 되돌려준다.")
+	public void confirmPassword() {
+		String name = "name";
+		String email = "test5@woowa.com";
+		String password = VALID_PASSWORD;
+		String passwordConfirm = VALID_PASSWORD + "diff";
+
+		webTestClient.post()
+				.uri("/users")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("name", name)
+						.with("email", email)
+						.with("password", password)
+						.with("passwordConfirm", passwordConfirm))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, PASSWORD_CONFIRM_FAIL_MESSAGE);
+				});
+	}
+
+	@Test
+	@DisplayName("로그인한 유저가 자신의 프로필을 변경하는 경우 변경에 성공한다.")
+	public void updateUserWhenLogIn() {
+		String jssesionId = LogInControllerTest.logIn(webTestClient, "update@test.test", VALID_PASSWORD);
+
+		webTestClient.put()
+				.uri("/users/2")
+				.cookie("JSESSIONID", jssesionId)
+				.body(BodyInserters.fromFormData("name", "updated")
+						.with("email", "update@test.test"))
+				.exchange()
+				.expectStatus().isFound();
+
+		webTestClient.get()
+				.uri("/mypage/2")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains("updated");
+				});
+	}
+
+	@Test
+	@DisplayName("로그인 되어있지 않을 때 프로필을 변경하는 경우 변경되지 않는다.")
+	public void updateUserWhenLogOut() {
+		webTestClient.put()
+				.uri("/users/1")
+				.body(BodyInserters.fromFormData("name", "updated")
+						.with("email", "update@test.test"))
+				.exchange()
+				.expectStatus().isFound();
+
+		webTestClient.get()
+				.uri("/mypage/1")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains("test");
+				});
+	}
+
+	@Test
+	@DisplayName("로그인한 유저가 자신의 프로필을 삭제하는 경우 삭제에 성공한다.")
+	public void deleteUserWhenLogIn() {
+		String jssesionId = LogInControllerTest.logIn(webTestClient, "delete@test.test", VALID_PASSWORD);
+
+		webTestClient.delete()
+				.uri("/users/3")
+				.cookie("JSESSIONID", jssesionId)
+				.exchange()
+				.expectStatus().isFound();
+
+		webTestClient.get()
+				.uri("/users")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).doesNotContain("delete@test.test");
+				});
+	}
+
+	@Test
+	@DisplayName("로그인 되어있지 않을 때 회원 탈퇴하려는 경우 실패한다.")
+	public void deleteUserWhenLogOut() {
+		webTestClient.delete()
+				.uri("/users/1")
+				.exchange()
+				.expectStatus().isFound();
+
+		webTestClient.get()
+				.uri("/users")
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body).contains("test@test.test");
+				});
+	}
 }

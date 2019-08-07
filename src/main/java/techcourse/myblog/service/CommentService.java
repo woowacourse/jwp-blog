@@ -1,64 +1,73 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.translator.ModelTranslator;
-import techcourse.myblog.translator.UserTranslator;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class CommentService {
+    private CommentRepository commentRepository;
+    private UserService userService;
+    private ArticleService articleService;
 
-    private final ArticleRepository articleRepository;
-    private final CommentRepository commentRepository;
-    private final ModelTranslator<User, UserDto> userTranslator;
-
-    public CommentService(final ArticleRepository articleRepository, final CommentRepository commentRepository) {
-        this.articleRepository = articleRepository;
+    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
         this.commentRepository = commentRepository;
-        this.userTranslator = new UserTranslator();
+        this.userService = userService;
+        this.articleService = articleService;
     }
 
+    public Comment findById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(NotFoundCommentException::new);
+    }
 
-    public Comment create(final Long articleId, final UserDto userDto, final Comment comment) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("해당 게시물이 없습니다."));
+    public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
+        Article article = articleService.findById(articleId);
+        return commentRepository.findAllByArticle(article)
+                .stream()
+                .map(this::toCommentResponseDto)
+                .collect(Collectors.toList());
+    }
 
-        comment.initialize(userTranslator.toEntity(new User(), userDto), article);
+    public Comment save(UserSessionDto userSessionDto, CommentRequestDto commentRequestDto) {
+        User user = userService.findByUserSession(userSessionDto);
+        Article article = articleService.findById(commentRequestDto.getArticleId());
+        Comment comment = commentRequestDto.toEntity(user, article);
         return commentRepository.save(comment);
     }
 
-    @Transactional(readOnly = true)
-    public List<Comment> findAllByArticleId(Long articleId) {
-        return commentRepository.findAllByArticleId(articleId);
-    }
-
-    public void update(final String content, final Long commentId, final UserDto userDto) {
-        Comment comment = findById(commentId, userTranslator.toEntity(new User(), userDto));
-        comment.update(content);
-    }
-
-    public void delete(final Long commentId, final UserDto userDto) {
-        Comment comment = findById(commentId, userTranslator.toEntity(new User(), userDto));
-        commentRepository.delete(comment);
-    }
-
-    @Transactional(readOnly = true)
-    public Comment findById(final Long commentId, final User user) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("해당 댓글을 찾을 수 없습니다"));
-        if (!comment.getUser().equals(user)) {
-            throw new NotMatchAuthenticationException("권한이 없습니다.");
+    public Comment update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
+        Comment comment = findById(commentId);
+        if (matchUserId(userSessionDto, comment)) {
+            comment.updateComment(commentRequestDto.getComment());
         }
         return comment;
+    }
+
+    public Comment delete(UserSessionDto userSessionDto, Long commentId) {
+        Comment comment = findById(commentId);
+        if (matchUserId(userSessionDto, comment)) {
+            commentRepository.delete(comment);
+        }
+        return comment;
+    }
+
+    private boolean matchUserId(UserSessionDto userSessionDto, Comment comment) {
+        return comment.matchAuthorId(userSessionDto.getId());
+    }
+
+    public CommentResponseDto toCommentResponseDto(Comment comment) {
+        return new CommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment());
     }
 }

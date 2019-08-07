@@ -2,100 +2,81 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.ArticleInputException;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.UserAuthorizationException;
+import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class ArticleController {
-    public static final String ARTICLE_DEFAULT_URL = "/articles";
+    private ArticleService articleService;
+    private UserService userService;
+    private CommentService commentService;
+    private LoginChecker loginChecker;
 
-    private final ArticleService articleService;
-    private final CommentService commentService;
-
-    public ArticleController(final ArticleService articleService, final CommentService commentService) {
+    public ArticleController(ArticleService articleService, UserService userService, CommentService commentService
+            , LoginChecker loginChecker) {
         this.articleService = articleService;
+        this.userService = userService;
         this.commentService = commentService;
+        this.loginChecker = loginChecker;
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
+    @GetMapping("/articles")
+    public String showArticles(Model model) {
         model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
-    @GetMapping("/writing")
-    public String renderCreatePage() {
+    @GetMapping("/articles/new")
+    public String showCreatePage(UserSessionDto userSession) {
         return "article-edit";
     }
 
-    @PostMapping(ARTICLE_DEFAULT_URL)
-    public RedirectView createArticle(@Valid ArticleDto articleDto, Errors errors, HttpSession session) {
-        if (errors.hasErrors()) {
-            throw new ArticleInputException("입력값이 잘못되었습니다.");
-        }
+    @GetMapping("/articles/{id}")
+    public String showArticle(@PathVariable("id") Long id, Model model) {
+        ArticleDto articleDto = articleService.findArticleDtoById(id);
+        model.addAttribute("article", articleDto);
 
-        UserDto user = (UserDto) session.getAttribute("user");
-        Article article = articleService.create(articleDto, user);
+        UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoByArticle(articleDto);
+        model.addAttribute("articleUser", userPublicInfoDto);
 
-        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + article.getId());
-    }
-
-    @GetMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
-    public String readArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleService.findById(articleId);
-        model.addAttribute("article", article);
-        model.addAttribute("comments", commentService.findAllByArticleId(articleId));
-
+        List<CommentResponseDto> commentResponses = commentService.findCommentsByArticleId(id);
+        model.addAttribute("comments", commentResponses);
         return "article";
     }
 
-    @GetMapping(ARTICLE_DEFAULT_URL + "/{articleId}/edit")
-    public String showArticleEditPage(@PathVariable Long articleId, Model model, HttpSession session) {
-        Article article = articleService.findById(articleId, (UserDto) session.getAttribute("user"));
-        model.addAttribute("article", article);
-
+    @GetMapping("/articles/{id}/edit")
+    public String showEditPage(@PathVariable("id") Long articleId, Model model, UserSessionDto userSession) {
+        ArticleDto articleDto = articleService.authorize(userSession, articleId);
+        model.addAttribute("article", articleDto);
         return "article-edit";
     }
 
-    @PutMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
-    public RedirectView updateArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession session) {
-        Article updateArticle = articleService.update(articleDto, articleId, (UserDto) session.getAttribute("user"));
-
-        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + updateArticle.getId());
+    @PostMapping("/articles")
+    public String createArticle(ArticleDto articleDto, UserSessionDto userSession) {
+        ArticleDto savedArticleDto = articleService.save(userSession, articleDto);
+        return "redirect:/articles/" + savedArticleDto.getId();
     }
 
-    @DeleteMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
-    public RedirectView deleteArticle(@PathVariable Long articleId, HttpSession session) {
-        articleService.delete(articleId, (UserDto) session.getAttribute("user"));
-        return new RedirectView("/");
+    @PutMapping("/articles/{articleId}")
+    public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto, UserSessionDto userSession) {
+        articleService.update(articleId, userSession, articleDto);
+        return "redirect:/articles/" + articleId;
     }
 
-    @PostMapping(ARTICLE_DEFAULT_URL + "/{articleId}/comments")
-    public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, Comment comment) {
-        commentService.create(articleId, (UserDto) session.getAttribute("user"), comment);
-        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + articleId);
-    }
-
-    @DeleteMapping(ARTICLE_DEFAULT_URL + "/{articleId}/comments/{commentId}")
-    public RedirectView deleteComment(@PathVariable final Long articleId, HttpSession session, @PathVariable final Long commentId) {
-        commentService.delete(commentId, (UserDto) session.getAttribute("user"));
-        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + articleId);
-    }
-
-    @PutMapping(ARTICLE_DEFAULT_URL + "/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(String content, @PathVariable final Long articleId, @PathVariable final Long commentId, HttpSession session) {
-        commentService.update(content, commentId, (UserDto) session.getAttribute("user"));
-        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + articleId);
+    @DeleteMapping("/articles/{id}")
+    public String deleteArticle(@PathVariable("id") long articleId, UserSessionDto userSession) {
+        articleService.delete(articleId, userSession);
+        return "redirect:/";
     }
 }

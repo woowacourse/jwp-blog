@@ -2,92 +2,62 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.SignUpInputException;
-import techcourse.myblog.exception.UpdateUserInputException;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.web.exception.AlreadyLoggedInException;
+import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import static techcourse.myblog.web.UserController.USER_DEFAULT_URL;
 
 @Controller
-@RequestMapping(USER_DEFAULT_URL)
 public class UserController {
-    public static final String USER_DEFAULT_URL = "/users";
+    private UserService userService;
+    private LoginChecker loginChecker;
 
-    private final UserService userService;
-
-    public UserController(final UserService userService) {
+    public UserController(UserService userService, LoginChecker loginChecker) {
         this.userService = userService;
+        this.loginChecker = loginChecker;
     }
 
-    @GetMapping
-    public String showAllUsers(Model model) {
-        model.addAttribute("users", userService.fetchAllUsers());
+    @GetMapping("/users/sign-up")
+    public String showRegisterPage(HttpSession session) {
+        if (loginChecker.isLoggedIn(session)) {
+            throw new AlreadyLoggedInException();
+        }
+        return "sign-up";
+    }
+
+    @GetMapping("/users")
+    public String showUserList(Model model) {
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
-    @GetMapping("/signup")
-    public String showSignupForm(@ModelAttribute String errorMessage, Model model) {
-        model.addAttribute("errorMessage", errorMessage);
-        return "signup";
+    @PostMapping("/users")
+    public String createUser(UserRequestDto userRequestDto) {
+        userService.save(userRequestDto);
+        return "redirect:/login";
     }
 
-    @PostMapping
-    public RedirectView registerUser(@Valid UserDto userDto, Errors errors) {
-        if (errors.hasErrors()) {
-            throw new SignUpInputException("회원 가입에 필요한 값이 잘못됐습니다. 확인해주세요");
+    @PutMapping("/users/{id}")
+    public String editUserName(@PathVariable Long id, UserRequestDto userRequestDto, HttpSession session, UserSessionDto userSessionDto) {
+        if (loginChecker.isLoggedInSameId(session, id)) {
+            UserPublicInfoDto updateResult = userService.update(id, userRequestDto);
+            userSessionDto.setName(updateResult.getName());
+            session.setAttribute(LoginChecker.LOGGED_IN_USER, userSessionDto);
         }
-
-        userService.register(userDto);
-        return new RedirectView("/auth/login");
+        return "redirect:/mypage/" + id;
     }
 
-    @GetMapping("/{email}")
-    public String showMyPage(@PathVariable String email, HttpSession session, Model model) {
-        UserDto user = (UserDto) session.getAttribute("user");
-
-        UserDto userInfo = userService.getUserInfo(email, user.getEmail());
-        model.addAttribute("user", userInfo);
-
-        return "mypage";
-    }
-
-    @GetMapping("/{email}/edit")
-    public String showMyInfoEdit(@PathVariable String email, HttpSession session, Model model) {
-        UserDto user = (UserDto) session.getAttribute("user");
-
-        UserDto userInfo = userService.getUserInfo(email, user.getEmail());
-        model.addAttribute("user", userInfo);
-
-        return "mypage-edit";
-    }
-
-    @PutMapping("/{email}")
-    public RedirectView myPageEdit(@PathVariable String email, @Valid UserDto userDto, Errors errors, HttpSession session) {
-        if (errors.hasErrors()) {
-            throw new UpdateUserInputException("잘못된 입력값입니다.");
+    @DeleteMapping("/users/{id}")
+    public String deleteUser(@PathVariable Long id, HttpSession session) {
+        if (loginChecker.isLoggedInSameId(session, id)) {
+            userService.delete(id);
+            session.removeAttribute(LoginChecker.LOGGED_IN_USER);
         }
-
-        UserDto user = (UserDto) session.getAttribute("user");
-        UserDto updatedUser = userService.update(userDto, email, user.getEmail());
-
-        session.setAttribute("username", updatedUser.getName());
-        return new RedirectView("/users/" + email);
-    }
-
-    @DeleteMapping("/{email}")
-    public RedirectView exitUser(@PathVariable String email, HttpSession session) {
-        UserDto user = (UserDto) session.getAttribute("user");
-
-        userService.exit(email, user.getEmail());
-        session.invalidate();
-
-        return new RedirectView("/");
+        return "redirect:/";
     }
 }

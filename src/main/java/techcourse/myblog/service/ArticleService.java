@@ -1,67 +1,78 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.translator.ArticleTranslator;
-import techcourse.myblog.translator.ModelTranslator;
-import techcourse.myblog.translator.UserTranslator;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.NotFoundArticleException;
+import techcourse.myblog.service.exception.UserAuthorizationException;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ArticleService {
+	private ArticleRepository articleRepository;
+	private UserService userService;
 
-    private final ArticleRepository articleRepository;
-    private final ModelTranslator<Article, ArticleDto> articleTranslator;
-    private final ModelTranslator<User, UserDto> userTranslator;
+	public ArticleService(ArticleRepository articleRepository, UserService userService) {
+		this.articleRepository = articleRepository;
+		this.userService = userService;
+	}
 
-    public ArticleService(final ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-        this.articleTranslator = new ArticleTranslator();
-        this.userTranslator = new UserTranslator();
-    }
+	Article findById(Long id) {
+		return articleRepository.findById(id)
+				.orElseThrow(NotFoundArticleException::new);
+	}
 
-    public Article create(final ArticleDto articleDto, final UserDto userDto) {
-        articleDto.setAuthor(userTranslator.toEntity(new User(), userDto));
-        Article article = articleTranslator.toEntity(new Article(), articleDto);
-        return articleRepository.save(article);
-    }
+	public ArticleDto findArticleDtoById(Long id) {
+		return toArticleDto(findById(id));
+	}
 
-    @Transactional(readOnly = true)
-    public List<Article> findAll() {
-        return articleRepository.findAll();
-    }
+	public List<ArticleDto> findAll() {
+		return articleRepository.findAll().stream()
+				.map(this::toArticleDto)
+				.collect(Collectors.toList());
+	}
 
-    @Transactional(readOnly = true)
-    public Article findById(final Long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 게시글 입니다."));
-    }
+	public ArticleDto save(UserSessionDto userSession, ArticleDto articleDto) {
+		User author = userService.findById(userSession.getId());
+		return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
+	}
 
-    public Article findById(final Long articleId, final UserDto userDto) {
-        Article article = findById(articleId);
-        User user = userTranslator.toEntity(new User(), userDto);
-        if (user.equals(article.getAuthor())) {
-            return article;
-        }
-        throw new NotMatchAuthenticationException("접근할 수 없는 게시글 입니다.");
-    }
+	public ArticleDto update(long articleId, UserSessionDto userSession, ArticleDto articleDto) {
+		Article article = findById(articleId);
+		if (article.matchUserId(userSession.getId())) {
+			article.updateArticle(articleDto.toEntity());
+		}
+		return toArticleDto(article);
+	}
 
-    public Article update(final ArticleDto articleDto, final Long articleId, final UserDto userDto) {
-        Article article = findById(articleId, userDto);
-        Article updateArticle = articleTranslator.toEntity(article, articleDto);
-        return articleRepository.save(updateArticle);
-    }
+	public ArticleDto delete(Long articleId, UserSessionDto userSession) {
+		Article article = findById(articleId);
+		if (article.matchUserId(userSession.getId())) {
+			articleRepository.delete(article);
+		}
+		return toArticleDto(article);
+	}
 
-    public void delete(final Long articleId, final UserDto userDto) {
-        Article article = findById(articleId, userDto);
-        articleRepository.delete(article);
-    }
+	public ArticleDto authorize(UserSessionDto userSession, Long articleId) {
+		final Article article = findById(articleId);
+		if (article.matchUserId(userSession.getId())) {
+			return toArticleDto(article);
+		}
+		throw new UserAuthorizationException();
+	}
+
+	private ArticleDto toArticleDto(Article article) {
+		return new ArticleDto(article.getId(),
+				article.getAuthorId(),
+				article.getTitle(),
+				article.getCoverUrl(),
+				article.getContents());
+	}
 }
