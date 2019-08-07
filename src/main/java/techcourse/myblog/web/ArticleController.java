@@ -57,13 +57,9 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable("id") Long articleId, Model model, UserSessionDto userSession) {
-        try {
-            ArticleDto articleDto = articleService.authorize(userSession, articleId);
-            model.addAttribute("article", articleDto);
-            return "article-edit";
-        } catch (UserAuthorizationException e) {
-            return "redirect:/articles/" + articleId;
-        }
+        ArticleDto articleDto = articleService.authorize(userSession, articleId);
+        model.addAttribute("article", articleDto);
+        return "article-edit";
     }
 
     @PostMapping("/articles")

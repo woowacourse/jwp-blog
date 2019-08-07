@@ -11,6 +11,7 @@ import techcourse.myblog.service.exception.*;
 import techcourse.myblog.web.exception.AlreadyLoggedInException;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @ControllerAdvice
@@ -60,9 +61,16 @@ public class ControllerExceptionAdvice {
     }
 
     @ExceptionHandler(AlreadyLoggedInException.class)
-    public String hadleAlreadyLoggedInException(Exception e) {
+    public String handleAlreadyLoggedInException(Exception e) {
         log.error(e.getMessage());
 
         return "redirect:/";
+    }
+
+    @ExceptionHandler(UserAuthorizationException.class)
+    public String handleAuthException(Exception e, HttpServletRequest request) {
+        log.error(e.getMessage());
+
+        return "redirect:" + request.getRequestURI();
     }
 }
