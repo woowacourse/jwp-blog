@@ -70,7 +70,7 @@ public class CommentControllerTest {
     private Long creatArticleAndReturnCommentId() {
         CommentRequest commentRequest = new CommentRequest(articleId, commentContents);
         // 댓글작성
-        byte[] responseBody = webTestClient.post().uri("/comments")
+        byte[] responseBody = webTestClient.post().uri("/api/comments")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .header("Cookie", cookie)
@@ -92,7 +92,7 @@ public class CommentControllerTest {
     void 댓글작성자_댓글수정() {
         CommentRequest commentRequest = new CommentRequest(articleId, "미스타꼬");
 
-        webTestClient.put().uri("/comments/" + commentId)
+        webTestClient.put().uri("/api/comments/" + commentId)
                 .header("Cookie", cookie)
                 // TODO: 2019-08-04 아래꺼 안 써도 잘 됨
 //                .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -108,7 +108,7 @@ public class CommentControllerTest {
     void 댓글수정_작성자가_아닐_때_Index로_이동() {
         CommentRequest commentRequest = new CommentRequest(articleId, "updated comment");
 
-        webTestClient.put().uri("/comments/" + commentId)
+        webTestClient.put().uri("/api/comments/" + commentId)
                 .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus().isFound()
@@ -117,7 +117,7 @@ public class CommentControllerTest {
 
     @Test
     void 댓글작성자_댓글삭제() {
-        webTestClient.delete().uri("/comments/" + commentId)
+        webTestClient.delete().uri("/api/comments/" + commentId)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
@@ -125,7 +125,7 @@ public class CommentControllerTest {
 
     @Test
     void 작성자가_아닐_때_댓글삭제() {
-        webTestClient.delete().uri("/comments/" + commentId)
+        webTestClient.delete().uri("/api/comments/" + commentId)
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/;.*");
