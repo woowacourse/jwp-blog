@@ -18,6 +18,7 @@ import javax.validation.Valid;
 @RequestMapping("/articles")
 public class ArticleController {
     private static final String ARTICLE = "article";
+    private static final String REDIRECT_ARTICLES = "redirect:/articles/";
 
     private final ArticleService articleService;
 
@@ -31,7 +32,7 @@ public class ArticleController {
         log.info("user : {}", loginUser);
         log.info("new ArticleData : {}", newArticleDto);
         Article article = articleService.save(newArticleDto.toEntity(loginUser));
-        return "redirect:/articles/" + article.getId();
+        return REDIRECT_ARTICLES + article.getId();
     }
 
     @GetMapping("/{articleId}")
@@ -58,7 +59,7 @@ public class ArticleController {
         log.info("updatedArticleDto : {}", updateArticleDto);
         Article updateArticle = articleService.update(articleId, updateArticleDto.toEntity(loginUser));
         model.addAttribute(ARTICLE, updateArticle);
-        return "redirect:/articles/" + updateArticle.getId();
+        return REDIRECT_ARTICLES + updateArticle.getId();
     }
 
     @DeleteMapping("/{articleId}")
