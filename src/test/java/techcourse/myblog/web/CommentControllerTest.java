@@ -76,7 +76,7 @@ public class CommentControllerTest {
                 .header("Cookie", cookie)
                 .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody()
                 .jsonPath("$.contents").isEqualTo(commentContents)
                 .jsonPath("$.article.id").isEqualTo(articleId)
