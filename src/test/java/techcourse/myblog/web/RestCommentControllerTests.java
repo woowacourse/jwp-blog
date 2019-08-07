@@ -20,31 +20,31 @@ public class RestCommentControllerTests extends AbstractControllerTests {
 
     @Test
     void 댓글들_GET_요청_테스트() throws IOException {
-        String json = new String(Objects.requireNonNull(getRequest("/articles/1/comments").getResponseBody()));
+        String json = new String(Objects.requireNonNull(getRequest("/api/articles/1/comments").getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
         assertThat(responses.length).isGreaterThanOrEqualTo(3);
     }
 
     @Test
     void 댓글_추가_POST_요청_테스트() throws IOException {
-        String json = new String(Objects.requireNonNull(postJsonRequest("/articles/1/comments/rest", CommentRequestDto.class, NEW_COMMENT).getResponseBody()));
+        String json = new String(Objects.requireNonNull(postJsonRequest("/api/articles/1/comments", CommentRequestDto.class, NEW_COMMENT).getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
         assertThat(responses[responses.length - 1].getComment()).isEqualTo(NEW_COMMENT);
     }
 
     @Test
     void 댓글_수정_PUT_요청_테스트() throws IOException {
-        String json = new String(Objects.requireNonNull(putJsonRequest("/comments/1/rest", CommentRequestDto.class, UPDATED_COMMENT).getResponseBody()));
+        String json = new String(Objects.requireNonNull(putJsonRequest("/api/comments/1", CommentRequestDto.class, UPDATED_COMMENT).getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
         assertThat(responses[0].getComment()).isEqualTo(UPDATED_COMMENT);
     }
 
     @Test
     void 댓글_삭제_DELETE_요청_테스트() throws IOException {
-        String json = new String(Objects.requireNonNull(getRequest("/articles/1/comments").getResponseBody()));
+        String json = new String(Objects.requireNonNull(getRequest("/api/articles/1/comments").getResponseBody()));
         CommentResponseDto[] getResponses = objectMapper.readValue(json, CommentResponseDto[].class);
 
-        json = new String(Objects.requireNonNull(deleteRequest("/comments/3/rest").getResponseBody()));
+        json = new String(Objects.requireNonNull(deleteRequest("/api/comments/3").getResponseBody()));
         CommentResponseDto[] deleteResponses = objectMapper.readValue(json, CommentResponseDto[].class);
         assertThat(getResponses.length).isGreaterThan(deleteResponses.length);
     }
@@ -52,12 +52,12 @@ public class RestCommentControllerTests extends AbstractControllerTests {
     @Test
     void 자신이_작성하지_않은_댓글_수정_실패_테스트() {
         loginRequest(ANOTHER_USER_EMAIL, ANOTHER_USER_PASSWORD);
-        assertThat(putJsonRequest("/comments/1/rest", CommentRequestDto.class, UPDATED_COMMENT).getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(putJsonRequest("/api/comments/1", CommentRequestDto.class, UPDATED_COMMENT).getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
     void 자신이_작성하지_않은_댓글_삭제_실패_테스트() {
         loginRequest(ANOTHER_USER_EMAIL, ANOTHER_USER_PASSWORD);
-        assertThat(deleteRequest("/comments/1/rest").getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(deleteRequest("/api/comments/1").getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }

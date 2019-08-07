@@ -17,6 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping("/api")
 public class RestCommentController {
     private final ArticleService articleService;
     private final CommentService commentService;
@@ -31,7 +32,7 @@ public class RestCommentController {
         return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 
-    @PostMapping("/articles/{articleId}/comments/rest")
+    @PostMapping("/articles/{articleId}/comments")
     public ResponseEntity<List<CommentResponseDto>> addNewComment(@PathVariable long articleId,
                                                                   @RequestBody CommentRequestDto commentRequestDto,
                                                                   @LoggedInUser User user) {
@@ -40,7 +41,7 @@ public class RestCommentController {
         return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 
-    @PutMapping("/comments/{commentId}/rest")
+    @PutMapping("/comments/{commentId}")
     public ResponseEntity<List<CommentResponseDto>> updateComment(@PathVariable long commentId,
                                                                   @RequestBody CommentRequestDto commentRequestDto,
                                                                   @LoggedInUser User user) {
@@ -52,7 +53,7 @@ public class RestCommentController {
         return new ResponseEntity<>(commentService.findByArticleId(comment.getArticle().getId()), HttpStatus.OK);
     }
 
-    @DeleteMapping("/comments/{commentId}/rest")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<List<CommentResponseDto>> deleteComment(@PathVariable long commentId,
                                                                   @LoggedInUser User user) {
         Comment comment = commentService.findById(commentId);
