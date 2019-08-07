@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,7 +88,7 @@ public class User {
     }
 
     public String getImageEncodeBase64() {
-        return Base64.getEncoder().encodeToString(image);
+        return Optional.ofNullable(image).isPresent() ? Base64.getEncoder().encodeToString(image) : "";
     }
 
     @Override

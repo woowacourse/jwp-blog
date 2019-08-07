@@ -187,11 +187,11 @@
         }).then(response => response.json())
             .then(data => {
                 let template = document.getElementById('template');
-                debugger;
+
                 let resultHtml = template.innerHTML.replace(/{id}/g, data.id)
                     .replace(/{name}/g, data.commenter.name)
                     .replace(/{contents}/g, data.contents)
-                    .replace(/{image}/g, "data:image/png;base64," + data.commenter.image)
+                    .replace(/{image}/g, getByteToImage(data.commenter.image))
                     .replace(/{elapsedTime}/g, convertTime(data.createdDate));
 
                 document.getElementById('comments').innerHTML += resultHtml;
