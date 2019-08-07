@@ -69,16 +69,13 @@ public class CommentService {
     }
 
     public CommentJsonDto saveJson(CommentJsonDto commentJsonDto,String loginUserEmail) {
-        String commentUserEmail = commentJsonDto.getEmail();
-        User loginUser = userService.findUserByEmail(loginUserEmail);
         User commentUser = userService.findUserByEmail(commentJsonDto.getEmail());
-        Boolean isValidUser = loginUser.isMatchEmail(commentUserEmail);
+        Boolean isValidUser = userService.checkValidity(commentJsonDto.getEmail(), loginUserEmail);
 
         Article article = articleService.findById(commentJsonDto.getArticleId());
-        Comment comment = commentConverter.toEntity(commentJsonDto.getContents(), commentUser, article);
-        Comment savedComment = commentRepository.save(comment);
-        CommentJsonDto responseCommentJsonDto = commentConverter.toCommentJsonDto(savedComment,isValidUser);
-        return responseCommentJsonDto;
+        Comment savedComment = commentRepository.save(commentConverter.toEntity(commentJsonDto.getContents(), commentUser, article));
+
+        return commentConverter.toCommentJsonDto(savedComment, isValidUser);
     }
 
     @Transactional
@@ -87,7 +84,7 @@ public class CommentService {
                 .orElseThrow(IllegalArgumentException::new);
         if(comment.isNotValidCommenter(commentJsonDto.getEmail())){
             throw new IllegalArgumentException("댓글 작성자가 아닙니다.");
-        };
+        }
         comment.changeContent(new CommentContents(commentJsonDto.getContents()));
         return commentConverter.toUpdateCommentJsonDto(comment);
     }
