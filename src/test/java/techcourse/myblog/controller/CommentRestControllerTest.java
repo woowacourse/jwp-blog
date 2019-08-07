@@ -77,9 +77,9 @@ public class CommentRestControllerTest extends WebClientGenerator {
                 contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).
                 cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue()).
                 body(commentRequest).
-                when().
+        when().
                 put("http://localhost:" + port + "/comments/" + 1).
-                then().
+        then().
                 statusCode(500).
                 body("message", equalTo("자신이 작성한 글만 수정/삭제가 가능합니다."));
     }
@@ -91,9 +91,9 @@ public class CommentRestControllerTest extends WebClientGenerator {
 
         given().
                 cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue()).
-                when().
+        when().
                 delete("http://localhost:" + port + "/comments/" + 2).
-                then().
+        then().
                 statusCode(200);
     }
 
@@ -104,9 +104,9 @@ public class CommentRestControllerTest extends WebClientGenerator {
 
         given().
                 cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue()).
-                when().
+        when().
                 delete("http://localhost:" + port + "/comments/" + 1).
-                then().
+        then().
                 statusCode(500).
                 body("message", equalTo("자신이 작성한 글만 수정/삭제가 가능합니다."));
     }
