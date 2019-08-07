@@ -26,7 +26,7 @@ class ArticleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.findByEmail_Email("test@test.com").get();
+        user = userRepository.findByEmailEmail("test@test.com").get();
     }
 
     @Test

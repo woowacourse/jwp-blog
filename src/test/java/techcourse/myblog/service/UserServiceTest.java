@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
@@ -47,7 +46,7 @@ class UserServiceTest {
     @Test
     void 회원정보_수정_테스트() {
         userService.updateUser(user, new UserDto("zxc", "A!1bcdefg", "zxc@gmail.com"));
-        assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("zxc@gmail.com")).orElseThrow(IllegalAccessError::new));
+        assertDoesNotThrow(() -> userRepository.findByEmailEmail("zxc@gmail.com").orElseThrow(IllegalAccessError::new));
     }
 
     @Test
@@ -56,7 +55,7 @@ class UserServiceTest {
         userService.deleteUser("delete@gmail.com");
 
         assertThatThrownBy(() ->
-                userRepository.findByEmail(UserEmail.of("delete@gmail.com")).orElseThrow(UserException::new))
+                userRepository.findByEmailEmail("delete@gmail.com").orElseThrow(UserException::new))
                 .isInstanceOf(UserException.class);
     }
 }

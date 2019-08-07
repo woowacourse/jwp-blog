@@ -50,7 +50,7 @@ public class ArticleService {
     }
 
     public Article update(long articleId, ArticleDto articleDto, User author) {
-        User user = userRepository.findByEmail_Email(author.getEmail()).orElseThrow(UserException::new);
+        User user = userRepository.findByEmailEmail(author.getEmail()).orElseThrow(UserException::new);
         Article originArticle = findArticle(articleId);
         originArticle.update(articleDto.toEntity(user));
         return originArticle;

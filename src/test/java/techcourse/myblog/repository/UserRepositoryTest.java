@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -26,17 +25,17 @@ class UserRepositoryTest {
 
     @Test
     void findByEmailTest() {
-        assertThatThrownBy(() -> userRepository.findByEmail(UserEmail.of("abc@gmail.com")).orElseThrow(UserException::new))
+        assertThatThrownBy(() -> userRepository.findByEmailEmail("abc@gmail.com").orElseThrow(UserException::new))
                 .isInstanceOf(UserException.class);
     }
 
     @Test
     void findByEmailTest2() {
-        assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("test@test.com")));
+        assertDoesNotThrow(() -> userRepository.findByEmailEmail("test@test.com"));
     }
 
     @Test
     void findByEmail_EmailTest() {
-        assertDoesNotThrow(() -> userRepository.findByEmail_Email("test@test.com"));
+        assertDoesNotThrow(() -> userRepository.findByEmailEmail("test@test.com"));
     }
 }

@@ -36,7 +36,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserByEmail(String userEmail) {
-        return userRepository.findByEmail_Email(userEmail).orElseThrow(UserException::new);
+        return userRepository.findByEmailEmail(userEmail).orElseThrow(UserException::new);
     }
 
     public void deleteUser(String userEmail) {

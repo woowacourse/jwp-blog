@@ -29,7 +29,7 @@ class CommentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.findByEmail_Email("test@test.com").get();
+        user = userRepository.findByEmailEmail("test@test.com").get();
         article = articleRepository.findById(1L).get();
         comment = commentRepository.findById(1L).get();
     }

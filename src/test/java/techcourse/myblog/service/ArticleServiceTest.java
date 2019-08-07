@@ -8,7 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -36,7 +35,7 @@ class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        author = userRepository.findByEmail(UserEmail.of("test@test.com")).get();
+        author = userRepository.findByEmailEmail("test@test.com").get();
         articleDto = new ArticleDto("t1", "c1", "c1");
     }
 

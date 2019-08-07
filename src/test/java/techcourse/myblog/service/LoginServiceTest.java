@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.repository.UserRepository;
@@ -29,7 +28,7 @@ class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.findByEmail(UserEmail.of("test@test.com")).get();
+        user = userRepository.findByEmailEmail("test@test.com").get();
     }
 
     @Test

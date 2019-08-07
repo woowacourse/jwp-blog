@@ -10,7 +10,6 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentException;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
@@ -41,7 +40,7 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.findByEmail(UserEmail.of("test@test.com")).get();
+        user = userRepository.findByEmailEmail("test@test.com").get();
         articleRepository.deleteAll();
         article = articleRepository.save(new Article("a", "b", "c", user));
     }
