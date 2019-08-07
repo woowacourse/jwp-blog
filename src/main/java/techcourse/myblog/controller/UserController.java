@@ -49,10 +49,10 @@ public class UserController {
     }
 
     @DeleteMapping
-    public String delete(HttpSession session) {
+    public RedirectView delete(HttpSession session) {
         User user = (User) session.getAttribute("user");
         userService.delete(user);
         session.invalidate();
-        return "redirect:/";
+        return new RedirectView("/");
     }
 }

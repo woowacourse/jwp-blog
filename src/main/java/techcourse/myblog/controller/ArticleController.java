@@ -53,11 +53,11 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String create(ArticleDTO articleDTO, @UserFromSession User user) {
+    public RedirectView create(ArticleDTO articleDTO, @UserFromSession User user) {
         Article article = articleDTO.toDomain(user);
 
         articleRepository.save(article);
-        return "redirect:/articles/" + article.getId();
+        return new RedirectView("/articles/" + article.getId());
     }
 
     @GetMapping("/{articleId}/edit")
@@ -77,8 +77,8 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String update(@PathVariable Long articleId, @UserFromSession User user,
-                         ArticleDTO articleDTO) {
+    public RedirectView update(@PathVariable Long articleId, @UserFromSession User user,
+                               ArticleDTO articleDTO) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -86,20 +86,20 @@ public class ArticleController {
 
         article.update(articleDTO.toDomain(article.getAuthor()));
 
-        return "redirect:/articles/" + articleId;
+        return new RedirectView("/articles" + articleId);
     }
 
 
 
     @DeleteMapping("/{articleId}")
-    public String delete(@PathVariable Long articleId, @UserFromSession User user) {
+    public RedirectView delete(@PathVariable Long articleId, @UserFromSession User user) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         article.validate(user);
 
         articleRepository.deleteById(articleId);
-        return "redirect:/";
+        return new RedirectView("/");
     }
 
     @ExceptionHandler(RuntimeException.class)
