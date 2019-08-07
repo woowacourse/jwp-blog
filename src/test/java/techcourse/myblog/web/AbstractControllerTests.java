@@ -34,10 +34,6 @@ public class AbstractControllerTests {
     @BeforeEach
     void setUp() {
         loginRequest(TEST_EMAIL, TEST_PW);
-//        EntityExchangeResult<byte[]> result = postFormRequest("/login", UserVO.class, "", TEST_PW, TEST_EMAIL);
-//        this.cookie = result
-//                .getResponseHeaders()
-//                .getFirst("Set-Cookie");
     }
 
     protected EntityExchangeResult<byte[]> getRequest(String uri) {
