@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class CommentConverter {
     public List<CommentDto> toDto(List<Comment> comments, String sessionEmail) {
         return comments.stream()
-                .map(comment -> new CommentDto(comment.getId(), comment.getContents().getContents(), comment.getAuthor().getName(), comment.getAuthor().isNotMatchEmail(sessionEmail)))
+                .map(comment -> new CommentDto(comment.getId(), comment.getContents().getContents(), comment.getAuthor().getName(), comment.getAuthor().isMatchEmail(sessionEmail)))
                 .collect(Collectors.toList());
     }
 

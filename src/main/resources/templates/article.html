@@ -69,8 +69,10 @@
                         </button>
                     </a>
                 </form>
-                < a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
-                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                <a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
+                    <button class="float-right pointer btn btn-icon">
+                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                    </button>
                 </a>
                 <div id="articleId" th:text="${article.id}" type="hidden"></div>
                 <div id="viewerSection"></div>
