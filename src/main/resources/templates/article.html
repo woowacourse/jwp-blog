@@ -255,7 +255,7 @@
                 const items = document.getElementsByClassName("btn delete-comment");
 
                 for (const i in items) {
-                     console.log(items[i].value)
+                    console.log(items[i].value)
                     if (items[i].value == json.id) {
                         console.log("수정!")
                         items[i].parentNode.querySelector("p").innerText = json.comment;

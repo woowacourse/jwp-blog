@@ -11,6 +11,7 @@ import techcourse.myblog.web.util.LoginChecker;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
 	private UserService userService;
 	private LoginChecker loginChecker;
@@ -20,7 +21,7 @@ public class UserController {
 		this.loginChecker = loginChecker;
 	}
 
-	@GetMapping("/users/sign-up")
+	@GetMapping("/sign-up")
 	public String showRegisterPage(HttpSession session) {
 		if (loginChecker.isLoggedIn(session)) {
 			return "redirect:/";
@@ -28,19 +29,19 @@ public class UserController {
 		return "sign-up";
 	}
 
-	@GetMapping("/users")
+	@GetMapping
 	public String showUserList(Model model) {
 		model.addAttribute("users", userService.findAll());
 		return "user-list";
 	}
 
-	@PostMapping("/users")
+	@PostMapping
 	public String createUser(UserRequestDto userRequestDto) {
 		userService.save(userRequestDto);
 		return "redirect:/login";
 	}
 
-	@PutMapping("/users/{id}")
+	@PutMapping("/{id}")
 	public String editUserName(@PathVariable Long id, UserRequestDto userRequestDto, HttpSession session, UserSessionDto userSessionDto) {
 		if (loginChecker.isLoggedInSameId(session, id)) {
 			userService.update(id, userRequestDto);
@@ -50,7 +51,7 @@ public class UserController {
 		return "redirect:/mypage/" + id;
 	}
 
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/{id}")
 	public String deleteUser(@PathVariable Long id, HttpSession session) {
 		if (loginChecker.isLoggedInSameId(session, id)) {
 			userService.delete(id);

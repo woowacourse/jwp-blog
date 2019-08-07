@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private ArticleService articleService;
     private UserService userService;
@@ -31,19 +32,19 @@ public class ArticleController {
         this.loginChecker = loginChecker;
     }
 
-    @GetMapping("/articles")
+    @GetMapping
     public String showArticles(Model model) {
         model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
-    @GetMapping("/articles/new")
+    @GetMapping("/new")
     public String showCreatePage(HttpSession session) {
         loginChecker.getLoggedInUser(session);
         return "article-edit";
     }
 
-    @GetMapping("/articles/{id}")
+    @GetMapping("/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
         ArticleDto articleDto = articleService.findArticleDtoById(id);
         model.addAttribute("article", articleDto);
@@ -56,7 +57,7 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/articles/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String showEditPage(@PathVariable("id") Long articleId, Model model, UserSessionDto userSession) {
         try {
             ArticleDto articleDto = articleService.authorize(userSession, articleId);
@@ -67,20 +68,20 @@ public class ArticleController {
         }
     }
 
-    @PostMapping("/articles")
+    @PostMapping
     public String createArticle(ArticleDto articleDto, UserSessionDto userSession) {
         ArticleDto savedArticleDto = articleService.save(userSession, articleDto);
         return "redirect:/articles/" + savedArticleDto.getId();
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto,
                               UserSessionDto userSession) {
         articleService.update(articleId, userSession, articleDto);
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{id}")
+    @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable("id") long articleId, UserSessionDto userSession) {
         articleService.delete(articleId, userSession);
         return "redirect:/";
