@@ -38,7 +38,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/users")
                 .excludePathPatterns("/css/**")
                 .excludePathPatterns("/js/**")
-                .excludePathPatterns("/images/**");
+                .excludePathPatterns("/images/**")
+                .excludePathPatterns("/articles/{articleId}")
+                .excludePathPatterns("/articles/{articleId}/comments");
 
         registry.addInterceptor(userAuthInterceptor)
                 .addPathPatterns("/user/update/{pageId}")
