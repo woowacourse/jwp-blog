@@ -9,6 +9,7 @@ import techcourse.myblog.comment.service.CommentService;
 
 import java.util.List;
 
+@RequestMapping("/ajax/articles/{articleId}/comments")
 @RestController
 public class CommentAjaxController {
     private CommentService commentService;
@@ -17,19 +18,19 @@ public class CommentAjaxController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/ajax/articles/{articleId}/comments")
+    @PostMapping
     public List<CommentResponseDto> add(@RequestBody CommentCreateDto commentCreateDto, @PathVariable long articleId, UserSession userSession) {
         commentService.save(articleId, userSession.getId(), commentCreateDto);
         return commentService.findAllByArticleId(articleId);
     }
 
-    @PutMapping("/ajax/articles/{articleId}/comments/{commentId}")
+    @PutMapping("/{commentId}")
     public List<CommentResponseDto> update(@RequestBody CommentUpdateDto commentUpdateDto, @PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
         commentService.update(commentId, userSession.getId(), commentUpdateDto);
         return commentService.findAllByArticleId(articleId);
     }
 
-    @DeleteMapping("/ajax/articles/{articleId}/comments/{commentId}")
+    @DeleteMapping("/{commentId}")
     public List<CommentResponseDto> delete(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
         commentService.deleteById(commentId, userSession.getId());
         return commentService.findAllByArticleId(articleId);
