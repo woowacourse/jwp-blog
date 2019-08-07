@@ -35,7 +35,7 @@ public class CommentService {
     }
 
     public List<Comment> findByArticle(Article article) {
-        return Collections.unmodifiableList(commentRepository.findByArticleOrderByCreatedAt(article));
+        return Collections.unmodifiableList(commentRepository.findAllByArticleOrderByCreatedAt(article));
     }
 
     public List<CommentResponseDto> commentsToDtos(List<Comment> comments) {

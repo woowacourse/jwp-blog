@@ -8,8 +8,6 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -38,7 +36,7 @@ public class CommentRepositoryTest {
                 .build();
         commentRepository.save(comment);
 
-        Comment justCreatedComment = commentRepository.findByArticleOrderByCreatedAt(article).get(0);
+        Comment justCreatedComment = commentRepository.findAllByArticleOrderByCreatedAt(article).get(0);
         assertThat(justCreatedComment.getCreatedAt()).isNotNull();
     }
 }

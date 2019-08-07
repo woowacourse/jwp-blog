@@ -7,5 +7,5 @@ import techcourse.myblog.domain.User;
 import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    List<Article> findByAuthor(User author);
+    List<Article> findAllByAuthor(User author);
 }

@@ -35,6 +35,6 @@ public class UserRepositoryTest {
 
         User actualUser = userRepository.findById(persistUser.getId()).get();
 
-        assertThat(articleRepository.findByAuthor(actualUser).size()).isEqualTo(2);
+        assertThat(articleRepository.findAllByAuthor(actualUser).size()).isEqualTo(2);
     }
 }
