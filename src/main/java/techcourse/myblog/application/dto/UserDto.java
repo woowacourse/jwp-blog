@@ -36,12 +36,6 @@ public class UserDto {
         return new User(name, email, password);
     }
 
-//    @Override
-//    public String toString() {
-//        return "name: " + name
-//                + "email : " + email;
-//    }
-
     @Override
     public String toString() {
         return "UserDto{" +
