@@ -43,12 +43,6 @@ public class User {
 	@javax.validation.constraints.Pattern(regexp = PASSWORD_REGEX)
 	private String password;
 
-	@OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-	private List<Article> articles;
-
-	@OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-	private List<Comment> comments;
-
 	protected User() {
 	}
 
