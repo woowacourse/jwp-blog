@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.User;
@@ -68,6 +67,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
         addComments();
 
         webTestClient.get().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
+                .cookie(JSESSIONID, getResponseCookie(SEAN_EMAIL, DEFAULT_PASSWORD).getValue())
                 .exchange()
                 .expectBody()
                 .jsonPath("$.comments.length()").isEqualTo(2);
@@ -79,11 +79,9 @@ public class CommentControllerTests extends AuthedWebTestClient {
 
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(2L)
                 .jsonPath("$.contents").isEqualTo(CONTENT)
@@ -95,7 +93,6 @@ public class CommentControllerTests extends AuthedWebTestClient {
         getStatus(POBI_EMAIL, UPDATED_COMMENT)
                 .expectStatus()
                 .isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(1L)
                 .jsonPath("$.contents").isEqualTo(UPDATED_COMMENT);
@@ -136,7 +133,6 @@ public class CommentControllerTests extends AuthedWebTestClient {
 
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
                 .exchange();
     }
@@ -146,7 +142,6 @@ public class CommentControllerTests extends AuthedWebTestClient {
 
         return webTestClient.put().uri("/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId)
                 .cookie(JSESSIONID, getResponseCookie(pobiEmail, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
                 .exchange();
     }

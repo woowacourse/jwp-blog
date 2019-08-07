@@ -3,7 +3,6 @@ package techcourse.myblog.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -51,7 +50,6 @@ public class AuthedWebTestClient {
     protected WebTestClient.ResponseSpec post(String email) {
         return webTestClient.post().uri(URI_ARTICLES)
                 .cookie(JSESSIONID, getResponseCookie(email, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData(TITLE, TITLE)
                         .with(COVER_URL, COVER_URL)
                         .with(CONTENT, CONTENT))
@@ -63,7 +61,6 @@ public class AuthedWebTestClient {
     protected WebTestClient.ResponseSpec put(String email, String uri) {
         return webTestClient.put().uri(uri)
                 .cookie(JSESSIONID, getResponseCookie(email, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData(TITLE, UPDATED_TITLE)
                         .with(COVER_URL, UPDATED_COVER_URL)
                         .with(CONTENT, UPDATED_CONTENT))
