@@ -2,7 +2,7 @@ const template =
     `<li class="comment-item border bottom mrg-btm-30">
         <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
         <div class="info">
-            <a class="text-bold inline-block" href="/mypage/{{author.id}}">{{author.name.name}}</a>
+            <a class="text-bold inline-block" href="/users/{{author.id}}">{{author.name.name}}</a>
                 <a class="inline-block sub-title pull-right">
                     <i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>
                 </a>

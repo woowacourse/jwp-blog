@@ -20,7 +20,7 @@ public class ArticleControllerTest extends RequestTemplate {
 
     @Test
     void 게시글작성_페이지_이동() {
-        loggedInGetRequest("/writing")
+        loggedInGetRequest("/articles/new")
                 .expectStatus()
                 .isOk();
     }

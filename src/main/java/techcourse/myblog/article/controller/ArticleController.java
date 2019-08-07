@@ -29,7 +29,7 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/writing")
+    @GetMapping("/articles/new")
     public String renderCreatePage() {
         return "article-edit";
     }

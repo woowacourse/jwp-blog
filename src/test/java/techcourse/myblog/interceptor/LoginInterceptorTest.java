@@ -39,7 +39,7 @@ class LoginInterceptorTest {
 
     @Test
     void 로그인_상태일_시_글쓰기_페이지로_이동하는지_테스트() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri("/articles/new")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
@@ -47,7 +47,7 @@ class LoginInterceptorTest {
 
     @Test
     void 로그인_상태가_아닐_시_글쓰기_페이지로_이동하는지_테스트() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus()
                 .isFound()

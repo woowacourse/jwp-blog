@@ -9,7 +9,7 @@ public class UserControllerTest extends RequestTemplate {
 
     @Test
     void 가입_페이지_이동() {
-        loggedOutGetRequest("/signup")
+        loggedOutGetRequest("/users/new")
                 .expectStatus()
                 .isOk();
     }
@@ -67,14 +67,14 @@ public class UserControllerTest extends RequestTemplate {
 
     @Test
     void 마이페이지_이동() {
-        loggedInGetRequest("/mypage/1")
+        loggedInGetRequest("/users/1")
                 .expectStatus()
                 .isOk();
     }
 
     @Test
     void 정보수정_페이지_이동() {
-        loggedInGetRequest("/mypage/1/edit")
+        loggedInGetRequest("/users/1/edit")
                 .expectStatus()
                 .isOk();
     }

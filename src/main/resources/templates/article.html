@@ -75,7 +75,7 @@
                                      src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                                 <div class="info">
                                     <a class="text-bold inline-block"
-                                       th:href="@{/mypage/{userId}(userId=${comment.author.id})}"
+                                       th:href="@{/users/{userId}(userId=${comment.author.id})}"
                                        th:text="${comment.author.name.name}"></a>
                                     <a class="inline-block sub-title pull-right"
                                        th:if="${session.user.id == comment.author.id}">
