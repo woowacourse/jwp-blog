@@ -12,6 +12,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 sh './scripts/deploy.sh'
+            }
         }
     }
 }
