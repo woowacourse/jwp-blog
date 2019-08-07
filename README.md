@@ -147,4 +147,4 @@
     - ~~EntityExchangeResult 를 반환하는 POST 요청 메서드~~
     - ~~EntityExchangeResult 를 반환하는 PUT 요청 메서드~~
     - ~~EntityExchangeResult 를 반환하는 DELETE 요청 메서드~~
-    - annotation argument resolver 로 세션에서 사용자 가져오기
+    - ~~annotation argument resolver 로 세션에서 사용자 가져오기~~
