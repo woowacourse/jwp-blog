@@ -46,7 +46,7 @@ public class RestCommentController {
                                                                   @RequestBody CommentRequestDto commentRequestDto,
                                                                   @LoggedInUser User user) {
         Comment comment = commentService.findById(commentId);
-        if (!comment.getCommenter().equals(user)) {
+        if (!comment.writtenBy(user)) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         commentService.update(commentId, commentRequestDto);
@@ -57,7 +57,7 @@ public class RestCommentController {
     public ResponseEntity<List<CommentResponseDto>> deleteComment(@PathVariable long commentId,
                                                                   @LoggedInUser User user) {
         Comment comment = commentService.findById(commentId);
-        if (!comment.getCommenter().equals(user)) {
+        if (!comment.writtenBy(user)) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         commentService.deleteById(commentId);
