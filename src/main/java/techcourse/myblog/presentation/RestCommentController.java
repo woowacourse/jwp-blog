@@ -11,11 +11,9 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.web.LoggedInUser;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
-
-import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
 @Slf4j
 @RestController
@@ -35,20 +33,19 @@ public class RestCommentController {
 
     @PostMapping("/articles/{articleId}/comments/rest")
     public ResponseEntity<List<CommentResponseDto>> addNewComment(@PathVariable long articleId,
-                                                                   @RequestBody CommentRequestDto commentRequestDto,
-                                                                   HttpSession httpSession) {
+                                                                  @RequestBody CommentRequestDto commentRequestDto,
+                                                                  @LoggedInUser User user) {
         Article article = articleService.findById(articleId);
-        User commenter = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);
-        commentService.save(commentRequestDto.toComment(commenter, article));
+        commentService.save(commentRequestDto.toComment(user, article));
         return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 
     @PutMapping("/comments/{commentId}/rest")
     public ResponseEntity<List<CommentResponseDto>> updateComment(@PathVariable long commentId,
                                                                   @RequestBody CommentRequestDto commentRequestDto,
-                                                                  HttpSession httpSession) {
+                                                                  @LoggedInUser User user) {
         Comment comment = commentService.findById(commentId);
-        if (!comment.getCommenter().equals(httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY))) {
+        if (!comment.getCommenter().equals(user)) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         commentService.update(commentId, commentRequestDto);
@@ -57,9 +54,9 @@ public class RestCommentController {
 
     @DeleteMapping("/comments/{commentId}/rest")
     public ResponseEntity<List<CommentResponseDto>> deleteComment(@PathVariable long commentId,
-                                                                  HttpSession httpSession) {
+                                                                  @LoggedInUser User user) {
         Comment comment = commentService.findById(commentId);
-        if (!comment.getCommenter().equals(httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY))) {
+        if (!comment.getCommenter().equals(user)) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         commentService.deleteById(commentId);
