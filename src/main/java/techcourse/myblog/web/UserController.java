@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.userinfo.UserPassword;
 import techcourse.myblog.dto.UserEditRequestDto;
@@ -28,12 +29,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public String signUp(UserSaveRequestDto userSaveRequestDto, RedirectAttributes redirectAttributes) {
+    public RedirectView signUp(UserSaveRequestDto userSaveRequestDto, RedirectAttributes redirectAttributes) {
         log.info("sign up post request params={}", userSaveRequestDto);
 
         userService.save(userSaveRequestDto.toEntity());
         redirectAttributes.addFlashAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
-        return "redirect:/login";
+
+        return new RedirectView("/login");
     }
 
     @GetMapping("/users")
@@ -69,24 +71,24 @@ public class UserController {
     }
 
     @PutMapping("/mypage")
-    public String editMyPage(UserEditRequestDto userEditRequestDto, User lastUser, HttpSession httpSession) {
+    public RedirectView editMyPage(UserEditRequestDto userEditRequestDto, User lastUser, HttpSession httpSession) {
         log.info("edit mypage put request params={}", userEditRequestDto);
 
         Long id = lastUser.getId();
         User user = userService.update(id, userEditRequestDto);
         httpSession.setAttribute(USER, user);
 
-        return "redirect:/mypage";
+        return new RedirectView("/mypage");
     }
 
     @DeleteMapping("/mypage")
-    public String deleteUser(User user, HttpSession httpSession) {
+    public RedirectView deleteUser(User user, HttpSession httpSession) {
         Long id = user.getId();
         log.info("delete user delete request id={}", id);
 
         userService.deleteUser(id);
         httpSession.removeAttribute(USER);
 
-        return "redirect:/";
+        return new RedirectView("/");
     }
 }

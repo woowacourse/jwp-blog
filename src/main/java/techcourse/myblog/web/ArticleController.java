@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -28,12 +29,13 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleSaveRequestDto articleSaveRequestDto, User user) {
+    public RedirectView saveArticle(ArticleSaveRequestDto articleSaveRequestDto, User user) {
         log.info("save article post request params={}", articleSaveRequestDto);
 
         Article article = articleService.save(articleSaveRequestDto, user);
         Long id = article.getId();
-        return "redirect:/articles/" + id;
+
+        return new RedirectView("/articles/" + id);
     }
 
     @GetMapping("/{id}")
@@ -58,18 +60,19 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto, User user) {
+    public RedirectView saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto, User user) {
         articleService.update(articleSaveRequestDto, id, user);
         log.info("save edited article post request params={}", articleSaveRequestDto);
 
-        return "redirect:/articles/" + id;
+        return new RedirectView("/articles/" + id);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id, User user) {
+    public RedirectView deleteArticle(@PathVariable long id, User user) {
         log.info("delete article delete request id={}", id);
 
         articleService.deleteById(id, user);
-        return "redirect:/";
+
+        return new RedirectView("/");
     }
 }
