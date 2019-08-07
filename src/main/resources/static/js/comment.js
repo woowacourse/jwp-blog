@@ -7,15 +7,6 @@ const editor = new tui.Editor({
     height: '200px',
 });
 
-const testComment = {
-    id: 1,
-    author: {
-        userName: "포도당"
-    },
-    updateTime: "2019-08-05",
-    contents: "잘가...ㅋㅋㅋㅋ"
-};
-
 const COMMENTAPP = (function () {
     const commentTemplate = function (comment) {
         return `<li class="comment-item border bottom mrg-btm-30" data-comment-id=${comment.commentId}>

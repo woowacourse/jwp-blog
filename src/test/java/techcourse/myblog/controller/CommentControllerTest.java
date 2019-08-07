@@ -25,7 +25,6 @@ class CommentControllerTest {
     private String cookie;
     private Long articleId;
 
-
     @BeforeEach
     void setUp() {
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));

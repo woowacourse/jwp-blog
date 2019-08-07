@@ -33,15 +33,6 @@ public class Utils {
                 .getHeader("Location");
     }
 
-    public static String createComment(RequestCommentDto requestCommentDto, String cookie, String baseUrl) {
-        return given()
-                .param("articleId", requestCommentDto.getArticleId())
-                .param("contents", requestCommentDto.getContents())
-                .cookie(cookie)
-                .post(baseUrl + "/comments")
-                .getHeader("Location");
-    }
-
     public static void deleteUser(WebTestClient webTestClient, String cookie) {
         webTestClient.delete().uri("/users")
                 .header("Cookie", cookie)
