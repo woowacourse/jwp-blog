@@ -10,31 +10,31 @@ import reactor.core.publisher.Mono;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HelloWorldControllerTest {
 
-	@Autowired
-	private WebTestClient webTestClient;
+    @Autowired
+    private WebTestClient webTestClient;
 
-	@Test
-	public void passParamWithGet() {
-		String blogName = "helloWrold";
-		webTestClient.get().uri("/helloworld?blogName=" + blogName)
-				.exchange()
-				.expectStatus().isOk()
-				.expectBody()
-				.consumeWith(response ->
-						Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-	}
+    @Test
+    public void passParamWithGet() {
+	String blogName = "helloWrold";
+	webTestClient.get().uri("/helloworld?blogName=" + blogName)
+		.exchange()
+		.expectStatus().isOk()
+		.expectBody()
+		.consumeWith(response ->
+			Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
+    }
 
-	@Test
-	public void passParamWithPost() {
-		String blogName = "helloWrold";
+    @Test
+    public void passParamWithPost() {
+	String blogName = "helloWrold";
 
-		webTestClient.post()
-				.uri("/helloworld")
-				.body(Mono.just(blogName), String.class)
-				.exchange()
-				.expectStatus().isOk()
-				.expectBody()
-				.consumeWith(response ->
-						Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-	}
+	webTestClient.post()
+		.uri("/helloworld")
+		.body(Mono.just(blogName), String.class)
+		.exchange()
+		.expectStatus().isOk()
+		.expectBody()
+		.consumeWith(response ->
+			Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
+    }
 }

@@ -7,54 +7,56 @@ import javax.persistence.*;
 
 @Entity
 public class Comment {
-	private static final int COMMENT_LENGTH = 100;
+    private static final int COMMENT_LENGTH = 100;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false, length = COMMENT_LENGTH)
-	private String comment;
+    @Column(nullable = false, length = COMMENT_LENGTH)
+    private String comment;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_comment_to_user"))
-	private User author;
+    @ManyToOne
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_comment_to_user"))
+    private User author;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "FK_comment_to_article"))
-	private Article article;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "FK_comment_to_article"))
+    private Article article;
 
-	private Comment() {
+    private Comment() {
 
+    }
+
+    public Comment(String comment, User author, Article article) {
+	this.comment = comment;
+	this.author = author;
+	this.article = article;
+    }
+
+    public boolean matchAuthor(User author) {
+	return this.author.equals(author);
+    }
+
+    public void updateComment(Comment paramComment) {
+	if (this.author.equals(paramComment.author)) {
+	    this.comment = paramComment.comment;
 	}
+    }
 
-	public Comment(String comment, User author, Article article) {
-		this.comment = comment;
-		this.author = author;
-		this.article = article;
-	}
+    public Long getId() {
+	return id;
+    }
 
-	public boolean matchAuthorId(Long userId) {
-		return this.author.matchId(userId);
-	}
+    public String getComment() {
+	return comment;
+    }
 
-	public void updateComment(String comment) {
-		this.comment = comment;
-	}
+    public Long getAuthorId() {
+	return author.getId();
+    }
 
-	public Long getId() {
-		return id;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public Long getAuthorId() {
-		return author.getId();
-	}
-
-	public String getAuthorName() {
-		return author.getName();
-	}
+    public String getAuthorName() {
+	return author.getName();
+    }
 }

@@ -9,8 +9,8 @@ import java.util.List;
 @SpringBootConfiguration
 public class MyBlogAppConfig implements WebMvcConfigurer {
 
-	@Override
-	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new UserSessionArgumentResolver());
-	}
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+	resolvers.add(new UserSessionArgumentResolver());
+    }
 }

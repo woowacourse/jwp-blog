@@ -8,13 +8,13 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IndexControllerTest {
 
-	@Autowired
-	WebTestClient webTestClient;
+    @Autowired
+    WebTestClient webTestClient;
 
-	@Test
-	public void indexTest() {
-		webTestClient.get().uri("/")
-				.exchange()
-				.expectStatus().isOk();
-	}
+    @Test
+    public void indexTest() {
+	webTestClient.get().uri("/")
+		.exchange()
+		.expectStatus().isOk();
+    }
 }

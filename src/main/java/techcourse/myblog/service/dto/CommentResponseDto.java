@@ -11,25 +11,25 @@ public class CommentResponseDto {
     }
 
     public CommentResponseDto(Long id, Long authorId, String authorName, String comment) {
-        this.id = id;
-        this.authorId = authorId;
-        this.authorName = authorName;
-        this.comment = comment;
+	this.id = id;
+	this.authorId = authorId;
+	this.authorName = authorName;
+	this.comment = comment;
     }
 
     public Long getId() {
-        return id;
+	return id;
     }
 
     public Long getAuthorId() {
-        return authorId;
+	return authorId;
     }
 
     public String getAuthorName() {
-        return authorName;
+	return authorName;
     }
 
     public String getComment() {
-        return comment;
+	return comment;
     }
 }

@@ -14,26 +14,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class UserSessionArgumentResolver implements HandlerMethodArgumentResolver {
-	private static final Logger log = LoggerFactory.getLogger(UserSessionArgumentResolver.class);
+    private static final Logger log = LoggerFactory.getLogger(UserSessionArgumentResolver.class);
 
-	public static final String LOGGED_IN_USER = "loggedInUser";
+    public static final String LOGGED_IN_USER = "loggedInUser";
 
-	@Override
-	public boolean supportsParameter(MethodParameter parameter) {
-		return UserSessionDto.class.isAssignableFrom(parameter.getParameterType());
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+	return UserSessionDto.class.isAssignableFrom(parameter.getParameterType());
+    }
+
+    @Override
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+	HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+	HttpSession session = servletRequest.getSession();
+	UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
+
+	if (userSessionDto == null) {
+	    log.debug("session is null");
+	    throw new NotLoggedInException();
 	}
-
-	@Override
-	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-		HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
-		HttpSession session = servletRequest.getSession();
-		UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
-
-		if (userSessionDto == null) {
-			log.debug("session is null");
-			throw new NotLoggedInException();
-		}
-		log.debug("current login user id is {} - {}", userSessionDto.getId(), userSessionDto.getName());
-		return userSessionDto;
-	}
+	log.debug("current login user id is {} - {}", userSessionDto.getId(), userSessionDto.getName());
+	return userSessionDto;
+    }
 }

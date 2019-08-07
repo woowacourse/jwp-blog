@@ -14,30 +14,30 @@ public class CommentRestController {
     private CommentService commentService;
 
     public CommentRestController(CommentService commentService) {
-        this.commentService = commentService;
+	this.commentService = commentService;
     }
 
     @PostMapping("/comment")
     public CommentResponseDto create(UserSessionDto userSessionDto, @RequestBody CommentRequestDto commentRequestDto) {
-        Comment comment = commentService.save(userSessionDto, commentRequestDto);
-        return commentService.toCommentResponseDto(comment);
+	Comment comment = commentService.save(userSessionDto, commentRequestDto);
+	return commentService.toCommentResponseDto(comment);
     }
 
     @PutMapping("/articles/{articleId}/comment/{commentId}")
     public CommentResponseDto updateComment(@PathVariable("articleId") Long articleId,
-                                            @PathVariable("commentId") Long commentId,
-                                            @RequestBody CommentRequestDto commentRequestDto,
-                                            UserSessionDto userSession) {
-        Comment comment = commentService.update(userSession, commentId, commentRequestDto);
-        return commentService.toCommentResponseDto(comment);
+					    @PathVariable("commentId") Long commentId,
+					    @RequestBody CommentRequestDto commentRequestDto,
+					    UserSessionDto userSession) {
+	Comment comment = commentService.update(userSession, commentId, commentRequestDto);
+	return commentService.toCommentResponseDto(comment);
     }
 
     @DeleteMapping("/articles/{articleId}/comment/{commentId}")
     public ResponseEntity<CommentResponseDto> deleteComment(@PathVariable("articleId") Long articleId,
-                                                            @PathVariable("commentId") Long commentId,
-                                                            UserSessionDto userSession) {
-        commentService.delete(userSession, commentId);
-        return new ResponseEntity<>(new CommentResponseDto(commentId, null, null, null)
-                , HttpStatus.OK);
+							    @PathVariable("commentId") Long commentId,
+							    UserSessionDto userSession) {
+	commentService.delete(userSession, commentId);
+	return new ResponseEntity<>(new CommentResponseDto(commentId, null, null, null)
+		, HttpStatus.OK);
     }
 }

@@ -14,31 +14,31 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/mypage")
 public class MyPageController {
-	private UserService userService;
-	private LoginChecker loginChecker;
+    private UserService userService;
+    private LoginChecker loginChecker;
 
-	public MyPageController(UserService userService, LoginChecker loginChecker) {
-		this.userService = userService;
-		this.loginChecker = loginChecker;
-	}
+    public MyPageController(UserService userService, LoginChecker loginChecker) {
+	this.userService = userService;
+	this.loginChecker = loginChecker;
+    }
 
-	@GetMapping("/{id}")
-	public String showMyPage(@PathVariable("id") long id, Model model) {
-		model.addAttribute("user", userService.findUserPublicInfoById(id));
-		return "mypage";
-	}
+    @GetMapping("/{id}")
+    public String showMyPage(@PathVariable("id") long id, Model model) {
+	model.addAttribute("user", userService.findUserPublicInfoById(id));
+	return "mypage";
+    }
 
-	@GetMapping("/{id}/edit")
-	public String showMyPageEdit(@PathVariable("id") long id, Model model,
-	                             HttpSession session, RedirectAttributes redirectAttributes) {
-		String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
-		if (errorMessage != null) {
-			model.addAttribute("errorMessage", errorMessage);
-		}
-		if (loginChecker.isLoggedInSameId(session, id)) {
-			model.addAttribute("user", userService.findUserPublicInfoById(id));
-			return "mypage-edit";
-		}
-		return "redirect:/mypage/" + id;
+    @GetMapping("/{id}/edit")
+    public String showMyPageEdit(@PathVariable("id") long id, Model model,
+				 HttpSession session, RedirectAttributes redirectAttributes) {
+	String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
+	if (errorMessage != null) {
+	    model.addAttribute("errorMessage", errorMessage);
 	}
+	if (loginChecker.isLoggedInSameId(session, id)) {
+	    model.addAttribute("user", userService.findUserPublicInfoById(id));
+	    return "mypage-edit";
+	}
+	return "redirect:/mypage/" + id;
+    }
 }

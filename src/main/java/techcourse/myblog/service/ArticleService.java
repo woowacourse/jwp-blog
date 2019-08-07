@@ -14,64 +14,65 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ArticleService {
-	private ArticleRepository articleRepository;
-	private UserService userService;
+    private ArticleRepository articleRepository;
+    private UserService userService;
 
-	public ArticleService(ArticleRepository articleRepository, UserService userService) {
-		this.articleRepository = articleRepository;
-		this.userService = userService;
-	}
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
+	this.articleRepository = articleRepository;
+	this.userService = userService;
+    }
 
-	Article findById(Long id) {
-		return articleRepository.findById(id)
-				.orElseThrow(NotFoundArticleException::new);
-	}
+    Article findById(Long id) {
+	return articleRepository.findById(id)
+		.orElseThrow(NotFoundArticleException::new);
+    }
 
-	public ArticleDto findArticleDtoById(Long id) {
-		return toArticleDto(findById(id));
-	}
+    public ArticleDto findArticleDtoById(Long id) {
+	return toArticleDto(findById(id));
+    }
 
-	public List<ArticleDto> findAll() {
-		return articleRepository.findAll().stream()
-				.map(this::toArticleDto)
-				.collect(Collectors.toList());
-	}
+    public List<ArticleDto> findAll() {
+	return articleRepository.findAll().stream()
+		.map(this::toArticleDto)
+		.collect(Collectors.toList());
+    }
 
-	public ArticleDto save(UserSessionDto userSession, ArticleDto articleDto) {
-		User author = userService.findById(userSession.getId());
-		return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
-	}
+    public ArticleDto save(UserSessionDto userSession, ArticleDto articleDto) {
+	User author = userService.findById(userSession.getId());
+	return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
+    }
 
-	@Transactional
-	public void update(long articleId, UserSessionDto userSession, ArticleDto articleDto) {
-		Article article = findById(articleId);
-		if (article.matchUserId(userSession.getId())) {
-			article.updateArticle(articleDto.toEntity());
-		}
-	}
+    public Article update(long articleId, UserSessionDto userSession, ArticleDto articleDto) {
+	Article article = findById(articleId);
+	User author = userService.findByUserSession(userSession);
+	article.updateArticle(articleDto.toEntity(author));
+	return article;
+    }
 
-	@Transactional
-	public void delete(Long articleId, UserSessionDto userSession) {
-		Article article = findById(articleId);
-		if (article.matchUserId(userSession.getId())) {
-			articleRepository.deleteById(articleId);
-		}
+    public void delete(Long articleId, UserSessionDto userSession) {
+	Article article = findById(articleId);
+	User author = userService.findByUserSession(userSession);
+	if (article.matchAuthor(author)) {
+	    articleRepository.deleteById(articleId);
 	}
+    }
 
-	public ArticleDto authorize(UserSessionDto userSession, Long articleId) {
-		final Article article = findById(articleId);
-		if (article.matchUserId(userSession.getId())) {
-			return toArticleDto(article);
-		}
-		throw new UserAuthorizationException();
+    public ArticleDto authorize(UserSessionDto userSession, Long articleId) {
+	Article article = findById(articleId);
+	User author = userService.findByUserSession(userSession);
+	if (article.matchAuthor(author)) {
+	    return toArticleDto(article);
 	}
+	throw new UserAuthorizationException();
+    }
 
-	private ArticleDto toArticleDto(Article article) {
-		return new ArticleDto(article.getId(),
-				article.getAuthorId(),
-				article.getTitle(),
-				article.getCoverUrl(),
-				article.getContents());
-	}
+    private ArticleDto toArticleDto(Article article) {
+	return new ArticleDto(article.getId(),
+		article.getAuthorId(),
+		article.getTitle(),
+		article.getCoverUrl(),
+		article.getContents());
+    }
 }

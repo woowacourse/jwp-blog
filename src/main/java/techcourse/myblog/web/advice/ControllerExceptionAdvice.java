@@ -17,44 +17,44 @@ public class ControllerExceptionAdvice {
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionAdvice.class);
 
     @ExceptionHandler({NotFoundUserException.class, UserDeleteException.class,
-            NotFoundArticleException.class, NotFoundUserException.class})
+	    NotFoundArticleException.class, NotFoundUserException.class})
     public String handleNotFoundUserException(Exception e) {
-        log.error(e.getMessage());
+	log.error(e.getMessage());
 
-        return "redirect:/";
+	return "redirect:/";
     }
 
     @ExceptionHandler(SignUpException.class)
     public String handleSignUpException(Model model, Exception e) {
-        log.error(e.getMessage());
+	log.error(e.getMessage());
 
-        model.addAttribute("errorMessage", e.getMessage());
-        return "sign-up";
+	model.addAttribute("errorMessage", e.getMessage());
+	return "sign-up";
     }
 
     @ExceptionHandler(UserUpdateException.class)
     public String handleUpdateUserException(Exception e,
-                                            HttpSession session,
-                                            RedirectAttributes redirectAttributes) {
-        log.error(e.getMessage());
+					    HttpSession session,
+					    RedirectAttributes redirectAttributes) {
+	log.error(e.getMessage());
 
-        UserSessionDto user = (UserSessionDto) session.getAttribute("loggedInUser");
-        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        return "redirect:/mypage/" + user.getId() + "/edit";
+	UserSessionDto user = (UserSessionDto) session.getAttribute("loggedInUser");
+	redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+	return "redirect:/mypage/" + user.getId() + "/edit";
     }
 
     @ExceptionHandler(LogInException.class)
     public String handleLogInException(Model model, Exception e) {
-        log.error(e.getMessage());
+	log.error(e.getMessage());
 
-        model.addAttribute("errorMessage", e.getMessage());
-        return "login";
+	model.addAttribute("errorMessage", e.getMessage());
+	return "login";
     }
 
     @ExceptionHandler(NotLoggedInException.class)
     public String handleNotLoggedInException(Exception e) {
-        log.error(e.getMessage());
+	log.error(e.getMessage());
 
-        return "redirect:/login";
+	return "redirect:/login";
     }
 }

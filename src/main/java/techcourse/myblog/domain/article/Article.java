@@ -8,66 +8,68 @@ import java.util.List;
 
 @Entity
 public class Article {
-	private static final int CONTENTS_LENGTH = 1000;
+    private static final int CONTENTS_LENGTH = 1000;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private String title;
+    @Column(nullable = false)
+    private String title;
 
-	@Column(nullable = false)
-	private String coverUrl;
+    @Column(nullable = false)
+    private String coverUrl;
 
-	@Column(nullable = false, length = CONTENTS_LENGTH)
-	@Lob
-	private String contents;
+    @Column(nullable = false, length = CONTENTS_LENGTH)
+    @Lob
+    private String contents;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
-	private User author;
+    @ManyToOne
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
+    private User author;
 
-	@OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-	private List<Comment> comments;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
-	protected Article() {
+    protected Article() {
+    }
+
+    public Article(String title, String coverUrl, String contents, User author) {
+	this.title = title;
+	this.coverUrl = coverUrl;
+	this.contents = contents;
+	this.author = author;
+    }
+
+    public void updateArticle(Article article) {
+	if (matchAuthor(article.author)) {
+	    this.title = article.title;
+	    this.coverUrl = article.coverUrl;
+	    this.contents = article.contents;
 	}
+    }
 
-	public Article(String title, String coverUrl, String contents, User author) {
-		this.title = title;
-		this.coverUrl = coverUrl;
-		this.contents = contents;
-		this.author = author;
-	}
+    public boolean matchAuthor(User author) {
+	return this.author.equals(author);
+    }
 
-	public void updateArticle(Article article) {
-		this.title = article.title;
-		this.coverUrl = article.coverUrl;
-		this.contents = article.contents;
-	}
+    public Long getId() {
+	return id;
+    }
 
-	public boolean matchUserId(Long userId) {
-		return this.author.matchId(userId);
-	}
+    public Long getAuthorId() {
+	return author.getId();
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getTitle() {
+	return title;
+    }
 
-	public Long getAuthorId() {
-		return author.getId();
-	}
+    public String getCoverUrl() {
+	return coverUrl;
+    }
 
-	public String getTitle() {
-		return title;
-	}
-
-	public String getCoverUrl() {
-		return coverUrl;
-	}
-
-	public String getContents() {
-		return contents;
-	}
+    public String getContents() {
+	return contents;
+    }
 }

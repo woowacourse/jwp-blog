@@ -24,71 +24,71 @@ public class CommentRestControllerTest {
     @Test
     @DisplayName("댓글 생성 테스트")
     void createTest() {
-        CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
-        CommentResponseDto comment = save(requestDto);
+	CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
+	CommentResponseDto comment = save(requestDto);
 
-        assertThat(comment.getId()).isNotNull();
-        assertThat(comment.getComment()).isEqualTo("hello");
-        assertThat(comment.getAuthorName()).isEqualTo(USER_NAME);
+	assertThat(comment.getId()).isNotNull();
+	assertThat(comment.getComment()).isEqualTo("hello");
+	assertThat(comment.getAuthorName()).isEqualTo(USER_NAME);
     }
 
     private CommentResponseDto save(CommentRequestDto requestDto) {
-        return sendRequestDto(HttpMethod.POST, requestDto, "/comment");
+	return sendRequestDto(HttpMethod.POST, requestDto, "/comment");
     }
 
     private CommentResponseDto sendRequestDto(HttpMethod method, CommentRequestDto requestDto, String uri) {
-        return webTestClient.method(method).uri(uri)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(requestDto), CommentRequestDto.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBody(CommentResponseDto.class)
-                .returnResult()
-                .getResponseBody();
+	return webTestClient.method(method).uri(uri)
+		.cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+		.accept(MediaType.APPLICATION_JSON_UTF8)
+		.body(Mono.just(requestDto), CommentRequestDto.class)
+		.exchange()
+		.expectStatus().isOk()
+		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+		.expectBody(CommentResponseDto.class)
+		.returnResult()
+		.getResponseBody();
     }
 
     @Test
     @DisplayName("댓글 변경 테스트")
     void updateTest() {
-        CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
-        CommentResponseDto comment = save(requestDto);
+	CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
+	CommentResponseDto comment = save(requestDto);
 
-        Long articleId = requestDto.getArticleId();
-        Long commentId = comment.getId();
+	Long articleId = requestDto.getArticleId();
+	Long commentId = comment.getId();
 
-        CommentRequestDto updateDto = new CommentRequestDto(1L, "update");
-        String uri = "/articles/" + articleId + "/comment/" + commentId;
-        CommentResponseDto updatedComment = update(updateDto, uri);
+	CommentRequestDto updateDto = new CommentRequestDto(1L, "update");
+	String uri = "/articles/" + articleId + "/comment/" + commentId;
+	CommentResponseDto updatedComment = update(updateDto, uri);
 
-        assertThat(updatedComment.getId()).isNotNull();
-        assertThat(updatedComment.getComment()).isEqualTo("update");
-        assertThat(updatedComment.getAuthorName()).isEqualTo(USER_NAME);
+	assertThat(updatedComment.getId()).isNotNull();
+	assertThat(updatedComment.getComment()).isEqualTo("update");
+	assertThat(updatedComment.getAuthorName()).isEqualTo(USER_NAME);
     }
 
     private CommentResponseDto update(CommentRequestDto updateDto, String uri) {
-        return sendRequestDto(HttpMethod.PUT, updateDto, uri);
+	return sendRequestDto(HttpMethod.PUT, updateDto, uri);
     }
 
     @Test
     @DisplayName("댓글 삭제 테스트")
     void deleteTest() {
-        CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
-        CommentResponseDto comment = save(requestDto);
+	CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
+	CommentResponseDto comment = save(requestDto);
 
-        Long articleId = requestDto.getArticleId();
-        Long commentId = comment.getId();
-        String uri = "/articles/" + articleId + "/comment/" + commentId;
-        CommentResponseDto deletedComment = delete(new CommentRequestDto(null, null), uri);
+	Long articleId = requestDto.getArticleId();
+	Long commentId = comment.getId();
+	String uri = "/articles/" + articleId + "/comment/" + commentId;
+	CommentResponseDto deletedComment = delete(new CommentRequestDto(null, null), uri);
 
-        assertThat(deletedComment.getId()).isEqualTo(commentId);
-        assertThat(deletedComment.getAuthorId()).isNull();
-        assertThat(deletedComment.getAuthorName()).isNull();
-        assertThat(deletedComment.getComment()).isNull();
+	assertThat(deletedComment.getId()).isEqualTo(commentId);
+	assertThat(deletedComment.getAuthorId()).isNull();
+	assertThat(deletedComment.getAuthorName()).isNull();
+	assertThat(deletedComment.getComment()).isNull();
     }
 
     private CommentResponseDto delete(CommentRequestDto commentRequestDto, String uri) {
-        return sendRequestDto(HttpMethod.DELETE, commentRequestDto, uri);
+	return sendRequestDto(HttpMethod.DELETE, commentRequestDto, uri);
     }
 }
