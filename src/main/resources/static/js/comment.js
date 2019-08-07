@@ -1,6 +1,6 @@
 let commentList = document.getElementById("comment-list");
 
-fetch('/articles/' + articleId +  '/comments', {
+fetch('/api/articles/' + articleId +  '/comments', {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
@@ -41,7 +41,7 @@ saveBtn.addEventListener('click', function() {
     let requestDto = {
         comment: document.getElementById("article-contents").getAttribute("value")
     }
-    fetch('/articles/' + articleId + '/comments/rest', {
+    fetch('/api/articles/' + articleId + '/comments', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=UTF-8'
@@ -61,7 +61,7 @@ commentList.addEventListener("click", function (ev) {
     }
 
     if (event.target.classList.contains("btn") && event.target.dataset.whichButton === 'delete') {
-        fetch('/comments/' + event.target.dataset.commentId + '/rest', {
+        fetch('/api/comments/' + event.target.dataset.commentId, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8'
@@ -79,7 +79,7 @@ commentList.addEventListener("click", function (ev) {
             comment: event.target.parentNode.children[0].value
         }
 
-        fetch('/comments/' + event.target.dataset.commentId + '/rest' , {
+        fetch('/api/comments/' + event.target.dataset.commentId, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8'
