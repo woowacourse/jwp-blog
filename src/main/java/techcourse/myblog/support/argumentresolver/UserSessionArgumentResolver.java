@@ -15,6 +15,8 @@ import java.util.Optional;
 
 public class UserSessionArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final String USER = "user";
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(UserSession.class);
@@ -23,7 +25,7 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpSession httpSession = ((HttpServletRequest) webRequest.getNativeRequest()).getSession();
-        return Optional.ofNullable((User) httpSession.getAttribute("user"))
+        return Optional.ofNullable((User) httpSession.getAttribute(USER))
                 .orElseThrow(() -> new InvalidAuthorException("로그인 후 이용할 수 있습니다."));
     }
 }
