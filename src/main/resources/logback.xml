@@ -7,7 +7,7 @@
             <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- keep 30 days’ worth of history capped at 3GB total size -->
             <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <totalSizeCap>5MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
