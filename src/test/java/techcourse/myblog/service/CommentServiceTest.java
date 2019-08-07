@@ -73,8 +73,7 @@ public class CommentServiceTest {
 		Comment comment = commentService.findById(BASE_USER_ID);
 		CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, UPDATE_COMMENT);
 
-		commentService.update(baseUserSessionDto, comment.getId(), updateRequestDto);
-		Comment updatedComment = commentService.findById(BASE_USER_ID);
+		Comment updatedComment = commentService.update(baseUserSessionDto, comment.getId(), updateRequestDto);
 		assertThat(updatedComment.getComment()).isEqualTo(UPDATE_COMMENT);
 	}
 

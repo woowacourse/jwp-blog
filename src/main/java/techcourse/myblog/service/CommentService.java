@@ -15,60 +15,59 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CommentService {
-	private CommentRepository commentRepository;
-	private UserService userService;
-	private ArticleService articleService;
+    private CommentRepository commentRepository;
+    private UserService userService;
+    private ArticleService articleService;
 
-	public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
-		this.commentRepository = commentRepository;
-		this.userService = userService;
-		this.articleService = articleService;
-	}
+    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
+        this.commentRepository = commentRepository;
+        this.userService = userService;
+        this.articleService = articleService;
+    }
 
-	public Comment findById(Long id) {
-		return commentRepository.findById(id)
-				.orElseThrow(NotFoundCommentException::new);
-	}
+    public Comment findById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(NotFoundCommentException::new);
+    }
 
-	@Transactional
-	public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
-		Article article = articleService.findById(articleId);
-		return commentRepository.findAllByArticle(article)
-				.stream()
-				.map(this::toCommentResponseDto)
-				.collect(Collectors.toList());
-	}
+    public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
+        Article article = articleService.findById(articleId);
+        return commentRepository.findAllByArticle(article)
+                .stream()
+                .map(this::toCommentResponseDto)
+                .collect(Collectors.toList());
+    }
 
-	public Comment save(UserSessionDto userSessionDto, CommentRequestDto commentRequestDto) {
-		User user = userService.findByUserSession(userSessionDto);
-		Article article = articleService.findById(commentRequestDto.getArticleId());
-		Comment comment = commentRequestDto.toEntity(user, article);
-		return commentRepository.save(comment);
-	}
+    public Comment save(UserSessionDto userSessionDto, CommentRequestDto commentRequestDto) {
+        User user = userService.findByUserSession(userSessionDto);
+        Article article = articleService.findById(commentRequestDto.getArticleId());
+        Comment comment = commentRequestDto.toEntity(user, article);
+        return commentRepository.save(comment);
+    }
 
-	@Transactional
-	public Comment update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
-		Comment comment = findById(commentId);
-		if (matchUserId(userSessionDto, comment)) {
-			comment.updateComment(commentRequestDto.getComment());
-		}
-		return comment;
-	}
+    public Comment update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
+        Comment comment = findById(commentId);
+        if (matchUserId(userSessionDto, comment)) {
+            comment.updateComment(commentRequestDto.getComment());
+        }
+        return comment;
+    }
 
-	@Transactional
-	public void delete(UserSessionDto userSessionDto, Long commentId) {
-		Comment comment = findById(commentId);
-		if (matchUserId(userSessionDto, comment)) {
-			commentRepository.deleteById(commentId);
-		}
-	}
+    public Comment delete(UserSessionDto userSessionDto, Long commentId) {
+        Comment comment = findById(commentId);
+        if (matchUserId(userSessionDto, comment)) {
+            commentRepository.delete(comment);
+        }
+        return comment;
+    }
 
-	private boolean matchUserId(UserSessionDto userSessionDto, Comment comment) {
-		return comment.matchAuthorId(userSessionDto.getId());
-	}
+    private boolean matchUserId(UserSessionDto userSessionDto, Comment comment) {
+        return comment.matchAuthorId(userSessionDto.getId());
+    }
 
-	public CommentResponseDto toCommentResponseDto(Comment comment) {
-		return new CommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment());
-	}
+    public CommentResponseDto toCommentResponseDto(Comment comment) {
+        return new CommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment());
+    }
 }
