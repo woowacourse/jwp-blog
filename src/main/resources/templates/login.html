@@ -68,10 +68,8 @@
 </div>
 <th:block layout:fragment="addScript">
     <script th:if="${loginError != null}" th:inline="javascript">
-        /* <![CDATA[ */
         const error = [[ ${loginError}]];
         alert(error)
-        /* ]]> */
     </script>
     <script th:inline="javascript" th:unless="${loginError != null}">
     </script>

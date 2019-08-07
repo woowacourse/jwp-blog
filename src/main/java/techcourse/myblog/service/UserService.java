@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.domain.UserDTO;
 
 import java.util.List;
 

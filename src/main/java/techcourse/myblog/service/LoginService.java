@@ -6,7 +6,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.domain.UserDTO;
 
 @Service
 @Transactional

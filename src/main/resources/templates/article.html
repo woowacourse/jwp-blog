@@ -74,8 +74,9 @@
                         <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                     </div>
                     <div class="comment">
-                        <ul class="list-unstyled list-info">
-                            <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
+                        <ul class="list-unstyled list-info" id="comment-list">
+                            <li class="comment-item border bottom mrg-btm-30" th:data-comment-id="${comment.id}"
+                                th:each="comment : ${comments}">
                                 <img alt=""
                                      class="thumb-img img-circle"
                                      src="https://avatars2.githubusercontent.com/u/3433096?v=4">
@@ -83,51 +84,32 @@
                                     <span class="text-bold inline-block" href="" th:text="${comment.author.userName}">JUN</span>
 
                                     <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>
+                                        <i class="ti-timer pdd-right-5"></i>p
                                         <span>6 min ago</span>
                                     </span>
+                                    <button class="btn btn-icon float-right pointer comment-del-button"
+                                            id="delete-button2" type="button"
+                                    >
+                                        <i class="ti-trash text-dark font-size-16 pdd-horizon-5 comment-del-button"></i>
+                                    </button>
 
-                                    <form method="post"
-                                          th:action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">
-                                        <input name="_method" type="hidden" value="DELETE"/>
-                                        <button class="btn btn-icon float-right pointer" id="delete-button2"
-                                                type="submit">
-                                            <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
-                                        </button>
-                                    </form>
-
-
-                                    <a class="float-right pointer btn btn-icon" href="/"
-                                       th:href="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">
-                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                    </a>
-                                    <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                    <button class="comment-edit float-right pointer btn btn-icon">
+                                        <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                    </button>
+                                    <p class="width-80" th:text="${comment.contents}"></p>
                                 </div>
-                                <form accept-charset="utf-8" method="post"
-                                      th:action="'/articles/' + ${article.id} + '/comments/' +${comment.id}"
-                                      th:if="${editCommentId} == ${comment.id}">
-                                    <div class="add-comment">
-                                        <input id="comment-contents2" name="contents" type="hidden">
-                                        <div id="editSection2"></div>
-                                        <input name="_method" type="hidden" value="put"/>
-                                        <button class="btn btn-default" id="save-btn2" type="submit">
-                                            댓글 수정
-                                        </button>
-                                    </div>
-                                </form>
                             </li>
                         </ul>
                     </div>
-                    <form accept-charset="utf-8" method="post"
-                          th:action="'/articles/' + ${article.id} + '/comments/'">
-                        <div class="add-comment">
-                            <input id="comment-contents" name="contents" type="hidden">
-                            <div id="editSection"></div>
-                            <button class="btn btn-default" id="save-btn" type="submit">
-                                댓글 등록
-                            </button>
-                        </div>
-                    </form>
+
+                    <div class="add-comment">
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <input id="article-id" th:value="${article.id}" type="hidden">
+                        <div id="editSection"></div>
+                        <button class="btn btn-default" id="comment-save-button" type="submit">
+                            댓글 등록
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,31 +140,18 @@
             },
             height: '200px'
         });
-
-
-        const editor2 = new tui.Editor({
-            el: document.querySelector('#editSection2'),
-            initialEditType: 'markdown',
-            previewStyle: 'horizontal',
-            events: {
-                change: function () {
-                    document.getElementById('comment-contents2').setAttribute('value', editor2.getMarkdown())
-                }
-            },
-            height: '200px'
-        });
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    <script src="/js/commentTemplate.js"></script>
+    <script src="/js/comment.js"></script>
     <script th:if="${commentError != null}" th:inline="javascript">
-        /* <![CDATA[ */
         const error = [[ ${commentError}]];
         alert(error)
-        /* ]]> */
     </script>
     <script th:if="${articleError != null}" th:inline="javascript">
-        /* <![CDATA[ */
         const error = [[ ${articleError}]];
         alert(error)
-        /* ]]> */
     </script>
 </th:block>
 </body>

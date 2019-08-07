@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.dto.domain.CommentDTO;
 
 import java.util.List;
 
@@ -78,7 +80,7 @@ class CommentControllerTest {
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
 
-        webTestClient.post().uri("/articles/write")
+        webTestClient.post().uri("/articles")
                 .header("cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("title", TITLE_1)
@@ -115,17 +117,14 @@ class CommentControllerTest {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
+            CommentDTO commentDTO = new CommentDTO(CONTENTS_1);
 
             webTestClient.post().uri(uri)
-                    .header("referer", uri)
-                    .body(fromFormData("contents", CONTENTS_1))
-                    .exchange()
-                    .expectStatus().isFound()
-                    .expectBody()
-                    .consumeWith((response) -> {
-                        String location = response.getUrl().getPath();
-                        assertThat(location).isEqualTo(uri);
-                    });
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .exchange().expectStatus().isBadRequest();
+
             assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
         }
 
@@ -133,14 +132,14 @@ class CommentControllerTest {
         void 댓글_수정() {
             Article foundArticle = articleRepository.findAll().get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
-
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            CommentDTO commentDTO = new CommentDTO(CONTENTS_2);
 
             webTestClient.put().uri(uri)
-                    .header("referer", uri)
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .body(fromFormData("contents", CONTENTS_2))
-                    .exchange();
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .exchange().expectStatus().isBadRequest();
 
             foundComment = commentReopsitory.findById(foundComment.getId()).get();
             assertThat(foundComment.getContents()).isEqualTo(CONTENTS_1);
@@ -154,8 +153,7 @@ class CommentControllerTest {
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
 
             webTestClient.delete().uri(uri)
-                    .header("referer", uri)
-                    .exchange();
+                    .exchange().expectStatus().isBadRequest();
 
             assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
         }
@@ -171,17 +169,16 @@ class CommentControllerTest {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
+            CommentDTO commentDTO = new CommentDTO("고고");
 
             webTestClient.post().uri(uri)
                     .header("cookie", cookie)
                     .header("referer", uri)
-                    .body(fromFormData("contents", CONTENTS_2))
-                    .exchange().expectStatus().isFound()
-                    .expectBody()
-                    .consumeWith((response) -> {
-                        String location = response.getUrl().getPath();
-                        assertThat(location).isEqualTo(uri);
-                    });
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .exchange().expectStatus().isOk();
+
             assertThat(commentReopsitory.findAll().size()).isEqualTo(2);
         }
 
@@ -191,13 +188,15 @@ class CommentControllerTest {
             Comment foundComment = commentReopsitory.findAll().get(0);
 
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            CommentDTO commentDTO = new CommentDTO(CONTENTS_2);
 
             webTestClient.put().uri(uri)
                     .header("cookie", cookie)
                     .header("referer", uri)
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .body(fromFormData("contents", CONTENTS_2))
-                    .exchange();
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .exchange().expectStatus().isOk();
 
             foundComment = commentReopsitory.findById(foundComment.getId()).get();
             assertThat(foundComment.getContents()).isEqualTo(CONTENTS_2);
@@ -213,7 +212,6 @@ class CommentControllerTest {
 
             webTestClient.delete().uri(uri)
                     .header("cookie", cookie)
-                    .header("referer", uri)
                     .exchange();
 
             assertThat(commentReopsitory.findAll().size()).isEqualTo(0);
@@ -229,13 +227,14 @@ class CommentControllerTest {
             Comment foundComment = commentReopsitory.findAll().get(0);
 
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            CommentDTO commentDTO = new CommentDTO(CONTENTS_2);
 
             webTestClient.put().uri(uri)
                     .header("cookie", anotherCookie)
-                    .header("referer", uri)
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .body(fromFormData("contents", CONTENTS_2))
-                    .exchange();
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .exchange().expectStatus().isBadRequest();
 
             foundComment = commentReopsitory.findById(foundComment.getId()).get();
             assertThat(foundComment.getContents()).isEqualTo(CONTENTS_1);
@@ -251,8 +250,7 @@ class CommentControllerTest {
 
             webTestClient.delete().uri(uri)
                     .header("cookie", anotherCookie)
-                    .header("referer", uri)
-                    .exchange();
+                    .exchange().expectStatus().isBadRequest();
 
             assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
 

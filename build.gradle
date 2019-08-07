@@ -15,14 +15,12 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.commons:commons-lang3:3.1'
+	implementation 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-	
-	implementation 'org.projectlombok:lombok:1.18.4'
 	
 	runtimeOnly 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	runtimeOnly 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0'

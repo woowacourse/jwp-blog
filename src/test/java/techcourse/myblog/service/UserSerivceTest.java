@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.domain.UserDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

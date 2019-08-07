@@ -11,7 +11,7 @@
 <div>
     <th:block layout:fragment="content">
         <form accept-charset="utf-8" method="post"
-              th:action="${articleId == null} ? '/articles/write' : |/articles/${articleId}|">
+              th:action="${articleId == null} ? '/articles/' : '/articles/'+${articleId}">
             <div class="about-cover card no-border">
                 <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                     <div class="height-300px vertical-center pdd-horizon-50">
