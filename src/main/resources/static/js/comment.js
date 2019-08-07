@@ -1,21 +1,18 @@
-const template = '<li class="comment-item border bottom mrg-btm-30">\n' +
-    '<img class="thumb-img img-circle"\n' +
-    'src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">\n' +
-    '<div class="info">\n' +
-    '<a class="text-bold inline-block"\n' +
-    'href="/mypage/{{author.id}}"\n>{{author.name.name}}</a>\n' +
-    '<button class="inline-block sub-title pull-right">\n' +
-    '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>\n' +
-    '</button>\n' +
-    '<a class="inline-block sub-title pull-right">\n' +
-    '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5 edit-comment-btn"></i>\n' +
-    '</a>\n' +
-    '<p id="comment{{id}}" class="width-80 tempComment" style="display: block"\n' +
-    '>{{contents}}</p>\n' +
-    '<input id="change{{id}}" class="width-80 tempInput"\n' +
-    'style="display: none;">\n' +
-    '</div>\n' +
-    '</li>';
+const template =
+    `<li class="comment-item border bottom mrg-btm-30">
+        <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+        <div class="info">
+            <a class="text-bold inline-block" href="/mypage/{{author.id}}">{{author.name.name}}</a>
+                <a class="inline-block sub-title pull-right">
+                    <i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>
+                </a>
+                <a class="inline-block sub-title pull-right">
+                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5 edit-comment-btn"></i>
+                </a>
+            <p id="comment{{id}}" class="width-80 tempComment" style="display: block">{{contents}}</p>
+        <input id="change{{id}}" class="width-80 tempInput" style="display: none;">
+        </div>
+    </li>`;
 
 const host = 'http://' + window.location.host;
 
