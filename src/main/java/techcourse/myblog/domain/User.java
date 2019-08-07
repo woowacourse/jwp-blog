@@ -1,28 +1,21 @@
 package techcourse.myblog.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.validation.UserPattern;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.util.regex.Pattern;
 
 @Entity
 @DynamicUpdate
-@EqualsAndHashCode(of = {"id", "email"})
+@EqualsAndHashCode(of = "email", callSuper = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @Getter
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
@@ -32,14 +25,6 @@ public class User {
     @Column(nullable = false)
     @JsonIgnore
     private String password;
-
-    @CreationTimestamp
-    private LocalDateTime createTimeAt;
-    @UpdateTimestamp
-    private LocalDateTime updateTimeAt;
-
-    private User() {
-    }
 
     public User(String name, String email, String password) {
         validateName(name);
@@ -79,6 +64,6 @@ public class User {
     }
 
     public boolean matchId(Long userId) {
-        return id.equals(userId);
+        return getId().equals(userId);
     }
 }

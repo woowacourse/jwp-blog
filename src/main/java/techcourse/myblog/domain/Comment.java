@@ -1,27 +1,19 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @Getter
-public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Comment extends BaseEntity {
     @Column(nullable = false, length = 600)
     private String contents;
 
@@ -34,11 +26,6 @@ public class Comment {
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
-
-    @CreationTimestamp
-    private LocalDateTime createTimeAt;
-    @UpdateTimestamp
-    private LocalDateTime updateTimeAt;
 
     public Comment(String contents, User writer, Article article) {
         validateContents(contents);
