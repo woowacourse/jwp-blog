@@ -1442,3 +1442,237 @@ Content-Type: application/json;charset=UTF-8
 
 
 
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+purpose: prefetch
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9FFB92D6CF56E4D30B5698BFD7BF5A8F
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254; Path=/; HttpOnly
+Content-Language: en-US
+Date: Wed, 07 Aug 2019 09:21:51 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 09:21:51 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: en-US
+Date: Wed, 07 Aug 2019 09:21:53 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+POST /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 40
+cache-control: max-age=0
+origin: http://localhost:8080
+upgrade-insecure-requests: 1
+content-type: application/x-www-form-urlencoded
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+email=easy@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: en-US
+Date: Wed, 07 Aug 2019 09:21:57 GMT
+Location: http://localhost:8080/
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: en-US
+Date: Wed, 07 Aug 2019 09:21:57 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 09:21:57 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: en-US
+Date: Wed, 07 Aug 2019 09:21:58 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /js/article.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+if-modified-since: Wed, 07 Aug 2019 05:14:13 GMT
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 09:21:39 GMT
+Content-Length: 6131
+Date: Wed, 07 Aug 2019 09:21:58 GMT
+Content-Type: application/javascript
+
+
+
+GET /js/template.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 09:21:39 GMT
+Content-Length: 2232
+Date: Wed, 07 Aug 2019 09:21:58 GMT
+Content-Type: application/javascript
+
+
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 09:21:58 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 59
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9,ko;q=0.8
+cookie: JSESSIONID=9EFEA0B1C26131BD458F7AD1DAB91254
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 09:22:01 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+

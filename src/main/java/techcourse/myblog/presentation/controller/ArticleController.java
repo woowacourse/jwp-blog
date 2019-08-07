@@ -34,7 +34,6 @@ public class ArticleController {
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("comments", commentService.findAllCommentsByArticleId(articleId, email.getEmail()));
         modelAndView.addObject("sessionEmail", email.getEmail());
-        //modelAndView.addObject("Id",commentService.)
         return modelAndView;
     }
 
