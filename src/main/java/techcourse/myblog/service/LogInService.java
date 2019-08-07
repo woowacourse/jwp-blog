@@ -7,10 +7,13 @@ import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.LogInException;
 
+import javax.transaction.Transactional;
+
 import static techcourse.myblog.service.exception.LogInException.NOT_FOUND_USER_MESSAGE;
 import static techcourse.myblog.service.exception.LogInException.PASSWORD_FAIL_MESSAGE;
 
 @Service
+@Transactional
 public class LogInService {
 	private UserRepository userRepository;
 

@@ -49,8 +49,7 @@ public class ArticleServiceTest {
 				new ArticleDto(articleId, BASE_USER_ID, "title1", "coverUrl1", "contents1");
 		UserSessionDto userSessionDto = new UserSessionDto(MISMATCH_USER_ID, null, null);
 
-		articleService.update(articleId, userSessionDto, updateArticleDto);
-		ArticleDto updateFailArticle = articleService.findArticleDtoById(articleId);
+		ArticleDto updateFailArticle = articleService.update(articleId, userSessionDto, updateArticleDto);
 
 		assertThat(updateFailArticle.getTitle()).isEqualTo("title");
 		assertThat(updateFailArticle.getCoverUrl()).isEqualTo("coverUrl");
