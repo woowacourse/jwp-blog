@@ -13,10 +13,7 @@ import techcourse.myblog.service.CommentService;
 @RequestMapping("/comments")
 @SessionAttributes("user")
 @RestController
-//@Controller
 public class CommentController {
-    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
-
     private final CommentService commentService;
 
     public CommentController(CommentService commentService) {

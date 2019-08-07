@@ -1,5 +1,6 @@
 package techcourse.myblog.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -8,8 +9,10 @@ import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.UserDto;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -59,17 +62,27 @@ public class Utils {
                 .exchange();
     }
 
-    public static void createComment(RequestCommentDto requestCommentDto, String cookie, WebTestClient webTestClient) {
-        webTestClient.post().uri("/comments")
+    public static byte[] createComment(RequestCommentDto requestCommentDto, String cookie, WebTestClient webTestClient) {
+       return webTestClient.post().uri("/comments")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .header("Cookie", cookie)
                 .body(Mono.just(requestCommentDto), RequestCommentDto.class)
-                .exchange();
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .returnResult().getResponseBody();
     }
 
-    public static String getId(String url) {
+    public static String getArticleId(String url) {
         List<String> list = Arrays.asList(url.split("/"));
         return list.get(list.size() - 1);
+    }
+
+    public static String getCommentId(byte[] responseBody) throws IOException{
+        String body = new String(responseBody);
+        HashMap jsonData = new ObjectMapper().readValue(body, HashMap.class);
+        return jsonData.get("id").toString();
     }
 }
