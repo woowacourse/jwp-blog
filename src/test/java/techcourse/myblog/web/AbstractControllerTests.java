@@ -14,7 +14,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.UserVO;
-import techcourse.myblog.service.dto.UserRequestDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +33,11 @@ public class AbstractControllerTests {
 
     @BeforeEach
     void setUp() {
-        EntityExchangeResult<byte[]> result = postFormRequest("/login", UserVO.class, "", TEST_PW, TEST_EMAIL);
-        this.cookie = result
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+        loginRequest(TEST_EMAIL, TEST_PW);
+//        EntityExchangeResult<byte[]> result = postFormRequest("/login", UserVO.class, "", TEST_PW, TEST_EMAIL);
+//        this.cookie = result
+//                .getResponseHeaders()
+//                .getFirst("Set-Cookie");
     }
 
     protected EntityExchangeResult<byte[]> getRequest(String uri) {
@@ -110,6 +110,13 @@ public class AbstractControllerTests {
                 .exchange()
                 .expectBody()
                 .returnResult();
+    }
+
+    protected void loginRequest(String email, String password) {
+        EntityExchangeResult<byte[]> result = postFormRequest("/login", UserVO.class, "", password, email);
+        this.cookie = result
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
     }
 
     private <T> BodyInserters.FormInserter<String> mapBy(Class<T> classType, String... parameters) {

@@ -138,7 +138,7 @@
     - ~~댓글 삭제 버튼 누를 시 DELETE ajax 요청~~
     - ~~댓글 수정 버튼 누를 시 PUT ajax 요청~~
     - ~~article.html 이 로드될 시 GET ajax 요청~~
-- 자기가 쓴 댓글만 수정/삭제 가능
+- ~~자기가 쓴 댓글만 수정/삭제 가능~~
 
 리팩토링
 - ~~컨트롤러 클래스를 추상화한 AbstractControllerTests 작성~~

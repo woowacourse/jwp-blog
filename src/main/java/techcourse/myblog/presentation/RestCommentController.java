@@ -30,7 +30,7 @@ public class RestCommentController {
 
     @GetMapping("/articles/{articleId}/comments")
     public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable long articleId) {
-        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 
     @PostMapping("/articles/{articleId}/comments/rest")
@@ -40,22 +40,29 @@ public class RestCommentController {
         Article article = articleService.findById(articleId);
         User commenter = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         commentService.save(commentRequestDto.toComment(commenter, article));
-        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 
     @PutMapping("/comments/{commentId}/rest")
     public ResponseEntity<List<CommentResponseDto>> updateComment(@PathVariable long commentId,
-                                                                  @RequestBody CommentRequestDto commentRequestDto) {
+                                                                  @RequestBody CommentRequestDto commentRequestDto,
+                                                                  HttpSession httpSession) {
         Comment comment = commentService.findById(commentId);
+        if (!comment.getCommenter().equals(httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY))) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         commentService.update(commentId, commentRequestDto);
-        return new ResponseEntity<>(commentService.findByArticleId(comment.getArticle().getId()), HttpStatus.ACCEPTED);
-
+        return new ResponseEntity<>(commentService.findByArticleId(comment.getArticle().getId()), HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{commentId}/rest")
-    public ResponseEntity<List<CommentResponseDto>> deleteComment(@PathVariable long commentId) {
+    public ResponseEntity<List<CommentResponseDto>> deleteComment(@PathVariable long commentId,
+                                                                  HttpSession httpSession) {
         Comment comment = commentService.findById(commentId);
+        if (!comment.getCommenter().equals(httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY))) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         commentService.deleteById(commentId);
-        return new ResponseEntity<>(commentService.findByArticleId(comment.getArticle().getId()), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(commentService.findByArticleId(comment.getArticle().getId()), HttpStatus.OK);
     }
 }
