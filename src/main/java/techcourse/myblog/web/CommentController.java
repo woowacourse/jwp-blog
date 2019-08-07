@@ -31,7 +31,7 @@ public class CommentController {
         Comment comment = commentService.save(commentRequest, (User) httpSession.getAttribute("user"));
         log.info("comment: {}", comment);
 
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
 
     @PutMapping("/{commentId}")
