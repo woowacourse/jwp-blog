@@ -13,8 +13,8 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequest;
 import techcourse.myblog.service.dto.CommentsResponse;
+import techcourse.myblog.support.validator.UserSession;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -38,11 +38,10 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(@Valid ArticleRequest articleRequest, Model model, HttpSession httpSession) {
+    public String saveArticle(@Valid ArticleRequest articleRequest, Model model, @UserSession User sessionUser) {
         log.debug("begin");
 
-        User user = (User) httpSession.getAttribute("user");
-        Article article = articleService.save(articleRequest, user);
+        Article article = articleService.save(articleRequest, sessionUser);
         log.info("article: {}", article);
 
         model.addAttribute("article", article);
@@ -67,28 +66,29 @@ public class ArticleController {
 
 
     @GetMapping("/articles/{articleId}/edit")
-    public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
+    public String edit(@PathVariable("articleId") long articleId, Model model, @UserSession User sessionUser) {
         log.debug("begin");
 
-        Article article = articleService.findByIdWithUser(articleId, (User) httpSession.getAttribute("user"));
+        Article article = articleService.findByIdWithUser(articleId, sessionUser);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest, HttpSession httpSession, Model model) {
+    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest,
+                              @UserSession User sessionUser, Model model) {
         log.debug("begin");
 
-        Article article = articleService.editArticle(articleRequest, articleId, (User) httpSession.getAttribute("user"));
+        Article article = articleService.editArticle(articleRequest, articleId, sessionUser);
         model.addAttribute("article", article);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
+    public String deleteArticle(@PathVariable("articleId") long articleId, @UserSession User sessionUser) {
         log.debug("begin");
 
-        articleService.deleteById(articleId, (User) httpSession.getAttribute("user"));
+        articleService.deleteById(articleId, sessionUser);
         log.info("articleId: {}", articleId);
 
         return "redirect:/";
