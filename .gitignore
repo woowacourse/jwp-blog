@@ -37,3 +37,4 @@ log/
 
 ### my sql file ###
 blog.sql
+*.log
