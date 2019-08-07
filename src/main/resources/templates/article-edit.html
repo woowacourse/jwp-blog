@@ -96,6 +96,16 @@
         </div>
     </form>
 </script>
+<script th:if="${method} == 'put'">
+    /* <![CDATA[ */
+    id = /*[[${article.id}]]*/;
+    path = "/" + id;
+    putTag = "<input type=\"hidden\" name=\"_method\" value=\"put\"/>";
+    title = /*[[${article.title}]]*/;
+    coverUrl = /*[[${article.coverUrl}]]*/;
+    contents = /*[[${article.contents}]]*/;
+    /*]]>*/
+</script>
 <script type="text/javascript" th:inline="javascript">
     let putTag = "";
     let path = "";
@@ -104,22 +114,7 @@
     let coverUrl = "";
     let contents = "";
     console.log("tt");
-
-
-    /* <![CDATA[ */
-    [
-    #
-    th:if= "${method} == 'put'"]
-    id = /*[[${article.id}]]*/;
-    path = "/" + id;
-    putTag = "<input type=\"hidden\" name=\"_method\" value=\"put\"/>";
-    title = /*[[${article.title}]]*/;
-    coverUrl = /*[[${article.coverUrl}]]*/;
-    contents = /*[[${article.contents}]]*/;
-    [/]
-        /*]]>*/
-
-        let inputTemplate = document.querySelector("#input-template").innerText;
+    let inputTemplate = document.querySelector("#input-template").innerText;
     document.querySelector("#input-section").innerHTML += inputTemplate
         .replace("{path}", path)
         .replace("{id}", id)

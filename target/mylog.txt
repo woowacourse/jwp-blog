@@ -1,175 +1,412 @@
-POST /users HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63095
-accept: */*
-webtestclient-request-id: 1
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-content-length: 50
-
-name=hard&email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:12:43 GMT
-Location: http://localhost:63095/login
-
-
-
-POST /login HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63095
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 2
-content-length: 40
-
-email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=D61D463C19115049718FE4473ED3BB02; Path=/; HttpOnly
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:12:43 GMT
-Location: http://localhost:63095/;jsessionid=D61D463C19115049718FE4473ED3BB02
-
-
-
-POST /articles HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63095
-accept: */*
-cookie: JSESSIONID=D61D463C19115049718FE4473ED3BB02; Path=/; HttpOnly
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 3
-content-length: 35
-
-title=111&coverUrl=222&contents=333
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:12:43 GMT
-Location: http://localhost:63095/articles/2
-
-
-
-POST /articles/2/jsoncomments HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63095
-accept: application/json;charset=UTF-8
-cookie: JSESSIONID=D61D463C19115049718FE4473ED3BB02; Path=/; HttpOnly
-webtestclient-request-id: 4
-content-type: application/json;charset=UTF-8
-content-length: 84
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=9802F7AD8AD772A8CDAD7BB9DA0B54F6
 
 
 
 HTTP/1.1 200 OK
 Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:12:43 GMT
+Set-Cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/customize.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 14408
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: text/css
+
+
+
+GET /images/logo/logo_full_white.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+if-modified-since: Thu, 01 Aug 2019 02:13:16 GMT
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 5308
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /css/index.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 461
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: text/css
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+if-modified-since: Thu, 01 Aug 2019 02:13:16 GMT
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 5387
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /css/main.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 1260
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: text/css
+
+
+
+GET /css/app.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 259454
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: text/css
+
+
+
+GET /images/pages/index/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 291935
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: image/jpeg
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 05:28:26 GMT
 Content-Type: application/json;charset=UTF-8
 
 
 
-POST /users HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63137
+GET /js/index.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
 accept: */*
-webtestclient-request-id: 1
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-content-length: 50
-
-name=hard&email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:28:20 GMT
-Location: http://localhost:63137/login
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
 
 
 
-POST /login HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63137
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 2
-content-length: 40
-
-email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=6F6CC0E265B117D2C72CFF2A315997A1; Path=/; HttpOnly
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:28:20 GMT
-Location: http://localhost:63137/;jsessionid=6F6CC0E265B117D2C72CFF2A315997A1
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 932
+Date: Wed, 07 Aug 2019 05:28:26 GMT
+Content-Type: application/javascript
 
 
 
-POST /articles HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63137
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 3
-cookie: JSESSIONID=6F6CC0E265B117D2C72CFF2A315997A1; Path=/; HttpOnly
-content-length: 35
-
-title=111&coverUrl=222&contents=333
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:28:20 GMT
-Location: http://localhost:63137/articles/2
-
-
-
-POST /articles/2/jsoncomments HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63137
-accept: application/json;charset=UTF-8
-webtestclient-request-id: 4
-cookie: JSESSIONID=6F6CC0E265B117D2C72CFF2A315997A1; Path=/; HttpOnly
-content-type: application/json;charset=UTF-8
-content-length: 84
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
 
 
 
 HTTP/1.1 200 OK
 Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:28:20 GMT
-Content-Type: application/json;charset=UTF-8
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: text/html;charset=UTF-8
 
 
 
-PUT /articles/2/jsoncomments/1 HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63137
-accept: application/json;charset=UTF-8
-cookie: JSESSIONID=6F6CC0E265B117D2C72CFF2A315997A1; Path=/; HttpOnly
-content-type: application/json;charset=UTF-8
-webtestclient-request-id: 5
-content-length: 82
+GET /css/customize.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
 
 
 
-HTTP/1.1 500 Internal Server Error
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 14408
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: text/css
+
+
+
+GET /css/main.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 1260
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: text/css
+
+
+
+GET /css/app.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 259454
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: text/css
+
+
+
+GET /css/article.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 503
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: text/css
+
+
+
+GET /js/index.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 932
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: application/javascript
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 5387
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /images/logo/logo_full_white.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 5308
+Date: Wed, 07 Aug 2019 05:28:28 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 400 Bad Request
 Transfer-Encoding: chunked
 Connection: close
-Date: Tue, 06 Aug 2019 13:28:20 GMT
+Date: Wed, 07 Aug 2019 05:28:28 GMT
 Content-Type: application/json;charset=UTF-8
 
 
@@ -177,7 +414,7 @@ Content-Type: application/json;charset=UTF-8
 POST /users HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63146
+host: localhost:64008
 accept: */*
 webtestclient-request-id: 1
 content-type: application/x-www-form-urlencoded;charset=UTF-8
@@ -188,15 +425,15 @@ name=hard&email=hard@gmail.com&password=qwerasdf
 HTTP/1.1 302 Found
 Content-Length: 0
 Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:29:11 GMT
-Location: http://localhost:63146/login
+Date: Wed, 07 Aug 2019 05:37:01 GMT
+Location: http://localhost:64008/login
 
 
 
 POST /login HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63146
+host: localhost:64008
 accept: */*
 content-type: application/x-www-form-urlencoded;charset=UTF-8
 webtestclient-request-id: 2
@@ -205,118 +442,20 @@ content-length: 40
 email=hard@gmail.com&password=qwerasdf
 
 HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=25FB042321DBB58BFA5A5268CC814147; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=984828E9978D091DBB42D4C42813B57B; Path=/; HttpOnly
 Content-Length: 0
 Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:29:11 GMT
-Location: http://localhost:63146/;jsessionid=25FB042321DBB58BFA5A5268CC814147
+Date: Wed, 07 Aug 2019 05:37:01 GMT
+Location: http://localhost:64008/;jsessionid=984828E9978D091DBB42D4C42813B57B
 
 
 
 POST /articles HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63146
+host: localhost:64008
 accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 3
-cookie: JSESSIONID=25FB042321DBB58BFA5A5268CC814147; Path=/; HttpOnly
-content-length: 35
-
-title=111&coverUrl=222&contents=333
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:29:11 GMT
-Location: http://localhost:63146/articles/2
-
-
-
-POST /articles/2/jsoncomments HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63146
-accept: application/json;charset=UTF-8
-webtestclient-request-id: 4
-cookie: JSESSIONID=25FB042321DBB58BFA5A5268CC814147; Path=/; HttpOnly
-content-type: application/json;charset=UTF-8
-content-length: 84
-
-
-
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:29:11 GMT
-Content-Type: application/json;charset=UTF-8
-
-
-
-PUT /articles/2/jsoncomments/1 HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63146
-accept: application/json;charset=UTF-8
-cookie: JSESSIONID=25FB042321DBB58BFA5A5268CC814147; Path=/; HttpOnly
-content-type: application/json;charset=UTF-8
-webtestclient-request-id: 5
-content-length: 82
-
-
-
-HTTP/1.1 500 Internal Server Error
-Transfer-Encoding: chunked
-Connection: close
-Date: Tue, 06 Aug 2019 13:29:11 GMT
-Content-Type: application/json;charset=UTF-8
-
-
-
-POST /users HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63157
-accept: */*
-webtestclient-request-id: 1
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-content-length: 50
-
-name=hard&email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:32:28 GMT
-Location: http://localhost:63157/login
-
-
-
-POST /login HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63157
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 2
-content-length: 40
-
-email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=EFAC8DCF843769BD52797115B8BB4A6A; Path=/; HttpOnly
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:32:28 GMT
-Location: http://localhost:63157/;jsessionid=EFAC8DCF843769BD52797115B8BB4A6A
-
-
-
-POST /articles HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63157
-accept: */*
-cookie: JSESSIONID=EFAC8DCF843769BD52797115B8BB4A6A; Path=/; HttpOnly
+cookie: JSESSIONID=984828E9978D091DBB42D4C42813B57B; Path=/; HttpOnly
 content-type: application/x-www-form-urlencoded;charset=UTF-8
 webtestclient-request-id: 3
 content-length: 35
@@ -326,17 +465,17 @@ title=111&coverUrl=222&contents=333
 HTTP/1.1 302 Found
 Content-Length: 0
 Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:32:28 GMT
-Location: http://localhost:63157/articles/2
+Date: Wed, 07 Aug 2019 05:37:01 GMT
+Location: http://localhost:64008/articles/2
 
 
 
 POST /articles/2/jsoncomments HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63157
+host: localhost:64008
 accept: application/json;charset=UTF-8
-cookie: JSESSIONID=EFAC8DCF843769BD52797115B8BB4A6A; Path=/; HttpOnly
+cookie: JSESSIONID=984828E9978D091DBB42D4C42813B57B; Path=/; HttpOnly
 webtestclient-request-id: 4
 content-type: application/json;charset=UTF-8
 content-length: 84
@@ -345,281 +484,7 @@ content-length: 84
 
 HTTP/1.1 200 OK
 Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:32:28 GMT
-Content-Type: application/json;charset=UTF-8
-
-
-
-PUT /articles/2/jsoncomments/1 HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63157
-accept: application/json;charset=UTF-8
-cookie: JSESSIONID=EFAC8DCF843769BD52797115B8BB4A6A; Path=/; HttpOnly
-content-type: application/json;charset=UTF-8
-webtestclient-request-id: 5
-content-length: 82
-
-
-
-HTTP/1.1 500 Internal Server Error
-Transfer-Encoding: chunked
-Connection: close
-Date: Tue, 06 Aug 2019 13:32:28 GMT
-Content-Type: application/json;charset=UTF-8
-
-
-
-POST /users HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63166
-accept: */*
-webtestclient-request-id: 1
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-content-length: 50
-
-name=hard&email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:35:06 GMT
-Location: http://localhost:63166/login
-
-
-
-POST /login HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63166
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 2
-content-length: 40
-
-email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=763534E323D2DA9CC5AEBAA5590C7321; Path=/; HttpOnly
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:35:29 GMT
-Location: http://localhost:63166/;jsessionid=763534E323D2DA9CC5AEBAA5590C7321
-
-
-
-POST /articles HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63166
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 3
-cookie: JSESSIONID=763534E323D2DA9CC5AEBAA5590C7321; Path=/; HttpOnly
-content-length: 35
-
-title=111&coverUrl=222&contents=333
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:35:38 GMT
-Location: http://localhost:63166/articles/2
-
-
-
-POST /articles/2/jsoncomments HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63166
-accept: application/json;charset=UTF-8
-webtestclient-request-id: 4
-content-type: application/json;charset=UTF-8
-cookie: JSESSIONID=763534E323D2DA9CC5AEBAA5590C7321; Path=/; HttpOnly
-content-length: 84
-
-
-
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:36:22 GMT
-Content-Type: application/json;charset=UTF-8
-
-
-
-PUT /articles/2/jsoncomments/1 HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63166
-accept: application/json;charset=UTF-8
-content-type: application/json;charset=UTF-8
-webtestclient-request-id: 5
-cookie: JSESSIONID=763534E323D2DA9CC5AEBAA5590C7321; Path=/; HttpOnly
-content-length: 82
-
-
-
-HTTP/1.1 500 Internal Server Error
-Transfer-Encoding: chunked
-Connection: close
-Date: Tue, 06 Aug 2019 13:40:06 GMT
-Content-Type: application/json;charset=UTF-8
-
-
-
-POST /users HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63176
-accept: */*
-webtestclient-request-id: 1
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-content-length: 50
-
-name=hard&email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:40:40 GMT
-Location: http://localhost:63176/login
-
-
-
-POST /login HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63176
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 2
-content-length: 40
-
-email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=903A97BD92C2E789373172BF5E14D879; Path=/; HttpOnly
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:40:40 GMT
-Location: http://localhost:63176/;jsessionid=903A97BD92C2E789373172BF5E14D879
-
-
-
-POST /articles HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63176
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-cookie: JSESSIONID=903A97BD92C2E789373172BF5E14D879; Path=/; HttpOnly
-webtestclient-request-id: 3
-content-length: 35
-
-title=111&coverUrl=222&contents=333
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:40:40 GMT
-Location: http://localhost:63176/articles/2
-
-
-
-POST /articles/2/jsoncomments HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63176
-accept: application/json;charset=UTF-8
-cookie: JSESSIONID=903A97BD92C2E789373172BF5E14D879; Path=/; HttpOnly
-webtestclient-request-id: 4
-content-type: application/json;charset=UTF-8
-content-length: 84
-
-
-
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:43:22 GMT
-Content-Type: application/json;charset=UTF-8
-
-
-
-POST /users HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63184
-accept: */*
-webtestclient-request-id: 1
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-content-length: 50
-
-name=hard&email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:43:42 GMT
-Location: http://localhost:63184/login
-
-
-
-POST /login HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63184
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 2
-content-length: 40
-
-email=hard@gmail.com&password=qwerasdf
-
-HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=48DEE4F8FFAF7D9A98C8AC3B3E3D3FD4; Path=/; HttpOnly
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:43:42 GMT
-Location: http://localhost:63184/;jsessionid=48DEE4F8FFAF7D9A98C8AC3B3E3D3FD4
-
-
-
-POST /articles HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63184
-accept: */*
-content-type: application/x-www-form-urlencoded;charset=UTF-8
-webtestclient-request-id: 3
-cookie: JSESSIONID=48DEE4F8FFAF7D9A98C8AC3B3E3D3FD4; Path=/; HttpOnly
-content-length: 35
-
-title=111&coverUrl=222&contents=333
-
-HTTP/1.1 302 Found
-Content-Length: 0
-Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:43:42 GMT
-Location: http://localhost:63184/articles/2
-
-
-
-POST /articles/2/jsoncomments HTTP/1.1
-accept-encoding: gzip
-user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63184
-accept: application/json;charset=UTF-8
-webtestclient-request-id: 4
-cookie: JSESSIONID=48DEE4F8FFAF7D9A98C8AC3B3E3D3FD4; Path=/; HttpOnly
-content-type: application/json;charset=UTF-8
-content-length: 84
-
-
-
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:43:42 GMT
+Date: Wed, 07 Aug 2019 05:37:01 GMT
 Content-Type: application/json;charset=UTF-8
 
 
@@ -627,19 +492,18 @@ Content-Type: application/json;charset=UTF-8
 PUT /articles/2/jsoncomments/3 HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63184
+host: localhost:64008
 accept: application/json;charset=UTF-8
-cookie: JSESSIONID=48DEE4F8FFAF7D9A98C8AC3B3E3D3FD4; Path=/; HttpOnly
+cookie: JSESSIONID=984828E9978D091DBB42D4C42813B57B; Path=/; HttpOnly
 content-type: application/json;charset=UTF-8
 webtestclient-request-id: 5
 content-length: 82
 
 
 
-HTTP/1.1 500 Internal Server Error
+HTTP/1.1 200 OK
 Transfer-Encoding: chunked
-Connection: close
-Date: Tue, 06 Aug 2019 13:43:42 GMT
+Date: Wed, 07 Aug 2019 05:37:01 GMT
 Content-Type: application/json;charset=UTF-8
 
 
@@ -647,7 +511,7 @@ Content-Type: application/json;charset=UTF-8
 POST /users HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63196
+host: localhost:64078
 accept: */*
 webtestclient-request-id: 1
 content-type: application/x-www-form-urlencoded;charset=UTF-8
@@ -658,15 +522,15 @@ name=hard&email=hard@gmail.com&password=qwerasdf
 HTTP/1.1 302 Found
 Content-Length: 0
 Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:48:27 GMT
-Location: http://localhost:63196/login
+Date: Wed, 07 Aug 2019 05:48:09 GMT
+Location: http://localhost:64078/login
 
 
 
 POST /login HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63196
+host: localhost:64078
 accept: */*
 content-type: application/x-www-form-urlencoded;charset=UTF-8
 webtestclient-request-id: 2
@@ -675,22 +539,22 @@ content-length: 40
 email=hard@gmail.com&password=qwerasdf
 
 HTTP/1.1 302 Found
-Set-Cookie: JSESSIONID=0E1D3F416C09927CE998D417E68B1BC7; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=D6BE095F5A075E31F77A9BA28DB0C4F3; Path=/; HttpOnly
 Content-Length: 0
 Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:48:27 GMT
-Location: http://localhost:63196/;jsessionid=0E1D3F416C09927CE998D417E68B1BC7
+Date: Wed, 07 Aug 2019 05:48:09 GMT
+Location: http://localhost:64078/;jsessionid=D6BE095F5A075E31F77A9BA28DB0C4F3
 
 
 
 POST /articles HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63196
+host: localhost:64078
 accept: */*
 content-type: application/x-www-form-urlencoded;charset=UTF-8
+cookie: JSESSIONID=D6BE095F5A075E31F77A9BA28DB0C4F3; Path=/; HttpOnly
 webtestclient-request-id: 3
-cookie: JSESSIONID=0E1D3F416C09927CE998D417E68B1BC7; Path=/; HttpOnly
 content-length: 35
 
 title=111&coverUrl=222&contents=333
@@ -698,18 +562,18 @@ title=111&coverUrl=222&contents=333
 HTTP/1.1 302 Found
 Content-Length: 0
 Content-Language: ko-KR
-Date: Tue, 06 Aug 2019 13:48:27 GMT
-Location: http://localhost:63196/articles/2
+Date: Wed, 07 Aug 2019 05:48:09 GMT
+Location: http://localhost:64078/articles/2
 
 
 
 POST /articles/2/jsoncomments HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63196
+host: localhost:64078
 accept: application/json;charset=UTF-8
+cookie: JSESSIONID=D6BE095F5A075E31F77A9BA28DB0C4F3; Path=/; HttpOnly
 webtestclient-request-id: 4
-cookie: JSESSIONID=0E1D3F416C09927CE998D417E68B1BC7; Path=/; HttpOnly
 content-type: application/json;charset=UTF-8
 content-length: 84
 
@@ -717,17 +581,3245 @@ content-length: 84
 
 HTTP/1.1 200 OK
 Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:48:27 GMT
+Date: Wed, 07 Aug 2019 05:48:34 GMT
 Content-Type: application/json;charset=UTF-8
 
 
 
-PUT /articles/2/jsoncomments/1 HTTP/1.1
+POST /users HTTP/1.1
 accept-encoding: gzip
 user-agent: ReactorNetty/0.8.9.RELEASE
-host: localhost:63196
+host: localhost:64086
+accept: */*
+webtestclient-request-id: 1
+content-type: application/x-www-form-urlencoded;charset=UTF-8
+content-length: 50
+
+name=hard&email=hard@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:49:04 GMT
+Location: http://localhost:64086/login
+
+
+
+POST /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64086
+accept: */*
+content-type: application/x-www-form-urlencoded;charset=UTF-8
+webtestclient-request-id: 2
+content-length: 40
+
+email=hard@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Set-Cookie: JSESSIONID=04EA9784144311853A5128229173766C; Path=/; HttpOnly
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:49:04 GMT
+Location: http://localhost:64086/;jsessionid=04EA9784144311853A5128229173766C
+
+
+
+POST /articles HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64086
+accept: */*
+cookie: JSESSIONID=04EA9784144311853A5128229173766C; Path=/; HttpOnly
+content-type: application/x-www-form-urlencoded;charset=UTF-8
+webtestclient-request-id: 3
+content-length: 35
+
+title=111&coverUrl=222&contents=333
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:49:04 GMT
+Location: http://localhost:64086/articles/2
+
+
+
+POST /articles/2/jsoncomments HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64086
 accept: application/json;charset=UTF-8
-cookie: JSESSIONID=0E1D3F416C09927CE998D417E68B1BC7; Path=/; HttpOnly
+cookie: JSESSIONID=04EA9784144311853A5128229173766C; Path=/; HttpOnly
+webtestclient-request-id: 4
+content-type: application/json;charset=UTF-8
+content-length: 84
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 05:49:04 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=EEC988FFC8D08443BB67913A4E863C3B
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/main.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 1260
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: text/css
+
+
+
+GET /css/customize.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 14408
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: text/css
+
+
+
+GET /css/index.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 461
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: text/css
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 5387
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /css/app.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Wed, 07 Aug 2019 05:27:15 GMT
+Content-Length: 259454
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: text/css
+
+
+
+GET /js/index.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: */*
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 932
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: application/javascript
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 5387
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /images/logo/logo_full_white.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 5308
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /images/pages/index/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: no-store
+Last-Modified: Tue, 06 Aug 2019 09:28:29 GMT
+Content-Length: 291935
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: image/jpeg
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 05:50:04 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:50:06 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+POST /users HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64140
+accept: */*
+webtestclient-request-id: 1
+content-type: application/x-www-form-urlencoded;charset=UTF-8
+content-length: 50
+
+name=hard&email=hard@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:54:41 GMT
+Location: http://localhost:64140/login
+
+
+
+POST /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64140
+accept: */*
+content-type: application/x-www-form-urlencoded;charset=UTF-8
+webtestclient-request-id: 2
+content-length: 40
+
+email=hard@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Set-Cookie: JSESSIONID=FADD7A9B23DC809AF13C7618C60F6402; Path=/; HttpOnly
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:54:41 GMT
+Location: http://localhost:64140/;jsessionid=FADD7A9B23DC809AF13C7618C60F6402
+
+
+
+POST /articles HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64140
+accept: */*
+cookie: JSESSIONID=FADD7A9B23DC809AF13C7618C60F6402; Path=/; HttpOnly
+content-type: application/x-www-form-urlencoded;charset=UTF-8
+webtestclient-request-id: 3
+content-length: 35
+
+title=111&coverUrl=222&contents=333
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 05:54:41 GMT
+Location: http://localhost:64140/articles/2
+
+
+
+POST /articles/2/jsoncomments HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64140
+accept: application/json;charset=UTF-8
+cookie: JSESSIONID=FADD7A9B23DC809AF13C7618C60F6402; Path=/; HttpOnly
+webtestclient-request-id: 4
+content-type: application/json;charset=UTF-8
+content-length: 84
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 05:54:41 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+DELETE /articles/2/jsoncomments/3 HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64140
+accept: */*
+cookie: JSESSIONID=FADD7A9B23DC809AF13C7618C60F6402; Path=/; HttpOnly
+webtestclient-request-id: 5
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 05:54:41 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /css/main.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+purpose: prefetch
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 1260
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: text/css
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+purpose: prefetch
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=1B4020BFA1FE0F3557F01EC837C87A9E
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/customize.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+purpose: prefetch
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 14408
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: text/css
+
+
+
+GET /css/index.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+purpose: prefetch
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 461
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: text/css
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+purpose: prefetch
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 5387
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /css/app.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+purpose: prefetch
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:00 GMT
+Content-Length: 259454
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: text/css
+
+
+
+GET /js/index.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: */*
+purpose: prefetch
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 932
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: application/javascript
+
+
+
+GET /images/logo/logo_full_white.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 5308
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: image/png
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /images/pages/index/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 291935
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: image/jpeg
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 07:44:18 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 500 Internal Server Error
+Connection: close
+Content-Length: 407
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:44:20 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+purpose: prefetch
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5409D48976278458CE2985E5ADCCEB7A
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=B0092EAA8D4BCE45431072DC7004626D; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:45:15 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=B0092EAA8D4BCE45431072DC7004626D
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 07:45:15 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=B0092EAA8D4BCE45431072DC7004626D
+
+
+
+HTTP/1.1 500 Internal Server Error
+Connection: close
+Content-Length: 406
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:45:16 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+purpose: prefetch
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=B0092EAA8D4BCE45431072DC7004626D
+
+
+
+HTTP/1.1 500 Internal Server Error
+Connection: close
+Set-Cookie: JSESSIONID=D69B053E312296C943220867444996A5; Path=/; HttpOnly
+Content-Length: 406
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:46:06 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=D69B053E312296C943220867444996A5
+
+
+
+HTTP/1.1 500 Internal Server Error
+Connection: close
+Set-Cookie: JSESSIONID=55B5B300001489D64DB131C4C5BC155B; Path=/; HttpOnly
+Content-Length: 427
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:47:16 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /favicon.ico HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+pragma: no-cache
+cache-control: no-cache
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=55B5B300001489D64DB131C4C5BC155B
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Tue, 16 Jul 2019 14:28:35 GMT
+Content-Length: 946
+Date: Wed, 07 Aug 2019 07:47:16 GMT
+Content-Type: image/x-icon
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=55B5B300001489D64DB131C4C5BC155B
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:47:54 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 07:47:54 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /images/logo/favicon.ico HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+pragma: no-cache
+cache-control: no-cache
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 412
+Date: Wed, 07 Aug 2019 07:47:54 GMT
+Content-Type: image/x-icon
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 500 Internal Server Error
+Connection: close
+Content-Length: 406
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:47:55 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:48:08 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/article.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 503
+Date: Wed, 07 Aug 2019 07:48:08 GMT
+Content-Type: text/css
+
+
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 07:48:08 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:48:10 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 07:48:10 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /writing HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 500 Internal Server Error
+Connection: close
+Content-Length: 413
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:48:12 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64860
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:55:38 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /signup HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64860
+accept: */*
+webtestclient-request-id: 2
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:55:38 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /writing HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64860
+accept: */*
+webtestclient-request-id: 3
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:55:38 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64860
+accept: */*
+webtestclient-request-id: 4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=AFEA7FD5040A29376530E48BDE3D5F47; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 07:55:38 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:49647
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:00:28 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /signup HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:49647
+accept: */*
+webtestclient-request-id: 2
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:00:28 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /writing HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:49647
+accept: */*
+webtestclient-request-id: 3
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:00:28 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:49647
+accept: */*
+webtestclient-request-id: 4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=D46AA9F321CE7C40071B8567E8B77CE7; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:00:28 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:50360
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:03:24 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:50562
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:04:14 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /writing HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:50988
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:05:59 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /writing HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:51810
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:09:23 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:51923
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:09:48 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /signup HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:51923
+accept: */*
+webtestclient-request-id: 2
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:09:48 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /writing HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:51923
+accept: */*
+webtestclient-request-id: 3
+
+
+
+HTTP/1.1 500 Internal Server Error
+Transfer-Encoding: chunked
+Connection: close
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:09:48 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:51923
+accept: */*
+webtestclient-request-id: 4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=1B2C94A4A350CC4259A9F018B6D78AAC; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:09:48 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:52448
+accept: */*
+webtestclient-request-id: 1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:11:57 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /signup HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:52448
+accept: */*
+webtestclient-request-id: 2
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:11:57 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /writing HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:52448
+accept: */*
+webtestclient-request-id: 3
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:11:57 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:52448
+accept: */*
+webtestclient-request-id: 4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=AB107A20F6B6479707F374FF37EC125F; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:11:57 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/app.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:00 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:00 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /css/customize.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /css/index.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /css/main.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /js/index.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /images/logo/logo_full_white.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /images/pages/index/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:13:20 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:13:22 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /images/default/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Content-Length: 478716
+Date: Wed, 07 Aug 2019 08:13:22 GMT
+Content-Type: image/jpeg
+
+[IMAGE CONTENTS SUPPRESSED]
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=AB19FFF99525E64B9FA0626F91A7036F
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:24:11 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:24:11 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:24:19 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+POST /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 40
+cache-control: max-age=0
+origin: http://localhost:8080
+upgrade-insecure-requests: 1
+content-type: application/x-www-form-urlencoded
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+email=easy@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:24:29 GMT
+Location: http://localhost:8080/
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:24:29 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:24:29 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:24:32 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/article.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:24:32 GMT
+
+
+
+GET /js/article.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 08:23:56 GMT
+Content-Length: 6038
+Date: Wed, 07 Aug 2019 08:24:32 GMT
+Content-Type: application/javascript
+
+
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:24:32 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/commentTemplate.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:24:32 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 59
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:24:35 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 59
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:24:36 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 59
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:24:36 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/commentTemplate.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 400 Bad Request
+Connection: close
+Content-Length: 491
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:24:45 GMT
+Content-Type: text/html;charset=ISO-8859-1
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=FFAD588B160A49FF094417F52660B555
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/index.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /css/main.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /css/customize.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /css/app.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:00 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:00 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /js/index.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /images/logo/logo_full_white.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /images/pages/index/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:30:18 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:30:19 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /images/default/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 08:30:19 GMT
+
+
+
+POST /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 40
+cache-control: max-age=0
+origin: http://localhost:8080
+upgrade-insecure-requests: 1
+content-type: application/x-www-form-urlencoded
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+email=easy@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:30:25 GMT
+Location: http://localhost:8080/
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:30:25 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:30:25 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:30:27 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /js/article.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+if-modified-since: Wed, 07 Aug 2019 08:23:56 GMT
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 08:29:18 GMT
+Content-Length: 6309
+Date: Wed, 07 Aug 2019 08:30:27 GMT
+Content-Type: application/javascript
+
+
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:30:27 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/commentTemplate.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:30:27 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=5C1D4A74D205AA1457F1856834DD64D4
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:31:28 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:31:28 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:31:28 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+POST /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 40
+cache-control: max-age=0
+origin: http://localhost:8080
+upgrade-insecure-requests: 1
+content-type: application/x-www-form-urlencoded
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+email=easy@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:31:38 GMT
+Location: http://localhost:8080/
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:31:38 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:31:38 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:31:39 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /js/article.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+if-modified-since: Wed, 07 Aug 2019 08:29:18 GMT
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 08:31:13 GMT
+Content-Length: 6308
+Date: Wed, 07 Aug 2019 08:31:39 GMT
+Content-Type: application/javascript
+
+
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:31:39 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/commentTemplate.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:31:39 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 58
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:31:42 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 58
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:31:42 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 58
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:31:42 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=8B1C4C3055FAD603E872C0DE2393EDF1
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:34:04 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:34:04 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:34:07 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+POST /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 40
+cache-control: max-age=0
+origin: http://localhost:8080
+upgrade-insecure-requests: 1
+content-type: application/x-www-form-urlencoded
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+email=easy@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:34:12 GMT
+Location: http://localhost:8080/
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:34:12 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:34:12 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:34:13 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /js/commentTemplate.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 08:23:56 GMT
+Content-Length: 2191
+Date: Wed, 07 Aug 2019 08:34:13 GMT
+Content-Type: application/javascript
+
+
+
+GET /js/article.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+if-modified-since: Wed, 07 Aug 2019 08:31:13 GMT
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 08:33:47 GMT
+Content-Length: 5946
+Date: Wed, 07 Aug 2019 08:34:13 GMT
+Content-Type: application/javascript
+
+
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:34:13 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 58
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:34:15 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=E6EA7491615721D471A316941B25E6B5
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:35:42 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:35:42 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:35:43 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+POST /login HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 40
+cache-control: max-age=0
+origin: http://localhost:8080
+upgrade-insecure-requests: 1
+content-type: application/x-www-form-urlencoded
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+email=easy@gmail.com&password=qwerasdf
+
+HTTP/1.1 302 Found
+Content-Length: 0
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:35:48 GMT
+Location: http://localhost:8080/
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+cache-control: max-age=0
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/login
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:35:48 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:35:48 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET /articles/1 HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 08:35:48 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /js/commentTemplate.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+if-modified-since: Wed, 07 Aug 2019 08:23:56 GMT
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 08:23:56 GMT
+Date: Wed, 07 Aug 2019 08:35:48 GMT
+
+
+
+GET /js/article.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+if-modified-since: Wed, 07 Aug 2019 08:33:47 GMT
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Last-Modified: Wed, 07 Aug 2019 08:35:23 GMT
+Content-Length: 5753
+Date: Wed, 07 Aug 2019 08:35:48 GMT
+Content-Type: application/javascript
+
+
+
+GET /articles/cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 400 Bad Request
+Transfer-Encoding: chunked
+Connection: close
+Date: Wed, 07 Aug 2019 08:35:49 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+POST /articles/1/jsoncomments HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+content-length: 58
+accept: application/json; charset=UTF-8
+origin: http://localhost:8080
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+content-type: application/json; charset=UTF-8
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 08:35:51 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+GET / HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
+referer: http://localhost:8080/articles/1
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=C565BD3948DE3787F45386519D7E691A
+
+
+
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Set-Cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72; Path=/; HttpOnly
+Content-Language: ko-KR
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+Content-Type: text/html;charset=UTF-8
+
+
+
+GET /css/app.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+if-modified-since: Wed, 07 Aug 2019 05:52:00 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:00 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /css/customize.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /css/index.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /images/logo/logo_full_dark.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /css/main.css HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: text/css,*/*;q=0.1
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /js/index.js HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: */*
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /images/logo/logo_full_white.png HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /images/pages/index/bg.jpg HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+if-modified-since: Wed, 07 Aug 2019 05:52:01 GMT
+
+
+
+HTTP/1.1 304 Not Modified
+Last-Modified: Wed, 07 Aug 2019 05:52:01 GMT
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+
+
+
+GET /cover_url HTTP/1.1
+host: localhost:8080
+connection: keep-alive
+user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Mobile Safari/537.36
+accept: image/webp,image/apng,image/*,*/*;q=0.8
+referer: http://localhost:8080/
+accept-encoding: gzip, deflate, br
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: JSESSIONID=4C4090689CBB86944B6439C7FF4D4A72
+
+
+
+HTTP/1.1 404 Not Found
+Transfer-Encoding: chunked
+Date: Wed, 07 Aug 2019 10:19:52 GMT
+Content-Type: application/json;charset=UTF-8
+
+
+
+PUT /articles/2/jsoncomments/3 HTTP/1.1
+accept-encoding: gzip
+user-agent: ReactorNetty/0.8.9.RELEASE
+host: localhost:64086
+accept: application/json;charset=UTF-8
+cookie: JSESSIONID=04EA9784144311853A5128229173766C; Path=/; HttpOnly
 content-type: application/json;charset=UTF-8
 webtestclient-request-id: 5
 content-length: 82
@@ -736,7 +3828,7 @@ content-length: 82
 
 HTTP/1.1 200 OK
 Transfer-Encoding: chunked
-Date: Tue, 06 Aug 2019 13:48:27 GMT
+Date: Wed, 07 Aug 2019 12:41:33 GMT
 Content-Type: application/json;charset=UTF-8
 
 

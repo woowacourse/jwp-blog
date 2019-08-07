@@ -25,13 +25,13 @@ public class MainController {
             model.addAttribute("email", httpSession.getAttribute("email"));
         }
 
-        return "/index";
+        return "index";
     }
 
     @GetMapping("/writing")
     public String readWritingPage(Model model) {
         model.addAttribute("method", "post");
-        return "/article-edit";
+        return "article-edit";
     }
 
     @GetMapping("/login")

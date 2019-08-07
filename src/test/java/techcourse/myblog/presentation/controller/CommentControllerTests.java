@@ -143,7 +143,7 @@ public class CommentControllerTests extends BasicControllerTests {
 
         CommentJsonDto expectUpdateCommentJsonDto = new CommentJsonDto("hard@gmail.com", "8888", 2L, 3L, true);
         System.out.println(articleUri);
-        webTestClient.put().uri(articleUri + "/jsoncomments/1")
+        webTestClient.put().uri(articleUri + "/jsoncomments/3")
                 .header("Cookie", sessionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -158,5 +158,29 @@ public class CommentControllerTests extends BasicControllerTests {
                 .jsonPath("$.contents").isEqualTo("8888")
                 .jsonPath("$.articleId").isEqualTo(2L)
                 .jsonPath("$.id").isEqualTo(3L);
+    }
+
+    @Test
+    void delete_ajax_comment_test() {
+        registerUser();
+        sessionId = logInAndGetSessionId();
+        result = writeArticle(sessionId);
+        articleUri = result.getResponseHeaders().getLocation().getPath();
+        CommentJsonDto commentJsonDto = new CommentJsonDto("hard@gmail.com", "777", 2L, null, true);
+        webTestClient.post().uri(articleUri + "/jsoncomments")
+                .header("Cookie", sessionId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentJsonDto), CommentJsonDto.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        webTestClient.delete().uri(articleUri+"/jsoncomments/3")
+                .header("Cookie",sessionId)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
 }
