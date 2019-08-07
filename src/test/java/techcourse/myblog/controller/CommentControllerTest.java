@@ -12,7 +12,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.dto.CommentDTO;
+import techcourse.myblog.service.dto.domain.CommentDTO;
 
 import java.util.List;
 

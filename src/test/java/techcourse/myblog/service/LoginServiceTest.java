@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.NotFoundUserException;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.domain.UserDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

@@ -14,7 +14,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.service.dto.ArticleDTO;
+import techcourse.myblog.service.dto.domain.ArticleDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

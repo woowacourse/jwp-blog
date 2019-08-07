@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.annotation.UserFromSession;
+import techcourse.myblog.controller.message.ResponseMessage;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -15,9 +16,8 @@ import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.service.dto.CommentDTO;
-import techcourse.myblog.service.dto.CommentResponseDto;
-import techcourse.myblog.service.dto.ResponseMessage;
+import techcourse.myblog.service.dto.domain.CommentDTO;
+import techcourse.myblog.service.dto.response.CommentResponseDto;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,8 +42,7 @@ public class CommentController {
         Comment comment = commentDTO.toDomain(article, user);
         article.add(comment);
         commentRepository.save(comment);
-        return new CommentResponseDto(article.getAuthor().getUserName(), comment.getContents(),
-                comment.getId());
+        return new CommentResponseDto(article, comment);
     }
 
     @DeleteMapping("/{commentId}")

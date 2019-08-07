@@ -1,14 +1,17 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.service.dto.response;
+
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 
 public class CommentResponseDto {
     private String userName;
     private String contents;
     private Long id;
 
-    public CommentResponseDto(String userName, String contents, Long id) {
-        this.userName = userName;
-        this.contents = contents;
-        this.id = id;
+    public CommentResponseDto(Article article, Comment comment) {
+        this.userName = article.getAuthor().getUserName();
+        this.contents = comment.getContents();
+        this.id = comment.getId();
     }
 
     public String getUserName() {

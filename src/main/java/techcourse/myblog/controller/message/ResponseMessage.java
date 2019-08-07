@@ -1,4 +1,4 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.controller.message;
 
 public class ResponseMessage {
     private String status;

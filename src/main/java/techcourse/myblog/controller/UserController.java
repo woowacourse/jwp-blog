@@ -10,7 +10,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.domain.UserDTO;
 
 import javax.servlet.http.HttpSession;
 

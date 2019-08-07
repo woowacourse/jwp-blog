@@ -1,4 +1,4 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.service.dto.domain;
 
 import org.springframework.lang.NonNull;
 import techcourse.myblog.domain.Article;
