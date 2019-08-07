@@ -147,8 +147,6 @@
             alert('내용을 입력하세요!');
             return;
         }
-        // document.getElementById("commentContents").value = contents;
-        // document.getElementById("commentForm").submit();
 
         fetch(window.location.pathname + '/comments', {
             method: "POST",
@@ -260,7 +258,6 @@
     }
 
     function refreshCommentCount() {
-        console.log('ssss');
         document.querySelector('.width-100.border.bottom.mrg-btm-20.pdd-btm-10 .font-size-16.text-info')
         .innerText = document.querySelectorAll('.comment > ul > li').length;
     }
