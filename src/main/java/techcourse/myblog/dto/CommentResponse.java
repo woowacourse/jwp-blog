@@ -1,6 +1,8 @@
 package techcourse.myblog.dto;
 
 import lombok.Getter;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
 
 @Getter
 public class CommentResponse {
@@ -9,10 +11,10 @@ public class CommentResponse {
     private Long authorId;
     private String authorName;
 
-    public CommentResponse(Long id, String contents, Long authorId, String authorName) {
-        this.id = id;
-        this.contents = contents;
-        this.authorId = authorId;
-        this.authorName = authorName;
+    public CommentResponse(Comment comment, User author) {
+        this.id = comment.getId();
+        this.contents = comment.getContents();
+        this.authorId = author.getId();
+        this.authorName = author.getName();
     }
 }

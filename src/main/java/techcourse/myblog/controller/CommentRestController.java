@@ -44,7 +44,7 @@ public class CommentRestController {
         return commentService
                 .findAllByArticleId(articleId)
                 .stream()
-                .map(savedComment -> toDto(savedComment, savedComment.getAuthor()))
+                .map(savedComment -> new CommentResponse(savedComment, savedComment.getAuthor()))
                 .collect(Collectors.toList());
     }
 
@@ -60,14 +60,14 @@ public class CommentRestController {
         Article article = articleService.select(commentRequest.getArticleId());
         Comment comment = new Comment(commentRequest.getContents(), user, article);
         Comment savedComment = commentService.save(comment);
-        return toDto(savedComment, savedComment.getAuthor());
+        return new CommentResponse(savedComment, savedComment.getAuthor());
     }
 
     @PutMapping("/{commentId}")
     public CommentResponse put(@PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
         User user = userSessionManager.getUser();
         Comment editedComment = commentService.update(commentId, commentRequest, user);
-        return toDto(editedComment, editedComment.getAuthor());
+        return new CommentResponse(editedComment, editedComment.getAuthor());
     }
 
     @DeleteMapping("/{commentId}")
@@ -82,14 +82,4 @@ public class CommentRestController {
             throw new UnauthorizedException();
         }
     }
-
-    private CommentResponse toDto(Comment comment, User author) {
-        return new CommentResponse(
-                comment.getId(),
-                comment.getContents(),
-                author.getId(),
-                author.getName()
-        );
-    }
-
 }
