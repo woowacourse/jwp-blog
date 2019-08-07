@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.CommentEditRequestDto;
+import techcourse.myblog.dto.CommentDeleteResponseDto;
+import techcourse.myblog.dto.CommentEditDto;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.dto.CommentSaveResponseDto;
 import techcourse.myblog.service.CommentService;
@@ -25,19 +26,19 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public String editComment(@PathVariable Long id, @RequestBody CommentEditRequestDto commentEditRequestDto, User user) {
-        String editedContents = commentEditRequestDto.getEditedContents();
+    public CommentEditDto editComment(@PathVariable Long id, @RequestBody CommentEditDto commentEditDto, User user) {
+        String editedContents = commentEditDto.getEditedContents();
         commentService.update(id, editedContents, user);
         log.info("update comment put request id={}, editedContents={}", id, editedContents);
 
-        return "{\"editedContents\":\"" + editedContents + "\"}";
+        return commentEditDto;
     }
 
     @DeleteMapping("/{id}")
-    public String deleteComment(@PathVariable Long id, User user) {
+    public CommentDeleteResponseDto deleteComment(@PathVariable Long id, User user) {
         log.info("delete comment delete request id={}", id);
 
         commentService.deleteById(id, user);
-        return "{\"commentId\":\"" + id + "\"}";
+        return new CommentDeleteResponseDto(id);
     }
 }

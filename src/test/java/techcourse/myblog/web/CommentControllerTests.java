@@ -11,7 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.dto.CommentEditRequestDto;
+import techcourse.myblog.dto.CommentEditDto;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.dto.UserSaveRequestDto;
 import techcourse.myblog.service.CommentService;
@@ -86,13 +86,13 @@ class CommentControllerTests {
         Comment comment = commentService.findByArticleId(Long.parseLong(articleId)).get(0);
         Long commentId = comment.getId();
 
-        CommentEditRequestDto commentEditRequestDto = new CommentEditRequestDto();
-        commentEditRequestDto.setEditedContents("수정된댓글");
+        CommentEditDto commentEditDto = new CommentEditDto();
+        commentEditDto.setEditedContents("수정된댓글");
 
         webTestClient.put().uri("/comment/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(commentEditRequestDto), CommentEditRequestDto.class)
+                .body(Mono.just(commentEditDto), CommentEditDto.class)
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk()
@@ -111,13 +111,13 @@ class CommentControllerTests {
         Comment comment = commentService.findByArticleId(Long.parseLong(articleId)).get(0);
         Long commentId = comment.getId();
 
-        CommentEditRequestDto commentEditRequestDto = new CommentEditRequestDto();
-        commentEditRequestDto.setEditedContents("수정된댓글");
+        CommentEditDto commentEditDto = new CommentEditDto();
+        commentEditDto.setEditedContents("수정된댓글");
 
         webTestClient.put().uri("/comment/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(commentEditRequestDto), CommentEditRequestDto.class)
+                .body(Mono.just(commentEditDto), CommentEditDto.class)
                 .cookie("JSESSIONID", jSessionIdByAnotherUser)
                 .exchange()
                 .expectStatus().isOk();
