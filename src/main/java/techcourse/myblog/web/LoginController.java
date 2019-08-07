@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.userinfo.UserEmail;
 import techcourse.myblog.domain.userinfo.UserPassword;
@@ -32,7 +33,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginRequestDto userLoginRequestDto, HttpSession httpSession) {
+    public RedirectView login(UserLoginRequestDto userLoginRequestDto, HttpSession httpSession) {
         UserEmail userEmail = new UserEmail(userLoginRequestDto.getEmail());
         UserPassword userPassword = new UserPassword(userLoginRequestDto.getPassword());
 
@@ -41,14 +42,16 @@ public class LoginController {
 
         User user = loginService.findByEmail(userLoginRequestDto.getEmail());
         httpSession.setAttribute(USER, user);
-        return "redirect:/";
+
+        return new RedirectView("/");
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession httpSession) {
+    public RedirectView logout(HttpSession httpSession) {
         log.info("logout get request params={}", httpSession.getAttribute(USER));
 
         httpSession.removeAttribute(USER);
-        return "redirect:/";
+
+        return new RedirectView("/");
     }
 }

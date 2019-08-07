@@ -61,10 +61,10 @@
 			<div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
 				<div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
 					<span class="font-size-16">댓글</span>
-					<span th:text="${comments.size()}" class="font-size-16 text-info"></span>
+					<span id="comment-size-span" th:text="${comments.size()}" class="font-size-16 text-info"></span>
 				</div>
 				<div class="comment">
-					<ul class="list-unstyle list-info">
+					<ul id="comment-ul-tag" class="list-unstyle list-info">
 						<li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
 							<form th:id="'comment-update-form' + ${comment.id}" method="post"
 							      th:action="'/comment/' + ${comment.id}">
@@ -73,28 +73,28 @@
 								<div class="info">
 									<span th:text="${comment.user.name.name}" class="text-bold inline-block"></span>
 									<span class="sub-title inline-block pull-right">
-										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput(event)">
+										<a th:if="${comment.user.equals(session.user)}"
+										   th:onclick="|showCommentInput(event, '${comment.id}')|">
 											<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
-										<a th:if="${comment.user.equals(session.user)}" onclick="deleteComment(event)">
+										<a th:if="${comment.user.equals(session.user)}"
+										   th:onclick="|deleteComment(event, '${comment.id}')|">
 											<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
 									</span>
-									<p id="comment-contents-p" th:text="${comment.contents}" class="width-80"></p>
-									<div id="comment-edit"></div>
+									<p th:id="'comment-contents-p-' + ${comment.id}" th:text="${comment.contents}" class="width-80"></p>
+									<div th:id="'comment-edit-' + ${comment.id}"></div>
 								</div>
 							</form>
 						</li>
 					</ul>
 					<div class="add-comment">
-						<form method="post" action="/comment/writing">
-							<input type="hidden" id="comment-contents" name="contents">
-							<div id="editSection"></div>
-							<input type="hidden" name="articleId" th:value="${article.id}">
-							<div class="mrg-top-20 text-right">
-								<button type="submit" class="btn btn-tumblr">댓글 작성</button>
-							</div>
-						</form>
+						<input type="hidden" id="comment-contents" name="contents">
+						<div id="editSection"></div>
+						<input type="hidden" name="articleId" th:value="${article.id}">
+						<div class="mrg-top-20 text-right">
+							<button id="comment-submit-button" type="button" class="btn btn-tumblr">댓글 작성</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -148,28 +148,113 @@
         height: '200px'
     });
 
-    function showCommentInput(event) {
-        event.preventDefault()
-        const e = document.createElement('span');
-        e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="submit" class="btn btn-tumblr">수정</button>';
-        document.getElementById("comment-edit").appendChild(e);
+    document.querySelector("#comment-submit-button").addEventListener("click", createComment);
 
-        const commentContents = document.getElementById("comment-contents-p");
+    function createComment() {
+        const articleId = /*[[${article.id}]]*/;
+
+        fetch('/comment/writing', {
+            method: "POST",
+            body: JSON.stringify({
+                contents: editor.getMarkdown(),
+                articleId: articleId
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                const node = document.createElement("LI");
+                node.setAttribute("class", "comment-item border bottom mrg-btm-30");
+
+                node.innerHTML = generateCommentBy(json);
+
+                document.getElementById("comment-ul-tag").appendChild(node);
+
+                editor.setValue('');
+
+                updateCommentSizeBy(1);
+            });
+
+        function generateCommentBy(json) {
+            return `<form id="comment-update-form${json.commentId}" method="post"
+                action="/comment/${json.commentId}">
+                <input id="comment-update" type="hidden" name="_method" value="put"/>
+                <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                <div class="info">
+                <span class="text-bold inline-block">${json.userName}</span>
+                <span class="sub-title inline-block pull-right">
+                <a onclick="showCommentInput(event, ${json.commentId})">
+                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                </a>
+                <a onclick="deleteComment(event, ${json.commentId})">
+                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                </a>
+                </span>
+                <p id="comment-contents-p-${json.commentId}" class="width-80">${json.contents}</p>
+                <div id="comment-edit-${json.commentId}"></div>
+                </div>
+                </form>`;
+        }
+    }
+
+    function updateCommentSizeBy(addedSize) {
+        const currentSizeSpan = document.getElementById("comment-size-span");
+        currentSizeSpan.innerText = Number(currentSizeSpan.innerText) + addedSize;
+    }
+
+    function showCommentInput(event, commentId) {
+        event.preventDefault();
+        
+        const e = document.createElement('span');
+        e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="button" class="btn btn-tumblr" onclick="updateComment(' + commentId + ')">수정</button>';
+        e.setAttribute("id", "comment-update-span-" + commentId);
+        document.getElementById("comment-edit-" + commentId).appendChild(e);
+
+        const commentContents = document.getElementById("comment-contents-p-" + commentId);
         document.getElementById("comment-edit-input").value = commentContents.innerHTML;
 
         commentContents.parentNode.removeChild(commentContents);
     }
 
-    function deleteComment(event) {
-        event.preventDefault()
+    function updateComment(commentId) {
+        fetch('/comment/' + commentId, {
+            method: "PUT",
+            body: JSON.stringify({
+                editedContents: document.getElementById("comment-edit-input").value
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                const e = document.createElement('span');
+                e.innerHTML = '<p id="comment-contents-p-' + commentId + '" class="width-80">' + json.editedContents + '</p>';
+                let element = document.getElementById("comment-update-span-" + commentId);
+                element.parentNode.appendChild(e);
+                element.remove();
+            });
+    }
 
-        const thisElement = event.target;
+    function deleteComment(event, commentId) {
+        event.preventDefault();
 
-        thisElement.setAttribute("value", "delete");
-        let formElement = thisElement.parentNode.parentNode.parentNode.parentNode;
-        formElement.querySelector('input').setAttribute("value", "delete");
+        fetch('/comment/' + commentId, {
+            method: "DELETE",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                if (json.commentId == commentId) {
+                    document.getElementById("comment-update-form" + commentId).parentNode.remove();
+                }
+            });
 
-        formElement.submit();
+        updateCommentSizeBy(-1);
     }
 </script>
 </body>
