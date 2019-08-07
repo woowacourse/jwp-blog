@@ -35,7 +35,7 @@ function editBtnClickHandler(event) {
             const updateComment = {
                 contents: editAble.value,
             }
-            putData('PUT', host + '/ajax/articles/' + articleId + '/comments/' + editId, updateComment)
+            putData('PUT', host + '/articles/' + articleId + '/comments/' + editId, updateComment)
                 .then(data => initComments(data))
                 .catch(data => console.log(data))
             editAble.style.display = "none";
@@ -49,7 +49,7 @@ function editBtnClickHandler(event) {
     if (event.target.classList.contains("delete-comment-btn")) {
         const editAble = getInputContents(comment);
         const editId = editAble.id.substring(6, editAble.id.length);
-        putData('DELETE', host + '/ajax/articles/' + articleId + '/comments/' + editId)
+        putData('DELETE', host + '/articles/' + articleId + '/comments/' + editId)
             .then(data => initComments(data))
             .catch(data => console.log(data))
 
@@ -109,7 +109,7 @@ function addSave(event) {
         contents: commentContents.value
     };
 
-    putData('POST', host + '/ajax/articles/' + articleId + '/comments', comments)
+    putData('POST', host + '/articles/' + articleId + '/comments', comments)
         .then(data => initComments(data))
         .catch(data => console.log(data));
     editor.setValue('');

@@ -60,7 +60,7 @@ public class RequestTemplate {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
-    public WebTestClient.RequestBodySpec loggedInPostAjaxRequest(String uri) {
+    public WebTestClient.RequestBodySpec loggedInPostJsonRequest(String uri) {
         return loggedInPostRequestBody(uri)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8);

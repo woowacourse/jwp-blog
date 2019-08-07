@@ -9,12 +9,12 @@ import techcourse.myblog.comment.service.CommentService;
 
 import java.util.List;
 
-@RequestMapping("/ajax/articles/{articleId}/comments")
+@RequestMapping("/articles/{articleId}/comments")
 @RestController
-public class CommentAjaxController {
+public class CommentController {
     private CommentService commentService;
 
-    public CommentAjaxController(CommentService commentService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
 

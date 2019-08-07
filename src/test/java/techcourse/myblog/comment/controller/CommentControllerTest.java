@@ -11,14 +11,14 @@ import techcourse.myblog.template.RequestTemplate;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 
-class CommentAjaxControllerTest extends RequestTemplate {
+class CommentControllerTest extends RequestTemplate {
 
     @Test
     @DisplayName(value = "댓글 추가 테스트")
     void addTest() {
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto();
         commentUpdateDto.setContents("add");
-        loggedInPostAjaxRequest("/ajax/articles/3/comments")
+        loggedInPostJsonRequest("/articles/3/comments")
                 .body(Mono.just(commentUpdateDto), CommentUpdateDto.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -32,7 +32,7 @@ class CommentAjaxControllerTest extends RequestTemplate {
     void updateTest() {
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto();
         commentUpdateDto.setContents("update");
-        loggedInPutJsonRequest("/ajax/articles/3/comments/3")
+        loggedInPutJsonRequest("/articles/3/comments/3")
                 .body(Mono.just(commentUpdateDto), CommentUpdateDto.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -44,7 +44,7 @@ class CommentAjaxControllerTest extends RequestTemplate {
     @Test
     @DisplayName(value = "삭제 테스트")
     void deleteTest() {
-        WebTestClient.BodyContentSpec map = loggedInDeleteJsonRequest("/ajax/articles/3/comments/4")
+        WebTestClient.BodyContentSpec map = loggedInDeleteJsonRequest("/articles/3/comments/4")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
