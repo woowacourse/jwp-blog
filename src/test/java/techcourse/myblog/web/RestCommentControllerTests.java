@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RestCommentControllerTests extends AbstractControllerTests {
     private static final String NEW_COMMENT = "new comment";
     private static final String UPDATED_COMMENT = "updated comment";
-    private static final String ANOTHER_USER_EMAIL = "";
-    private static final String ANOTHER_USER_PASSWORD = "";
+    private static final String ANOTHER_USER_EMAIL = "moomin@naver.com";
+    private static final String ANOTHER_USER_PASSWORD = "mooMIN123!@#";
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
