@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.service.LogInService;
 import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.web.exception.AlreadyLoggedInException;
 import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
@@ -23,7 +24,7 @@ public class LogInController {
 	@GetMapping("/login")
 	public String showLoginPage(HttpSession session) {
 		if (loginChecker.isLoggedIn(session)) {
-			return "redirect:/";
+			throw new AlreadyLoggedInException();
 		}
 		return "login";
 	}

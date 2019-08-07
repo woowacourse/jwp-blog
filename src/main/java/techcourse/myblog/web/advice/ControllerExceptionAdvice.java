@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.*;
+import techcourse.myblog.web.exception.AlreadyLoggedInException;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpSession;
@@ -56,5 +57,12 @@ public class ControllerExceptionAdvice {
         log.error(e.getMessage());
 
         return "redirect:/login";
+    }
+
+    @ExceptionHandler(AlreadyLoggedInException.class)
+    public String hadleAlreadyLoggedInException(Exception e) {
+        log.error(e.getMessage());
+
+        return "redirect:/";
     }
 }

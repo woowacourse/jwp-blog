@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserRequestDto;
 import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.web.exception.AlreadyLoggedInException;
 import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
@@ -22,8 +23,8 @@ public class UserController {
 
 	@GetMapping("/users/sign-up")
 	public String showRegisterPage(HttpSession session) {
-		if (loginChecker.isLoggedIn(session)) {
-			return "redirect:/";
+		if(loginChecker.isLoggedIn(session)) {
+			throw new AlreadyLoggedInException();
 		}
 		return "sign-up";
 	}

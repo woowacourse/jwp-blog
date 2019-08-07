@@ -6,31 +6,27 @@ import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 @Component
 public class LoginChecker {
-	public static final String LOGGED_IN_USER = "loggedInUser";
+    public static final String LOGGED_IN_USER = "loggedInUser";
 
-	public boolean isLoggedInSameId(HttpSession session, Long id) {
-		UserSessionDto loggedInUser = getLoggedInUser(session);
-		return loggedInUser.getId().equals(id);
-	}
+    public boolean isLoggedInSameId(HttpSession session, Long id) {
+        UserSessionDto loggedInUser = getLoggedInUser(session);
+        return loggedInUser.getId().equals(id);
+    }
 
-	public boolean isLoggedIn(HttpSession session) {
-		try {
-			getLoggedInUser(session);
-			return true;
-		} catch (NotLoggedInException e) {
-			return false;
-		}
-	}
+    public boolean isLoggedIn(HttpSession session) {
+        Optional<UserSessionDto> user = Optional.ofNullable((UserSessionDto) session.getAttribute(LOGGED_IN_USER));
 
-	@NotNull
-	public UserSessionDto getLoggedInUser(HttpSession session) {
-		UserSessionDto user = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
-		if (user == null) {
-			throw new NotLoggedInException();
-		}
-		return user;
-	}
+        return user.isPresent();
+    }
+
+    @NotNull
+    public UserSessionDto getLoggedInUser(HttpSession session) {
+        Optional<UserSessionDto> user = Optional.ofNullable((UserSessionDto) session.getAttribute(LOGGED_IN_USER));
+
+        return user.orElseThrow(NotLoggedInException::new);
+    }
 }
