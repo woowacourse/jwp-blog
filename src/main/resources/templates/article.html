@@ -59,13 +59,6 @@
 
 <th:block th:include="/common/js"></th:block>
 <script th:inline="javascript">
-    // window.onload = function () {
-    //     const size = document.getElementsByName('edit-contents').length;
-    //
-    //     for (let i = 0; i < size; i++) {
-    //         document.getElementsByName('edit-contents')[i].style.display = 'none';
-    //     }
-    // }
 
     const initValue = [[${article.contents}]];
     const articleId = [[${article.id}]];
@@ -185,7 +178,7 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
-                // document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'

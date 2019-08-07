@@ -15,34 +15,33 @@ public class CommentControllerTest extends LoggedInTemplate {
     private static final Logger log = LoggerFactory.getLogger(CommentControllerTest.class);
 
     private static final String CONTENTS = "comment";
-    private static final String NEW_CONTENTS = "new comment";
 
     private static final String OTHER_USER_NAME = "bob";
     private static final String OTHER_USER_PASSWORD = "Password1!";
     private static final String OTHER_USER_EMAIL = "bob@gmail.com";
 
+    private static final String COMMENT_ID = "1";
+
     private CommentRequest commentRequest;
+    private String articleId;
 
     @BeforeEach
     void setUp() {
         signUpUser();
         commentRequest = new CommentRequest(CONTENTS);
+        articleId = getArticleId();
+        댓글_작성(articleId);
     }
 
     @Test
-    void 댓글_작성_성공_테스트() {
-        String articleId = getArticleId();
-        댓글_작성(articleId)
-                .expectStatus()
+    void 댓글_작성_성공() {
+        댓글_작성(articleId).expectStatus()
                 .isOk();
     }
 
     @Test
     void 댓글_수정_성공_테스트() {
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-
-        loggedInPutRequest("/comments/" + articleId + "/" + commentId)
+        loggedInPutRequest("/comments/" + articleId + "/" + COMMENT_ID)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
@@ -54,12 +53,9 @@ public class CommentControllerTest extends LoggedInTemplate {
     void 작성자가_아닌_경우_댓글_수정_살패_테스트() {
         signUpUser(OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_EMAIL);
 
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-        loggedInPutRequest("/comments/" + articleId + "/" + commentId, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
+        loggedInPutRequest("/comments/" + articleId + "/" + COMMENT_ID, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters
-                        .fromFormData("contents", NEW_CONTENTS))
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus()
                 .is4xxClientError()
@@ -69,10 +65,7 @@ public class CommentControllerTest extends LoggedInTemplate {
 
     @Test
     void 댓글_삭제_성공_테스트() {
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-
-        loggedInDeleteRequest("/comments/" + articleId + "/" + commentId)
+        loggedInDeleteRequest("/comments/" + articleId + "/" + COMMENT_ID)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -82,9 +75,7 @@ public class CommentControllerTest extends LoggedInTemplate {
     void 작성자가_아닌_경우_댓글_삭제_실패_테스트() {
         signUpUser(OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_EMAIL);
 
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-        loggedInDeleteRequest("/comments/" + articleId + "/" + commentId, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
+        loggedInDeleteRequest("/comments/" + articleId + "/" + COMMENT_ID, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
                 .exchange()
                 .expectStatus()
                 .is4xxClientError()
@@ -119,21 +110,9 @@ public class CommentControllerTest extends LoggedInTemplate {
     }
 
     private WebTestClient.ResponseSpec 댓글_작성(String articleId) {
-        return loggedInPostRequest("/comments/" + articleId)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        return loggedInPostRequest("/comments/" + articleId + "/" + COMMENT_ID)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange();
-    }
-
-    private String getCommentId(String articleId) {
-        String path = 댓글_작성(articleId)
-                .expectBody()
-                .returnResult()
-                .getResponseHeaders()
-                .getLocation()
-                .getPath();
-
-        log.debug("comment path : {} ", path);
-        return path.split("/")[2];
     }
 }

@@ -5,52 +5,7 @@
     </div>
     <div class="comment">
         <ul tclass="list-unstyled list-info" id="comment-list">
-
-<!--            <li class="comment-item border bottom mrg-btm-30">-->
-<!--                <img alt=""-->
-<!--                     class="thumb-img img-circle"-->
-<!--                     src="https://avatars3.githubusercontent.com/u/50367798?v=4">-->
-<!--                <div class="info">-->
-<!--                    <span th:text="${comment.commenter.name}" class="text-bold inline-block" href=""></span>-->
-<!--                    <span class="sub-title inline-block pull-right">-->
-<!--                        <a th:if="${session.user} != null AND ${comment.commenter.email} == ${session.user.email}"-->
-<!--                           th:id="'edit-a-' + ${comment.id}" th:onclick="'editComment(' + ${comment.id} + ')'">수정</a>-->
-<!--                        <a th:if="${session.user} != null AND ${comment.commenter.email} == ${session.user.email}"-->
-<!--                           th:id="'delete-a-' + ${comment.id}"-->
-<!--                           th:onclick="'deleteComment(' + ${article.id} + ',' + ${comment.id} + ')'">삭제</a>-->
-
-<!--                        <a th:if="${session.user} != null AND ${comment.commenter.email} == ${session.user.email}"-->
-<!--                           th:id="'update-a-' + ${comment.id}"-->
-<!--                           th:onclick="'updateComment(' + ${article.id} + ',' + ${comment.id} + ')'"-->
-<!--                           style="display: none">저장</a>-->
-<!--                        <a th:if="${session.user} != null AND ${comment.commenter.email} == ${session.user.email}"-->
-<!--                           th:id="'cancel-a-' + ${comment.id}" th:onclick="'cancelComment(' + ${comment.id} + ')'"-->
-<!--                           style="display: none">취소</a>-->
-<!--                        <span th:text="${comment.date}">6 min ago</span>-->
-<!--                    </span>-->
-
-<!--                    <p th:id="'comment-div-' + ${comment.id}" th:text="${comment.contents}" class="width-80"></p>-->
-<!--                    <textarea th:text="${comment.contents}" class="edit" th:id="'edit-section-' + ${comment.id}"-->
-<!--                              name="edit-contents"></textarea>-->
-<!--                </div>-->
-<!--            </li>-->
-
         </ul>
-
-<!--        <form th:if="${session.user} != null" th:action="@{/comment/{articleId}(articleId=${article.id})}"-->
-<!--              th:method="post">-->
-<!--            <div class="add-comment">-->
-<!--                <div id="editSection"></div>-->
-<!--                <input id="comment-contents" name="contents" type="hidden">-->
-<!--            </div>-->
-<!--            <div class="col-lg-1 col-md-1">-->
-<!--                <div class="btn-group btn-group-vertical">-->
-<!--                    <button class="btn btn-default" id="save-btn" type="submit">-->
-<!--                        <i class="ti-save"></i>-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </form>-->
         <input type="hidden" name="contents" id="commentContents"/>
         <div class="add-comment">
             <div id="editSection"></div>
