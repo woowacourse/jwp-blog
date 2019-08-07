@@ -7,27 +7,30 @@ const articleApp = (function () {
 
         const save = function () {
             const saveButton = document.getElementById('save-btn');
-            saveButton.addEventListener('click', articleService.save)
-        }
+            saveButton.addEventListener('click', articleService.save);
+        };
 
         const edit = function () {
             const divSection = document.getElementById("comment-div");
             divSection.addEventListener('click', articleService.prepareEdit);
         }
+
         const update = function () {
             const divSection = document.getElementById("comment-div");
             divSection.addEventListener('click', articleService.update);
         }
+
         const deleteComment = function () {
             const divSection = document.getElementById("comment-div");
             divSection.addEventListener('click', articleService.deleteComment);
         }
+
         const init = function () {
-            save()
-            edit()
-            update()
-            deleteComment()
-        }
+            save();
+            edit();
+            update();
+            deleteComment();
+        };
 
         return {
             init: init
