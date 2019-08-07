@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.dto.CommentRequestDto;
-import techcourse.myblog.service.dto.UserRequestDto;
-import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.dto.*;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 import techcourse.myblog.service.exception.SignUpException;
@@ -185,9 +182,8 @@ public class UserServiceTest {
 		User user = userService.findById(userId);
 		String updateName = "UPDATE";
 		UserRequestDto userRequestDto = new UserRequestDto(updateName, user.getEmail(), null, null);
-		userService.update(userId, userRequestDto);
-		User updateUser = userService.findById(userId);
+		UserPublicInfoDto updateResult = userService.update(userId, userRequestDto);
 
-		assertThat(updateUser.getName()).isEqualTo(updateName);
+		assertThat(updateResult.getName()).isEqualTo(updateName);
 	}
 }

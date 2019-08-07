@@ -20,77 +20,76 @@ import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUP
 import static techcourse.myblog.domain.exception.UserArgumentException.PASSWORD_CONFIRM_FAIL_MESSAGE;
 
 @Service
+@Transactional
 public class UserService {
-	private UserRepository userRepository;
+    private UserRepository userRepository;
 
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	public List<User> findAll() {
-		return userRepository.findAll();
-	}
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 
-	public User findById(Long id) {
-		return userRepository.findById(id)
-				.orElseThrow(NotFoundUserException::new);
-	}
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(NotFoundUserException::new);
+    }
 
-	User findByUserSession(UserSessionDto userSessionDto) {
-		return findById(userSessionDto.getId());
-	}
+    User findByUserSession(UserSessionDto userSessionDto) {
+        return findById(userSessionDto.getId());
+    }
 
-	public UserPublicInfoDto findUserPublicInfoById(Long id) {
-		User user = findById(id);
-		return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
-	}
+    public UserPublicInfoDto findUserPublicInfoById(Long id) {
+        User user = findById(id);
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+    }
 
-	public UserPublicInfoDto findUserPublicInfoByArticle(ArticleDto article) {
-		User user = findById(article.getUserId());
-		return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
-	}
+    public UserPublicInfoDto findUserPublicInfoByArticle(ArticleDto article) {
+        User user = findById(article.getUserId());
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+    }
 
-	public User save(UserRequestDto userRequestDto) {
-		try {
-			validate(userRequestDto);
-			return userRepository.save(userRequestDto.toEntity());
-		} catch (UserArgumentException e) {
-			throw new SignUpException(e.getMessage());
-		}
-	}
+    public User save(UserRequestDto userRequestDto) {
+        try {
+            validate(userRequestDto);
+            return userRepository.save(userRequestDto.toEntity());
+        } catch (UserArgumentException e) {
+            throw new SignUpException(e.getMessage());
+        }
+    }
 
-	private void validate(UserRequestDto userRequestDto) {
-		checkDuplicatedEmail(userRequestDto.getEmail());
-		checkPasswordConfirm(userRequestDto);
-	}
+    private void validate(UserRequestDto userRequestDto) {
+        checkDuplicatedEmail(userRequestDto.getEmail());
+        checkPasswordConfirm(userRequestDto);
+    }
 
-	private void checkDuplicatedEmail(String email) {
-		if (userRepository.findByEmail(email).isPresent()) {
-			throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
-		}
-	}
+    private void checkDuplicatedEmail(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
+        }
+    }
 
-	private void checkPasswordConfirm(UserRequestDto userRequestDto) {
-		if (!userRequestDto.confirmPassword()) {
-			throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
-		}
-	}
+    private void checkPasswordConfirm(UserRequestDto userRequestDto) {
+        if (!userRequestDto.confirmPassword()) {
+            throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
+        }
+    }
 
-	@Transactional
-	public void update(Long userId, UserRequestDto userRequestDto) {
-		try {
-			User user = findById(userId);
-			user.updateName(userRequestDto.getName());
-		} catch (NotFoundUserException | UserArgumentException e) {
-			throw new UserUpdateException(e.getMessage());
-		}
-	}
+    public UserPublicInfoDto update(Long userId, UserRequestDto userRequestDto) {
+        try {
+            User user = findById(userId);
+            user.updateName(userRequestDto.getName());
+            return new UserPublicInfoDto(user.getId(), user.getName(),user.getEmail());
+        } catch (NotFoundUserException | UserArgumentException e) {
+            throw new UserUpdateException(e.getMessage());
+        }
+    }
 
-	public void delete(Long id) {
-		try {
-			userRepository.deleteById(id);
-		} catch (IllegalArgumentException e) {
-			throw new UserDeleteException(e.getMessage());
-		}
-	}
+    public UserPublicInfoDto delete(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserDeleteException("Not Found User"));
+        userRepository.delete(user);
+        return new UserPublicInfoDto(user.getId(), user.getName(),user.getEmail());
+    }
 }
