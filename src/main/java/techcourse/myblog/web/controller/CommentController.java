@@ -19,19 +19,16 @@ import techcourse.myblog.web.annotation.LoginUser;
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
     private final CommentService commentService;
-    private final ArticleService articleService;
 
     @Autowired
-    public CommentController(CommentService commentService, ArticleService articleService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.articleService = articleService;
     }
 
     @GetMapping
     public ResponseEntity<Comments> getComments(@PathVariable long articleId) {
         log.info("articleId : {}", articleId);
-        Article article = articleService.findById(articleId);
-        Comments comments = commentService.findByArticle(article);
+        Comments comments = commentService.findByArticle(articleId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
@@ -40,9 +37,8 @@ public class CommentController {
         log.info("articleId : {}", articleId);
         log.info("loginUser : {}", loginUser);
         log.info("CommentDto : {}", commentDto);
-        Comment comment = convert(commentDto, loginUser, articleId);
-        Comment savedComment = commentService.save(comment);
-        return new ResponseEntity<>(savedComment, HttpStatus.OK);
+        Comment savedComment = commentService.save(commentDto, loginUser, articleId);
+        return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{commentId}")
@@ -55,10 +51,5 @@ public class CommentController {
     public ResponseEntity<Comment> deleteComment(@PathVariable long commentId, @LoginUser User loginUser) {
         commentService.deleteById(commentId, loginUser.getId());
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private Comment convert(CommentDto commentDto, @LoginUser User loginUser, long articleId) {
-        Article article = articleService.findById(articleId);
-        return new Comment(commentDto.getContents(), loginUser, article);
     }
 }
