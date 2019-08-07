@@ -32,7 +32,7 @@ class CommentAjaxControllerTest extends RequestTemplate {
     void updateTest() {
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto();
         commentUpdateDto.setContents("update");
-        loggedInPutAjaxRequest("/ajax/articles/3/comments/3")
+        loggedInPutJsonRequest("/ajax/articles/3/comments/3")
                 .body(Mono.just(commentUpdateDto), CommentUpdateDto.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -44,7 +44,7 @@ class CommentAjaxControllerTest extends RequestTemplate {
     @Test
     @DisplayName(value = "삭제 테스트")
     void deleteTest() {
-        WebTestClient.BodyContentSpec map = loggedInDeleteAjaxRequest("/ajax/articles/3/comments/4")
+        WebTestClient.BodyContentSpec map = loggedInDeleteJsonRequest("/ajax/articles/3/comments/4")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
