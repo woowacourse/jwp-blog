@@ -12,6 +12,10 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestCommentControllerTests extends AbstractControllerTests {
+    private static final String NEW_COMMENT = "new comment";
+    private static final String UPDATED_COMMENT = "updated comment";
+    private static final String ANOTHER_USER_EMAIL = "";
+    private static final String ANOTHER_USER_PASSWORD = "";
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
@@ -23,18 +27,16 @@ public class RestCommentControllerTests extends AbstractControllerTests {
 
     @Test
     void 댓글_추가_POST_요청_테스트() throws IOException {
-        String newComment = "new comment";
-        String json = new String(Objects.requireNonNull(postJsonRequest("/articles/1/comments/rest", CommentRequestDto.class, newComment).getResponseBody()));
+        String json = new String(Objects.requireNonNull(postJsonRequest("/articles/1/comments/rest", CommentRequestDto.class, NEW_COMMENT).getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
-        assertThat(responses[responses.length - 1].getComment()).isEqualTo(newComment);
+        assertThat(responses[responses.length - 1].getComment()).isEqualTo(NEW_COMMENT);
     }
 
     @Test
     void 댓글_수정_PUT_요청_테스트() throws IOException {
-        String updatedComment = "updated comment";
-        String json = new String(Objects.requireNonNull(putJsonRequest("/comments/1/rest", CommentRequestDto.class, updatedComment).getResponseBody()));
+        String json = new String(Objects.requireNonNull(putJsonRequest("/comments/1/rest", CommentRequestDto.class, UPDATED_COMMENT).getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
-        assertThat(responses[0].getComment()).isEqualTo(updatedComment);
+        assertThat(responses[0].getComment()).isEqualTo(UPDATED_COMMENT);
     }
 
     @Test
@@ -48,15 +50,14 @@ public class RestCommentControllerTests extends AbstractControllerTests {
     }
 
     @Test
-    void 자신이_작성하지_않은_댓글_수정_실패_테스트() throws IOException {
-        String updatedComment = "updated comment";
-        loginRequest("moomin@naver.com", "mooMIN123!@#");
-        assertThat(putJsonRequest("/comments/1/rest", CommentRequestDto.class, updatedComment).getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+    void 자신이_작성하지_않은_댓글_수정_실패_테스트() {
+        loginRequest(ANOTHER_USER_EMAIL, ANOTHER_USER_PASSWORD);
+        assertThat(putJsonRequest("/comments/1/rest", CommentRequestDto.class, UPDATED_COMMENT).getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
-    void 자신이_작성하지_않은_댓글_삭제_실패_테스트() throws IOException {
-        loginRequest("moomin@naver.com", "mooMIN123!@#");
+    void 자신이_작성하지_않은_댓글_삭제_실패_테스트() {
+        loginRequest(ANOTHER_USER_EMAIL, ANOTHER_USER_PASSWORD);
         assertThat(deleteRequest("/comments/1/rest").getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
