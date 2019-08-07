@@ -100,11 +100,13 @@ public class UserController {
         log.debug("begin");
 
         if (bindingResult.hasErrors()) {
+            log.debug("error : {}", bindingResult.getFieldError().getDefaultMessage());
             return "mypage-edit";
         }
-        User user = userService.editUserName(userId, userEditRequest.getName());
+
+        User user = userService.editUserName(userId, userEditRequest);
         request.getSession().setAttribute(USER, user);
-        return "redirect:/";
+        return "redirect:/mypage";
     }
 
     @DeleteMapping("/users/{userId}")

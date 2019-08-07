@@ -1,5 +1,7 @@
 package techcourse.myblog.service.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -9,11 +11,29 @@ public class UserEditRequest {
             message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다!")
     private String name;
 
+    private MultipartFile image;
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEditRequest{" +
+                "name='" + name + '\'' +
+                ", image=" + image +
+                '}';
     }
 }

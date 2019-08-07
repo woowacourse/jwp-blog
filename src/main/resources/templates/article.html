@@ -187,9 +187,11 @@
         }).then(response => response.json())
             .then(data => {
                 let template = document.getElementById('template');
+                debugger;
                 let resultHtml = template.innerHTML.replace(/{id}/g, data.id)
                     .replace(/{name}/g, data.commenter.name)
                     .replace(/{contents}/g, data.contents)
+                    .replace(/{image}/g, "data:image/png;base64," + data.commenter.image)
                     .replace(/{elapsedTime}/g, convertTime(data.createdDate));
 
                 document.getElementById('comments').innerHTML += resultHtml;
@@ -210,6 +212,11 @@
         return minute > 24 * 60 ? minute / 24 * 60 + "일 전" : minute / 60 + "시간 전";
     };
 
+    function getByteToImage(image) {
+        return image === null ?
+            "https://m2bob-forum.net/wcf/images/avatars/3e/2720-3e546be0b0701e0cb670fa2f4fcb053d4f7e1ba5.jpg" : "data:image/png;base64," + image;
+    }
+
     // 댓글 불러오기
     window.addEventListener('DOMContentLoaded', () => {
         fetch('/api/articles/' + articleId + '/comments/', {
@@ -223,6 +230,7 @@
                     let resultHtml = template.innerHTML.replace(/{id}/g, comment.id)
                         .replace(/{name}/g, comment.commenter.name)
                         .replace(/{contents}/g, comment.contents)
+                        .replace(/{image}/g, getByteToImage(comment.commenter.image))
                         .replace(/{elapsedTime}/g, convertTime(comment.createdDate));
 
                     document.getElementById('comments').innerHTML += resultHtml;
@@ -258,8 +266,8 @@
 
 <script id="template" type="text/template">
     <li class="comment-item border bottom mrg-btm-15 mrg-top-15">
-        <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
-             alt="">
+        <img class="thumb-img img-circle" src="{image}"
+             alt="{name}">
         <div class="info">
             <span class="text-bold inline-block">{name}</span>
             <span class="sub-title inline-block pull-right">

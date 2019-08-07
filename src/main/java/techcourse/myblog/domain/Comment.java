@@ -9,6 +9,7 @@ import techcourse.myblog.service.exception.InvalidAuthorException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @EntityListeners(value = {AuditingEntityListener.class})
@@ -87,5 +88,30 @@ public class Comment {
     public Comment updateContents(String contents) {
         this.contents = contents;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", contents='" + contents + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                ", commenter=" + commenter +
+                ", article=" + article +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, contents, createdDate, modifiedDate, commenter, article);
     }
 }

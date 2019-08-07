@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +34,10 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @Lob
+    @Column
+    private byte[] image;
+
     private User() {
     }
 
@@ -54,13 +59,11 @@ public class User {
         }
     }
 
-    public void changeName(String name) {
+    public User update(String name, byte[] image) {
         validateName(name);
         this.name = name;
-    }
-
-    public boolean matchEmail(User user) {
-        return this.email.equals(user.email);
+        this.image = image;
+        return this;
     }
 
     public Long getId() {
@@ -77,6 +80,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public String getImageEncodeBase64() {
+        return Base64.getEncoder().encodeToString(image);
     }
 
     @Override
