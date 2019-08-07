@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.web.AuthedWebTestClient;
 
-class ArticleApiTest extends AuthedWebTestClient {
+class ApiArticleControllerTest extends AuthedWebTestClient {
 
     @Test
     void read() {

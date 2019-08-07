@@ -16,7 +16,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-class CommentApiTest extends AuthedWebTestClient {
+class ApiCommentControllerTest extends AuthedWebTestClient {
 
     @Test
     void create() throws IOException {

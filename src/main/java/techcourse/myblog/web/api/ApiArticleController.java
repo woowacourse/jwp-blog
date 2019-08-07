@@ -11,10 +11,10 @@ import techcourse.myblog.web.support.UserSessionInfo;
 
 @RestController
 @RequestMapping("/api/articles")
-public class ArticleApi {
+public class ApiArticleController {
     private final ArticleService articleService;
 
-    public ArticleApi(ArticleService articleService) {
+    public ApiArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 

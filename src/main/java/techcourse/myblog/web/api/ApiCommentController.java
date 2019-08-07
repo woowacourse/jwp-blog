@@ -16,13 +16,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/articles/{articleId}/comments")
-public class CommentApi {
-    private static final Logger log = LoggerFactory.getLogger(CommentApi.class);
+public class ApiCommentController {
+    private static final Logger log = LoggerFactory.getLogger(ApiCommentController.class);
 
     private final CommentService commentService;
     private final ArticleService articleService;
 
-    public CommentApi(CommentService commentService, ArticleService articleService) {
+    public ApiCommentController(CommentService commentService, ArticleService articleService) {
         this.commentService = commentService;
         this.articleService = articleService;
     }
