@@ -9,15 +9,15 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequest;
+import techcourse.myblog.support.validator.UserSession;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
     private static final Logger log = LoggerFactory.getLogger(CommentController.class);
-    
+
     private CommentService commentService;
 
     public CommentController(CommentService commentService) {
@@ -25,29 +25,28 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> saveComment(@RequestBody @Valid CommentRequest commentRequest, HttpSession httpSession) {
+    public ResponseEntity<Comment> saveComment(@RequestBody @Valid CommentRequest commentRequest, @UserSession User sessionUser) {
         log.debug("begin");
 
-        Comment comment = commentService.save(commentRequest, (User) httpSession.getAttribute("user"));
+        Comment comment = commentService.save(commentRequest, sessionUser);
         log.info("comment: {}", comment);
 
-        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<Comment> editComment(@RequestBody @Valid CommentRequest commentRequest, @PathVariable("commentId") Long commentId, HttpSession httpSession) {
+    public ResponseEntity<Comment> editComment(@RequestBody @Valid CommentRequest commentRequest, @PathVariable("commentId") Long commentId, @UserSession User sessionUser) {
         log.debug("begin");
 
-        Comment updatedComment = commentService.update(commentRequest, (User) httpSession.getAttribute("user"), commentId);
+        Comment updatedComment = commentService.update(commentRequest, sessionUser, commentId);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId, @UserSession User sessionUser) {
         log.debug("begin");
 
-        // TODO: 2019-08-03 HttpSession -> ArgumentResolver
-        commentService.deleteById(commentId, (User) httpSession.getAttribute("user"));
+        commentService.deleteById(commentId, sessionUser);
         log.info("commentId: {}", commentId);
 
         return new ResponseEntity<>(HttpStatus.OK);
