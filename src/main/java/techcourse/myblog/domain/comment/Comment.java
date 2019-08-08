@@ -1,11 +1,11 @@
-package techcourse.myblog.comment;
+package techcourse.myblog.domain.comment;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techcourse.myblog.date.BaseEntity;
-import techcourse.myblog.exception.InvalidAuthorException;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.BaseEntity;
+import techcourse.myblog.domain.InvalidAuthorException;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 

@@ -1,15 +1,13 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.comment.Comment;
-import techcourse.myblog.comment.CommentRepository;
-import techcourse.myblog.exception.NotFoundObjectException;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.CommentDto;
-import techcourse.myblog.user.User;
+import techcourse.myblog.service.exception.NotFoundObjectException;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 public class CommentService {

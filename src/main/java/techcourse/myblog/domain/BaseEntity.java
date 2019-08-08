@@ -1,4 +1,4 @@
-package techcourse.myblog.date;
+package techcourse.myblog.domain;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -1,4 +1,4 @@
-package techcourse.myblog.article;
+package techcourse.myblog.domain.article;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

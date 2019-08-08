@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,12 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.exception.NotValidUpdateUserInfoException;
-import techcourse.myblog.exception.NotValidUserInfoException;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserUpdateRequestDto;
-import techcourse.myblog.user.User;
+import techcourse.myblog.service.exception.NotValidUserInfoException;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;

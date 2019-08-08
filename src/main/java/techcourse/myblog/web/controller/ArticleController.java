@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.article.Article;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.user.User;
 
 import javax.servlet.http.HttpSession;
 

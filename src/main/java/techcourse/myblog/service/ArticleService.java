@@ -1,14 +1,17 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.article.ArticleRepository;
-import techcourse.myblog.comment.Comment;
-import techcourse.myblog.exception.NotFoundObjectException;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentAssembler;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.user.User;
+import techcourse.myblog.service.dto.ResponseCommentDto;
+import techcourse.myblog.service.exception.NotFoundObjectException;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,8 +51,16 @@ public class ArticleService {
         return article.getComments();
     }
 
-    public List<Comment> findAllComments(Long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new).getComments();
+    public List<ResponseCommentDto> findAllComments(Long articleId) {
+        List<ResponseCommentDto> commentDtos = new ArrayList<>();
+        List<Comment> comments = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundObjectException::new).getComments();
+
+        for(Comment comment : comments) {
+            commentDtos.add(CommentAssembler.toResponseDto(comment));
+        }
+
+        return commentDtos;
     }
 
     @Transactional

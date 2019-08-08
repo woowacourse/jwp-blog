@@ -1,4 +1,4 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.domain;
 
 public class InvalidAuthorException extends RuntimeException {
     public InvalidAuthorException() {

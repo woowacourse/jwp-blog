@@ -3,12 +3,12 @@ package techcourse.myblog.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.exception.NotFoundObjectException;
-import techcourse.myblog.exception.NotValidUserInfoException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserUpdateRequestDto;
-import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserRepository;
+import techcourse.myblog.service.exception.NotFoundObjectException;
+import techcourse.myblog.service.exception.NotValidUserInfoException;
 
 import javax.transaction.Transactional;
 import java.util.List;
