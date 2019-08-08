@@ -5,12 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.Comments;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.annotation.LoginUser;
 
