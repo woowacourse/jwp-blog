@@ -1263,3 +1263,12 @@
 [2019-08-08 17:09:15:20700][main] INFO  t.myblog.MyblogApplicationTest - Starting MyblogApplicationTest on baghyojin-ui-MacBookPro.local with PID 12161 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
 [2019-08-08 17:09:15:20700][main] INFO  t.myblog.MyblogApplicationTest - No active profile set, falling back to default profiles: default
 [2019-08-08 17:09:16:21533][main] INFO  t.myblog.MyblogApplicationTest - Started MyblogApplicationTest in 0.849 seconds (JVM running for 22.219)
+[2019-08-08 17:13:25:2170376][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 17:13:25:2170377][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 17:13:26:2171029][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.688 seconds (JVM running for 2176.32)
+[2019-08-08 17:13:39:2184635][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 17:13:39:2184636][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 17:13:40:2185225][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.616 seconds (JVM running for 2190.516)
+[2019-08-08 17:14:20:2225579][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 17:14:20:2225579][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 17:14:21:2226217][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.663 seconds (JVM running for 2231.48)
