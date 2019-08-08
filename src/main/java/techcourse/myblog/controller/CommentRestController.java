@@ -15,35 +15,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import techcourse.myblog.controller.session.UserSessionManager;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.dto.CommentResponse;
 import techcourse.myblog.exception.UnauthorizedException;
-import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.CommentRestService;
 
 @RequestMapping("/comments")
 @RestController
 public class CommentRestController {
 
-    private ArticleService articleService;
-    private CommentService commentService;
+    private CommentRestService commentRestService;
     private UserSessionManager userSessionManager;
 
     @Autowired
-    public CommentRestController(final ArticleService articleService,
-                                 final CommentService commentService,
-                                 final UserSessionManager userSessionManager) {
-        this.articleService = articleService;
-        this.commentService = commentService;
+    public CommentRestController(CommentRestService commentRestService,
+                                 UserSessionManager userSessionManager) {
+        this.commentRestService = commentRestService;
         this.userSessionManager = userSessionManager;
     }
 
     @GetMapping
     public List<CommentResponse> showAllComments(@RequestParam Long articleId) {
-        return commentService
+        return commentRestService
                 .findAllByArticleId(articleId)
                 .stream()
                 .map(savedComment -> new CommentResponse(savedComment, savedComment.getAuthor()))
@@ -52,30 +46,27 @@ public class CommentRestController {
 
     @GetMapping("/total")
     public int getCountOfComment(@RequestParam Long articleId) {
-        return commentService.findCommentsByArticleId(articleId).size();
+        return commentRestService.getCommentSizeByArticleId(articleId);
     }
 
     @PostMapping
     public CommentResponse save(@RequestBody CommentRequest commentRequest) {
         User user = userSessionManager.getUser();
         checkAuthorize(user);
-        Article article = articleService.select(commentRequest.getArticleId());
-        Comment comment = new Comment(commentRequest.getContents(), user, article);
-        Comment savedComment = commentService.save(comment);
-        return new CommentResponse(savedComment, savedComment.getAuthor());
+        return commentRestService.save(commentRequest, user);
     }
 
     @PutMapping("/{commentId}")
-    public CommentResponse put(@PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
+    public CommentResponse put(@PathVariable Long commentId,
+                               @RequestBody CommentRequest commentRequest) {
         User user = userSessionManager.getUser();
-        Comment editedComment = commentService.update(commentId, commentRequest, user);
-        return new CommentResponse(editedComment, editedComment.getAuthor());
+        return commentRestService.put(commentId, commentRequest, user);
     }
 
     @DeleteMapping("/{commentId}")
     public String delete(@PathVariable Long commentId) {
         User user = userSessionManager.getUser();
-        commentService.delete(commentId, user);
+        commentRestService.delete(commentId, user);
         return "success!";
     }
 
