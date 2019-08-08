@@ -9,22 +9,18 @@
     </appender>
 
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-	    <prudent>true</prudent>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <!-- rollover daily -->
-	<fileNamePattern>blog.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>blog.%d{yyyy-MM-dd}.log</fileNamePattern>
             <totalSizeCap>100MB</totalSizeCap>
+            <maxHistory>6</maxHistory>
+        </rollingPolicy>
 
-        <!-- maximum number of archive files to keep, deleting older files. For example, if you specify monthly rollover, and set maxHistory to 6, then 6 months worth of archives files will be kept with files older than 6 months deleted. -->
-        <maxHistory>6</maxHistory>
-
-    </rollingPolicy>
-
-    <encoder>
-        <pattern>
-            %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
-        </pattern>
-    </encoder>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
     </appender>
 
     <!-- 자바 패키지별 log level을 설정한다. -->
