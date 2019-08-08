@@ -20,8 +20,10 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 30)
     private String title;
 
+    @Column(length = 100)
     private String coverUrl;
 
     private String contents;
