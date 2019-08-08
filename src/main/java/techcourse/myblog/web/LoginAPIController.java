@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -8,10 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import techcourse.myblog.application.UserService;
-import techcourse.myblog.web.dto.BaseResponse;
-import techcourse.myblog.web.dto.ErrorResponse;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.exception.JsonAPIException;
+import techcourse.myblog.web.dto.ErrorResponse;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -28,7 +26,7 @@ public class LoginAPIController {
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult,
-                                              HttpSession httpSession) {
+                                HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new ErrorResponse(bindingResult.getAllErrors().get(0).getDefaultMessage()),
                 HttpStatus.BAD_REQUEST);

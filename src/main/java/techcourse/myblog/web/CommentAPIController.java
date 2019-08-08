@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.CommentRequest;
-import techcourse.myblog.web.dto.UserResponse;
 import techcourse.myblog.application.exception.JsonAPIException;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.web.dto.UserResponse;
 
 import javax.servlet.http.HttpSession;
 import java.net.URI;
@@ -41,7 +41,7 @@ public class CommentAPIController {
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity deleteComment(@PathVariable("commentId") Long commentId,
-                                                      HttpSession httpSession) {
+                                        HttpSession httpSession) {
         try {
             UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
             commentService.delete(commentId, userResponse.getId());
@@ -54,8 +54,8 @@ public class CommentAPIController {
 
     @PutMapping("/{commentId}")
     public ResponseEntity updateComment(@PathVariable("commentId") Long commentId,
-                                                      @RequestBody CommentRequest commentRequest,
-                                                      HttpSession httpSession) {
+                                        @RequestBody CommentRequest commentRequest,
+                                        HttpSession httpSession) {
         try {
             UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
             commentService.updateComment(commentId, userResponse.getId(), commentRequest);

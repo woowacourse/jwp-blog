@@ -1,14 +1,12 @@
 package techcourse.myblog.web;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.UserService;
-import techcourse.myblog.web.dto.BaseResponse;
-import techcourse.myblog.web.dto.ErrorResponse;
 import techcourse.myblog.application.dto.UserEditRequest;
+import techcourse.myblog.web.dto.ErrorResponse;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -25,9 +23,9 @@ public class UserAPIController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<BaseResponse> updateUser(@PathVariable Long userId, HttpSession httpSession,
-                                                   @Valid @RequestBody UserEditRequest userEditRequest,
-                                                   BindingResult bindingResult) {
+    public ResponseEntity updateUser(@PathVariable Long userId, HttpSession httpSession,
+                                     @Valid @RequestBody UserEditRequest userEditRequest,
+                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new ErrorResponse(bindingResult.getAllErrors().get(0).getDefaultMessage()),
                 HttpStatus.BAD_REQUEST);

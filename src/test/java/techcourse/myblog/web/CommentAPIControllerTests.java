@@ -66,8 +66,8 @@ public class CommentAPIControllerTests {
             .is4xxClientError()
             .expectBody(ErrorResponse.class)
             .returnResult().getResponseBody();
-            assertThat(res.getResult()).isEqualTo("fail");
-            assertThat(res.getMessage()).isEqualTo("댓글 내용을 입력하세요.");
+        assertThat(res.getResult()).isEqualTo(ErrorResponse.ErrorResult.fail);
+        assertThat(res.getMessage()).isEqualTo("댓글 내용을 입력하세요.");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class CommentAPIControllerTests {
             .expectBody(ErrorResponse.class)
             .returnResult();
 
-        assertThat(response.getResponseBody().getResult()).isEqualTo("fail");
+        assertThat(response.getResponseBody().getResult()).isEqualTo(ErrorResponse.ErrorResult.fail);
         assertThat(response.getResponseBody().getMessage()).isEqualTo("해당 작성자만 댓글을 수정할 수 있습니다.");
     }
 
@@ -148,7 +148,7 @@ public class CommentAPIControllerTests {
             .returnResult()
             .getResponseBody();
 
-        assertThat(res.getResult()).isEqualTo("fail");
+        assertThat(res.getResult()).isEqualTo(ErrorResponse.ErrorResult.fail);
         assertThat(res.getMessage()).isEqualTo("존재하지 않는 댓글입니다.");
     }
 

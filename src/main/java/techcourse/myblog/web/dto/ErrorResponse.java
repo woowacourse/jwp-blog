@@ -1,42 +1,45 @@
 package techcourse.myblog.web.dto;
 
 import techcourse.myblog.application.exception.JsonAPIException;
-import techcourse.myblog.web.dto.BaseResponse;
 
-public class ErrorResponse extends BaseResponse {
+public class ErrorResponse {
 
+    private ErrorResult result;
     private String message;
 
     public ErrorResponse() {
-        super("fail");
-    }
-
-    public ErrorResponse(JsonAPIException e) {
-        super("fail");
-        message = e.getMessage();
     }
 
     public ErrorResponse(String message) {
-        super("fail");
+        result = ErrorResult.fail;
         this.message = message;
+    }
+
+    public static ErrorResponse fail(JsonAPIException e) {
+        ErrorResponse res = new ErrorResponse();
+        res.result = ErrorResult.fail;
+        res.message = e.getMessage();
+        return res;
+    }
+
+    public static ErrorResponse error(Exception e) {
+        ErrorResponse res = new ErrorResponse();
+        res.result = ErrorResult.error;
+        res.message = e.getMessage();
+        return res;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public static enum ErrorResult {
-        FAIL("fail"), ERROR("error");
+    public ErrorResult getResult() {
+        return result;
+    }
 
-        private String result;
+    public enum ErrorResult {
+        // FAIL => "FAIL"로 변환되기 때문에 소문자 사용
+        fail, error;
 
-        ErrorResult(String result) {
-            this.result = result;
-        }
-
-        @Override
-        public String toString() {
-            return result;
-        }
     }
 }
