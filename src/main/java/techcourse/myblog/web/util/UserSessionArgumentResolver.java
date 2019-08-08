@@ -1,7 +1,5 @@
 package techcourse.myblog.web.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -12,10 +10,9 @@ import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 public class UserSessionArgumentResolver implements HandlerMethodArgumentResolver {
-    private static final Logger log = LoggerFactory.getLogger(UserSessionArgumentResolver.class);
-
     public static final String LOGGED_IN_USER = "loggedInUser";
 
     @Override
@@ -27,13 +24,9 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = servletRequest.getSession();
-        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
+        Optional<UserSessionDto> userSessionDto
+                = Optional.ofNullable((UserSessionDto) session.getAttribute(LOGGED_IN_USER));
 
-        if (userSessionDto == null) {
-            log.debug("session is null");
-            throw new NotLoggedInException();
-        }
-        log.debug("current login user id is {} - {}", userSessionDto.getId(), userSessionDto.getName());
-        return userSessionDto;
+        return userSessionDto.orElseThrow(NotLoggedInException::new);
     }
 }
