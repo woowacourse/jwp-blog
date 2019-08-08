@@ -57,7 +57,7 @@ public class LoginAPIControllerTests {
             .body(Mono.just(request), LoginRequest.class)
             .exchange()
             .expectStatus()
-            .isOk()
+            .is3xxRedirection()
             .expectHeader()
             .valueMatches("Location", ".*/")
         ;

@@ -34,9 +34,9 @@ public class UserAPIController {
         }
         httpSession.setAttribute(USER_INFO, userService.update(userId, userEditRequest.getName()));
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/mypage");
-        return new ResponseEntity<>(headers, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK)
+            .header("Location", "/mypage")
+            .build();
 
     }
 

@@ -27,7 +27,7 @@ public class LoginAPIController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse> login(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult,
+    public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult,
                                               HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new ErrorResponse(bindingResult.getAllErrors().get(0).getDefaultMessage()),
@@ -36,9 +36,9 @@ public class LoginAPIController {
 
         try {
             httpSession.setAttribute(USER_INFO, userService.checkLogin(loginRequest));
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "/");
-            return new ResponseEntity<>(headers, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", "/")
+                .build();
         } catch (RuntimeException e) {
             throw new JsonAPIException(e.getMessage());
         }

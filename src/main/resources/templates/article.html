@@ -162,31 +162,31 @@
                 const list = document.querySelector('.comment > ul');
                 list.innerHTML = list.innerHTML + `
                 <li class="comment-item border bottom mrg-btm-30" id="comment-${json.id}">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-                            <div class="info">
-                                <span class="text-bold inline-block" >${json.authorName}</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>${json.createdTime}</span>
-                                </span>
-                                <p class="width-80 comment-contents">${json.contents}</p>
-                                <div class="comment-button" style = "margin-bottom:90px">
-                                    <button  class="btn btn-icon float-right pointer" type="button" onclick="deleteComment(${json.id})">
-                                        <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
-                                    </button>
-                                    <input class= "none content-input" type="text" value="${json.contents}" name="contents">
-                                    <button onclick="showCommentInput(${json.id})" class="show-button float-right pointer btn btn-icon">
-                                        수정
-                                        <!--<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
-                                    </button>
-                                    <button onclick="updateComment(${json.id})" class="update-button none float-right pointer btn btn-icon">
-                                        확인
-                                    </button>
-                                </div>
-                            </div>
-                        </li>`;
-                        editor.setMarkdown('');
-                        refreshCommentCount();
+                    <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                    <div class="info">
+                        <span class="text-bold inline-block" >${json.authorName}</span>
+                        <span class="sub-title inline-block pull-right">
+                            <i class="ti-timer pdd-right-5"></i>
+                            <span>${json.createdTime}</span>
+                        </span>
+                        <p class="width-80 comment-contents">${json.contents}</p>
+                        <div class="comment-button" style = "margin-bottom:90px">
+                            <button  class="btn btn-icon float-right pointer" type="button" onclick="deleteComment(${json.id})">
+                                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+                            </button>
+                            <input class= "none content-input" type="text" value="${json.contents}" name="contents">
+                            <button onclick="showCommentInput(${json.id})" class="show-button float-right pointer btn btn-icon">
+                                수정
+                                <!--<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
+                            </button>
+                            <button onclick="updateComment(${json.id})" class="update-button none float-right pointer btn btn-icon">
+                                확인
+                            </button>
+                        </div>
+                    </div>
+                </li>`;
+                editor.setMarkdown('');
+                refreshCommentCount();
         });
     }
 
