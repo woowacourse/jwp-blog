@@ -205,11 +205,9 @@
                     throw response;
                 }).then(comments => {
                     const commentSize = comments.length;
-                    console.log(comments)
 
                     for(let i = 0; i < commentSize; i++){
                         appendComment(comments[i]);
-                        console.log(comments[i])
                     }
 
                     commentCount.innerText = String(commentSize);
