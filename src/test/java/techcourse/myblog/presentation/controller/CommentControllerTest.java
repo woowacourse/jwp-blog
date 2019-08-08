@@ -6,17 +6,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static techcourse.myblog.presentation.controller.ControllerTestUtils.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,75 +25,66 @@ class CommentControllerTest {
 
     @Test
     void 댓글_생성하기() {
-        initalWork(createComment -> {
-            webTestClient.post()
-                    .uri("/articles/" + 1 + sessionId)
-                    .body(BodyInserters.fromFormData("contents", "comment add test"))
-                    .exchange()
-                    .expectBody()
-                    .consumeWith(result -> {
-                        articleView(webTestClient, sessionId, 1L, articleView -> {
-                            assertTrue(new String(articleView.getResponseBody()).contains("comment add test"));
-                        });
-                    });
-        });
-
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents("testCommentContents");
+        CommentRequestDto commentRequestDto = new CommentRequestDto();
+        commentRequestDto.setId(1);
+        commentRequestDto.setContents("testCommentContents");
 
         initalWork(createComment -> {
             webTestClient.post()
-                    .uri("/articles/" + 1 + sessionId)
+                    .uri("/articles/" + 1 + "/writing" + sessionId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
                     .accept(MediaType.APPLICATION_JSON_UTF8)
-                    .body(Mono.just(commentDto), CommentDto.class)
+                    .body(Mono.just(commentRequestDto), CommentRequestDto.class)
                     .exchange()
                     .expectStatus().isOk()
                     .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                     .expectBody()
-                    .jsonPath("$.name").isNotEmpty()
-                    .jsonPath("$.name").isEqualTo("test-webclient-repository");
+                    .jsonPath("$.contents").isEqualTo("testCommentContents");
         });
-
-
     }
 
     @Test
     void 댓글_수정하기() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents("comment test");
+        CommentRequestDto commentRequestDto = new CommentRequestDto();
+        commentRequestDto.setId(1);
+        commentRequestDto.setContents("testCommentContents");
+
+        CommentRequestDto commentEditRequestDto = new CommentRequestDto();
+        commentEditRequestDto.setId(1);
+        commentEditRequestDto.setContents("editCommentContents");
 
         initalWork(result -> {
-            createComment(webTestClient, commentDto, 1L, sessionId, addComment -> {
+            createComment(webTestClient, commentRequestDto, 1L, sessionId, addComment -> {
                 webTestClient.put()
-                        .uri("/articles/3/comment-edit/1" + sessionId)
-                        .body(BodyInserters.fromFormData("contents", "comment update"))
+                        .uri("/articles/1/comment-edit/" + commentRequestDto.getId() + sessionId)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .body(Mono.just(commentEditRequestDto), CommentRequestDto.class)
                         .exchange()
-                        .expectBody().consumeWith(updateComment -> {
-                    articleView(webTestClient, sessionId, 1L, commentView -> {
-                        assertTrue(new String(commentView.getResponseBody()).contains("comment update"));
-                    });
-                });
+                        .expectStatus().isOk()
+                        .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .expectBody()
+                        .jsonPath("$.contents").isEqualTo("editCommentContents");
             });
         });
     }
 
     @Test
     void 댓글_삭제하기() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents("comment test");
+        CommentRequestDto commentRequestDto = new CommentRequestDto();
+        commentRequestDto.setId(1);
+        commentRequestDto.setContents("testCommentContents");
+
         initalWork(result -> {
-            createComment(webTestClient, commentDto, 1L, sessionId, addComment -> {
+            createComment(webTestClient, commentRequestDto, 1L, sessionId, addComment -> {
                 webTestClient.delete()
-                        .uri("/articles/1/1" + sessionId)
+                        .uri("/articles/1/" + commentRequestDto.getId() + sessionId)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .exchange()
-                        .expectStatus().is3xxRedirection()
+                        .expectStatus().isOk()
+                        .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                         .expectBody()
-                        .consumeWith(deleteComment -> {
-                            articleView(webTestClient, sessionId, 1L, articleView -> {
-                                assertFalse(new String(articleView.getResponseBody()).contains("comment test"));
-                            });
-                        });
+                        .jsonPath("$.id").isEqualTo(commentRequestDto.getId());
             });
         });
     }

@@ -1,10 +1,12 @@
 package techcourse.myblog.presentation.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 
@@ -50,11 +52,14 @@ public class ControllerTestUtils {
                 .consumeWith(consumer);
     }
 
-    public static void createComment(WebTestClient webTestClient, CommentDto commentDto, Long articleId, String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
+    public static void createComment(WebTestClient webTestClient, CommentRequestDto commentRequestDto, Long articleId, String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
         webTestClient.post()
-                .uri("/articles/" + articleId + sessionId)
-                .body(BodyInserters.fromFormData("contents", commentDto.getContents()))
+                .uri("/articles/" + articleId + "/writing" + sessionId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequestDto), CommentRequestDto.class)
                 .exchange()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .consumeWith(consumer);
     }

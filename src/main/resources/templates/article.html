@@ -109,7 +109,7 @@
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
-                        <div th:each="comment : ${comments}" id = "commnetList">
+                        <div th:each="comment : ${comments}">
                             <form th:id="'comment-update-form' + ${comment.id}" method="post"
                                   th:action="'/comment/' + ${comment.id}">
                                 <input id="comment-update" type="hidden" name="_method" value="put"/>
@@ -119,11 +119,12 @@
                                     <span class="sub-title inline-block pull-right">
 <!--										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput(event)">-->
 
-                                        <a th:onclick="|showCommentInput(event, '${comment.id}')|">
+                                        <a th:if="${comment.userEmail.equals(session.email)}" th:onclick="|showCommentInput(event, ${comment.id})|">
+<!--                                        <a th:onclick="|showCommentInput(event, '${comment.id}')|">-->
 											<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
 
-                                        <a th:onclick="|deleteComment(event, '${comment.id}')|">
+                                        <a th:if="${comment.userEmail.equals(session.email)}" th:onclick="|deleteComment(event, ${comment.id})|">
                                             <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
 									</span>
@@ -200,35 +201,36 @@
             .then(response => response.json())
             .then(function (json) {
                     const node = document.createElement("LI");
-                node.innerHTML = '<form id="comment-update-form' + json.commentId + '" method="post"' +
-                    'action="/comment/' + json.commentId + '">' +
-                    '<input id="comment-update" type="hidden" name="_method" value="put"/>' +
-                    '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
-                    '<div class="info">' +
-                    '<span class="text-bold inline-block">' + json.userName + '</span>' +
-                    '<span class="sub-title inline-block pull-right">' +
-                    '<a onclick="showCommentInput(event, ' + json.commentId + ')">' +
-                    '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
-                    '</a>' +
-                    '<a onclick="deleteComment(event, ' + json.commentId + ')">' +
-                    '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
-                    '</a>' +
-                    '</span>' +
-                    '<p id="comment-contents-p-' + json.commentId + '" class="width-80">' + json.contents + '</p>' +
-                    '<div id="comment-edit-' + json.commentId + '"></div>' +
-                    '</div>' +
-                    '</form>';
+                    node.innerHTML = '<form id="comment-update-form' + json.id + '" method="post"' +
+                        'action="/comment/' + json.id + '">' +
+                        '<input id="comment-update" type="hidden" name="_method" value="put"/>' +
+                        '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
+                        '<div class="info">' +
+                        '<span class="text-bold inline-block">' + json.userName + '</span>' +
+                        '<span class="sub-title inline-block pull-right">' +
+                        '<a onclick="showCommentInput(event, ' + json.id + ')">' +
+                        '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
+                        '</a>' +
+                        '<a onclick="deleteComment(event, ' + json.id + ')">' +
+                        '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
+                        '</a>' +
+                        '</span>' +
+                        '<p id="comment-contents-p-' + json.id + '" class="width-80">' + json.contents + '</p>' +
+                        '<div id="comment-edit-' + json.id + '"></div>' +
+                        '</div>' +
+                        '</form>';
 
-                document.getElementById("commnetList").appendChild(node);
+                document.getElementById("comment-list").appendChild(node);
                 })
             }
 
     function updateComment(commentId) {
         const articleId = [[${article.id}]];
+
         fetch(articleId + '/comment-edit/' + commentId, {
             method: "PUT",
             body: JSON.stringify({
-                editedContents: document.getElementById("comment-edit-input").value
+                contents: document.getElementById("comment-edit-input").value
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -237,12 +239,13 @@
             .then(response => response.json())
             .then(function (json) {
                 const e = document.createElement('span');
-                e.innerHTML = '<p id="comment-contents-p-' + commentId + '" class="width-80">' + json.editedContents + '</p>';
+                e.innerHTML = '<p id="comment-contents-p-' + commentId + '" class="width-80">' + json.contents + '</p>';
                 let element = document.getElementById("comment-update-span-" + commentId);
                 element.parentNode.appendChild(e);
                 element.remove();
             });
     }
+
     function deleteComment(event, commentId) {
 
         event.preventDefault()
@@ -255,7 +258,7 @@
         })
             .then(response => response.json())
             .then(function (json) {
-                if (json.commentId == commentId) {
+                if (json.id == commentId) {
                     document.getElementById("comment-update-form" + commentId).remove();
                 }
             });

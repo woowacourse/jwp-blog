@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentResponseDto;
 import techcourse.myblog.application.service.ArticleService;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.application.service.UserService;
@@ -42,8 +42,8 @@ public class ArticleController {
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("user", articleService.findAuthor(articleId));
 
-        List<CommentDto> commentDtos = commentService.findAllByArticleId(articleId);
-        modelAndView.addObject("comments", commentDtos);
+        List<CommentResponseDto> commentResponseDtos = commentService.findAllByArticleId(articleId);
+        modelAndView.addObject("comments", commentResponseDtos);
         return modelAndView;
     }
 

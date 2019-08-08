@@ -42,10 +42,11 @@ public class Comment {
         this.article = article;
     }
 
-    public void modify(String contents, User user) {
+    public String modify(String contents, User user) {
         if (!this.user.equals(user)) {
             throw new NotExistUserIdException("작성자가 아닙니다.");
         }
         this.contents = contents;
+        return this.contents;
     }
 }
