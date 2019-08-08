@@ -21,7 +21,7 @@ public class CommentController {
                              @SessionInfo UserSessionInfo userSessionInfo,
                              CommentDto commentDto) {
         commentService.add(articleId, userSessionInfo.toUser(), commentDto);
-        return "redirect:/articles/" + articleId;
+        return redirectResolver(articleId);
     }
 
     @DeleteMapping("/{commentId}")
@@ -29,7 +29,7 @@ public class CommentController {
                                 @PathVariable long commentId,
                                 @SessionInfo UserSessionInfo userSessionInfo) {
         commentService.delete(commentId, userSessionInfo.toUser());
-        return "redirect:/articles/" + articleId;
+        return redirectResolver(articleId);
     }
 
     @PutMapping("/{commentId}")
@@ -38,6 +38,10 @@ public class CommentController {
                                 @SessionInfo UserSessionInfo userSessionInfo,
                                 CommentDto commentDto) {
         commentService.update(commentId, userSessionInfo.toUser(), commentDto);
+        return redirectResolver(articleId);
+    }
+
+    private String redirectResolver(long articleId) {
         return "redirect:/articles/" + articleId;
     }
 }
