@@ -16,6 +16,8 @@ import techcourse.myblog.dto.CommentDto;
 
 import java.util.Objects;
 
+import static java.time.LocalDateTime.now;
+
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTests extends AuthedWebTestClient {
@@ -75,13 +77,13 @@ public class CommentControllerTests extends AuthedWebTestClient {
 
     @Test
     void 댓글_생성() {
-        CommentDto commentDto = new CommentDto(CONTENT);
+        CommentDto commentDto = new CommentDto(2L, CONTENT, now(), new User(POBI_NAME, POBI_EMAIL, DEFAULT_PASSWORD));
 
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
                 .body(Mono.just(commentDto), CommentDto.class)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(2L)
                 .jsonPath("$.contents").isEqualTo(CONTENT)
@@ -92,7 +94,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
     void 댓글_수정() {
         getStatus(POBI_EMAIL, UPDATED_COMMENT)
                 .expectStatus()
-                .isOk()
+                .isCreated()
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(1L)
                 .jsonPath("$.contents").isEqualTo(UPDATED_COMMENT);
@@ -129,7 +131,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
     }
 
     private void addComments() {
-        CommentDto commentDto = new CommentDto(CONTENT);
+        CommentDto commentDto = new CommentDto(1L, CONTENT, now(), new User(POBI_NAME, POBI_EMAIL, DEFAULT_PASSWORD));
 
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
@@ -138,7 +140,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
     }
 
     private WebTestClient.ResponseSpec getStatus(String pobiEmail, String comment) {
-        CommentDto commentDto = new CommentDto(UPDATED_COMMENT);
+        CommentDto commentDto = new CommentDto(1L, UPDATED_COMMENT, now(), new User(POBI_NAME, POBI_EMAIL, DEFAULT_PASSWORD));
 
         return webTestClient.put().uri("/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId)
                 .cookie(JSESSIONID, getResponseCookie(pobiEmail, DEFAULT_PASSWORD).getValue())

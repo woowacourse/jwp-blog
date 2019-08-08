@@ -36,18 +36,18 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody CommentDto commentDto, @PathVariable long articleId, @LoginUser User loginUser) {
+    public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto, @PathVariable long articleId, @LoginUser User loginUser) {
         log.info("articleId : {}", articleId);
         log.info("loginUser : {}", loginUser);
         log.info("CommentDto : {}", commentDto);
         Comment comment = convert(commentDto, loginUser, articleId);
-        Comment savedComment = commentService.save(comment);
+        CommentDto savedComment = commentService.save(comment);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable long commentId, @LoginUser User loginUser, @RequestBody CommentDto commentDto) {
-        Comment updatedComment = commentService.update(commentId, loginUser, commentDto.getContents());
+    public ResponseEntity<CommentDto> updateComment(@PathVariable long commentId, @LoginUser User loginUser, @RequestBody CommentDto commentDto) {
+        CommentDto updatedComment = commentService.update(commentId, loginUser, commentDto.getContents());
         return new ResponseEntity<>(updatedComment, HttpStatus.CREATED);
     }
 
