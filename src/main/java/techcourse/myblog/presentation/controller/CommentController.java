@@ -1,11 +1,9 @@
 package techcourse.myblog.presentation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.CommentDto;
@@ -14,8 +12,10 @@ import techcourse.myblog.domain.User;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
+@RestController
 public class CommentController {
+    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
+
     private CommentService commentService;
 
     @Autowired
@@ -24,10 +24,8 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView addComment(CommentDto commentDto, @PathVariable Long articleId, HttpSession session) {
-        commentService.save(commentDto, articleId, (User) session.getAttribute("user"));
-        RedirectView redirectView = new RedirectView("/articles/" + articleId);
-        return redirectView;
+    public @ResponseBody CommentDto addComment(@RequestBody CommentDto commentDto, @PathVariable Long articleId, HttpSession session) {
+        return commentService.save(commentDto, articleId, (User) session.getAttribute("user"));
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")

@@ -31,7 +31,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void save(CommentDto commentDto, Long articleId, User user) {
+    public CommentDto save(CommentDto commentDto, Long articleId, User user) {
         Article article = articleService.findArticleById(articleId);
 
         Comment comment = new Comment.CommentBuilder()
@@ -40,7 +40,7 @@ public class CommentService {
                 .contents(commentDto.getContents())
                 .build();
 
-        commentRepository.save(comment);
+        return commentAssembler.convertEntityToDto(commentRepository.save(comment));
     }
 
     private Comment findCommentById(Long commentId) {

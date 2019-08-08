@@ -9,6 +9,7 @@
 
     <!-- 자바 패키지별 log level을 설정한다. -->
 <!--    <logger name="core" level="DEBUG" />-->
+    <logger name="techcourse.myblog.presentation.controller" level="INFO" />
 
 <!--    logging.level.techcourse.myblog.web = DEBUG-->
     <logger name="org.springframework" level="INFO" />

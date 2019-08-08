@@ -105,11 +105,11 @@
                     <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info" th:each="comment, status : ${comments}">
-                        <li class="comment-item border bottom mrg-btm-30">
+                    <ul id="comment-list" class="list-unstyled list-info">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment, status : ${comments}">
                                 <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                                 <div class="info">
-                                    <input type="text" th:id="'content-input'+ ${comment.id}" style="display:none"/>
+                                    <input type="text" th:id="'content-input-'+ ${comment.id}" style="display:none"/>
                                     <span href="" class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
                                     <span class="sub-title inline-block pull-right">
                                         <i class="ti-timer pdd-right-5"></i>
@@ -117,13 +117,9 @@
                                     </span>
 
                                     <div th:if ="${checkCommentsAuthor[status.index]} == true">
-                                        <!-- <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
-                                            <input type="hidden" name="_method" value="put"/> -->
                                         <button type="button" class="float-right pointer btn btn-icon" th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
                                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
-                                        <!-- </form>
- -->
                                         <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}" method="post">
                                             <input type="hidden" name="_method" value="DELETE"/>
                                             <button type="submit" class="float-right pointer btn btn-icon">
@@ -133,21 +129,19 @@
                                     </div>
 
 
-                                    <p th:id="'commentContents-'+${comment.id}" class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                    <p th:id="'comment-contents-'+${comment.id}" class="width-80" th:text="${comment.contents}">브라운 멋져</p>
                                 </div>
                         </li>
 
                     </ul>
                     <div class="add-comment">
                         <div id="editSection"></div>
-                        <form th:action="'/articles/' + ${article.id} + '/comments'" method="post">
-                            <input id="comment-contents" name="contents" type="hidden">
-                            <a class="float-right pointer btn btn-icon">
-                                <button id="save-btn" type="submit" class="btn btn-default">
-                                    <i class="ti-save"></i>
-                                </button>
-                            </a>
-                        </form>
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <a class="float-right pointer btn btn-icon">
+                            <button id="save-btn" type="submit" class="btn btn-default" onclick="saveComment()">
+                                <i class="ti-save"></i>
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -177,11 +171,14 @@
 </div>
 
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    
 <th:block th:include="fragments/body"></th:block>
 <script type="text/javascript" th:inline="javascript">
 
     /* <![CDATA[ */
     const initValue = /*[[${article.contents}]]*/;
+    const comment = /*[[${comments}]]*/;
     /*]]>*/
 
     const viewer = tui.Editor.factory({
@@ -204,10 +201,52 @@
     });
 
     function clickPencil(articleId, commentId) {
-        let commentContents = document.getElementById("commentContents-"+commentId);
+        let commentContents = document.getElementById("comment-contents-"+commentId);
         $('#modalInput').val(commentContents.textContent)
         document.getElementById('commentModifyForm').action="/articles/"+articleId+"/comments/"+commentId
         $('#exampleModal').modal('show')
+    }
+
+    /* <![CDATA[ */
+    const articleId = /*[[${article.id}]]*/;
+    /*]]>*/
+
+    const commentTemplate =                         
+        '<li class="comment-item border bottom mrg-btm-30">'+
+            '<img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">' +
+            '<div class="info">' +
+                '<input type="text" id="content-input-{{id}}" style="display:none"/>' +
+                '<span href="" class="text-bold inline-block">{{author.name}}</span>' +
+                '<span class="sub-title inline-block pull-right">' +
+                    '<i class="ti-timer pdd-right-5"></i>' +
+                    '<span>6 min ago</span>' +
+                '</span>' +
+                '<div>' +
+                    '<button type="button" class="float-right pointer btn btn-icon" onclick=clickPencil(' + articleId + ',{{id}}">' +
+                        '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
+                    '</button>' +
+                    '<button type="submit" class="float-right pointer btn btn-icon">' +
+                        '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
+                    '</button>' +
+                '</div>' +
+                '<p id="comment-contents-{{id}}" class="width-80">{{contents}}</p>' +
+            '</div>' +
+        '</li>';
+    const commentItemTemplate = Handlebars.compile(commentTemplate)
+
+    const saveComment = async e => {
+        const url = "/articles/" + articleId + "/comments"
+        const res = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                contents : document.getElementById("comment-contents").getAttribute('value')
+            }),
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            }
+        })
+        const comment = await res.json()
+        document.getElementById("comment-list").insertAdjacentHTML("beforeend", commentItemTemplate(comment))
     }
 </script>
 </body>
