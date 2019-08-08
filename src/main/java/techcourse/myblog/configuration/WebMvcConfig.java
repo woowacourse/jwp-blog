@@ -28,6 +28,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/users/**")
                 .excludePathPatterns("/users/new")
                 .addPathPatterns("/mypage/**")
-                .addPathPatterns("/articles/**");
+                .addPathPatterns("/articles");
     }
 }

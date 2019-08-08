@@ -67,58 +67,15 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${articleDto.countOfComment}"></span>
+                    <span id="count-of-comment" class="font-size-16 text-info"></span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="commentDto : ${commentDtos}">
-                            <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4">
-                            <div class="info">
-                                <span class="text-bold inline-block" th:text="${commentDto.author}"></span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span th:text="${commentDto.createdDate}">6 min ago</span>
-                                </span>
-                                <p class="width-80" th:text="${commentDto.contents}"></p>
-                                <div th:id="comment+${commentDto.id}" style="display: none;">
-                                    <form method="post" th:object="${commentDto}"
-                                          th:action="@{/articles/{articleId}/comment/{commentId}(articleId=${articleDto.articleId}, commentId=${commentDto.id})}">
-                                        <input name="_method" type="hidden" value="put">
-                                        <input th:value="${commentDto.contents}" name="contents" class="text-area"
-                                               type="text"
-                                               style="border: 0; background-color: #fff; width: 80%; height: 100px; border-radius: 10px; margin-bottom: 10px; padding: 10px;">
-                                        <button class="btn btn-info float-right mrg-btm-0 relative bottom-5"
-                                                type="submit">수정
-                                        </button>
-                                    </form>
-                                </div>
-
-                                <div>
-                                    <button class="pointer btn btn-icon" style="float: left;"
-                                            th:onclick="|javascript:update('${commentDto.id}')|">
-                                        <i class="ti-pencil text-dark font-size-10 pdd-horizontal-5"></i>
-                                    </button>
-                                    <form method="post"
-                                          th:action="@{/articles/{articleId}/comment/{commentId}(articleId=${articleDto.articleId}, commentId=${commentDto.id})}">
-                                        <input name="_method" type="hidden" value="delete">
-                                        <button class="pointer btn btn-icon" style="float: left;" type="submit">
-                                            <i class="ti-trash text-dark font-size-10 pdd-horizontal-5"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <p id="comment-edit-section" style="clear: both;"></p>
-                            </div>
-                        </li>
+                    <ul id="comment-list" class="list-unstyled list-info">
                     </ul>
                     <div class="add-comment">
                         <div id="editSection"></div>
-                        <form th:action="@{/articles/{articleId}/comment(articleId=${articleDto.articleId})}"
-                              method="post" style="margin-top: 20px;">
-                            <input id="comment-contents" name="contents" type="hidden">
-                            <input class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit"
-                                   value="댓글 작성">
-                        </form>
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <button class="btn btn-info float-right mrg-btm-0 mrg-top-20 relative bottom-5" onclick="saveComment();">댓글 작성</button>
                     </div>
                 </div>
             </div>
@@ -152,10 +109,120 @@
     });
 </script>
 <script>
-    function update(id) {
-        var x = document.getElementById("comment" + id);
-        x.style.display = "block";
+    const BASE_URL = `http://${window.location.host}`
+    const url = window.location.pathname
+    const articleId = url.replace("/articles/", "")
+
+    const commentGenerator = (id, contents, author, createdDate) => {
+        return `<li class="comment-item border bottom mrg-btm-30">
+                    <img class="thumb-img img-circle"
+                         src="https://avatars3.githubusercontent.com/u/50367798?v=4">
+                    <div class="info">
+                        <span class="text-bold inline-block">${author}</span>
+                        <span class="sub-title inline-block pull-right">
+                            <i class="ti-timer pdd-right-5"></i>
+                            <span>${createdDate}</span>
+                        </span>
+                        <p id="comment-view-${id}" class="width-80">${contents}</p>
+                        <div>
+                            <button id="comment-edit-button-${id}" class="pointer btn btn-icon" style="float: left;">
+                                <i class="ti-pencil text-dark font-size-10 pdd-horizontal-5"></i>
+                            </button>
+                            <button id="comment-close-button-${id}" class="pointer btn btn-icon" style="float: left; display: none;">
+                                <i class="ti-close text-dark font-size-10 pdd-horizontal-5"></i>
+                            </button>
+                            <button id="comment-delete-button-${id}" class="pointer btn btn-icon" style="float: left;">
+                                <i class="ti-trash text-dark font-size-10 pdd-horizontal-5"></i>
+                            </button>
+                        </div>
+                        <div id="comment-editor-${id}" style="display: none;">
+                            <input id="comment-contents-${id}" name="contents" type="hidden" required>
+                            <div id="editSection-${id}"></div>
+                            <button class="btn btn-info float-right mrg-top-5 mrg-btm-3 top-10 bottom-5" onclick="editComment(${id})">수정</button>
+                        </div>
+                        <p style="clear: both;"></p>
+                    </div>
+                </li>`
     }
+
+    const commentList = document.getElementById('comment-list')
+
+    const loadComments = () => {
+        fetch(`${BASE_URL}/articles/${articleId}/comments`)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('댓글을 불러올 수 없습니다.')
+            })
+            .then(comments => {
+                commentList.innerHTML = ''
+                comments.forEach(comment => {
+                    commentList.innerHTML += commentGenerator(comment.id, comment.contents, comment.author, comment.createdDate)
+                })
+            }).catch((error) => {
+                console.log(error)
+        })
+    }
+
+    const saveComment = () => {
+        const commentContents = document.getElementById('comment-contents')
+        const contents = commentContents.getAttribute('value')
+        const commentRequest = {
+            'contents': contents
+        }
+        if (contents.length === 0) {
+            alert('댓글을 입력해주세요.')
+            return
+        }
+
+        fetch(`${BASE_URL}/articles/${articleId}/comments`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(commentRequest)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('댓글을 저장하는 중에 오류가 발생했습니다.')
+            })
+            .then(() => {
+                getCountOfComment()
+                loadComments()
+                commentContents.setAttribute('value', '')
+                editor.setValue('')
+            })
+            .catch((error) => {
+                console.log(error)
+                alert('권한이 없습니다.')
+                commentContents.setAttribute('value', '')
+                editor.setValue('')
+            })
+    }
+
+    const getCountOfComment = () => {
+        fetch(`${BASE_URL}/articles/${articleId}/comments/total`)
+            .then(response => {
+                if (response.ok) {
+                    return response.text()
+                }
+                throw new Error('올바른 요청이 아닙니다.')
+            })
+            .then(text => {
+                const countOfComment = document.getElementById('count-of-comment')
+                countOfComment.innerText = text
+            })
+            .catch(() => {
+                console.log('올바른 요청이 아닙니다.')
+            })
+    }
+
+    getCountOfComment()
+    loadComments()
 </script>
 </body>
 </html>

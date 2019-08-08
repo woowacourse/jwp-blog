@@ -38,7 +38,6 @@ public class ArticleController {
     public String showArticle(@PathVariable long articleId, Model model) {
         ArticleResponse articleDto = articleService.getArticleDtoById(articleId);
         model.addAttribute("articleDto", articleDto);
-        model.addAttribute("commentDtos", articleService.getAllComments(articleId));
         return "article";
     }
 
@@ -64,13 +63,6 @@ public class ArticleController {
         User user = (User) httpSession.getAttribute("user");
         articleService.deleteById(articleId, user);
         return "redirect:/";
-    }
-
-    @PostMapping("/{articleId}/comment")
-    public String createComment(@PathVariable long articleId, CommentRequest commentDto, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        articleService.saveComment(articleId, commentDto, user);
-        return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/{articleId}/comment/{commentId}")
