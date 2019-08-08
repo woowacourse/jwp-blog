@@ -1,6 +1,7 @@
 package techcourse.myblog.comment.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,9 +35,10 @@ public class CommentController {
 
     @ResponseBody
     @PostMapping("/articles/{articleId}/comments")
-    public CommentResponseDto createComment(@PathVariable long articleId, UserSession userSession, @RequestBody CommentCreateDto commentDto) {
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable long articleId, UserSession userSession, @RequestBody CommentCreateDto commentDto) {
         log.debug(">>> commentDto : {}", commentDto);
-        return commentService.save(articleId, userSession.getId(), commentDto);
+        CommentResponseDto comment = commentService.save(articleId, userSession.getId(), commentDto);
+        return ResponseEntity.created(null).body(comment);
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")

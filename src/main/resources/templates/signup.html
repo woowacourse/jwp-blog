@@ -118,14 +118,14 @@
                     "Content-type": "application/json; charset=UTF-8"
                 }
             })
-                .then(response => response.json())
-                .then((response) => {
-                    if (response.errorMessage) {
-                        signUpError(response.errorMessage)
+                .then(response => {
+                    if (response.status !== 201) {
+                        const res = response.json();
+                        res.then(data => signUpError(data));
                     } else {
-                        location.href = 'http://localhost:8080/login'
+                        location.href = response.headers.get("location");
                     }
-                });
+                })
         }
 
         function signUpError(errorMessage) {

@@ -32,7 +32,7 @@ public class LoginControllerTests {
     void 로그인_요청_성공_테스트() {
         UserLoginDto userLoginDto = new UserLoginDto(USER_EMAIL, USER_PASSWORD);
 
-        executeLogin(userLoginDto).isOk()
+        executeLogin(userLoginDto).isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$.email").isNotEmpty()

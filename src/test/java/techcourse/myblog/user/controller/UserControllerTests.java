@@ -45,7 +45,7 @@ public class UserControllerTests {
     void 회원가입_테스트() {
         UserCreateDto userCreateDto = new UserCreateDto(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME);
 
-        executeSignUp(userCreateDto).isOk()
+        executeSignUp(userCreateDto).isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$.email").isNotEmpty()

@@ -45,7 +45,7 @@ public class CommentControllerTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentCreateDto), CommentCreateDto.class)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$.contents").isNotEmpty()
@@ -54,8 +54,8 @@ public class CommentControllerTest {
 
     @Test
     void 댓글_수정_페이지_이동_테스트() {
-        WebTest.executeGetTest(webTestClient, "/comments/" + COMMENT_ID + "/edit", cookie)
-                .expectStatus().isOk();
+            WebTest.executeGetTest(webTestClient, "/comments/" + COMMENT_ID + "/edit", cookie)
+                    .expectStatus().isOk();
     }
 
     @Test

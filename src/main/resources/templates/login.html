@@ -72,6 +72,7 @@
         </div>
     </div>
     <script type="text/javascript" th:inline="javascript">
+
         function login() {
             const id = document.getElementById('login-id').value;
             const password = document.getElementById('login-password').value;
@@ -88,18 +89,18 @@
                     "Content-type": "application/json; charset=UTF-8"
                 }
             })
-                .then(response => response.json())
-                .then((response) => {
-                    if (response.errorMessage) {
-                        loginError(response.errorMessage)
+                .then(response => {
+                    if (response.status !== 201) {
+                        const res = response.json();
+                        res.then(data => loginError(data));
                     } else {
-                        location.href = 'http://localhost:8080/'
+                        location.href = response.headers.get("location");
                     }
-                });
+                })
         }
 
-        function loginError(errorMessage) {
-            alert(errorMessage);
+        function loginError(error) {
+            alert(error.errorMessage);
         }
     </script>
 </th:block>

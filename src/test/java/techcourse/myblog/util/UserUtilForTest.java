@@ -14,7 +14,7 @@ public class UserUtilForTest {
         return WebTest.executePostTestWithJson(webTestClient, "/login", EMPTY_COOKIE)
                 .body(Mono.just(userLoginDto), UserLoginDto.class)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .returnResult(String.class)
                 .getResponseHeaders()
                 .getFirst("Set-Cookie");
