@@ -1,6 +1,5 @@
 package techcourse.myblog.web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,6 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
@@ -44,7 +39,7 @@ class CommentControllerTests extends ControllerTestTemplate {
     }
 
     @Test
-    public void 게시글의_댓글_요청() throws IOException {
+    public void 게시글의_댓글_요청() {
         //댓글 없을 때 댓글 요청
         webTestClient.get().uri(commentUrl)
                 .cookie("JSESSIONID", getLoginSessionId(authorDto))
@@ -54,7 +49,14 @@ class CommentControllerTests extends ControllerTestTemplate {
                 .expectBody()
                 .jsonPath("$").isEmpty();
 
-        //댓글 하나 작성
+        //댓글 두개 작성
+        webTestClient.post().uri(commentUrl)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentDto), CommentDto.class)
+                .cookie("JSESSIONID", getLoginSessionId(authorDto))
+                .exchange()
+                .returnResult(String.class);
         webTestClient.post().uri(commentUrl)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -64,18 +66,13 @@ class CommentControllerTests extends ControllerTestTemplate {
                 .returnResult(String.class);
 
         //댓글 요청
-        byte[] responseBody = webTestClient.get().uri(commentUrl)
+        webTestClient.get().uri(commentUrl)
                 .cookie("JSESSIONID", getLoginSessionId(authorDto))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
-                .returnResult()
-                .getResponseBody();
-
-        List<Comment> comments = new ObjectMapper().readValue(new String(responseBody), ArrayList.class);
-
-        assertThat(comments).hasSize(1);
+                .jsonPath("$.length()").isEqualTo(2);
     }
 
     @Test
@@ -197,8 +194,7 @@ class CommentControllerTests extends ControllerTestTemplate {
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
                 .cookie("JSESSIONID", getLoginSessionId(authorDto))
-                .exchange()
-        ;
+                .exchange();
 
         comment = commentRepository.findAll().get(0);
 

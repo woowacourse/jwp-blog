@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import techcourse.myblog.domain.exception.InvalidUserException;
 import techcourse.myblog.validation.UserPattern;
 
 import javax.persistence.Column;

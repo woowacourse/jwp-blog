@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.CommentUpdateFailedException;
-import techcourse.myblog.domain.InvalidCommentException;
-import techcourse.myblog.service.*;
-import techcourse.myblog.web.controller.*;
+import techcourse.myblog.domain.exception.CommentUpdateFailedException;
+import techcourse.myblog.domain.exception.InvalidCommentException;
+import techcourse.myblog.service.exception.*;
+import techcourse.myblog.web.exception.*;
 
 @ControllerAdvice
 public class MyBlogExceptionHandler {

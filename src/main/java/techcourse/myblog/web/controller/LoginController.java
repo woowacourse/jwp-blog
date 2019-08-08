@@ -10,6 +10,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserReadService;
+import techcourse.myblog.web.exception.LoginBindException;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;

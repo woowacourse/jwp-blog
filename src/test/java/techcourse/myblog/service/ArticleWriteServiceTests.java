@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.common.ArticleCommonServiceTests;
+import techcourse.myblog.service.exception.MismatchAuthorException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

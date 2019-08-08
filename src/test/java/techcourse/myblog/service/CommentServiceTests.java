@@ -6,8 +6,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentUpdateFailedException;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.exception.CommentUpdateFailedException;
 import techcourse.myblog.domain.repository.CommentRepository;
 
 import java.util.Optional;

@@ -10,6 +10,9 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
 import techcourse.myblog.validation.UserInfo;
+import techcourse.myblog.web.exception.EditUserBindException;
+import techcourse.myblog.web.exception.SignUpBindException;
+import techcourse.myblog.web.exception.UnauthorizedRequestException;
 import techcourse.myblog.web.support.SessionUser;
 
 import javax.validation.groups.Default;

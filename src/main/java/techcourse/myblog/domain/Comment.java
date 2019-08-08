@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.domain.exception.CommentUpdateFailedException;
+import techcourse.myblog.domain.exception.InvalidCommentException;
 
 import javax.persistence.*;
 

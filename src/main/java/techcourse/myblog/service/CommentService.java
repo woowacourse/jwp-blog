@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
+import techcourse.myblog.service.exception.MismatchAuthorException;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import java.util.Collections;
 import java.util.List;

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import techcourse.myblog.service.MismatchAuthorException;
+import techcourse.myblog.service.exception.MismatchAuthorException;
 
 import javax.persistence.*;
 
