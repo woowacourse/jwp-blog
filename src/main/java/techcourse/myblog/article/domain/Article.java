@@ -30,11 +30,11 @@ public class Article {
     @Column(name = "article_cover_url")
     private String coverUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Comment> comments;
 

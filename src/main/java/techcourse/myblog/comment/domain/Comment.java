@@ -22,11 +22,11 @@ public class Comment {
     @Column(name = "comment_contents")
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commenterId", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User commenter;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "articleId", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     @JsonManagedReference
     private Article article;
