@@ -1,9 +1,11 @@
 const articleApp = (function () {
     const articleId = document.getElementById('articleId').innerText;
     const email = document.getElementById('session-email').innerText;
+
     function makeAttributeVisible(element) {
         element.setAttribute("style", "visibility:visible");
     }
+
     function makeAttributeHidden(element) {
         element.setAttribute("style", "visibility:hidden");
     }
@@ -65,13 +67,12 @@ const articleApp = (function () {
                 const litag = event.target.closest('li');
                 const ptag = litag.querySelector('p').innerText;
                 const input = litag.querySelector('input');
-                const confirmButton = litag.querySelector('button');
                 input.value = ptag;
+                const confirmButton = litag.querySelector('button');
                 makeAttributeVisible(confirmButton);
                 makeAttributeVisible(input);
-                console.log("연필클릭")
             }
-        }
+        };
 
         const update = function (event) {
             if(event.target.classList.contains("btn-icon")) {
@@ -100,9 +101,6 @@ const articleApp = (function () {
                 })
                     .then(response => response.json())
                     .then(function (json) {
-                        console.log(json);
-                        // input.setAttribute('style', "visibility:hidden");
-                        // confirmButton.setAttribute('style', "visibility:hidden");
                         makeAttributeHidden(input);
                         makeAttributeHidden(confirmButton);
                         ptag.innerText = json.contents;
