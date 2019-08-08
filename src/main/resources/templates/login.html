@@ -79,13 +79,15 @@
                 'Content-Type': 'application/json; charset=UTF-8'
             }
         }).then(res => {
-           if (res.status !== 302) {
-               return res.json();
-           }
-        }).then(json => {
-            const alertElm = document.querySelector('.alert.alert-danger');
-            alertElm.innerText = json.message;
-            alertElm.classList.remove('none');
+           if (res.status === 302) {
+               return;
+            }
+
+            res.json().then(json => {
+                const alertElm = document.querySelector('.alert.alert-danger');
+                alertElm.innerText = json.message;
+                alertElm.classList.remove('none');
+            });
         });
     })
 </script>
