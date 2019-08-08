@@ -2,10 +2,7 @@ package techcourse.myblog.domain;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +19,7 @@ public class User {
     private Long id;
     private String name;
     private String password;
+    @Column(unique = true)
     private String email;
 
     private User() {
