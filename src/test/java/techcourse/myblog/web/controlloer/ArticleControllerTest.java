@@ -5,20 +5,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.domain.article.Contents;
 
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.domain.article.ArticleTest.article;
+import static techcourse.myblog.domain.article.ArticleTest.contents;
 import static techcourse.myblog.domain.user.UserTest.user;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest extends AbstractControllerTest {
-    private static final String title = article.getTitle();
-    private static final String coverUrl = article.getCoverUrl();
-    private static final String contents = article.getContents();
-
     @Test
     void 로그인_전_Article_생성_페이지_접근() {
         webTestClient.get().uri("/articles/new").exchange()
@@ -37,9 +34,8 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_전_Article_생성() {
-        ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
         getResponse(webTestClient.post()
-                .uri("/articles/new"), articleDto, null)
+                .uri("/articles/new"), contents, null)
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/login.*");
     }
@@ -47,16 +43,15 @@ public class ArticleControllerTest extends AbstractControllerTest {
     @Test
     void 로그인_후_Article_생성() {
         String jSessionId = extractJSessionId(login(user));
-        ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
 
         WebTestClient.RequestBodySpec requestBodySpec = webTestClient.post().uri("/articles/new")
                 .cookie("JSESSIONID", jSessionId);
 
-        WebTestClient.ResponseSpec responseSpec = getResponse(requestBodySpec, articleDto, jSessionId)
+        WebTestClient.ResponseSpec responseSpec = getResponse(requestBodySpec, contents, jSessionId)
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/articles.*");
 
-        checkBody(responseSpec, articleDto);
+        checkBody(responseSpec, contents);
     }
 
     @Test
@@ -83,18 +78,16 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_전_Article_수정() {
-        ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
-
-        getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleDto, null)
+        getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), contents, null)
                 .expectStatus().is3xxRedirection();
     }
 
     @Test
     void 로그인_후_Article_수정() {
-        ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
+        Contents contents = new Contents("update title", "update coverUrl", "update contents");
         String jSessionId = extractJSessionId(login(user));
 
-        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/1"), articleDto, jSessionId);
+        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/1"), contents, jSessionId);
 
         responseSpec.expectBody()
                 .consumeWith(response -> {
@@ -104,9 +97,9 @@ public class ArticleControllerTest extends AbstractControllerTest {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                                assertThat(body.contains(articleDto.getTitle())).isTrue();
-                                assertThat(body.contains(articleDto.getCoverUrl())).isTrue();
-                                assertThat(body.contains(articleDto.getContents())).isTrue();
+                                assertThat(body.contains(contents.getTitle())).isTrue();
+                                assertThat(body.contains(contents.getCoverUrl())).isTrue();
+                                assertThat(body.contains(contents.getContents())).isTrue();
                             });
                 });
     }
@@ -131,18 +124,18 @@ public class ArticleControllerTest extends AbstractControllerTest {
                 .expectHeader().valueMatches("location", ".*/.*");
     }
 
-    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleDto articleDto, String jSessionId) {
+    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, Contents contents, String jSessionId) {
         return requestBodySpec
                 .cookie("JSESSIONID", jSessionId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", articleDto.getTitle())
-                        .with("coverUrl", articleDto.getCoverUrl())
-                        .with("contents", articleDto.getContents()))
+                        .fromFormData("title", contents.getTitle())
+                        .with("coverUrl", contents.getCoverUrl())
+                        .with("contents", contents.getContents()))
                 .exchange();
     }
 
-    private void checkBody(WebTestClient.ResponseSpec responseSpec, ArticleDto articleDto) {
+    private void checkBody(WebTestClient.ResponseSpec responseSpec, Contents contents) {
         responseSpec.expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
@@ -151,9 +144,9 @@ public class ArticleControllerTest extends AbstractControllerTest {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                                assertThat(body.contains(articleDto.getTitle())).isTrue();
-                                assertThat(body.contains(articleDto.getCoverUrl())).isTrue();
-                                assertThat(body.contains(articleDto.getContents())).isTrue();
+                                assertThat(body.contains(contents.getTitle())).isTrue();
+                                assertThat(body.contains(contents.getCoverUrl())).isTrue();
+                                assertThat(body.contains(contents.getContents())).isTrue();
                             });
                 });
     }

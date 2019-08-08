@@ -3,19 +3,14 @@ package techcourse.myblog.domain.article;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.InvalidAuthorException;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static techcourse.myblog.domain.user.UserTest.user;
 
 
 public class ArticleTest {
-    public static final Article article = Article.builder()
-            .title("title")
-            .coverUrl("coverUrl")
-            .contents("contents")
-            .author(UserTest.user)
-            .build();
+    public static final Contents contents = new Contents("title", "coverUrl", "contents");
+    public static final Article article = new Article(contents, user);
 
     @Test
     void 아티클_작성자_확인() {
@@ -29,17 +24,11 @@ public class ArticleTest {
 
     @Test
     void 자신의_아티클_수정() {
-        Article article2 = Article.builder()
-                .title("update title")
-                .coverUrl("update coverUrl")
-                .contents("update contents")
-                .author(UserTest.user)
-                .build();
+        Contents contents = new Contents("update title", "update coverUrl", "update contents");
+        Article article2 = new Article(contents, user);
 
         article.update(article2);
 
-        assertEquals(article.getTitle(), "update title");
-        assertEquals(article.getCoverUrl(), "update coverUrl");
-        assertEquals(article.getContents(), "update contents");
+        assertEquals(article.contents, contents);
     }
 }

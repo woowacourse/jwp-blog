@@ -21,14 +21,8 @@ public class Article extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
 
-    @Column(nullable = false, length = 20)
-    private String title;
-
-    @Column(length = 100)
-    private String coverUrl;
-
-    @Lob
-    private String contents;
+    @Embedded
+    Contents contents;
 
     @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
@@ -40,18 +34,14 @@ public class Article extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Article(String title, String coverUrl, String contents, User author) {
-        this.title = title;
-        this.coverUrl = coverUrl;
+    public Article(Contents contents, User author) {
         this.contents = contents;
         this.author = author;
     }
 
     public void update(Article article) {
         checkCorrespondingAuthor(article.getAuthor());
-        this.title = article.title;
         this.contents = article.contents;
-        this.coverUrl = article.coverUrl;
     }
 
     public void checkCorrespondingAuthor(User user) {

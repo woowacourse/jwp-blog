@@ -6,16 +6,16 @@
     <div>
         <input id="articleId" name="_method" type="hidden" th:value="${article.articleId}">
         <div class="about-cover card no-border ">
-            <div class="cover-img overlay-dark bg" th:if="${article.coverUrl!=''}"
-                 th:style="'background-image: url(' + ${article.coverUrl} + ');'">
+            <div class="cover-img overlay-dark bg" th:if="${article.contents.coverUrl!=''}"
+                 th:style="'background-image: url(' + ${article.contents.coverUrl} + ');'">
                 <div class="padding-30">
-                    <h1 class="text-center cover-title" th:text="${article.title}"></h1>
+                    <h1 class="text-center cover-title" th:text="${article.contents.title}"></h1>
                 </div>
             </div>
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/default/defaultImage.png')"
-                 th:unless="${article.coverUrl!=''}">
+                 th:unless="${article.contents.coverUrl!=''}">
                 <div class="padding-30">
-                    <h1 class="text-center cover-title" th:text="${article.title}"></h1>
+                    <h1 class="text-center cover-title" th:text="${article.contents.title}"></h1>
                 </div>
             </div>
         </div>

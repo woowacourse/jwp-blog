@@ -1,16 +1,13 @@
 package techcourse.myblog.web.controller;
 
 import groovy.util.logging.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.Contents;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
-import techcourse.myblog.service.dto.ArticleDto;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,14 +15,10 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
     private ArticleService articleService;
-    private CommentService commentService;
 
-    ArticleController(ArticleService articleService, CommentService commentService) {
+    ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.commentService = commentService;
     }
 
     @GetMapping("/new")
@@ -34,9 +27,9 @@ public class ArticleController {
     }
 
     @PostMapping("/new")
-    public String createArticle(ArticleDto articleDto, Model model, HttpSession httpSession) {
+    public String createArticle(Contents contents, Model model, HttpSession httpSession) {
         User author = (User) httpSession.getAttribute("user");
-        Article article = articleService.createArticle(articleDto, author);
+        Article article = articleService.createArticle(contents, author);
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getArticleId();
     }
@@ -59,9 +52,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ArticleDto updateArticleDto, Model model, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
-        Article updateArticle = articleService.updateArticle(articleId, updateArticleDto.toEntity(author));
+    public String updateArticle(@PathVariable Long articleId, Contents contents, Model model, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        Article updateArticle = articleService.updateArticle(articleId, contents, user);
         model.addAttribute("article", updateArticle);
         return "redirect:/articles/" + articleId;
     }

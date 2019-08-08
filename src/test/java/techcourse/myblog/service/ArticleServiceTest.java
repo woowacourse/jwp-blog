@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.exception.NotFoundObjectException;
 
 import javax.servlet.http.HttpSession;
@@ -15,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static techcourse.myblog.domain.article.ArticleTest.article;
+import static techcourse.myblog.domain.article.ArticleTest.contents;
 import static techcourse.myblog.domain.user.UserTest.user;
 
 
@@ -30,14 +30,12 @@ public class ArticleServiceTest {
     @MockBean(name = "httpSession")
     private HttpSession httpSession;
 
-    private ArticleDto articleDto = new ArticleDto();
-
     @Test
     void 글_생성() {
         given(httpSession.getAttribute("user")).willReturn(user);
         given(articleRepository.save(article)).willReturn(article);
 
-        assertDoesNotThrow(() -> articleService.createArticle(articleDto, user));
+        assertDoesNotThrow(() -> articleService.createArticle(contents, user));
     }
 
     @Test

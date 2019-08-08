@@ -15,11 +15,11 @@
                         <div class="width-80">
                             <input autocomplete="off" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
                                    name="title"
-                                   placeholder="제목을 입력해주세요" th:value="${article == null ? '' : article.title}"
+                                   placeholder="제목을 입력해주세요" th:value="${article == null ? '' : article.contents.title}"
                                    type="text">
                             <input autocomplete="off" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                    name="coverUrl"
-                                   placeholder="배경 url을 입력해주세요" th:value="${article == null ? '' : article.coverUrl}"
+                                   placeholder="배경 url을 입력해주세요" th:value="${article == null ? '' : article.contents.coverUrl}"
                                    type="text">
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                     <div class="col-lg-1 col-md-1"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10">
                         <input id="article-contents" name="contents" type="hidden">
-                        <div id="editSection" th:text="${article == null ? '' : article.contents}"></div>
+                        <div id="editSection" th:text="${article == null ? '' : article.contents.contents}"></div>
                     </div>
                     <div class="col-lg-1 col-md-1">
                         <div class="btn-group btn-group-vertical">
