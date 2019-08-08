@@ -7,12 +7,18 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 
+import java.util.Optional;
+
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
 
     public CommentService(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
+    }
+
+    public Optional<Comment> find(long id) {
+        return commentRepository.findById(id);
     }
 
     public Comment write(Article article, User user, String contents) {
