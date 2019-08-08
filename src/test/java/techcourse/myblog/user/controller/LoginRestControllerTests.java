@@ -14,7 +14,7 @@ import techcourse.myblog.util.WebTest;
 import static techcourse.myblog.user.UserDataForTest.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoginControllerTests {
+public class LoginRestControllerTests {
     private static final String UNFORMATTED_EMAIL_ERROR = "올바른 email 형식이 아닙니다.";
     private static final String UNFORMATTED_PASSWORD_ERROR = "올바른 비밀번호 형식이 아닙니다.";
     private static final String UNMATCHED_PASSWORD_ERROR = "비밀번호가 일치하지 않습니다.";

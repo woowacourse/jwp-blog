@@ -30,15 +30,6 @@ public class UserController {
         return "signup";
     }
 
-    @PostMapping("/users")
-    @ResponseBody
-    public UserResponseDto createUser(@RequestBody @Valid UserCreateDto userDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
-        }
-        return userService.save(userDto);
-    }
-
     @GetMapping("/users")
     public String readUsers(Model model) {
         List<UserResponseDto> users = userService.findAll();

@@ -32,13 +32,6 @@ public class CommentController {
         return "comment-edit";
     }
 
-    @PostMapping("/articles/{articleId}/comments")
-    @ResponseBody
-    public CommentResponseDto createComment(@PathVariable long articleId, UserSession userSession, @RequestBody CommentCreateDto commentDto) {
-        log.debug(">>> commentDto : {}", commentDto);
-        return commentService.save(articleId, userSession.getId(), commentDto);
-    }
-
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public RedirectView updateComment(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession,
                                       @Valid CommentUpdateDto commentDto, BindingResult result, HttpServletRequest request) {
