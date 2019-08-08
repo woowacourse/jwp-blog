@@ -27,8 +27,7 @@ public class CommentControllerTest extends AbstractControllerTest {
     @Test
     void 로그인_후_댓글_생성() {
         String jSessionId = extractJSessionId(login(user));
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents("댓글입니다.");
+        CommentDto commentDto = new CommentDto("댓글입니다.");
 
         webTestClient.post().uri("/articles/1/comment")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -44,8 +43,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_댓글_수정() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents("수정된 댓글입니다.");
+        CommentDto commentDto = new CommentDto("수정된 댓글입니다.");
 
         String jSessionId = extractJSessionId(login(user));
         webTestClient.put().uri("/articles/1/comment/1")
@@ -75,9 +73,7 @@ public class CommentControllerTest extends AbstractControllerTest {
     @Test
     void 자신이_쓰지_않은_댓글_수정_시도() {
         String jSessionId = extractJSessionId(login(user2));
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents("수정된 댓글입니다.");
-
+        CommentDto commentDto = new CommentDto("수정된 댓글입니다.");
 
         webTestClient.put().uri("/articles/1/comment/1")
                 .cookie("JSESSIONID", jSessionId)
