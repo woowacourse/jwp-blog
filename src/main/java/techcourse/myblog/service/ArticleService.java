@@ -6,6 +6,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.dto.CommentDto;
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.domain.dto.ArticleDto;
 import techcourse.myblog.domain.user.User;
@@ -17,13 +18,16 @@ import java.util.List;
 @Service
 public class ArticleService {
 	private final ArticleRepository articleRepository;
+	private final UserService userService;
 
-	public ArticleService(ArticleRepository articleRepository) {
+	public ArticleService(ArticleRepository articleRepository, UserService userService) {
 		this.articleRepository = articleRepository;
+		this.userService = userService;
 	}
 
-	public ArticleDto createArticle(ArticleDto articleDto, User author) {
-		Article article = articleDto.toEntity(author);
+	public ArticleDto createArticle(ArticleDto articleDto, LoginUser loginUser) {
+		User user = userService.findByEmail(loginUser.getEmail());
+		Article article = articleDto.toEntity(user);
 		article = articleRepository.save(article);
 		return ArticleDto.toArticleDto(article);
 	}
@@ -38,16 +42,17 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public ArticleDto updateArticle(Long articleId, ArticleDto articleDto, User user) {
+	public ArticleDto updateArticle(Long articleId, ArticleDto articleDto, LoginUser loginUser) {
+		User user = userService.findByEmail(loginUser.getEmail());
 		Article article = findArticle(articleId);
 		article.update(articleDto.toEntity(user));
 
 		return ArticleDto.toArticleDto(article);
 	}
 
-	public void deleteArticle(Long articleId, User user) {
+	public void deleteArticle(Long articleId, LoginUser loginUser) {
 		Article article = findArticle(articleId);
-		article.checkCorrespondingAuthor(user);
+		article.checkCorrespondingAuthor(loginUser.getEmail());
 		articleRepository.deleteById(articleId);
 	}
 
@@ -72,7 +77,7 @@ public class ArticleService {
 		return article;
 	}
 
-	public void checkAvailableUpdateUser(Long articleId, User user) {
-		findArticle(articleId).checkCorrespondingAuthor(user);
+	public void checkAvailableUpdateUser(Long articleId, String email) {
+		findArticle(articleId).checkCorrespondingAuthor(email);
 	}
 }

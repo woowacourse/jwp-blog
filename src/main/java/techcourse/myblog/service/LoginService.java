@@ -1,6 +1,8 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.domain.dto.AuthenticationDto;
 import techcourse.myblog.domain.user.User;
@@ -17,11 +19,11 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public User login(AuthenticationDto authenticationDto) {
+    public LoginUser login(AuthenticationDto authenticationDto) {
         User user = userRepository.findByEmail(authenticationDto.getEmail())
                 .orElseThrow(LoginException::notFoundEmail);
-
-        return Optional.of(user).filter(u -> u.matchPassword(authenticationDto.getPassword()))
-                .orElseThrow(LoginException::notFoundEmail);
+        Optional.of(user).filter(u -> u.matchPassword(authenticationDto.getPassword()))
+                .orElseThrow(LoginException::notMatchPassword);
+        return LoginUser.toLoginUser(user);
     }
 }

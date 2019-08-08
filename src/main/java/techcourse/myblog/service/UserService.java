@@ -35,14 +35,13 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(String email, UserUpdateRequestDto userUpdateRequestDto) {
-        User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
+    public void updateUser(String email, UserUpdateRequestDto userUpdateRequestDto) {
+        User user = findByEmail(email);
         user.changeUserName(userUpdateRequestDto.getUserName());
-        return user;
     }
 
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
+        User user = findByEmail(email);
         userRepository.delete(user);
     }
 
@@ -52,5 +51,8 @@ public class UserService {
         }
     }
 
-
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(NotFoundObjectException::new);
+    }
 }
