@@ -52,7 +52,7 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    public List<CommentResponseDto> findByArticleId(long articleId) {
+    public List<CommentResponseDto> findAllByArticleId(long articleId) {
         return findByArticle(articleService.findById(articleId))
                 .stream()
                 .map(CommentResponseDto::new)

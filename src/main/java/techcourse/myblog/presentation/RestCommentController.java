@@ -29,7 +29,7 @@ public class RestCommentController {
 
     @GetMapping("/articles/{articleId}/comments")
     public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable long articleId) {
-        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.findAllByArticleId(articleId), HttpStatus.OK);
     }
 
     @PostMapping("/articles/{articleId}/comments")
@@ -38,7 +38,7 @@ public class RestCommentController {
                                                                   @LoggedInUser User user) {
         Article article = articleService.findById(articleId);
         commentService.save(commentRequestDto.toComment(user, article));
-        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.findAllByArticleId(articleId), HttpStatus.OK);
     }
 
     @PutMapping("/comments/{commentId}")
@@ -50,7 +50,7 @@ public class RestCommentController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         commentService.update(commentId, commentRequestDto);
-        return new ResponseEntity<>(commentService.findByArticleId(comment.getArticle().getId()), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.findAllByArticleId(comment.getArticle().getId()), HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -61,6 +61,6 @@ public class RestCommentController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         commentService.deleteById(commentId);
-        return new ResponseEntity<>(commentService.findByArticleId(comment.getArticle().getId()), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.findAllByArticleId(comment.getArticle().getId()), HttpStatus.OK);
     }
 }
