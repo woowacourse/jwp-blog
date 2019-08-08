@@ -110,7 +110,7 @@
     function deleteComment(articleId, commentId) {
         const deleteForm = document.createElement('form');
         deleteForm.setAttribute("method", "Post");
-        deleteForm.setAttribute("action", "/comment/" + articleId + "/" + commentId);
+        deleteForm.setAttribute("action", "/article/" + articleId + "/comment/" + commentId);
 
         const hiddenField = document.createElement("input");
         hiddenField.setAttribute("type", "hidden");
@@ -120,28 +120,6 @@
 
         document.body.appendChild(deleteForm);
         deleteForm.submit();
-    }
-
-    function updateComment(articleId, commentId) {
-        const updateForm = document.createElement('form');
-        updateForm.setAttribute("method", "Post");
-        updateForm.setAttribute("action", "/comment/" + articleId + "/" + commentId);
-
-        const hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "_method");
-        hiddenField.setAttribute("value", "put");
-        updateForm.appendChild(hiddenField);
-
-        const commentContent = document.createElement("input");
-        const content = document.getElementById('edit-section-' + commentId).value;
-        commentContent.setAttribute("type", "text");
-        commentContent.setAttribute("name", "contents");
-        commentContent.setAttribute("value", content);
-        updateForm.appendChild(commentContent);
-
-        document.body.appendChild(updateForm);
-        updateForm.submit();
     }
 
     function getCommentTemplate(comment) {
@@ -169,7 +147,7 @@
         const contents = document.getElementById('comment-contents').value;
         const commentData = {contents: contents};
 
-        fetch("/comment/" + [[${article.id}]], {
+        fetch("/article/" + [[${article.id}]] + "/comment", {
             method: "POST",
             headers: {'Content-Type': 'application/json; charset=utf-8'},
             body: JSON.stringify(commentData)
@@ -189,7 +167,7 @@
             const updateCommentData = {contents: updateContents};
 
             if (event.target.innerText === "저장") {
-                fetch("/comment/" + [[${article.id}]] + "/" + commentId, {
+                fetch("/article/" + [[${article.id}]] + "/comment/" + commentId, {
                     method: "PUT",
                     headers: {'Content-Type': 'application/json; charset=utf-8'},
                     body: JSON.stringify(updateCommentData)
@@ -197,7 +175,6 @@
                     .then(json => {
                         console.log(json);
                         cancelComment(commentId);
-                        console.log(json);
                         document.getElementById('comment-div-'+commentId).innerText = json.contents;
                         document.getElementById('edit-section-'+commentId).value = json.contents;
                     });

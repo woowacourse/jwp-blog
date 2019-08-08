@@ -30,7 +30,7 @@ public class CommentControllerTest extends LoginTemplate {
         String articleId = getNewArticleId();
         CommentRequestDto commentRequestDto = new CommentRequestDto(CONTENTS);
 
-        loggedInPostRequest("/comment/" + articleId)
+        loggedInPostRequest("/article/" + articleId + "/comment")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequestDto), CommentRequestDto.class)
@@ -47,7 +47,7 @@ public class CommentControllerTest extends LoginTemplate {
 
         CommentRequestDto commentRequestDto = new CommentRequestDto(CONTENTS + 2);
 
-        loggedInPutRequest("/comment/" + articleId + "/" + commentId)
+        loggedInPutRequest("/article/" + articleId + "/comment/" + commentId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequestDto), CommentRequestDto.class)
@@ -66,7 +66,7 @@ public class CommentControllerTest extends LoginTemplate {
         String articleId = getNewArticleId();
         getNewCommentId(articleId);
 
-        loggedInPutRequest("/comment/" + articleId + "/" + commentId, SECOND_USER_EMAIL, SECOND_USER_PASSWORD)
+        loggedInPutRequest("/article/" + articleId + "/comment/" + commentId, SECOND_USER_EMAIL, SECOND_USER_PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequestDto), CommentRequestDto.class)
@@ -79,7 +79,7 @@ public class CommentControllerTest extends LoginTemplate {
         String articleId = getNewArticleId();
         getNewCommentId(articleId);
 
-        loggedInDeleteRequest("/comment/" + articleId + "/" + commentId)
+        loggedInDeleteRequest("/article/" + articleId + "/comment/" + commentId)
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/articles/" + articleId + ".*");
@@ -92,7 +92,7 @@ public class CommentControllerTest extends LoginTemplate {
         String articleId = getNewArticleId();
         getNewCommentId(articleId);
 
-        loggedInDeleteRequest("/comment/" + articleId + "/" + commentId, SECOND_USER_EMAIL, SECOND_USER_PASSWORD)
+        loggedInDeleteRequest("/article/" + articleId + "/comment/" + commentId, SECOND_USER_EMAIL, SECOND_USER_PASSWORD)
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/");
@@ -113,7 +113,7 @@ public class CommentControllerTest extends LoginTemplate {
     private void getNewCommentId(String articleId) {
         CommentRequestDto commentRequestDto = new CommentRequestDto(CONTENTS);
 
-        loggedInPostRequest("/comment/" + articleId)
+        loggedInPostRequest("/article/" + articleId + "/comment")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequestDto), CommentRequestDto.class)

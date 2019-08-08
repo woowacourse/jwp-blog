@@ -26,7 +26,7 @@
                         <a th:if="${session.user} != null AND ${comment.commenter.email} == ${session.user.email}"
                            th:id="'cancel-a-' + ${comment.id}" th:onclick="'cancelComment(' + ${comment.id} + ')'"
                            style="display: none">취소</a>
-                        <span th:text="${comment.date}">6 min ago</span>
+                        <span th:text="${comment.createdDate}"></span>
                     </span>
 
                     <p th:id="'comment-div-' + ${comment.id}" th:text="${comment.contents}" class="width-80"></p>
