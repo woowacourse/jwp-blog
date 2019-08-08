@@ -38,7 +38,7 @@ class CommentControllerTest {
         requestCommentDto.setContents("contents");
         requestCommentDto.setArticleId(articleId);
 
-        webTestClient.post().uri("/comments")
+        webTestClient.post().uri("/articles/9/comments")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -57,7 +57,7 @@ class CommentControllerTest {
         RequestCommentDto updateRequestCommentDto = new RequestCommentDto();
         updateRequestCommentDto.setContents("update contents");
 
-        webTestClient.put().uri("/comments/" + 20)
+        webTestClient.put().uri("/articles/9/comments/" + 20)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -73,7 +73,7 @@ class CommentControllerTest {
     @Test
     @DisplayName("comment를 삭제한다.")
     void deleteComment() {
-        webTestClient.delete().uri("/comments/" + 19)
+        webTestClient.delete().uri("/articles/9/comments/" + 19)
                 .header("Cookie", cookie)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()

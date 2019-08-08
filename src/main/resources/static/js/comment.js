@@ -37,6 +37,9 @@ const COMMENTAPP = (function () {
     const commentUpdateBtn = document.getElementById('comment-update-btn');
     const updateCancelBtn = document.getElementById('update-cancel-btn');
     const commentList = document.getElementById('comment-list');
+
+    const articleId = parseInt(document.getElementById('article-id').value);
+
     let commentCount = {
         data: document.getElementById('comment-count'),
         up: function () {
@@ -82,10 +85,10 @@ const COMMENTAPP = (function () {
     const CommentService = function () {
         const add = function (event) {
             event.stopPropagation();
-            const articleId = parseInt(document.getElementById('article-id').value);
+
             const commentContent = editor.getMarkdown();
 
-            fetch('/comments', {
+            fetch(`/articles/${articleId}/comments`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
@@ -136,7 +139,7 @@ const COMMENTAPP = (function () {
             let commentId = document.getElementById('comment-id').value;
             let selectedComment = commentList.querySelector(`li[data-comment-id="${commentId}"]`);
 
-            fetch(`/comments/${commentId}`, {
+            fetch(`/articles/${articleId}/comments/${commentId}`, {
                 method: 'put',
                 headers: {
                     'Content-Type': 'application/json'
@@ -159,7 +162,7 @@ const COMMENTAPP = (function () {
                 let commentContainer = updateBtn.closest('li');
                 let commentId = commentContainer.getAttribute('data-comment-id');
 
-                fetch(`/comments/${commentId}`, {
+                fetch(`/articles/${articleId}/comments/${commentId}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'

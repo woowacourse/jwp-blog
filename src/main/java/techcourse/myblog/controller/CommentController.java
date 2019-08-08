@@ -11,7 +11,7 @@ import techcourse.myblog.model.User;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
-@RequestMapping("/comments")
+@RequestMapping("/articles/{articleId}/comments")
 @SessionAttributes("user")
 @RestController
 public class CommentController {
@@ -36,7 +36,7 @@ public class CommentController {
                 comment.getId(),
                 comment.getContents(),
                 comment.getAuthor().getUserName(),
-                comment.getCurrentDateTime()
+                comment.getCreatedDate()
         );
     }
 
@@ -51,7 +51,7 @@ public class CommentController {
                 newComment.getId(),
                 newComment.getContents(),
                 newComment.getAuthor().getUserName(),
-                newComment.getCurrentDateTime()
+                newComment.getCreatedDate()
         );
     }
 
