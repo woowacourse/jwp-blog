@@ -114,7 +114,7 @@ public class CommentServiceTests {
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
-        commentService.deleteComment(COMMENT_ID, userResponse);
+        commentService.deleteComment(COMMENT_ID, userResponse.getId());
         verify(commentRepository).deleteById(COMMENT_ID);
     }
 
@@ -125,20 +125,19 @@ public class CommentServiceTests {
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NoUserException.class,
-            () -> commentService.deleteComment(COMMENT_ID, userResponse));
+            () -> commentService.deleteComment(COMMENT_ID, userResponse.getId()));
     }
 
     @Test
     void 작성자가_아닌_회원이_댓글_삭제_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-//        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
         given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
         given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class,
-            () -> commentService.deleteComment(COMMENT_ID, userResponse));
+            () -> commentService.deleteComment(COMMENT_ID, userResponse.getId()));
     }
 
     @Test
@@ -149,7 +148,7 @@ public class CommentServiceTests {
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
-        assertDoesNotThrow(() -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+        assertDoesNotThrow(() -> commentService.updateComment(COMMENT_ID, userResponse.getId(), commentRequest));
     }
 
     @Test
@@ -159,13 +158,12 @@ public class CommentServiceTests {
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NoUserException.class,
-            () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+            () -> commentService.updateComment(COMMENT_ID, userResponse.getId(), commentRequest));
     }
 
     @Test
     void 작성자가_아닌_회원이_댓글_수정_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-//        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
         given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
         given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
         given(modelMapper.map(commentRequest, Comment.class)).willReturn(comment);
@@ -173,7 +171,7 @@ public class CommentServiceTests {
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class,
-            () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+            () -> commentService.updateComment(COMMENT_ID, userResponse.getId(), commentRequest));
     }
 
     private UserResponse 사용자_응답_만들기(Long 아이디) {
