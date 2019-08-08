@@ -184,7 +184,6 @@ const COMMENTAPP = (function () {
         }
     }
 
-
     const init = function () {
         const commentController = new CommentController()
         commentController.init()
