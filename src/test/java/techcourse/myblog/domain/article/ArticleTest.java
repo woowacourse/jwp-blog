@@ -19,12 +19,12 @@ public class ArticleTest {
 
     @Test
     void 아티클_작성자_확인() {
-        assertDoesNotThrow(() -> article.checkCorrespondingAuthor(user));
+        assertDoesNotThrow(() -> article.checkCorrespondingAuthor(user.getEmail()));
     }
 
     @Test
     void 아티클을_다른사람이_변경시도() {
-        assertThrows(InvalidAuthorException.class, () -> article.checkCorrespondingAuthor(new User()));
+        assertThrows(InvalidAuthorException.class, () -> article.checkCorrespondingAuthor("another@email.com"));
     }
 
     @Test

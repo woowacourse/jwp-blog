@@ -48,14 +48,14 @@ public class Article extends BaseEntity {
     }
 
     public void update(Article article) {
-        checkCorrespondingAuthor(article.getAuthor());
+        checkCorrespondingAuthor(article.getAuthor().getEmail());
         this.title = article.title;
         this.contents = article.contents;
         this.coverUrl = article.coverUrl;
     }
 
-    public void checkCorrespondingAuthor(User user) {
-        if (!this.author.equals(user)) {
+    public void checkCorrespondingAuthor(String email) {
+        if (!this.author.matchEmail(email)) {
             throw new InvalidAuthorException();
         }
     }
