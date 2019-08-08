@@ -48,8 +48,4 @@ public class Article {
 
         return this;
     }
-
-    public boolean notMatchAuthorId(long authorId) {
-        return author.getId() != authorId;
-    }
 }

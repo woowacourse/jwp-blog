@@ -46,9 +46,7 @@ public class ArticleService {
 
     public ArticleResponseDto find(long articleId, long authorId) {
         Article article = findById(articleId);
-        if (article.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
-        }
+        userService.checkMatchUser(article.getAuthor(), authorId);
         return modelMapper.map(article, ArticleResponseDto.class);
     }
 

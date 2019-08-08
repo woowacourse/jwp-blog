@@ -44,8 +44,4 @@ public class Comment {
         this.contents = contents;
         return this;
     }
-
-    public boolean notMatchAuthorId(long authorId) {
-        return author.getId() != authorId;
-    }
 }
