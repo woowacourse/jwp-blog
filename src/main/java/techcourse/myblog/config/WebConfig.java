@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import techcourse.myblog.interceptor.AuthInterceptor;
 import techcourse.myblog.interceptor.GuestInterceptor;
 import techcourse.myblog.interceptor.LoginInterceptor;
 import techcourse.myblog.support.UserSessionArgumentResolver;
@@ -18,7 +17,6 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private final GuestInterceptor guestInterceptor;
-    private final AuthInterceptor authInterceptor;
     private final LoginInterceptor loginInterceptor;
 
     private final UserSessionArgumentResolver userSessionArgumentResolver;
@@ -37,11 +35,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/users/login")
                 .addPathPatterns("/users/new");
-
-        registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/users/{id}")
-                .addPathPatterns("/users/{id}/edit")
-                .excludePathPatterns("/users/logout");
     }
 
     @Override

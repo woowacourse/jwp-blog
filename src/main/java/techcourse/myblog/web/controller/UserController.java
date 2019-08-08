@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.UserSession;
 
@@ -68,29 +69,47 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id, Model model) {
+    public String show(@PathVariable Long id,
+                       Model model,
+                       UserSession userSession) {
+        identify(userSession, id);
+
         UserDto.Response userResponseDto = userService.getUserById(id);
         model.addAttribute("user", userResponseDto);
         return "mypage";
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
+    public String editForm(@PathVariable Long id,
+                           Model model,
+                           UserSession userSession) {
+        identify(userSession, id);
+
         UserDto.Response userResponseDto = userService.getUserById(id);
         model.addAttribute("user", userResponseDto);
         return "mypage-edit";
     }
 
     @PutMapping("/{id}")
-    public String edit(@Valid UserDto.Update userDto) {
+    public String edit(@Valid UserDto.Update userDto, UserSession userSession) {
+        identify(userSession, userDto.getId());
+
         UserDto.Response responseDto = userService.update(userDto);
         return "redirect:/users/" + responseDto.getId();
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id, HttpSession session) {
+    public String delete(@PathVariable Long id, HttpSession session, UserSession userSession) {
+        identify(userSession, id);
+
         userService.deleteById(id);
         session.removeAttribute(USER_SESSION);
         return "redirect:/";
+    }
+
+    private void identify(UserSession userSession, Long id) {
+        if (!id.equals(userSession.getId())) {
+            throw new AuthException("본인이 아닙니다.");
+        }
     }
 }
