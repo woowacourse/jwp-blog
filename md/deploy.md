@@ -2,6 +2,10 @@
 
 디렉터리: TBD
 
+* `docker-compose.yml`: ~/app
+* Application log: ~/app/log
+* Jenkins home directory: ~/app/jenkins_home
+* Mysql data: ~/app/db_data
 
 ## 초기 설정
 
