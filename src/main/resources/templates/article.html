@@ -247,6 +247,7 @@
         })
         const comment = await res.json()
         document.getElementById("comment-list").insertAdjacentHTML("beforeend", commentItemTemplate(comment))
+        editor.setValue('')
     }
 </script>
 </body>
