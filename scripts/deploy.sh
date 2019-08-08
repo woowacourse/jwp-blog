@@ -1,13 +1,13 @@
 #!/bin/bash
 container_id_to_stop = $(sudo docker ps -q --filter name=myblog)
 
-if ${#container_id_to_stop}=0 then
+if [ ${#container_id_to_stop}=0 ]; then
     sudo docker stop $container_id_to_stop
 fi
 
 container_id_to_remove = $(sudo docker ps -a -q --filter name=myblog)
 
-if ${#container_id_to_remove}=0 then
+if [ ${#container_id_to_remove}=0 ]; then
     sudo docker rm $container_id_to_remove
 fi
 
