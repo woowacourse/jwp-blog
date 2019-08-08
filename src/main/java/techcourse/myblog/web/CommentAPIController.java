@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentAPIController {
+
+    private static final Logger log = LoggerFactory.getLogger(CommentAPIController.class);
 
     private final CommentService commentService;
 
@@ -45,7 +49,7 @@ public class CommentAPIController {
             commentService.deleteComment(commentId, userResponse);
             return new ResponseEntity<>(new BaseResponse("ok"), HttpStatus.OK);
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            log.error("RuntimeException", e);
             throw new JsonAPIException(e.getMessage());
         }
     }
