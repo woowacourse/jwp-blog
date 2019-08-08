@@ -1,39 +1,411 @@
-[2019-08-06 18:06:01:383][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 7537 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
-[2019-08-06 18:06:01:385][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
-[2019-08-06 18:06:04:3422][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.21 seconds (JVM running for 8.72)
-[2019-08-06 18:06:33:32577][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
-[2019-08-06 18:06:33:32581][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:06:33:32581][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
-[2019-08-06 18:06:35:33771][http-nio-8080-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:39:38280][http-nio-8080-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:39:38382][http-nio-8080-exec-6] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
-[2019-08-06 18:06:44:43183][http-nio-8080-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:44:43189][http-nio-8080-exec-7] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
-[2019-08-06 18:06:46:45028][http-nio-8080-exec-8] INFO  t.m.article.service.ArticleService - page : [] 
-[2019-08-06 18:06:46:45031][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:06:46:45031][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
-[2019-08-06 18:06:47:46150][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:48:47489][http-nio-8080-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:48:47495][http-nio-8080-exec-1] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
-[2019-08-06 18:06:51:50300][http-nio-8080-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
-[2019-08-06 18:06:56:54951][http-nio-8080-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
-[2019-08-06 18:06:56:54989][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
-[2019-08-06 18:06:56:54989][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2d36e1db 
-[2019-08-06 18:06:56:54998][http-nio-8080-exec-6] INFO  t.m.article.service.ArticleService - page : [] 
-[2019-08-06 18:06:56:55000][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:06:56:55000][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
-[2019-08-06 18:07:03:62162][http-nio-8080-exec-1] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
-[2019-08-06 18:07:03:62176][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:07:03:62176][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:03:62179][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:03:62179][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20, comments=[]} 
-[2019-08-06 18:07:04:63274][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:07:04:63275][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:07:66288][http-nio-8080-exec-8] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
-[2019-08-06 18:07:07:66292][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:07:07:66293][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:07:66294][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:07:66294][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20, comments=[]} 
-[2019-08-06 18:07:30:384][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 7554 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
-[2019-08-06 18:07:30:386][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
-[2019-08-06 18:07:33:3222][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.014 seconds (JVM running for 8.542)
+[2019-08-08 10:23:58:1750][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:23:58:1769][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:03:7110][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:03:7110][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:05:8670][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:05:8671][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:06:10064][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:06:10064][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:07:11391][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:07:11392][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:09:12715][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:09:12716][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:10:13923][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:10:13923][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:11:15047][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:11:15048][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:12:15974][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:12:15974][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:13:16866][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:13:16867][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:14:17677][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:14:17678][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:14:18443][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:14:18444][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:15:19287][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:15:19287][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:16:20080][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:16:20081][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:17:20888][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:17:20888][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:18:21667][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:18:21668][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:19:22768][main] INFO  t.m.a.r.ArticleRepositoryTest - Starting ArticleRepositoryTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:19:22769][main] INFO  t.m.a.r.ArticleRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:23:27050][main] INFO  t.m.a.r.ArticleRepositoryTest - Started ArticleRepositoryTest in 4.342 seconds (JVM running for 28.653)
+[2019-08-08 10:24:24:27599][main] INFO  t.m.a.service.ArticleServiceTest - Starting ArticleServiceTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:24:27600][main] INFO  t.m.a.service.ArticleServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:25:29164][main] INFO  t.m.a.service.ArticleServiceTest - Starting ArticleServiceTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:25:29164][main] INFO  t.m.a.service.ArticleServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:26:30240][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:26:30240][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:27:31044][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:27:31044][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:28:31953][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:28:31954][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:29:32817][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:29:32817][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:30:33591][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:30:33592][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:30:34307][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:30:34308][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:31:35067][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:31:35067][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:32:35832][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:32:35832][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:33:36614][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:33:36614][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:33:37356][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:33:37356][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:34:38465][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:34:38466][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:35:39478][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:35:39478][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:36:40199][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:36:40199][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:37:41046][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:37:41046][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:38:41808][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:38:41808][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:39:42564][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:39:42564][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:39:43279][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:39:43279][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:40:44112][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:40:44112][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:41:44847][main] INFO  t.myblog.MyblogApplicationTest - Starting MyblogApplicationTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:41:44848][main] INFO  t.myblog.MyblogApplicationTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:41:45355][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:41:45355][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:42:46040][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:42:46040][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:43:46783][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:43:46784][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:44:47522][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:44:47522][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:44:48312][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:44:48313][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:45:49041][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:45:49042][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:46:49785][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:46:49785][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:47:50604][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:47:50604][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:47:51349][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:47:51349][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:48:52092][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:48:52092][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:49:52863][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:49:52863][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:50:53671][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:50:53671][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:50:54425][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:50:54425][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:51:55143][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:51:55143][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:52:55854][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:52:55855][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:53:56597][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:53:56597][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:53:57378][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:53:57379][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:54:58082][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:54:58083][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:55:58794][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:55:58795][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:56:59534][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:56:59535][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:24:56:60265][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 37284 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:24:56:60265][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:04:1723][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:04:1728][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:08:6232][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:08:6232][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:10:7648][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:10:7649][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:11:8914][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:11:8914][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:12:10117][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:12:10117][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:14:11555][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:14:11555][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:15:12728][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:15:12728][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:16:13704][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:16:13705][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:17:14670][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:17:14670][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:18:15589][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:18:15589][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:25:18:16394][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 37004 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:25:18:16394][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:03:1894][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:03:1897][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:08:7023][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:08:7024][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:09:8450][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:09:8450][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:11:9944][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:11:9944][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:13:11774][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:13:11775][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:15:14443][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:15:14444][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:17:16182][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:17:16183][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:18:17534][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:18:17536][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:20:18730][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:20:18730][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:21:19714][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:21:19714][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:22:20646][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:22:20646][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:23:21571][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:23:21571][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:23:22411][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:23:22412][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:24:23223][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:24:23224][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:25:24058][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:25:24059][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:26:24906][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:26:24907][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:27:26078][main] INFO  t.m.a.r.ArticleRepositoryTest - Starting ArticleRepositoryTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:27:26078][main] INFO  t.m.a.r.ArticleRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:31:29833][main] INFO  t.m.a.r.ArticleRepositoryTest - Started ArticleRepositoryTest in 3.809 seconds (JVM running for 31.744)
+[2019-08-08 10:30:31:30223][main] INFO  t.m.a.service.ArticleServiceTest - Starting ArticleServiceTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:31:30224][main] INFO  t.m.a.service.ArticleServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:33:31551][main] INFO  t.m.a.service.ArticleServiceTest - Starting ArticleServiceTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:33:31551][main] INFO  t.m.a.service.ArticleServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:33:32428][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:33:32428][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:34:33198][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:34:33198][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:35:34191][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:35:34191][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:36:35052][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:36:35052][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:37:35948][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:37:35948][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:38:36794][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:38:36794][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:39:37817][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:39:37818][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:40:38604][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:40:38605][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:40:39515][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:40:39515][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:41:40288][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:41:40288][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:43:41654][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:43:41654][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:44:43138][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:44:43138][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:45:43881][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:45:43882][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:46:44609][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:46:44609][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:46:45384][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:46:45384][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:47:46308][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:47:46309][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:48:47347][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:48:47347][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:49:48280][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:49:48281][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:50:49118][main] INFO  t.myblog.MyblogApplicationTest - Starting MyblogApplicationTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:50:49118][main] INFO  t.myblog.MyblogApplicationTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:51:49582][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:51:49582][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:51:50312][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:51:50312][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:52:51090][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:52:51090][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:53:51972][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:53:51972][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:54:52822][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:54:52822][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:54:53533][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:54:53533][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:55:54248][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:55:54249][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:56:54940][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:56:54940][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:57:55675][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:57:55675][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:57:56460][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:57:56460][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:58:57209][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:58:57209][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:30:59:57949][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:30:59:57949][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:00:58700][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:00:58700][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:00:59527][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:00:59527][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:01:60361][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:01:60361][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:02:61177][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:02:61177][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:03:61963][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:03:61964][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:04:62637][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:04:62637][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:04:63309][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:04:63309][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:05:63994][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:05:63995][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:31:06:64716][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 4804 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:31:06:64716][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:14:1623][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:14:1628][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:17:5439][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:17:5440][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:19:6641][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:19:6641][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:20:7620][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:20:7620][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:20:8579][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:20:8580][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:21:9539][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:21:9540][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:22:10546][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:22:10547][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:23:11372][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:23:11372][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:24:12173][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:24:12173][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:25:12994][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:25:12995][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:26:13712][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:26:13712][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:26:14492][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:26:14493][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:27:15173][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:27:15173][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:28:15880][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:28:15881][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:28:16563][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:28:16564][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:33:29:17224][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 33996 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:33:29:17224][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:35:55:1547][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:35:55:1554][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:35:59:5900][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:35:59:5900][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:00:7166][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:00:7166][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:02:8380][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:02:8380][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:03:9341][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:03:9342][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:03:10260][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:03:10261][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:04:11163][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:04:11163][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:05:12159][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:05:12160][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:06:12988][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:06:12988][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:07:13779][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:07:13779][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:08:14530][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:08:14530][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:09:15269][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:09:15269][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:09:16104][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:09:16105][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:10:16864][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:10:16865][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:11:17566][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:11:17567][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:11:18249][main] INFO  t.m.a.c.ArticleControllerTest - Starting ArticleControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:11:18249][main] INFO  t.m.a.c.ArticleControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:12:19175][main] INFO  t.m.a.r.ArticleRepositoryTest - Starting ArticleRepositoryTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:12:19176][main] INFO  t.m.a.r.ArticleRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:16:22762][main] INFO  t.m.a.r.ArticleRepositoryTest - Started ArticleRepositoryTest in 3.637 seconds (JVM running for 24.0)
+[2019-08-08 10:36:16:23122][main] INFO  t.m.a.service.ArticleServiceTest - Starting ArticleServiceTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:16:23122][main] INFO  t.m.a.service.ArticleServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:18:24351][main] INFO  t.m.a.service.ArticleServiceTest - Starting ArticleServiceTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:18:24352][main] INFO  t.m.a.service.ArticleServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:19:25375][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:19:25376][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:20:26482][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:20:26483][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:20:27210][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:20:27210][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:21:27930][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:21:27930][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:22:28696][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:22:28696][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:23:29479][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:23:29479][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:23:30212][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:23:30212][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:24:30922][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:24:30922][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:25:31561][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:25:31561][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:25:32218][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:25:32218][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:27:33321][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:27:33321][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:27:34189][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:27:34189][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:28:34899][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:28:34900][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:29:35604][main] INFO  t.m.i.l.LoggedInInterceptorTest - Starting LoggedInInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:29:35604][main] INFO  t.m.i.l.LoggedInInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:30:36268][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:30:36269][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:30:37012][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:30:37013][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:31:37758][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:31:37758][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:32:38442][main] INFO  t.m.i.login.LoginInterceptorTest - Starting LoginInterceptorTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:32:38443][main] INFO  t.m.i.login.LoginInterceptorTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:32:39169][main] INFO  t.myblog.MyblogApplicationTest - Starting MyblogApplicationTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:32:39169][main] INFO  t.myblog.MyblogApplicationTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:33:39600][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:33:39600][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:34:40412][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:34:40413][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:34:41163][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:34:41163][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:35:41887][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:35:41887][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:36:42701][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:36:42702][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:37:43431][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:37:43431][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:37:44131][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:37:44131][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:38:44793][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:38:44793][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:39:45553][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:39:45553][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:39:46261][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:39:46261][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:40:46941][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:40:46941][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:41:47586][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:41:47586][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:41:48249][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:41:48249][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:42:48929][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:42:48930][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:43:49638][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:43:49639][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:44:50295][main] INFO  t.m.u.controller.UserControllerTest - Starting UserControllerTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:44:50295][main] INFO  t.m.u.controller.UserControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:44:50997][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:44:50997][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:45:51633][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:45:51634][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:46:52364][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:46:52364][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:46:53056][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:46:53056][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default
+[2019-08-08 10:36:47:53736][main] INFO  t.m.user.service.UserServiceTest - Starting UserServiceTest on DESKTOP-A6TPU26 with PID 36628 (started by Admin in C:\Users\Admin\techcourse\jwp-blog)
+[2019-08-08 10:36:47:53736][main] INFO  t.m.user.service.UserServiceTest - No active profile set, falling back to default profiles: default

@@ -15,8 +15,11 @@ import java.util.Objects;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long id;
 
+    @Lob
+    @Column(name = "comment_contents")
     private String contents;
 
     @ManyToOne

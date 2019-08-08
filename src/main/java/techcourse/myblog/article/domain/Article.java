@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Entity
 public class Article {
@@ -18,10 +17,17 @@ public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "article_id")
     private Long id;
 
+    @Column(name = "article_title", nullable = false, length = 20)
     private String title;
+
+    @Lob
+    @Column(name = "article_contents")
     private String contents;
+
+    @Column(name = "article_cover_url")
     private String coverUrl;
 
     @ManyToOne
