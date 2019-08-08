@@ -16,8 +16,6 @@ import static techcourse.myblog.web.UserSession.USER_SESSION;
 public class GuestInterceptor extends HandlerInterceptorAdapter {
     private static final Logger log = LoggerFactory.getLogger(GuestInterceptor.class);
 
-    private static final Pattern ARTICLE_PATTERN = Pattern.compile("^/articles/[0-9]*$");
-
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
         HttpSession session = request.getSession();
@@ -33,16 +31,19 @@ public class GuestInterceptor extends HandlerInterceptorAdapter {
     }
 
     private boolean isException(final String path, final String method) {
-        return isSignup(path, method) || isShow(path, method);
+        return isSignup(path, method) || isArticleShow(path, method) || isCommentList(path, method);
     }
 
+    private boolean isCommentList(final String path, final String method) {
+        return path.equals("/api/articles/**/comments") && method.equals("GET");
+    }
 
     private boolean isSignup(String path, String method) {
         return path.equals("/users") && method.equals("POST");
     }
 
-    private boolean isShow(String path, String method) {
-        return ARTICLE_PATTERN.matcher(path).find() && method.equals("GET");
+    private boolean isArticleShow(String path, String method) {
+        return path.equals("/articles/**") && method.equals("GET");
     }
 
 }

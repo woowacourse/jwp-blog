@@ -20,7 +20,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CommentApiTest extends BaseControllerTests {
+class CommentRestControllerTest extends BaseControllerTests {
     @Autowired
     WebTestClient webTestClient;
 

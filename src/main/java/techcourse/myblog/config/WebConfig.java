@@ -28,8 +28,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(guestInterceptor)
                 .addPathPatterns("/users")
                 .addPathPatterns("/users/**")
-                .addPathPatterns("/articles/**")
-//                .addPathPatterns("/api/**")
+                .addPathPatterns("/api/**")
+                .addPathPatterns("/articles/{articleId}/comments/{id}")
+                .excludePathPatterns("/api/articles/**/comments")
                 .excludePathPatterns("/users/new")
                 .excludePathPatterns("/users/login");
 
