@@ -2,7 +2,8 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.controller.dto.CommentDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
+import techcourse.myblog.controller.dto.ResponseCommentDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.model.Article;
@@ -21,16 +22,16 @@ public class CommentService {
         this.articleRepository = articleRepository;
     }
 
-    public Long save(CommentDto commentDto, User user) {
-        Article foundArticle = findByArticleId(commentDto.getArticleId());
-        Comment comment = new Comment(commentDto.getContents(), user, foundArticle);
+    public ResponseCommentDto save(RequestCommentDto requestCommentDto, User user) {
+        Article foundArticle = findByArticleId(requestCommentDto.getArticleId());
+        Comment comment = new Comment(requestCommentDto.getContents(), user, foundArticle);
 
         foundArticle.addComment(comment);
         commentRepository.save(comment);
-        return foundArticle.getId();
+        return new ResponseCommentDto(comment.getId(), comment.getAuthor().getUserName(), comment.getUpdateTime(), comment.getContents());
     }
 
-    private Article findByArticleId(Long articleId) {
+    public Article findByArticleId(Long articleId) {
         return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
@@ -39,25 +40,31 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment update(CommentDto commentDto, Long commentId, User user) {
+    public ResponseCommentDto update(RequestCommentDto requestCommentDto, Long commentId, User user) {
         Comment oldComment = findById(commentId, user);
-        Comment updatedComment = new Comment(commentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
-        return oldComment.update(updatedComment);
+        Comment updatedComment = oldComment.update(
+                new Comment(requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle()));
+
+        return new ResponseCommentDto(updatedComment.getId(), updatedComment.getAuthor().getUserName(), updatedComment.getUpdateTime(), updatedComment.getContents());
     }
 
-    public Article delete(Long commentId, User user) {
+    public ResponseCommentDto delete(Long commentId, User user) {
         Comment comment = findById(commentId, user);
         Article deleteArticle = comment.getArticle();
 
         deleteArticle.deleteComment(comment);
         commentRepository.deleteById(commentId);
 
-        return deleteArticle;
+        return new ResponseCommentDto(commentId, comment.getAuthor().getUserName(), comment.getUpdateTime(), comment.getContents());
     }
 
     private Comment checkOwner(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글을 찾을수 없습니다."));
         comment.checkOwner(user);
         return comment;
+    }
+
+    public void deleteAll() {
+        commentRepository.deleteAll();
     }
 }

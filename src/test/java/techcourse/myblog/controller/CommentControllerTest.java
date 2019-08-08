@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,16 +13,16 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.CommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
 
-import java.net.URI;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -39,7 +41,6 @@ class CommentControllerTest {
 
     private static final String COMMENTS_CONTENTS = "Ccomment_contents";
     private static final String COMMENTS_CONTENTS_2 = "Ccomment_contents2";
-    private static final String COMMENTS_CONTENTS_3 = "Ccomment_contents3";
 
     @LocalServerPort
     private int serverPort;
@@ -48,117 +49,73 @@ class CommentControllerTest {
     private WebTestClient webTestClient;
 
     private String cookie;
-    private String articleUrl;
     private String articleId;
-    private String baseUrl;
+    private String commentId;
 
     @BeforeEach
-    void setUp() {
-        baseUrl = "http://localhost:" + serverPort;
+    void setUp() throws IOException {
+        String baseUrl = "http://localhost:" + serverPort;
 
         Utils.createUser(webTestClient, new UserDto(USER_NAME, EMAIL, PASSWORD));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));
 
         ArticleDto articleDto = new ArticleDto(TITLE, COVER_URL, CONTENTS);
 
-        articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
-        articleId = Utils.getId(articleUrl);
+        String articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
+        articleId = Utils.getArticleId(articleUrl);
 
-        CommentDto commentDto = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS);
-        Utils.createComment(commentDto, cookie, baseUrl);
-        CommentDto commentDto2 = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_2);
-        Utils.createComment(commentDto2, cookie, baseUrl);
+        RequestCommentDto requestCommentDto = new RequestCommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS);
+        byte[] responseBody = Utils.createComment(requestCommentDto, cookie, webTestClient);
+
+        commentId = Utils.getCommentId(responseBody);
     }
 
     @Test
     @DisplayName("comment를 저장한다.")
     void save() {
+        RequestCommentDto requestCommentDto = new RequestCommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_2);
         webTestClient.post().uri("/comments")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .header("Cookie", cookie)
-                .body(fromFormData("articleId", articleId)
-                        .with("contents", COMMENTS_CONTENTS_2))
+                .body(Mono.just(requestCommentDto), RequestCommentDto.class)
                 .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(COMMENTS_CONTENTS_2);
-                            });
-                });
-    }
-
-    @Test
-    @DisplayName("comment 수정 페이지로 이동한다.")
-    void commentEditForm() {
-        webTestClient.post().uri("/comments")
-                .header("Cookie", cookie)
-                .body(fromFormData("articleId", articleId)
-                        .with("contents", COMMENTS_CONTENTS))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(COMMENTS_CONTENTS);
-                            });
-                });
+                .jsonPath("$.contents").isEqualTo(COMMENTS_CONTENTS_2)
+                .jsonPath("$.userName").isEqualTo(USER_NAME);
     }
 
     @Test
     @DisplayName("comment를 수정한다.")
     void updateComment() {
-        webTestClient.put().uri("/comments/1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        RequestCommentDto updateRequestCommentDto = new RequestCommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_2);
+
+        webTestClient.put().uri("/comments/" + commentId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .header("Cookie", cookie)
-                .body(fromFormData("articleId", articleId)
-                        .with("contents", COMMENTS_CONTENTS_3))
+                .body(Mono.just(updateRequestCommentDto), RequestCommentDto.class)
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(COMMENTS_CONTENTS_3);
-                            });
-                });
+                .jsonPath("$.contents").isEqualTo(COMMENTS_CONTENTS_2)
+                .jsonPath("$.userName").isEqualTo(USER_NAME);
     }
 
     @Test
     @DisplayName("comment를 삭제한다.")
     void deleteComment() {
-        webTestClient.delete().uri("/comments/2")
+        webTestClient.delete().uri("/comments/" + commentId)
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isOk()
                 .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).doesNotContain(COMMENTS_CONTENTS_2);
-                            });
-                });
+                .jsonPath("$.contents").isEqualTo(COMMENTS_CONTENTS)
+                .jsonPath("$.id").isEqualTo(commentId)
+                .jsonPath("$.userName").isEqualTo(USER_NAME);
     }
 
     @Test
@@ -167,11 +124,13 @@ class CommentControllerTest {
         Utils.createUser(webTestClient, new UserDto(USER_NAME_2, EMAIL_2, PASSWORD_2));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL_2, PASSWORD_2));
 
-        EntityExchangeResult<byte[]> result = webTestClient.put().uri("/comments/1")
+        RequestCommentDto updateRequestCommentDto = new RequestCommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_2);
+
+        EntityExchangeResult<byte[]> result = webTestClient.put().uri("/comments/" + commentId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .header("Cookie", cookie)
-                .header("Cookie", cookie)
-                .body(fromFormData("articleId", articleId)
-                        .with("contents", COMMENTS_CONTENTS_3))
+                .body(Mono.just(updateRequestCommentDto), RequestCommentDto.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -188,11 +147,7 @@ class CommentControllerTest {
         Utils.createUser(webTestClient, new UserDto(USER_NAME_2, EMAIL_2, PASSWORD_2));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL_2, PASSWORD_2));
 
-        CommentDto commentDto3 = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_3);
-        String createLocationUrl = Utils.createComment(commentDto3, cookie, baseUrl);
-        String id = Utils.getId(createLocationUrl);
-
-        EntityExchangeResult<byte[]> result = webTestClient.delete().uri("/comments/" + id)
+        EntityExchangeResult<byte[]> result = webTestClient.delete().uri("/comments/" + commentId)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk()
@@ -206,7 +161,8 @@ class CommentControllerTest {
 
     @AfterEach
     void tearDown() {
-        Utils.deleteArticle(webTestClient, articleUrl);
-        Utils.deleteUser(webTestClient, cookie);
+        webTestClient.delete().uri("/comments/" + commentId)
+                .header("Cookie", cookie)
+                .exchange();
     }
 }
