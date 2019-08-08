@@ -27,20 +27,16 @@ public class CommentRestControllerTest extends WebClientGenerator {
         MultiValueMap<String, ResponseCookie> loginCookie = getLoginCookie(userDto);
         CommentRequest commentRequest = new CommentRequest(1L, "새로운 댓글입니다.");
 
-        Response response = given()
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue())
-                .body(commentRequest)
-                .expect()
-                .statusCode(200)
-                .when()
-                .post("http://localhost:" + port + "/comments");
-
-        Map<String, String> comment = response.getBody()
-                .jsonPath()
-                .get("");
-
-        assertThat(comment.get("contents")).isEqualTo(commentRequest.getContents());
+        given().
+                contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).
+                cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue()).
+                body(commentRequest).
+        when().
+                post("http://localhost:" + port + "/comments").
+        then().
+                statusCode(200).
+                body("contents", is(not(empty()))).
+                body("contents", equalTo(commentRequest.getContents()));
     }
 
     @Test
@@ -50,20 +46,15 @@ public class CommentRestControllerTest extends WebClientGenerator {
 
         CommentRequest commentRequest = new CommentRequest(1L, "수정한 댓글입니다.");
 
-        Response response = given()
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue())
-                .body(commentRequest)
-                .expect()
-                .statusCode(200)
-                .when()
-                .put("http://localhost:" + port + "/comments/" + 1);
-
-        Map<String, String> comment = response.getBody()
-                .jsonPath()
-                .get("");
-
-        assertThat(comment.get("contents")).isEqualTo(commentRequest.getContents());
+        given().
+                contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).
+                cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue()).
+                body(commentRequest).
+        when().
+                put("http://localhost:" + port + "/comments/" + 1).
+        then().
+                statusCode(200).
+                body("contents", equalTo(commentRequest.getContents()));
     }
 
     @Test
