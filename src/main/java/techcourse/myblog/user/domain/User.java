@@ -20,7 +20,7 @@ public class User {
     @Embedded
     private Email email;
 
-    @Convert(converter = PasswordConverter.class)
+    @Embedded
     private Password password;
 
     @Convert(converter = NameConverter.class)

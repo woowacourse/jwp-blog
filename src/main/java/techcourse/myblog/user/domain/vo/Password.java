@@ -1,9 +1,16 @@
 package techcourse.myblog.user.domain.vo;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Password {
     private static final String PASSWORD_REGEX = ".*(?=^.{8,}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*";
 
-    private final String password;
+    @Column(name = "password")
+    private String password;
+
+    public Password() {}
 
     private Password(final String password) {
         this.password = validatePassword(password);
