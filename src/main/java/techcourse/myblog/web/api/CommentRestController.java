@@ -14,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/articles/{articleId}/comments")
-public class CommentApi {
-    private static final Logger log = LoggerFactory.getLogger(CommentApi.class);
+public class CommentRestController {
+    private static final Logger log = LoggerFactory.getLogger(CommentRestController.class);
 
     private final CommentService commentService;
 
-    public CommentApi(final CommentService commentService) {
+    public CommentRestController(final CommentService commentService) {
         this.commentService = commentService;
     }
 

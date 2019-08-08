@@ -12,12 +12,12 @@ import techcourse.myblog.service.ArticleService;
 
 @RestController
 @RequestMapping("/api/articles/counts")
-public class ArticleApi {
-    private static final Logger log = LoggerFactory.getLogger(ArticleApi.class);
+public class ArticleRestController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleRestController.class);
 
     private final ArticleService articleService;
 
-    public ArticleApi(final ArticleService articleService) {
+    public ArticleRestController(final ArticleService articleService) {
         this.articleService = articleService;
     }
 
