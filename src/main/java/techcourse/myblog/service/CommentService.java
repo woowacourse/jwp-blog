@@ -2,6 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentAssembler;
 import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.CommentDto;
@@ -18,8 +19,8 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public Comment createComment(CommentDto commentDto, User author) {
-        Comment comment = commentDto.toEntity(author);
+    public Comment createComment(CommentDto commentDto, User user) {
+        Comment comment = CommentAssembler.toEntity(commentDto, user);
         return commentRepository.save(comment);
     }
 
@@ -32,7 +33,7 @@ public class CommentService {
     @Transactional
     public Comment updateComment(Long commentId, User user, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
-        Comment updateComment = commentDto.toEntity(user);
+        Comment updateComment = CommentAssembler.toEntity(commentDto, user);
         comment.update(updateComment, user);
         return comment;
     }

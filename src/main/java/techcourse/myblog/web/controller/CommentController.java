@@ -1,7 +1,5 @@
 package techcourse.myblog.web.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +16,6 @@ import java.util.List;
 @RequestMapping("/articles/{articleId}/comment")
 @RestController
 public class CommentController {
-    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
-
     private CommentService commentService;
     private ArticleService articleService;
 
