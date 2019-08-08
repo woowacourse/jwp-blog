@@ -1,35 +1,25 @@
 package techcourse.myblog.model;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.exception.MisMatchAuthorException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class Comment {
+public class Comment extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
 
     @NonNull
-    @Column(name = "contents", nullable = false, columnDefinition = "TEXT")
+    @Lob
+    @Column(name = "contents", nullable = false)
     private String contents;
-
-    @CreationTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
-    private LocalDateTime currentDateTime;
-
-    @UpdateTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updateTime;
 
     @NonNull
     @ManyToOne(fetch = FetchType.EAGER)

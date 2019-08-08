@@ -1,12 +1,9 @@
 package techcourse.myblog.model;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.exception.MisMatchAuthorException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @EqualsAndHashCode
 @Entity
-public class Article {
+public class Article extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id")
@@ -32,17 +29,9 @@ public class Article {
     private String coverUrl;
 
     @NonNull
-    @Column(name = "contents", nullable = false, columnDefinition = "TEXT")
     @Lob
+    @Column(name = "contents", nullable = false)
     private String contents;
-
-    @CreationTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
-    private LocalDateTime currentDateTime;
-
-    @UpdateTimestamp
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updateTime;
 
     @NonNull
     @ManyToOne
@@ -54,7 +43,7 @@ public class Article {
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
-        if (comment.getArticle() != this) {
+        if (!this.equals(comment.getArticle())) {
             Comment commentWithArticleUpdated = new Comment(
                     comment.getContents(),
                     comment.getAuthor(),
