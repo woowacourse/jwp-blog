@@ -1,4 +1,4 @@
-package techcourse.myblog.service.comment;
+package techcourse.myblog.comment.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

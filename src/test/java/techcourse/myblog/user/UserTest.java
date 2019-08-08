@@ -1,9 +1,8 @@
-package techcourse.myblog.domain.user;
+package techcourse.myblog.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
-import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

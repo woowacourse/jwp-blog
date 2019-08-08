@@ -1,13 +1,13 @@
-package techcourse.myblog.service.article;
+package techcourse.myblog.article.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.dto.ArticleRequest;
 import techcourse.myblog.article.dto.ArticleResponse;
 import techcourse.myblog.article.exception.ArticleNotFoundException;
-import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.user.dto.UserResponse;
 
@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ArticleServiceTest {
     private static final Long DEFAULT_USER_ID = 999L;
     private static final Long DEFAULT_ARTICLE_ID = 999L;

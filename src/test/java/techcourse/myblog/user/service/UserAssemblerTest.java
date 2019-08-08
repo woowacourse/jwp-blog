@@ -1,4 +1,4 @@
-package techcourse.myblog.service.user;
+package techcourse.myblog.user.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

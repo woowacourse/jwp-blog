@@ -1,13 +1,13 @@
-package techcourse.myblog.service.comment;
+package techcourse.myblog.comment.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.comment.dto.CommentRequest;
 import techcourse.myblog.comment.dto.CommentResponse;
 import techcourse.myblog.comment.exception.CommentNotFoundException;
-import techcourse.myblog.comment.service.CommentService;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.user.dto.UserResponse;
 
@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Transactional
 public class CommentServiceTest {
     private static final Long DEFAULT_USER_ID = 999L;

@@ -1,4 +1,4 @@
-package techcourse.myblog.service.login;
+package techcourse.myblog.user.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.user.exception.InvalidPasswordException;
 import techcourse.myblog.user.exception.UserNotFoundException;
-import techcourse.myblog.user.service.LoginService;
-import techcourse.myblog.user.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

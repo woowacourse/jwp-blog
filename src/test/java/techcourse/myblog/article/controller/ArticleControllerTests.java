@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.article.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,21 +78,6 @@ public class ArticleControllerTests {
                 .expectBody()
                 .returnResult()
                 .getResponseHeaders().getLocation();
-    }
-
-    @Test
-    void 메인화면() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void 게시글_생성_페이지_이동() {
-        webTestClient.get().uri("/writing")
-                .cookie("JSESSIONID", jSessionId)
-                .exchange()
-                .expectStatus().isOk();
     }
 
     @Test

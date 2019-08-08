@@ -1,4 +1,4 @@
-package techcourse.myblog.comment.controllerHandler;
+package techcourse.myblog.comment.controller.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

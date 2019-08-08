@@ -1,7 +1,6 @@
-package techcourse.myblog.domain.article;
+package techcourse.myblog.article;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.article.Article;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.user.User;
 

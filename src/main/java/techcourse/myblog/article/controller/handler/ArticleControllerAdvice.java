@@ -1,4 +1,4 @@
-package techcourse.myblog.article.controllerHandler;
+package techcourse.myblog.article.controller.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

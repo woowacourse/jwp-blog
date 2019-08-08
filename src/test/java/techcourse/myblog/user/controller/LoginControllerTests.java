@@ -1,6 +1,5 @@
-package techcourse.myblog.web;
+package techcourse.myblog.user.controller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,29 +15,13 @@ import org.springframework.web.reactive.function.BodyInserters;
 public class LoginControllerTests {
     @Autowired
     private WebTestClient webTestClient;
-    private String name;
     private String email;
     private String password;
 
     @BeforeEach
     void setUp() {
-        name = "done";
-        email = "done@woowa.com";
-        password = "12345678";
-
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange();
-    }
-
-    @AfterEach
-    void tearDown() {
-        webTestClient.delete().uri("/mypage")
-                .exchange();
+        email = "john123@example.com";
+        password = "p@ssW0rd";
     }
 
     @Test

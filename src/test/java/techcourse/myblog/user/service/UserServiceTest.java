@@ -1,4 +1,4 @@
-package techcourse.myblog.service.user;
+package techcourse.myblog.user.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import techcourse.myblog.user.dto.UserRequest;
 import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.user.exception.DuplicatedEmailException;
 import techcourse.myblog.user.exception.UserNotFoundException;
-import techcourse.myblog.user.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
