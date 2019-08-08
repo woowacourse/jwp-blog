@@ -173,12 +173,13 @@
                     "Content-type": "application/json; charset=UTF-8"
                 }
             })
+            document.getElementById("comment-contents").value = ""
             const comment = await res.json()
             document.getElementById("comment-list").insertAdjacentHTML("beforeend", commentItemTemplate(comment))
         }
 
         const editComment = async id => {
-            const res = await fetch("/articles/" + articleId + "/comment/" + id, {
+            const res = await fetch("/comment/" + id, {
                 method: "PUT",
                 body: JSON.stringify({
                     contents: document.getElementById("edit-form-" + id).value
@@ -194,7 +195,7 @@
         }
 
         const removeComment = async id => {
-            const res = await fetch("/articles/" + articleId + "/comment/" + id, {
+            const res = await fetch("/comment/" + id, {
                 method: "DELETE",
                 body: JSON.stringify({}),
                 headers: {

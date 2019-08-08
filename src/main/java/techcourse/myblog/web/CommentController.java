@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
@@ -30,27 +32,41 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comment")
-    public CommentDTO writeComment(@PathVariable long articleId, @RequestBody CommentDTO comment, HttpSession session) {
+    public ResponseEntity<CommentDTO> writeComment(@PathVariable long articleId, @RequestBody CommentDTO comment, HttpSession session) {
         Comment written = commentService.write(
                 articleService.maybeArticle(articleId).get(), getCurrentUser(session), comment.getContents()
         );
-        return new CommentDTO(written.getId(), written.getAuthor().getName(), written.getContents(), written.getCreatedTimeAt());
+        if (written != null) {
+            return new ResponseEntity<>(
+                    new CommentDTO(written.getId(), written.getAuthor().getName(), written.getContents(), written.getCreatedTimeAt()),
+                    HttpStatus.OK
+            );
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public CommentDTO updateComment(
-            @PathVariable long articleId,
-            @PathVariable long commentId,
-            @RequestBody CommentDTO comment,
-            HttpSession session
-    ) {
+    @GetMapping("/comment/{commentId}")
+    public ResponseEntity<CommentDTO> getComment(@PathVariable long commentId, HttpSession session) {
+        return commentService.find(commentId).map(comment ->
+            new ResponseEntity<>(
+                    new CommentDTO(commentId, comment.getAuthor().getName(), comment.getContents(), comment.getCreatedTimeAt()),
+                    HttpStatus.OK
+            )
+        ).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/comment/{commentId}")
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable long commentId, @RequestBody CommentDTO comment, HttpSession session) {
         Comment written = commentService.tryUpdate(commentId, comment.getContents(), getCurrentUser(session));
-        return new CommentDTO(written.getId(), written.getAuthor().getName(), written.getContents(), written.getCreatedTimeAt());
+        return new ResponseEntity<>(
+                new CommentDTO(written.getId(), written.getAuthor().getName(), written.getContents(), written.getCreatedTimeAt()),
+                HttpStatus.OK
+        );
     }
 
-    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
-    public boolean deleteComment(@PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable long commentId, HttpSession session) {
         commentService.delete(commentId, getCurrentUser(session));
-        return true;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
