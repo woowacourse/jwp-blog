@@ -1,39 +1,1072 @@
-[2019-08-06 18:06:01:383][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 7537 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
-[2019-08-06 18:06:01:385][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
-[2019-08-06 18:06:04:3422][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.21 seconds (JVM running for 8.72)
-[2019-08-06 18:06:33:32577][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
-[2019-08-06 18:06:33:32581][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:06:33:32581][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
-[2019-08-06 18:06:35:33771][http-nio-8080-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:39:38280][http-nio-8080-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:39:38382][http-nio-8080-exec-6] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
-[2019-08-06 18:06:44:43183][http-nio-8080-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:44:43189][http-nio-8080-exec-7] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
-[2019-08-06 18:06:46:45028][http-nio-8080-exec-8] INFO  t.m.article.service.ArticleService - page : [] 
-[2019-08-06 18:06:46:45031][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:06:46:45031][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
-[2019-08-06 18:06:47:46150][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:48:47489][http-nio-8080-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
-[2019-08-06 18:06:48:47495][http-nio-8080-exec-1] DEBUG t.m.w.e.ControllerExceptionHandler - Exception : 등록된 이메일이 없습니다. 
-[2019-08-06 18:06:51:50300][http-nio-8080-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
-[2019-08-06 18:06:56:54951][http-nio-8080-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
-[2019-08-06 18:06:56:54989][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
-[2019-08-06 18:06:56:54989][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2d36e1db 
-[2019-08-06 18:06:56:54998][http-nio-8080-exec-6] INFO  t.m.article.service.ArticleService - page : [] 
-[2019-08-06 18:06:56:55000][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:06:56:55000][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
-[2019-08-06 18:07:03:62162][http-nio-8080-exec-1] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
-[2019-08-06 18:07:03:62176][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:07:03:62176][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:03:62179][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:03:62179][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20, comments=[]} 
-[2019-08-06 18:07:04:63274][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:07:04:63275][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:07:66288][http-nio-8080-exec-8] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
-[2019-08-06 18:07:07:66292][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
-[2019-08-06 18:07:07:66293][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:07:66294][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.article.domain.Article@20} 
-[2019-08-06 18:07:07:66294][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.article.domain.Article@20, comments=[]} 
-[2019-08-06 18:07:30:384][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 7554 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
-[2019-08-06 18:07:30:386][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
-[2019-08-06 18:07:33:3222][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.014 seconds (JVM running for 8.542)
+[2019-08-08 14:51:53:527][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11123 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 14:51:53:531][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 14:52:18:447][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11135 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 14:52:18:449][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 14:52:46:370][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11142 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 14:52:46:372][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 14:52:49:4028][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.819 seconds (JVM running for 9.336)
+[2019-08-08 14:53:05:20108][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 14:53:05:20112][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 14:53:05:20112][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 14:53:28:417][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11153 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 14:53:28:419][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 14:55:18:492][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11174 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 14:55:18:494][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 14:55:21:3749][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.469 seconds (JVM running for 9.076)
+[2019-08-08 14:55:23:6020][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 14:55:23:6024][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 14:55:23:6024][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 14:55:27:10122][http-nio-8080-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 14:55:29:11864][http-nio-8080-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 14:55:33:16132][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 14:55:33:16239][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 14:55:33:16239][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@226fa87f 
+[2019-08-08 14:55:33:16248][http-nio-8080-exec-10] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 14:55:33:16249][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 14:55:33:16249][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 14:55:38:21112][http-nio-8080-exec-5] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 14:55:38:21128][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 14:55:38:21128][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 14:55:38:21130][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 14:55:38:21130][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[]}
+[2019-08-08 14:57:21:448][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11183 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 14:57:21:450][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:04:05:510][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11235 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:04:05:512][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:04:54:477][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11252 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:04:54:479][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:05:44:454][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11260 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:05:44:456][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:05:47:3754][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.505 seconds (JVM running for 9.04)
+[2019-08-08 15:05:53:9970][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 15:05:53:9974][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 15:05:53:9974][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 15:47:22:2498259][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11260 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:47:22:2498261][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:47:23:2499453][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 6.228 seconds (JVM running for 636.191)
+[2019-08-08 15:47:24:2500988][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11260 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:47:24:2500988][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:47:25:2501698][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 0.73 seconds (JVM running for 638.436)
+[2019-08-08 15:49:11:2607321][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11260 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:49:11:2607322][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:49:11:2608102][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.809 seconds (JVM running for 744.841)
+[2019-08-08 15:52:00:5813][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11357 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:52:00:5816][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:52:03:8505][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.939 seconds (JVM running for 9.07)
+[2019-08-08 15:52:04:8957][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11357 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:52:04:8958][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:52:06:11434][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.504 seconds (JVM running for 11.999)
+[2019-08-08 15:52:11:16869][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:52:11:16948][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:11:16949][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@13ec41b4 
+[2019-08-08 15:52:12:17023][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17065][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17065][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2ce29635 
+[2019-08-08 15:52:12:17110][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17114][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17114][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2574dc3a 
+[2019-08-08 15:52:12:17160][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:52:12:17168][http-nio-auto-1-exec-6] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:52:12:17174][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17181][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17181][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@550605d9 
+[2019-08-08 15:52:12:17197][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17204][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17204][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4c7d1b25 
+[2019-08-08 15:52:12:17225][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:52:12:17231][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:52:12:17235][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:52:12:17245][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17246][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@20cb850 
+[2019-08-08 15:52:12:17250][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17256][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17256][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7665beed 
+[2019-08-08 15:52:12:17270][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17276][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17276][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4347587e 
+[2019-08-08 15:52:12:17293][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:52:12:17297][http-nio-auto-1-exec-7] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:52:12:17301][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:52:12:17305][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:52:12:17309][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17313][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17313][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5de7d478 
+[2019-08-08 15:52:12:17324][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17328][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17328][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@60b403d9 
+[2019-08-08 15:52:12:17342][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:52:12:17347][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:52:12:17351][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17356][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17356][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@50618988 
+[2019-08-08 15:52:12:17369][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:52:12:17374][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:52:12:17374][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3c775f04 
+[2019-08-08 15:53:29:5790][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11371 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:53:29:5793][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:53:31:8144][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.616 seconds (JVM running for 8.668)
+[2019-08-08 15:53:32:8580][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11371 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:53:32:8580][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:53:34:10991][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.45 seconds (JVM running for 11.514)
+[2019-08-08 15:53:40:16360][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:53:40:16452][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16453][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4b5c19c4 
+[2019-08-08 15:53:40:16526][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16574][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16574][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6bc3a806 
+[2019-08-08 15:53:40:16613][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16617][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16617][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@961e681 
+[2019-08-08 15:53:40:16663][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:53:40:16675][http-nio-auto-1-exec-6] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:53:40:16682][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16690][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16690][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3e435b37 
+[2019-08-08 15:53:40:16708][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16715][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16715][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6afe1c21 
+[2019-08-08 15:53:40:16741][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:53:40:16746][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:53:40:16749][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:53:40:16757][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16757][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4e8c25d9 
+[2019-08-08 15:53:40:16761][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16767][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16767][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@19ef25de 
+[2019-08-08 15:53:40:16782][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16787][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16787][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@20dadf89 
+[2019-08-08 15:53:40:16808][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:53:40:16813][http-nio-auto-1-exec-7] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:53:40:16817][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:53:40:16820][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:53:40:16824][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16829][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16829][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@20bf9efb 
+[2019-08-08 15:53:40:16841][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16845][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16845][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@20d48216 
+[2019-08-08 15:53:40:16861][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:53:40:16866][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:53:40:16870][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16875][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16876][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3c4cf262 
+[2019-08-08 15:53:40:16891][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:53:40:16897][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:53:40:16897][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@711b6ef 
+[2019-08-08 15:55:25:5729][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11379 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:55:25:5733][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:55:27:8191][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.7 seconds (JVM running for 8.72)
+[2019-08-08 15:55:28:8605][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11379 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:55:28:8605][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:55:30:10982][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.407 seconds (JVM running for 11.511)
+[2019-08-08 15:55:35:16342][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:55:36:16425][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16425][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@587c8dfb 
+[2019-08-08 15:55:36:16493][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16535][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16535][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7cc7eda5 
+[2019-08-08 15:55:36:16571][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16575][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16575][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@51c1b634 
+[2019-08-08 15:55:36:16686][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:55:36:16693][http-nio-auto-1-exec-6] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:55:36:16703][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16709][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16709][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3e4fbf74 
+[2019-08-08 15:55:36:16728][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16733][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16733][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@212d535d 
+[2019-08-08 15:55:36:16771][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:55:36:16776][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:55:36:16781][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:55:36:16787][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16787][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7a89d93 
+[2019-08-08 15:55:36:16791][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16796][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16797][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@56f6e1a 
+[2019-08-08 15:55:36:16809][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16813][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16814][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6712aa11 
+[2019-08-08 15:55:36:16845][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:55:36:16849][http-nio-auto-1-exec-7] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:55:36:16853][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:55:36:16857][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:55:36:16860][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16865][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16865][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@272b462b 
+[2019-08-08 15:55:36:16875][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16879][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16879][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@58cbf6c 
+[2019-08-08 15:55:36:16913][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:55:36:16917][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:55:36:16922][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16926][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16926][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@587c3b62 
+[2019-08-08 15:55:36:16938][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:55:36:16942][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:55:36:16942][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7a2b8ef 
+[2019-08-08 15:56:46:5971][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11387 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:56:46:5990][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:56:48:8414][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.702 seconds (JVM running for 8.968)
+[2019-08-08 15:56:48:8838][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11387 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:56:48:8838][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:56:51:11220][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.411 seconds (JVM running for 11.774)
+[2019-08-08 15:56:56:16579][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:56:56:16659][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:56:16659][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@404e1027 
+[2019-08-08 15:56:56:16719][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:56:16762][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:56:16762][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6eaaefad 
+[2019-08-08 15:56:56:16801][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:56:16806][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:56:16806][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2f61b8fb 
+[2019-08-08 15:56:57:16880][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:56:57:16885][http-nio-auto-1-exec-6] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:56:57:16889][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:16893][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:16893][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7885c6ce 
+[2019-08-08 15:56:57:16907][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:16910][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:16911][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6d6ee3a4 
+[2019-08-08 15:56:57:16945][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:56:57:16950][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:56:57:16955][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:56:57:16960][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:16961][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@47bfcde5 
+[2019-08-08 15:56:57:16964][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:16968][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:16968][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@316edf2e 
+[2019-08-08 15:56:57:16981][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:16986][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:16986][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@14b6bf4a 
+[2019-08-08 15:56:57:17018][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:56:57:17022][http-nio-auto-1-exec-7] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:56:57:17026][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:56:57:17030][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:56:57:17033][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:17037][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:17037][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1e888f42 
+[2019-08-08 15:56:57:17048][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:17052][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:17052][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1a5f5381 
+[2019-08-08 15:56:57:17082][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:56:57:17087][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:56:57:17092][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:17096][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:17096][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@35354ed 
+[2019-08-08 15:56:57:17110][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:56:57:17113][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:56:57:17113][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@41132951 
+[2019-08-08 15:58:12:454][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11393 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:58:12:456][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:58:15:3492][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.239 seconds (JVM running for 8.801)
+[2019-08-08 15:58:29:17799][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 15:58:29:17802][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 15:58:29:17802][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 15:58:31:19739][http-nio-8080-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:58:33:21464][http-nio-8080-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:58:46:34888][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:58:46:34989][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:58:46:34990][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@68e96bc2 
+[2019-08-08 15:58:46:34998][http-nio-8080-exec-10] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 15:58:46:34999][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 15:58:46:34999][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 15:58:50:38600][http-nio-8080-exec-5] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 15:58:50:38614][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 15:58:50:38614][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 15:58:50:38617][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 15:58:50:38617][http-nio-8080-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[]}
+[2019-08-08 15:59:40:555][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11401 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:59:40:557][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 15:59:43:3790][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.481 seconds (JVM running for 9.108)
+[2019-08-08 15:59:46:5863][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11404 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:59:46:5866][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:59:48:8074][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.462 seconds (JVM running for 8.656)
+[2019-08-08 15:59:48:8516][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11404 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 15:59:48:8516][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 15:59:51:11006][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.521 seconds (JVM running for 11.589)
+[2019-08-08 15:59:56:16392][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:59:56:16485][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:56:16486][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5a7cb407 
+[2019-08-08 15:59:56:16550][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16594][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16594][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@435ba268 
+[2019-08-08 15:59:57:16635][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16639][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16639][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7253af87 
+[2019-08-08 15:59:57:16733][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:59:57:16742][http-nio-auto-1-exec-6] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:59:57:16750][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16758][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16758][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@681c1ccf 
+[2019-08-08 15:59:57:16778][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16786][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16786][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@145ba8a9 
+[2019-08-08 15:59:57:16824][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:59:57:16829][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:59:57:16834][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:59:57:16840][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16840][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5cb39b3a 
+[2019-08-08 15:59:57:16844][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16849][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16849][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@789e31d3 
+[2019-08-08 15:59:57:16866][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16870][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16870][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5fd50c58 
+[2019-08-08 15:59:57:16905][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:59:57:16909][http-nio-auto-1-exec-7] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:59:57:16913][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:59:57:16917][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:59:57:16921][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16925][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16925][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7ae29b92 
+[2019-08-08 15:59:57:16936][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16941][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16941][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2a419ddb 
+[2019-08-08 15:59:57:16976][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 15:59:57:16981][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 15:59:57:16985][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:16990][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:16990][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5d7ffef1 
+[2019-08-08 15:59:57:17004][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 15:59:57:17007][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 15:59:57:17007][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@584e1b1d 
+[2019-08-08 16:01:25:105764][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11401 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:01:25:105765][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:01:26:106494][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.758 seconds (JVM running for 111.814)
+[2019-08-08 16:01:38:118516][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11401 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:01:38:118516][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:01:38:5749][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11414 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:01:38:5752][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:01:39:119402][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.913 seconds (JVM running for 124.722)
+[2019-08-08 16:01:41:8208][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.701 seconds (JVM running for 8.736)
+[2019-08-08 16:01:41:8696][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11414 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:01:41:8696][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:01:44:11205][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.536 seconds (JVM running for 11.734)
+[2019-08-08 16:01:49:16704][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:01:49:16780][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:49:16781][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@10898261 
+[2019-08-08 16:01:49:16845][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:49:16883][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:49:16883][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@78d91af3 
+[2019-08-08 16:01:49:16918][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:16922][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:16922][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@52d1a536 
+[2019-08-08 16:01:50:16980][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:16988][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:16989][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@13db7827 
+[2019-08-08 16:01:50:17045][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:01:50:17056][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:01:50:17065][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17071][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17071][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5e041c6 
+[2019-08-08 16:01:50:17085][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17090][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17090][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6ad9dfeb 
+[2019-08-08 16:01:50:17116][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:01:50:17121][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:01:50:17125][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:01:50:17130][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17130][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@12f9e22b 
+[2019-08-08 16:01:50:17134][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17138][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17138][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3bee6211 
+[2019-08-08 16:01:50:17151][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17155][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17155][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5289729e 
+[2019-08-08 16:01:50:17182][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17188][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17188][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7398e1d4 
+[2019-08-08 16:01:50:17210][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:01:50:17216][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:01:50:17219][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:01:50:17223][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:01:50:17226][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17230][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17230][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@37558957 
+[2019-08-08 16:01:50:17241][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17245][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17245][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@18ae38c6 
+[2019-08-08 16:01:50:17267][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17272][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17272][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@e662be1 
+[2019-08-08 16:01:50:17293][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:01:50:17297][http-nio-auto-1-exec-9] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:01:50:17301][http-nio-auto-1-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17305][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17305][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1b5410b 
+[2019-08-08 16:01:50:17316][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17320][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17320][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@22618b6e 
+[2019-08-08 16:01:50:17334][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:01:50:17338][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:01:50:17338][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2a4d316b 
+[2019-08-08 16:09:50:5806][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11445 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:09:50:5810][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:09:52:8449][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.886 seconds (JVM running for 9.017)
+[2019-08-08 16:09:53:8951][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11445 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:09:53:8951][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:09:55:11455][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.544 seconds (JVM running for 12.023)
+[2019-08-08 16:10:01:16860][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:10:01:16929][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:16930][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@74f6ccf7 
+[2019-08-08 16:10:01:17002][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17049][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17049][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4478e2d6 
+[2019-08-08 16:10:01:17086][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17090][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17091][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1146a1fe 
+[2019-08-08 16:10:01:17176][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17183][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17184][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@17edde45 
+[2019-08-08 16:10:01:17266][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:10:01:17274][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:10:01:17280][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17285][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17286][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@720e8e32 
+[2019-08-08 16:10:01:17300][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17305][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17305][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@13c75f60 
+[2019-08-08 16:10:01:17336][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:10:01:17342][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:10:01:17346][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:10:01:17352][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17352][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@21d044a5 
+[2019-08-08 16:10:01:17356][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17360][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17360][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@57dcfe81 
+[2019-08-08 16:10:01:17378][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17382][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17382][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6070ca54 
+[2019-08-08 16:10:01:17408][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17413][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17413][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@11aec2b 
+[2019-08-08 16:10:01:17433][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:10:01:17439][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:10:01:17443][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:10:01:17446][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:10:01:17449][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17453][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17453][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4b9e2947 
+[2019-08-08 16:10:01:17465][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17468][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17468][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@44a55843 
+[2019-08-08 16:10:01:17491][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17495][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17495][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@42c16cb9 
+[2019-08-08 16:10:01:17514][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:10:01:17518][http-nio-auto-1-exec-9] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:10:01:17522][http-nio-auto-1-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17525][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17526][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@196a875 
+[2019-08-08 16:10:01:17536][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17539][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17539][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@358227f 
+[2019-08-08 16:10:01:17551][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:10:01:17554][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:10:01:17555][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2a4e8e6f 
+[2019-08-08 16:10:48:5742][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11457 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:10:48:5745][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:10:51:8302][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.788 seconds (JVM running for 8.862)
+[2019-08-08 16:10:51:8791][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11457 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:10:51:8791][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:10:54:11610][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.851 seconds (JVM running for 12.169)
+[2019-08-08 16:10:59:17035][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:11:00:17111][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17112][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7e64d60e 
+[2019-08-08 16:11:00:17180][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17224][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17225][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7ea9f2cc 
+[2019-08-08 16:11:00:17267][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17273][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17273][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7104fb83 
+[2019-08-08 16:11:00:17371][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17379][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17379][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@22842830 
+[2019-08-08 16:11:00:17430][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:11:00:17438][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:11:00:17443][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17449][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17449][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2fb5c1b2 
+[2019-08-08 16:11:00:17468][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17473][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17473][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5ca24dea 
+[2019-08-08 16:11:00:17502][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:11:00:17507][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:11:00:17512][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:11:00:17518][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17518][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@510b577d 
+[2019-08-08 16:11:00:17522][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17527][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17527][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@39689cec 
+[2019-08-08 16:11:00:17541][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17546][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17546][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@77c4a1fa 
+[2019-08-08 16:11:00:17576][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17582][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17582][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@38275fc4 
+[2019-08-08 16:11:00:17601][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:11:00:17607][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:11:00:17610][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:11:00:17613][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:11:00:17617][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17621][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17621][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@e6dd62e 
+[2019-08-08 16:11:00:17633][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17637][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17637][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@38e14ebd 
+[2019-08-08 16:11:00:17666][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17672][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17672][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@36d4665c 
+[2019-08-08 16:11:00:17693][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:11:00:17698][http-nio-auto-1-exec-9] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:11:00:17702][http-nio-auto-1-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17706][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17706][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1601e4f0 
+[2019-08-08 16:11:00:17719][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17723][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17723][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@466e41a6 
+[2019-08-08 16:11:00:17738][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:11:00:17742][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:11:00:17742][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1967a40a 
+[2019-08-08 16:11:49:5771][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:49:5774][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:50:7297][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:50:7298][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:50:7531][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:50:7532][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:51:7722][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:51:7723][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:51:7924][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:51:7925][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:51:8098][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:51:8098][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:51:8300][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:51:8301][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:52:9662][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:52:9662][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:53:10167][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:53:10167][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:53:10642][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:53:10642][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:59:16146][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:59:16146][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:11:59:16667][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:11:59:16667][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:12:00:17098][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:12:00:17098][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:12:00:17499][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:12:00:17499][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:12:01:17886][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:12:01:17886][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:12:01:18274][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11464 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:12:01:18274][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:12:31:5823][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11470 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:12:31:5825][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:12:34:8090][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.525 seconds (JVM running for 8.667)
+[2019-08-08 16:12:34:8550][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11470 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:12:34:8550][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:12:37:11043][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.529 seconds (JVM running for 11.621)
+[2019-08-08 16:12:42:16398][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:12:42:16474][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:42:16474][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@734a222d 
+[2019-08-08 16:12:42:16549][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:42:16595][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:42:16595][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@519348c1 
+[2019-08-08 16:12:42:16638][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:42:16643][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:42:16643][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@ba43104 
+[2019-08-08 16:12:42:16752][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:42:16759][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:42:16759][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@69013f14 
+[2019-08-08 16:12:42:16812][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:12:42:16823][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:12:43:16832][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:16839][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:16839][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6158cb0 
+[2019-08-08 16:12:43:16856][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:16862][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:16862][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@32a101d3 
+[2019-08-08 16:12:43:16892][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:12:43:16897][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:12:43:16902][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:12:43:16910][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:16910][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1f77d78b 
+[2019-08-08 16:12:43:16915][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:16919][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:16920][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@35a6ff55 
+[2019-08-08 16:12:43:16933][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:16938][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:16938][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@31444629 
+[2019-08-08 16:12:43:16964][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:16969][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:16970][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1c7ee203 
+[2019-08-08 16:12:43:16989][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:12:43:16994][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:12:43:16998][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:12:43:17002][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:12:43:17005][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:17009][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:17009][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@52aa1f6c 
+[2019-08-08 16:12:43:17021][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:17025][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:17025][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@49e14308 
+[2019-08-08 16:12:43:17050][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:17055][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:17055][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@580533c3 
+[2019-08-08 16:12:43:17078][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:12:43:17083][http-nio-auto-1-exec-9] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:12:43:17086][http-nio-auto-1-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:17090][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:17090][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6c0d0256 
+[2019-08-08 16:12:43:17101][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:17105][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:17105][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@18ef5d46 
+[2019-08-08 16:12:43:17117][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:12:43:17121][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:12:43:17121][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@332dea58 
+[2019-08-08 16:13:18:5685][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11478 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:13:18:5687][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:13:21:8037][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.569 seconds (JVM running for 8.543)
+[2019-08-08 16:13:21:8302][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11478 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:13:21:8303][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:13:23:10749][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.474 seconds (JVM running for 11.255)
+[2019-08-08 16:13:29:16196][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:13:29:16382][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:13:29:16383][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@20422b2 
+[2019-08-08 16:13:29:16463][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:13:29:16517][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:13:29:16517][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@79d506cf 
+[2019-08-08 16:13:29:16632][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:13:29:16639][http-nio-auto-1-exec-4] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:13:29:16648][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:13:29:16656][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:13:29:16656][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7ec6a71d 
+[2019-08-08 16:13:29:16690][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:13:29:16698][http-nio-auto-1-exec-7] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:13:29:16704][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:13:29:16711][http-nio-auto-1-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:13:29:16712][http-nio-auto-1-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@19e4060f 
+[2019-08-08 16:13:29:16715][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:13:29:16721][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:13:29:16721][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@69aea2b6 
+[2019-08-08 16:13:29:16756][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:13:29:16762][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:13:29:16766][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:13:29:16771][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:13:29:16775][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:13:29:16780][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:13:29:16781][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5346c155 
+[2019-08-08 16:13:29:16814][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:13:29:16819][http-nio-auto-1-exec-5] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:13:29:16824][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:13:29:16831][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:13:29:16831][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5dea80e8 
+[2019-08-08 16:14:26:5856][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11494 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:14:26:5859][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:14:28:8319][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.744 seconds (JVM running for 8.895)
+[2019-08-08 16:14:29:8602][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11494 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:14:29:8602][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:14:31:11324][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.753 seconds (JVM running for 11.9)
+[2019-08-08 16:14:37:16711][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:37:16900][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:37:16900][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5b27f79c 
+[2019-08-08 16:14:37:16979][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:14:37:17047][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:37:17047][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5b580a28 
+[2019-08-08 16:14:37:17149][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:37:17156][http-nio-auto-1-exec-4] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:14:37:17165][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:14:37:17170][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:37:17170][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5b530dcb 
+[2019-08-08 16:14:37:17205][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:37:17209][http-nio-auto-1-exec-7] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:14:37:17214][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:37:17223][http-nio-auto-1-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:37:17223][http-nio-auto-1-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1a41aab2 
+[2019-08-08 16:14:37:17229][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:14:37:17236][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:37:17236][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@480880cb 
+[2019-08-08 16:14:37:17275][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:37:17281][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:14:37:17285][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:37:17290][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:14:37:17293][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:14:37:17297][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:37:17297][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7b42d2a0 
+[2019-08-08 16:14:37:17329][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:37:17333][http-nio-auto-1-exec-5] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:14:37:17339][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:14:37:17343][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:37:17343][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1418b1b8 
+[2019-08-08 16:14:49:5808][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11499 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:14:49:5811][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:14:51:8174][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.638 seconds (JVM running for 8.713)
+[2019-08-08 16:14:52:8615][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11499 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:14:52:8615][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:14:54:11044][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.461 seconds (JVM running for 11.583)
+[2019-08-08 16:14:59:16453][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:14:59:16517][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:14:59:16517][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@121fb3e2 
+[2019-08-08 16:14:59:16578][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16616][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16617][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@41e3bd90 
+[2019-08-08 16:15:00:16653][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16657][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16657][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6e2b3364 
+[2019-08-08 16:15:00:16719][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16727][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16727][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7a57385c 
+[2019-08-08 16:15:00:16787][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:00:16794][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:15:00:16804][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16810][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16810][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@23f9ce17 
+[2019-08-08 16:15:00:16826][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16831][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16831][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@20cdd1b6 
+[2019-08-08 16:15:00:16861][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:00:16866][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:15:00:16871][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:00:16877][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16877][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4dbae4f2 
+[2019-08-08 16:15:00:16881][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16885][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16886][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7d5dc444 
+[2019-08-08 16:15:00:16898][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16902][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16902][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3e3bc2d4 
+[2019-08-08 16:15:00:16928][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16934][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16934][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@69f97619 
+[2019-08-08 16:15:00:16953][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:00:16958][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:15:00:16962][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:00:16966][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:15:00:16970][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16974][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16974][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@40476bf9 
+[2019-08-08 16:15:00:16987][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:16991][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:16991][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1fbe38fc 
+[2019-08-08 16:15:00:17020][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:17026][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:17026][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@16dfaf76 
+[2019-08-08 16:15:00:17046][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:00:17050][http-nio-auto-1-exec-9] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:15:00:17053][http-nio-auto-1-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:17057][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:17058][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4288d206 
+[2019-08-08 16:15:00:17069][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:17072][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:17072][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@121a02a2 
+[2019-08-08 16:15:00:17084][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:00:17088][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:00:17088][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5026929 
+[2019-08-08 16:15:11:426][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11505 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:15:11:428][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:15:14:3407][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.167 seconds (JVM running for 8.71)
+[2019-08-08 16:15:19:8535][http-nio-8080-exec-1] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:15:19:8620][http-nio-8080-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 해당 게시글이 존재하지 않습니다. 
+[2019-08-08 16:15:19:8726][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:15:19:8728][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:15:19:8728][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:15:22:11273][http-nio-8080-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:15:23:12609][http-nio-8080-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:28:18096][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:15:29:18187][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:15:29:18188][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@d3ec131 
+[2019-08-08 16:15:29:18194][http-nio-8080-exec-8] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:15:29:18195][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:15:29:18195][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:15:33:22220][http-nio-8080-exec-6] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:15:33:22227][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:15:33:22227][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:15:33:22230][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:15:33:22230][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[]}
+[2019-08-08 16:17:38:147545][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11505 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:17:38:147546][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:17:39:148420][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.906 seconds (JVM running for 153.723)
+[2019-08-08 16:17:46:155464][http-nio-8080-exec-1] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:17:46:155477][http-nio-8080-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 해당 게시글이 존재하지 않습니다. 
+[2019-08-08 16:17:46:155488][http-nio-8080-exec-2] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:17:46:155489][http-nio-8080-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:17:46:155489][http-nio-8080-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:17:49:158917][http-nio-8080-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:17:51:160251][http-nio-8080-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:17:55:164480][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:17:55:164506][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:17:55:164506][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@2f71930a 
+[2019-08-08 16:17:55:164512][http-nio-8080-exec-10] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:17:55:164513][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:17:55:164513][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:17:58:167767][http-nio-8080-exec-3] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:17:58:167771][http-nio-8080-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:17:58:167772][http-nio-8080-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:17:58:167775][http-nio-8080-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:17:58:167775][http-nio-8080-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[]}
+[2019-08-08 16:20:04:497][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11534 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:20:04:499][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:20:07:3537][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.283 seconds (JVM running for 8.873)
+[2019-08-08 16:22:29:444][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11551 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:22:29:446][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:22:32:3589][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.344 seconds (JVM running for 8.92)
+[2019-08-08 16:22:37:8602][http-nio-8080-exec-1] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:22:37:8661][http-nio-8080-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 해당 게시글이 존재하지 않습니다. 
+[2019-08-08 16:22:37:8744][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:22:37:8745][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:22:37:8745][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:22:37:8833][http-nio-8080-exec-2] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:22:37:8834][http-nio-8080-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:22:37:8834][http-nio-8080-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:22:39:10650][http-nio-8080-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:22:41:12036][http-nio-8080-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:22:49:20233][http-nio-8080-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:22:49:20324][http-nio-8080-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:22:49:20325][http-nio-8080-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6949950e 
+[2019-08-08 16:22:49:20332][http-nio-8080-exec-4] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:22:49:20333][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:22:49:20333][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:22:56:27163][http-nio-8080-exec-1] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:22:56:27171][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:22:56:27171][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:22:56:27173][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:22:56:27173][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[]}
+[2019-08-08 16:26:01:212434][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11551 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:26:01:212435][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:09:5773][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:09:5776][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:10:7212][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:10:7213][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:10:7446][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:10:7447][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:11:7642][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:11:7643][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:11:7875][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:11:7876][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:11:8039][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:11:8040][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:11:8246][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:11:8247][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:13:9634][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:13:9634][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:13:10107][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:13:10107][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:14:10537][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:14:10537][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:19:15985][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:19:15986][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:19:16422][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:19:16423][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:20:16818][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:20:16818][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:20:17250][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:20:17251][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:21:17635][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:21:17635][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:29:21:18039][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11579 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:29:21:18040][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:30:50:5792][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11594 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:30:50:5794][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:30:53:8252][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.688 seconds (JVM running for 8.891)
+[2019-08-08 16:30:53:8752][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11594 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:30:53:8752][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:30:56:11097][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.376 seconds (JVM running for 11.735)
+[2019-08-08 16:31:01:16498][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:31:01:16563][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:01:16564][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@c0f4c6a 
+[2019-08-08 16:31:01:16625][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:01:16671][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:01:16671][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@7421c00a 
+[2019-08-08 16:31:01:16713][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:01:16717][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:01:16717][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4da784f8 
+[2019-08-08 16:31:01:16779][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:01:16784][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:01:16784][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@44e5443f 
+[2019-08-08 16:31:02:16841][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:31:02:16849][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:31:02:16855][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:16861][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:16861][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@54c2e243 
+[2019-08-08 16:31:02:16880][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:16887][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:16887][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@c0b4d9e 
+[2019-08-08 16:31:02:16917][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:31:02:16923][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:31:02:16928][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:31:02:16935][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:16935][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1a350b2b 
+[2019-08-08 16:31:02:16940][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:16945][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:16945][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@e9edd76 
+[2019-08-08 16:31:02:16966][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:16973][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:16973][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@6fde837e 
+[2019-08-08 16:31:02:17003][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:17009][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:17009][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@712bc501 
+[2019-08-08 16:31:02:17033][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:31:02:17040][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:31:02:17044][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:31:02:17049][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:31:02:17053][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:17059][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:17059][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@54c6fb4d 
+[2019-08-08 16:31:02:17076][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:17083][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:17083][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@628e167a 
+[2019-08-08 16:31:02:17110][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:17114][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:17114][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@454e38a0 
+[2019-08-08 16:31:02:17133][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:31:02:17138][http-nio-auto-1-exec-9] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:31:02:17141][http-nio-auto-1-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:17147][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:17147][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@210cf9f8 
+[2019-08-08 16:31:02:17162][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:17165][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:17166][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@1355ebe4 
+[2019-08-08 16:31:02:17180][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:31:02:17185][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:31:02:17185][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@13bbb26f 
+[2019-08-08 16:31:40:435][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11600 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:31:40:438][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:31:43:3462][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.215 seconds (JVM running for 8.792)
+[2019-08-08 16:32:00:20064][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:32:00:20068][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:32:00:20068][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:32:04:24322][http-nio-8080-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:32:06:26073][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:32:11:31763][http-nio-8080-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:32:11:31847][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:32:11:31848][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@73a24215 
+[2019-08-08 16:32:11:31856][http-nio-8080-exec-9] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:32:11:31858][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:32:11:31858][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:32:18:38103][http-nio-8080-exec-6] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:32:18:38117][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:32:18:38117][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:32:18:38119][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:32:18:38119][http-nio-8080-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[]}
+[2019-08-08 16:37:15:483][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:37:15:484][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:37:18:3420][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 3.135 seconds (JVM running for 8.737)
+[2019-08-08 16:37:24:9584][http-nio-8080-exec-1] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:37:24:9586][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:37:24:9587][http-nio-8080-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:37:26:11841][http-nio-8080-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:37:28:13057][http-nio-8080-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:37:32:17086][http-nio-8080-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:37:32:17227][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:37:32:17228][http-nio-8080-exec-8] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3daf9557 
+[2019-08-08 16:37:32:17238][http-nio-8080-exec-9] INFO  t.m.article.service.ArticleService - page : [] 
+[2019-08-08 16:37:32:17239][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:37:32:17239][http-nio-8080-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[]} 
+[2019-08-08 16:37:36:21158][http-nio-8080-exec-10] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:37:36:21173][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:37:36:21173][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:37:36:21175][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:37:36:21175][http-nio-8080-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[]}
+[2019-08-08 16:38:41:86539][http-nio-8080-exec-2] INFO  t.m.article.service.ArticleService - page : [techcourse.myblog.domain.Article@20]
+[2019-08-08 16:38:41:86541][http-nio-8080-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:38:41:86541][http-nio-8080-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Model : {articles=[techcourse.myblog.domain.Article@20]}
+[2019-08-08 16:38:43:88673][http-nio-8080-exec-4] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:38:43:88680][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:38:43:88680][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:38:43:88682][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:38:43:88682][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[Comment@20]}
+[2019-08-08 16:39:13:118600][http-nio-8080-exec-4] INFO  t.m.w.i.login.LoginInterceptor - uri : /articles/1 
+[2019-08-08 16:39:13:118605][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {} 
+[2019-08-08 16:39:13:118605][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:39:13:118608][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Model : {article=techcourse.myblog.domain.Article@20}
+[2019-08-08 16:39:13:118608][http-nio-8080-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Model : {article=techcourse.myblog.domain.Article@20, comments=[Comment@20]}
+[2019-08-08 16:39:42:5864][main] INFO  t.m.c.r.CommentRepositoryTest - Starting CommentRepositoryTest on baghyojin-ui-MacBookPro.local with PID 11623 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:39:42:5872][main] INFO  t.m.c.r.CommentRepositoryTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:39:44:8234][main] INFO  t.m.c.r.CommentRepositoryTest - Started CommentRepositoryTest in 7.665 seconds (JVM running for 8.792)
+[2019-08-08 16:39:45:8739][main] INFO  t.m.c.c.CommentControllerTest - Starting CommentControllerTest on baghyojin-ui-MacBookPro.local with PID 11623 (started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:39:45:8739][main] INFO  t.m.c.c.CommentControllerTest - No active profile set, falling back to default profiles: default
+[2019-08-08 16:39:47:11251][main] INFO  t.m.c.c.CommentControllerTest - Started CommentControllerTest in 2.546 seconds (JVM running for 11.81)
+[2019-08-08 16:39:53:16631][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:39:53:16710][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:16711][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3a9752da 
+[2019-08-08 16:39:53:16780][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:16817][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:16817][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@c4de2fe 
+[2019-08-08 16:39:53:16858][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:16862][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:16862][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@423ef216 
+[2019-08-08 16:39:53:16922][http-nio-auto-1-exec-6] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:16929][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:16929][http-nio-auto-1-exec-6] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@e15d58b 
+[2019-08-08 16:39:53:16981][http-nio-auto-1-exec-8] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:39:53:16990][http-nio-auto-1-exec-8] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:39:53:16997][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17002][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17003][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5746c872 
+[2019-08-08 16:39:53:17020][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17025][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17025][http-nio-auto-1-exec-1] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@550a3192 
+[2019-08-08 16:39:53:17062][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:39:53:17068][http-nio-auto-1-exec-3] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:39:53:17072][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:39:53:17078][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17078][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@5b8337c5 
+[2019-08-08 16:39:53:17081][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17085][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17086][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@77023b23 
+[2019-08-08 16:39:53:17100][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17105][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17105][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@331d3c8d 
+[2019-08-08 16:39:53:17133][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17139][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17139][http-nio-auto-1-exec-9] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@3825918 
+[2019-08-08 16:39:53:17159][http-nio-auto-1-exec-1] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:39:53:17164][http-nio-auto-1-exec-1] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:39:53:17168][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:39:53:17171][http-nio-auto-1-exec-2] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:39:53:17174][http-nio-auto-1-exec-3] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17178][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17178][http-nio-auto-1-exec-3] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@33439cd5 
+[2019-08-08 16:39:53:17191][http-nio-auto-1-exec-5] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17195][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17195][http-nio-auto-1-exec-5] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@75a1e1aa 
+[2019-08-08 16:39:53:17219][http-nio-auto-1-exec-7] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17223][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17223][http-nio-auto-1-exec-7] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@38e89761 
+[2019-08-08 16:39:53:17243][http-nio-auto-1-exec-9] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /signup 
+[2019-08-08 16:39:53:17248][http-nio-auto-1-exec-9] ERROR t.m.w.e.ControllerExceptionHandler - Exception : 이미 존재하는 이메일입니다. 
+[2019-08-08 16:39:53:17252][http-nio-auto-1-exec-10] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17257][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17257][http-nio-auto-1-exec-10] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@4f4fdc2a 
+[2019-08-08 16:39:53:17271][http-nio-auto-1-exec-2] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17275][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17276][http-nio-auto-1-exec-2] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@70821e67 
+[2019-08-08 16:39:53:17293][http-nio-auto-1-exec-4] INFO  t.m.w.i.l.LoggedInInterceptor - uri : /login 
+[2019-08-08 16:39:53:17299][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - Before Session : null 
+[2019-08-08 16:39:53:17300][http-nio-auto-1-exec-4] INFO  t.myblog.utils.model.ModelUtil - After Session : techcourse.myblog.dto.UserResponseDto@d747898 
+[2019-08-08 16:41:24:249334][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:41:24:249335][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:41:25:250120][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.816 seconds (JVM running for 255.438)
+[2019-08-08 16:48:50:695190][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:48:50:695196][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:48:51:695942][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.789 seconds (JVM running for 701.231)
+[2019-08-08 16:49:38:743864][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:49:38:743864][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:49:39:744584][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.755 seconds (JVM running for 749.874)
+[2019-08-08 16:50:36:801170][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:50:36:801171][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:50:36:801828][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.684 seconds (JVM running for 807.118)
+[2019-08-08 16:51:07:832607][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:51:07:832607][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:51:08:833253][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.668 seconds (JVM running for 838.543)
+[2019-08-08 16:51:43:868059][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:51:43:868059][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:51:43:868697][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.662 seconds (JVM running for 873.987)
+[2019-08-08 16:53:02:947042][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:53:02:947042][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:53:02:947795][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.779 seconds (JVM running for 953.085)
+[2019-08-08 16:57:09:1194167][restartedMain] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on baghyojin-ui-MacBookPro.local with PID 11607 (/Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3/out/production/classes started by hyojin in /Users/hyojin/Desktop/wooteco/lv2/jwp-blog-3)
+[2019-08-08 16:57:09:1194168][restartedMain] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+[2019-08-08 16:57:10:1194942][restartedMain] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 5.815 seconds (JVM running for 1200.232)

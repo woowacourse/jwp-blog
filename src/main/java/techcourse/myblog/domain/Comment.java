@@ -1,22 +1,15 @@
-package techcourse.myblog.comment.domain;
+package techcourse.myblog.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.springframework.data.annotation.CreatedDate;
-import techcourse.myblog.article.domain.Article;
-import techcourse.myblog.comment.exception.CommentAuthenticationException;
+import techcourse.myblog.domain.base.BaseEntity;
+import techcourse.myblog.exception.CommentAuthenticationException;
 import techcourse.myblog.dto.CommentRequestDto;
-import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
 
 @Entity
-public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Comment extends BaseEntity {
+    @Column(length = 100, nullable = false)
     private String contents;
 
     @ManyToOne
@@ -28,9 +21,6 @@ public class Comment {
     @JsonManagedReference
     private Article article;
 
-    @CreatedDate
-    private Date date;
-
     public Comment() {
     }
 
@@ -40,20 +30,12 @@ public class Comment {
         this.article = article;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getContents() {
         return contents;
     }
 
     public User getCommenter() {
         return commenter;
-    }
-
-    public Date getDate() {
-        return date;
     }
 
     public Article getArticle() {
@@ -70,18 +52,5 @@ public class Comment {
 
     public boolean isCommenter(User user) {
         return user.equals(commenter);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

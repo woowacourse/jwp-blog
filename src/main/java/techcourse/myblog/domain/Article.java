@@ -1,27 +1,25 @@
-package techcourse.myblog.article.domain;
+package techcourse.myblog.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import techcourse.myblog.article.exception.ArticleAuthenticationException;
-import techcourse.myblog.comment.domain.Comment;
-import techcourse.myblog.user.domain.User;
+import techcourse.myblog.domain.base.BaseEntity;
+import techcourse.myblog.exception.ArticleAuthenticationException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Entity
-public class Article {
+public class Article extends BaseEntity {
     private static final String DEFAULT_URL = "/images/default/bg.jpg";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @Column(length = 40, nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String contents;
+
+    @Column(nullable = false)
     private String coverUrl;
 
     @ManyToOne
@@ -66,10 +64,6 @@ public class Article {
         return contents;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public User getAuthor() {
         return author;
     }
@@ -94,18 +88,5 @@ public class Article {
 
     public boolean isAuthor(User user) {
         return user.equals(author);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(id, article.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

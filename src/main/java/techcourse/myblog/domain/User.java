@@ -1,23 +1,19 @@
-package techcourse.myblog.user.domain;
+package techcourse.myblog.domain;
 
 import org.hibernate.validator.constraints.Length;
+import techcourse.myblog.domain.base.BaseEntity;
 import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.user.exception.InvalidNameException;
-import techcourse.myblog.user.exception.InvalidPasswordException;
+import techcourse.myblog.exception.InvalidNameException;
+import techcourse.myblog.exception.InvalidPasswordException;
 
 import javax.persistence.*;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Entity
-public class User {
+public class User extends BaseEntity {
     private static final Pattern NAME_PATTERN = Pattern.compile("^[ㄱ-ㅎ가-힣a-zA-Z]{2,10}$");
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}");
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(nullable = false)
     @Length(min = 2, max = 10)
@@ -55,10 +51,6 @@ public class User {
         return name;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
@@ -78,18 +70,5 @@ public class User {
 
     public boolean isMatchPassword(UserRequestDto dto) {
         return this.password.equals(dto.getPassword());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
