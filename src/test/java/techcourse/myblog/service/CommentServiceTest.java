@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.dto.UserDto;
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.domain.dto.CommentDto;
@@ -34,34 +36,34 @@ class CommentServiceTest {
     void 댓글_작성() {
         given(commentRepository.save(comment)).willReturn(comment);
 
-        assertDoesNotThrow(() -> commentService.createComment(commentDto, user));
+        assertDoesNotThrow(() -> commentService.createComment(commentDto, LoginUser.toLoginUser(user)));
     }
 
     @Test
     void 없는_댓글_삭제() {
         given(commentRepository.findById(100L)).willReturn(Optional.empty());
 
-        assertThrows(NotFoundObjectException.class, () -> commentService.deleteComment(100L, user));
+        assertThrows(NotFoundObjectException.class, () -> commentService.deleteComment(100L, LoginUser.toLoginUser(user)));
     }
 
     @Test
     void 타인_댓글_삭제() {
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
 
-        assertThrows(InvalidAuthorException.class, () -> commentService.deleteComment(1L, user2));
+        assertThrows(InvalidAuthorException.class, () -> commentService.deleteComment(1L,  LoginUser.toLoginUser(user2)));
     }
 
     @Test
     void 없는_댓글_수정() {
         given(commentRepository.findById(100L)).willReturn(Optional.empty());
 
-        assertThrows(NotFoundObjectException.class, () -> commentService.updateComment(100L, user, commentDto2));
+        assertThrows(NotFoundObjectException.class, () -> commentService.updateComment(100L, LoginUser.toLoginUser(user), commentDto2));
     }
 
     @Test
     void 타인_댓글_수정() {
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
 
-        assertThrows(InvalidAuthorException.class, () -> commentService.updateComment(1L, user2, commentDto2));
+        assertThrows(InvalidAuthorException.class, () -> commentService.updateComment(1L,  LoginUser.toLoginUser(user2), commentDto2));
     }
 }

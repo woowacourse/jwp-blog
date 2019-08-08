@@ -4,12 +4,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import techcourse.myblog.domain.dto.UserDto;
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.domain.dto.AuthenticationDto;
 import techcourse.myblog.domain.user.UserRepository;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -28,12 +32,17 @@ public class LoginServiceTest {
 
     @Test
     void 로그인_성공() {
+        UserDto userDto = new UserDto("heejoo", "heejoo@gmail.com");
+
         authenticationDto.setEmail(user.getEmail());
         authenticationDto.setPassword(user.getPassword());
 
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-        assertEquals(loginService.login(authenticationDto), user);
+        LoginUser loginUser = loginService.login(authenticationDto);
+
+        assertThat(userDto.getEmail()).isEqualTo(loginUser.getEmail());
+        assertThat(userDto.getUserName()).isEqualTo(loginUser.getUserName());
     }
 
     @Test

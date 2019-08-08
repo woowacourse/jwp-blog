@@ -1,18 +1,20 @@
 package techcourse.myblog.web;
 
+import javax.servlet.http.HttpSession;
+
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import techcourse.myblog.domain.dto.ArticleDto;
+import techcourse.myblog.domain.dto.UserDto;
+import techcourse.myblog.domain.dto.response.LoginUser;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
+import techcourse.myblog.web.supports.UserSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
-import techcourse.myblog.domain.dto.ArticleDto;
-import techcourse.myblog.domain.user.User;
-
-import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -34,9 +36,8 @@ public class ArticleController {
     }
 
     @PostMapping("/new")
-    public String createArticle(ArticleDto articleDto, Model model, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
-        articleDto = articleService.createArticle(articleDto, author);
+    public String createArticle(@UserSession LoginUser user, ArticleDto articleDto, Model model) {
+        articleDto = articleService.createArticle(articleDto, user);
         model.addAttribute("article", articleDto);
         return "redirect:/articles/" + articleDto.getArticleId();
     }
@@ -50,25 +51,22 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String showUpdateArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
+    public String showUpdateArticle(@UserSession LoginUser user, @PathVariable Long articleId, Model model) {
         ArticleDto articleDto = articleService.findArticleAndGetDto(articleId);
-        articleService.checkAvailableUpdateUser(articleId, user);
+        articleService.checkAvailableUpdateUser(articleId, user.getEmail());
         model.addAttribute("article", articleDto);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ArticleDto updateArticleDto, Model model, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
-        updateArticleDto = articleService.updateArticle(articleId, updateArticleDto, author);
+    public String updateArticle(@UserSession LoginUser user, @PathVariable Long articleId, ArticleDto updateArticleDto, Model model) {
+        updateArticleDto = articleService.updateArticle(articleId, updateArticleDto, user);
         model.addAttribute("article", updateArticleDto);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
+    public String deleteArticle(@PathVariable Long articleId, @UserSession LoginUser user) {
         articleService.deleteArticle(articleId, user);
         return "redirect:/";
     }

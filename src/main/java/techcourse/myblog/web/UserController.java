@@ -8,12 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.domain.dto.UserDto;
 import techcourse.myblog.domain.dto.UserUpdateRequestDto;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.web.supports.UserSession;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -58,22 +61,21 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
+    public String editUserInfo(@UserSession LoginUser loginUser, @Valid UserUpdateRequestDto userUpdateRequestDto,
                                BindingResult bindingResult, HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
             throw new NotValidUpdateUserInfoException(fieldError.getDefaultMessage());
         }
-        String email = ((User) httpSession.getAttribute("user")).getEmail();
-        User user = userService.updateUser(email, userUpdateRequestDto);
-        httpSession.setAttribute("user", user);
+        userService.updateUser(loginUser.getEmail(), userUpdateRequestDto);
+        loginUser.setUserName(userUpdateRequestDto.getUserName());
+        httpSession.setAttribute("user", loginUser);
         return "redirect:/users/mypage";
     }
 
     @DeleteMapping("/mypage")
-    public String deleteUser(HttpSession httpSession) {
-        String email = ((User) httpSession.getAttribute("user")).getEmail();
-        userService.deleteUser(email);
+    public String deleteUser(@UserSession LoginUser loginUser, HttpSession httpSession) {
+        userService.deleteUser(loginUser.getEmail());
         httpSession.removeAttribute("user");
         return "redirect:/";
     }

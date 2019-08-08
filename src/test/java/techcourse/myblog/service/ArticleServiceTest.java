@@ -7,9 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserRepository;
-import techcourse.myblog.domain.user.UserTest;
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.domain.dto.ArticleDto;
 
@@ -43,7 +41,7 @@ public class ArticleServiceTest {
         given(httpSession.getAttribute("user")).willReturn(user);
         given(articleRepository.save(any(Article.class))).willReturn(new Article());
 
-        assertDoesNotThrow(() -> articleService.createArticle(articleDto, user));
+        assertDoesNotThrow(() -> articleService.createArticle(articleDto, LoginUser.toLoginUser(user)));
     }
 
     @Test

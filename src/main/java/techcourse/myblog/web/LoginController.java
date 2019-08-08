@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.domain.dto.AuthenticationDto;
-import techcourse.myblog.domain.user.User;
 
 import javax.servlet.http.HttpSession;
 
@@ -33,8 +34,8 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(AuthenticationDto authenticationDto, HttpSession httpSession) {
-        User user = loginService.login(authenticationDto);
-        httpSession.setAttribute("user", user);
+        LoginUser loginUser = loginService.login(authenticationDto);
+        httpSession.setAttribute("user", loginUser);
         return "redirect:/";
     }
 

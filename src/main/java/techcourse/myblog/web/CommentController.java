@@ -4,10 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.dto.UserDto;
+import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.domain.dto.CommentDto;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.web.supports.UserSession;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -26,24 +29,21 @@ public class CommentController {
     }
 
     @PostMapping
-    public List<CommentDto> createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
-        Comment comment = commentService.createComment(commentDto, author);
+    public List<CommentDto> createComment(@UserSession LoginUser loginUser, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
+        Comment comment = commentService.createComment(commentDto, loginUser);
         articleService.addComment(articleId, comment);
         return articleService.findAllComments(articleId);
     }
 
     @PutMapping("/{commentId}")
-    public List<CommentDto> updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        commentService.updateComment(commentId, user, commentDto);
+    public List<CommentDto> updateComment(@UserSession LoginUser loginUser, @PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDto commentDto) {
+        commentService.updateComment(commentId, loginUser, commentDto);
         return articleService.findAllComments(articleId);
     }
 
     @DeleteMapping("/{commentId}")
-    public List<CommentDto> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        commentService.deleteComment(commentId, user);
+    public List<CommentDto> deleteComment(@UserSession LoginUser loginUser, @PathVariable Long articleId, @PathVariable Long commentId) {
+        commentService.deleteComment(commentId, loginUser);
         return articleService.findAllComments(articleId);
     }
 }
