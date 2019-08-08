@@ -50,4 +50,8 @@ public class User extends BaseEntity {
     public void setId(Long userId) {
         this.userId = userId;
     }
+
+    public boolean matchEmail(String email) {
+        return this.email.equals(email);
+    }
 }
