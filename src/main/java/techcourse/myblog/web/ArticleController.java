@@ -36,33 +36,33 @@ public class ArticleController {
     @PostMapping("/new")
     public String createArticle(ArticleDto articleDto, Model model, HttpSession httpSession) {
         User author = (User) httpSession.getAttribute("user");
-        Article article = articleService.createArticle(articleDto, author);
-        model.addAttribute("article", article);
-        return "redirect:/articles/" + article.getArticleId();
+        articleDto = articleService.createArticle(articleDto, author);
+        model.addAttribute("article", articleDto);
+        return "redirect:/articles/" + articleDto.getArticleId();
     }
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleService.findArticle(articleId);
-        model.addAttribute("article", article);
-        model.addAttribute("comments", articleService.findAllComments(article));
+        ArticleDto articleDto = articleService.findArticleAndGetDto(articleId);
+        model.addAttribute("article", articleDto);
+        model.addAttribute("comments", articleService.findAllComments(articleId));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String showUpdateArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
-        Article article = articleService.findArticle(articleId);
-        articleService.checkAvailableUpdateUser(article, user);
-        model.addAttribute("article", article);
+        ArticleDto articleDto = articleService.findArticleAndGetDto(articleId);
+        articleService.checkAvailableUpdateUser(articleId, user);
+        model.addAttribute("article", articleDto);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable Long articleId, ArticleDto updateArticleDto, Model model, HttpSession httpSession) {
         User author = (User) httpSession.getAttribute("user");
-        Article updateArticle = articleService.updateArticle(articleId, updateArticleDto.toEntity(author));
-        model.addAttribute("article", updateArticle);
+        updateArticleDto = articleService.updateArticle(articleId, updateArticleDto, author);
+        model.addAttribute("article", updateArticleDto);
         return "redirect:/articles/" + articleId;
     }
 

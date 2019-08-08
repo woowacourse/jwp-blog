@@ -4,7 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
+import techcourse.myblog.domain.user.UserTest;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.domain.dto.ArticleDto;
 
@@ -13,6 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static techcourse.myblog.domain.article.ArticleTest.article;
 import static techcourse.myblog.domain.user.UserTest.user;
@@ -35,7 +41,7 @@ public class ArticleServiceTest {
     @Test
     void 글_생성() {
         given(httpSession.getAttribute("user")).willReturn(user);
-        given(articleRepository.save(article)).willReturn(article);
+        given(articleRepository.save(any(Article.class))).willReturn(new Article());
 
         assertDoesNotThrow(() -> articleService.createArticle(articleDto, user));
     }
@@ -43,12 +49,12 @@ public class ArticleServiceTest {
     @Test
     void 글_조회() {
         given(articleRepository.findById(1L)).willReturn(Optional.of(article));
-        assertDoesNotThrow(() -> articleService.findArticle(1L));
+        assertDoesNotThrow(() -> articleService.findArticleAndGetDto(1L));
     }
 
     @Test
     void 없는_글_조회() {
         given(articleRepository.findById(1L)).willReturn(Optional.empty());
-        assertThrows(NotFoundObjectException.class, () -> articleService.findArticle(1L));
+        assertThrows(NotFoundObjectException.class, () -> articleService.findArticleAndGetDto(1L));
     }
 }

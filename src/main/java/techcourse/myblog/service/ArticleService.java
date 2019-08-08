@@ -22,33 +22,33 @@ public class ArticleService {
 		this.articleRepository = articleRepository;
 	}
 
-	public Article createArticle(ArticleDto articleDto, User author) {
+	public ArticleDto createArticle(ArticleDto articleDto, User author) {
 		Article article = articleDto.toEntity(author);
-
-		return articleRepository.save(article);
+		article = articleRepository.save(article);
+		return ArticleDto.toArticleDto(article);
 	}
 
-	public Article findArticle(Long articleId) {
+	private Article findArticle(Long articleId) {
 		return articleRepository.findById(articleId)
 				.orElseThrow(NotFoundObjectException::new);
 	}
 
-	@Transactional
-	public Article updateArticle(Long articleId, Article updatedArticle) {
-		Article article = findArticle(articleId);
-		article.update(updatedArticle);
+	public ArticleDto findArticleAndGetDto(Long articleId) {
+		return ArticleDto.toArticleDto(findArticle(articleId));
+	}
 
-		return article;
+	@Transactional
+	public ArticleDto updateArticle(Long articleId, ArticleDto articleDto, User user) {
+		Article article = findArticle(articleId);
+		article.update(articleDto.toEntity(user));
+
+		return ArticleDto.toArticleDto(article);
 	}
 
 	public void deleteArticle(Long articleId, User user) {
 		Article article = findArticle(articleId);
 		article.checkCorrespondingAuthor(user);
 		articleRepository.deleteById(articleId);
-	}
-
-	public List<CommentDto> findAllComments(Article article) {
-		return convertCommentsToDto(article.getComments());
 	}
 
 	public List<CommentDto> findAllComments(Long articleId) {
@@ -72,7 +72,7 @@ public class ArticleService {
 		return article;
 	}
 
-	public void checkAvailableUpdateUser(Article article, User user) {
-		article.checkCorrespondingAuthor(user);
+	public void checkAvailableUpdateUser(Long articleId, User user) {
+		findArticle(articleId).checkCorrespondingAuthor(user);
 	}
 }

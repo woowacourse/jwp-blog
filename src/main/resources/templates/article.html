@@ -65,7 +65,7 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info" th:text="${article.countOfComment}"></span>
+                        <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
                     </div>
                     <div class="comment">
                         <ul id="comment-list" class="list-unstyled list-info">
@@ -249,6 +249,7 @@
         }
 
         function print(comments) {
+            console.log(comments);
             var i;
             var template = '';
             for (i = 0; i < comments.length; i++) {

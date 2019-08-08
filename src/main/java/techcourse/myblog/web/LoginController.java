@@ -51,5 +51,4 @@ public class LoginController {
         log.error(e.getMessage());
         return "login";
     }
-
 }

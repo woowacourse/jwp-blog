@@ -46,4 +46,8 @@ public class User extends BaseEntity {
     public void changeUserName(String userName) {
         this.userName = userName;
     }
+
+    public void setId(Long userId) {
+        this.userId = userId;
+    }
 }
