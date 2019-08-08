@@ -20,10 +20,10 @@ public class CommentResponseDto {
     private ArticleResponseDto article;
 
     public void setAuthor(User author) {
-        this.author = author.mapUserResponse();
+        this.author = UserResponseDto.toUserResponseDto(author);
     }
 
     public void setArticle(Article article) {
-        this.article = article.mapArticleResponse();
+        this.article = ArticleResponseDto.toArticleResponseDto(article);
     }
 }

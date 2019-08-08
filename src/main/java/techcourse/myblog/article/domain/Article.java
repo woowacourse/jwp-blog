@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import techcourse.myblog.article.dto.ArticleResponseDto;
 import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.user.domain.User;
 
@@ -50,15 +49,5 @@ public class Article {
 
     public boolean notMatchAuthorId(long authorId) {
         return author.getId() != authorId;
-    }
-
-    public ArticleResponseDto mapArticleResponse() {
-        return ArticleResponseDto.builder()
-                .id(this.id)
-                .title(this.title)
-                .coverUrl(this.coverUrl)
-                .contents(this.contents)
-                .author(this.author)
-                .build();
     }
 }

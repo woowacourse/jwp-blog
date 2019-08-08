@@ -1,6 +1,7 @@
 package techcourse.myblog.article.dto;
 
 import lombok.*;
+import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.dto.UserResponseDto;
 
@@ -21,14 +22,24 @@ public class ArticleResponseDto {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-        this.author = author.mapUserResponse();
+        this.author = UserResponseDto.toUserResponseDto(author);
+    }
+
+    public void setAuthor(User author) {
+        this.author = UserResponseDto.toUserResponseDto(author);
     }
 
     public boolean matchAuthorId(long authorId) {
         return author.getId() == authorId;
     }
 
-    public void setAuthor(User author) {
-        this.author = author.mapUserResponse();
+    public static ArticleResponseDto toArticleResponseDto(Article article) {
+        return ArticleResponseDto.builder()
+                .id(article.getId())
+                .title(article.getTitle())
+                .coverUrl(article.getCoverUrl())
+                .contents(article.getContents())
+                .author(article.getAuthor())
+                .build();
     }
 }
