@@ -24,12 +24,6 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Article findById(Long id) {
-        return articleRepository.findById(id)
-            .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
-    }
-
-    @Transactional(readOnly = true)
     public List<Article> findAll() {
         return articleRepository.findAll();
     }
@@ -44,14 +38,14 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Article findArticleById(Long articleId) {
+    public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
             .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }
 
     @Transactional(readOnly = true)
-    public Article findArticleWrittenByUser(Long articleId, Long userId) {
-        Article article = findArticleById(articleId);
+    public Article findByAuthorId(Long articleId, Long userId) {
+        Article article = findById(articleId);
 
         if (!article.matchAuthorId(userId)) {
             throw new NotSameAuthorException("해당 게시물의 작성자가 아닙니다.");
@@ -60,8 +54,8 @@ public class ArticleService {
         return article;
     }
 
-    public void editArticle(ArticleDto articleDto, Long articleId, Long userId) {
-        Article article = findArticleById(articleId);
+    public void update(ArticleDto articleDto, Long articleId, Long userId) {
+        Article article = findById(articleId);
 
         checkAuthenticatedAuthor(article, userId);
 
@@ -69,7 +63,7 @@ public class ArticleService {
     }
 
     public void deleteById(Long articleId, Long userId) {
-        Article article = findArticleById(articleId);
+        Article article = findById(articleId);
         checkAuthenticatedAuthor(article, userId);
 
         articleRepository.deleteById(articleId);

@@ -58,8 +58,8 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
-        Article article = articleService.findArticleById(articleId);
-        List<Comment> comments = commentService.findCommentsByArticle(article);
+        Article article = articleService.findById(articleId);
+        List<Comment> comments = commentService.findByArticle(article);
         model.addAttribute(ARTICLE_INFO, article);
         model.addAttribute(COMMENTS_INFO, comments);
 
@@ -69,7 +69,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        Article article = articleService.findArticleWrittenByUser(articleId, userResponse.getId());
+        Article article = articleService.findByAuthorId(articleId, userResponse.getId());
         model.addAttribute(ARTICLE_INFO, article);
 
         return "article-edit";
@@ -79,7 +79,7 @@ public class ArticleController {
     public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto, HttpSession httpSession, Model model) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
-        articleService.editArticle(articleDto, articleId, userResponse.getId());
+        articleService.update(articleDto, articleId, userResponse.getId());
         model.addAttribute(ARTICLE_INFO, articleDto);
 
         return "article";

@@ -32,7 +32,7 @@ public class UserAPIController {
             return new ResponseEntity<>(new ErrorResponse(bindingResult.getAllErrors().get(0).getDefaultMessage()),
                 HttpStatus.BAD_REQUEST);
         }
-        httpSession.setAttribute(USER_INFO, userService.editUserName(userId, userEditRequest.getName()));
+        httpSession.setAttribute(USER_INFO, userService.update(userId, userEditRequest.getName()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/mypage");

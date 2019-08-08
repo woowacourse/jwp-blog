@@ -42,7 +42,7 @@ public class CommentAPIController {
                                                       HttpSession httpSession) {
         try {
             UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-            commentService.deleteComment(commentId, userResponse.getId());
+            commentService.delete(commentId, userResponse.getId());
             return new ResponseEntity<>(new BaseResponse("ok"), HttpStatus.OK);
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -57,7 +57,7 @@ public class CommentAPIController {
         try {
             UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
             commentService.updateComment(commentId, userResponse.getId(), commentRequest);
-            Comment comment = commentService.findCommentById(commentId);
+            Comment comment = commentService.findById(commentId);
             return new ResponseEntity<>(new CommentResponse(comment), HttpStatus.OK);
         } catch (RuntimeException e) {
             e.printStackTrace();

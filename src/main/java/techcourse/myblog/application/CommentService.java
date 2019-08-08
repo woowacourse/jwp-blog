@@ -43,17 +43,17 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public List<Comment> findCommentsByArticle(Article article) {
+    public List<Comment> findByArticle(Article article) {
         return Collections.unmodifiableList(commentRepository.findAllByArticle(article));
     }
 
-    public Comment findCommentById(Long commentId) {
+    public Comment findById(Long commentId) {
         return commentRepository.findById(commentId)
             .orElseThrow(() -> new CommentNotFoundException("존재하지 않는 댓글입니다."));
     }
 
-    public void deleteComment(Long commentId, Long userId) {
-        Comment comment = findCommentById(commentId);
+    public void delete(Long commentId, Long userId) {
+        Comment comment = findById(commentId);
         User author = userService.findById(userId);
 
         if (!comment.isSameAuthor(author)) {
@@ -65,7 +65,7 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long commentId, Long userId, CommentRequest commentRequest) {
-        Comment comment = findCommentById(commentId);
+        Comment comment = findById(commentId);
         User author = userService.findById(userId);
         Comment updatedComment = commentRequest.toEntity(author, comment.getArticle());
 

@@ -62,14 +62,14 @@ public class UserServiceTests {
         doReturn(USER_1_ID).when(USER_1).getId();
         doReturn(Optional.of(USER_1)).when(userRepository).findById(USER_1_ID);
         given(userRepository.findUserByEmail(USER_REQUEST_2.getEmail())).willReturn(Optional.of(USER_1));
-        userService.editUserName(USER_1.getId(), USER_REQUEST_2.getName());
+        userService.update(USER_1.getId(), USER_REQUEST_2.getName());
         verify(userRepository, times(1)).findById(USER_1.getId());
         assertThat(USER_1.getName()).isEqualTo(USER_REQUEST_2.getName());
     }
 
     @Test
     void 존재하지_않는_ID로_업데이트시_Exception() {
-        assertThrows(NoUserException.class, () -> userService.editUserName(USER_1.getId(), USER_REQUEST_2.getName()));
+        assertThrows(NoUserException.class, () -> userService.update(USER_1.getId(), USER_REQUEST_2.getName()));
     }
 
     @Test

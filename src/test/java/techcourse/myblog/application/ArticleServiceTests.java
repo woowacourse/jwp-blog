@@ -76,14 +76,14 @@ public class ArticleServiceTests {
 
     @Test
     void 존재하지_않는_게시글_조회_실패() {
-        assertThrows(NoArticleException.class, () -> articleService.findArticleById(ARTICLE_ID));
+        assertThrows(NoArticleException.class, () -> articleService.findById(ARTICLE_ID));
     }
 
     @Test
     void 게시글_조회_성공() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
 
-        articleService.findArticleById(ARTICLE_ID);
+        articleService.findById(ARTICLE_ID);
 
         verify(articleRepository).findById(ARTICLE_ID);
     }
@@ -94,7 +94,7 @@ public class ArticleServiceTests {
         doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-            articleService.findArticleWrittenByUser(ARTICLE_ID, notAuthorResponse.getId())
+            articleService.findByAuthorId(ARTICLE_ID, notAuthorResponse.getId())
         );
     }
 
@@ -102,7 +102,7 @@ public class ArticleServiceTests {
     void 작성자가_작성한_게시글_조회_성공() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
 
-        articleService.findArticleWrittenByUser(ARTICLE_ID, userResponse.getId());
+        articleService.findByAuthorId(ARTICLE_ID, userResponse.getId());
 
         verify(articleRepository).findById(ARTICLE_ID);
     }
@@ -110,7 +110,7 @@ public class ArticleServiceTests {
     @Test
     void 존재하지_않는_게시물_수정_실패() {
         assertThrows(NoArticleException.class, () ->
-            articleService.editArticle(articleDto, ARTICLE_ID, userResponse.getId()));
+            articleService.update(articleDto, ARTICLE_ID, userResponse.getId()));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class ArticleServiceTests {
         doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-            articleService.editArticle(articleDto, ARTICLE_ID, notAuthorResponse.getId()));
+            articleService.update(articleDto, ARTICLE_ID, notAuthorResponse.getId()));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ArticleServiceTests {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
         given(userService.findById(USER_ID)).willReturn(user);
 
-        assertDoesNotThrow(() -> articleService.editArticle(articleDto, ARTICLE_ID, userResponse.getId()));
+        assertDoesNotThrow(() -> articleService.update(articleDto, ARTICLE_ID, userResponse.getId()));
     }
 
     @Test

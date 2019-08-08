@@ -67,7 +67,7 @@ public class UserService {
         }
     }
 
-    public UserResponse editUserName(Long userId, String name) {
+    public UserResponse update(Long userId, String name) {
         User user = findById(userId);
         changeName(name, user);
         return UserResponse.from(user);
