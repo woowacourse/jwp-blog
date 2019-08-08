@@ -26,7 +26,7 @@ public class CommentService {
 
     public void deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
-        comment.checkAvailableUserForDelete(user);
+        comment.checkCorrespondingAuthor(user);
         commentRepository.deleteById(commentId);
     }
 

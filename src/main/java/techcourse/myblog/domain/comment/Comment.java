@@ -31,7 +31,7 @@ public class Comment extends BaseEntity {
         this.contents = contents;
     }
 
-    private void checkCorrespondingAuthor(User user) {
+    public void checkCorrespondingAuthor(User user) {
         if (!author.equals(user)) {
             throw new InvalidAuthorException();
         }
@@ -40,9 +40,5 @@ public class Comment extends BaseEntity {
     public void update(Comment updateComment, User user) {
         checkCorrespondingAuthor(user);
         this.contents = updateComment.contents;
-    }
-
-    public void checkAvailableUserForDelete(User user) {
-        checkCorrespondingAuthor(user);
     }
 }
