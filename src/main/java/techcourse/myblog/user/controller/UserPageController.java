@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.user.dto.UserRequest;
-import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.user.service.UserService;
 import techcourse.myblog.web.argumentResolver.AccessUserInfo;
 
@@ -26,7 +25,7 @@ public class UserPageController {
         this.userService = userService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public ModelAndView showMyPage(final AccessUserInfo accessUserInfo) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("mypage");
@@ -34,7 +33,7 @@ public class UserPageController {
         return modelAndView;
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     public String deleteUser(final AccessUserInfo accessUserInfo) {
         userService.delete(accessUserInfo.getUser());
         return "redirect:/logout";
@@ -49,9 +48,8 @@ public class UserPageController {
     }
 
     @PutMapping("/mypage-edit")
-    public String editMyPage(final HttpSession session, final UserRequest userInfo) {
-        UserResponse accessUser = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        session.setAttribute(USER_SESSION_KEY, userService.update(accessUser, userInfo));
+    public String editMyPage(final HttpSession session, final UserRequest userInfo, final AccessUserInfo accessUserInfo) {
+        session.setAttribute(USER_SESSION_KEY, userService.update(accessUserInfo.getUser(), userInfo));
         return "redirect:/mypage";
     }
 }

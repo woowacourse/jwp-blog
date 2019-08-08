@@ -21,7 +21,7 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public String createArticle(final ArticleRequest articleDTO, final AccessUserInfo accessUserInfo) {
         Long id = articleService.save(articleDTO, accessUserInfo.getUser().getId());
         return "redirect:/articles/" + id;
