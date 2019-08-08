@@ -8,8 +8,8 @@ import techcourse.myblog.application.exception.EmptyCommentRequestException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.repository.CommentRepository;
 
 import javax.transaction.Transactional;
 import java.util.Collections;

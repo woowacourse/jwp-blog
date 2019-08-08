@@ -12,8 +12,8 @@ import techcourse.myblog.application.exception.NoArticleException;
 import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.Optional;
 
