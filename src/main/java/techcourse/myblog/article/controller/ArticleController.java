@@ -8,6 +8,7 @@ import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.utils.model.ModelLogger;
+import techcourse.myblog.utils.page.PageRequest;
 
 @Controller
 public class ArticleController {
@@ -18,8 +19,8 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        ModelLogger.addAttribute(model, "articles", articleService.findAll());
+    public String index(Model model, PageRequest pageRequest) {
+        ModelLogger.addAttribute(model, "articles", articleService.findAll(pageRequest));
         return "index";
     }
 

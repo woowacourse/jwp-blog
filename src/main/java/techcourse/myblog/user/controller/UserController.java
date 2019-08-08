@@ -22,8 +22,6 @@ import static techcourse.myblog.utils.session.SessionContext.USER;
 public class UserController {
     private final UserService userService;
     private final LoginService loginService;
-    @Autowired
-    private HttpSession session;
 
     @Autowired
     public UserController(UserService userService, LoginService loginService) {
@@ -37,13 +35,13 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public String logout() {
+    public String logout(HttpSession session) {
         SessionHelper.removeAttribute(session, USER);
         return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody @Valid UserRequestDto userRequestDto, BindingResult result) {
+    public String login(@RequestBody @Valid UserRequestDto userRequestDto, BindingResult result, HttpSession session) {
         if (result.hasErrors()) {
             throw new LoginException();
         }
@@ -75,7 +73,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String addUser(@Valid UserRequestDto userRequestDto, BindingResult result) {
+    public String addUser(@Valid UserRequestDto userRequestDto, BindingResult result, HttpSession session) {
         if (result.hasErrors()) {
             return "signup";
         }
@@ -86,7 +84,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(@Valid UserRequestDto userRequestDto, BindingResult result, UserResponseDto origin) {
+    public String updateUser(@Valid UserRequestDto userRequestDto, BindingResult result, UserResponseDto origin, HttpSession session) {
         if (result.hasErrors()) {
             return "mypage";
         }
@@ -97,7 +95,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public String deleteUser(UserResponseDto userResponseDto) {
+    public String deleteUser(UserResponseDto userResponseDto, HttpSession session) {
         userService.deleteUser(userResponseDto);
         SessionHelper.removeAttribute(session, USER);
         return "redirect:/";
