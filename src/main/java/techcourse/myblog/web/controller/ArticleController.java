@@ -9,6 +9,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
+import techcourse.myblog.web.exception.CreateArticleBindException;
 import techcourse.myblog.web.support.SessionUser;
 
 import javax.validation.Valid;

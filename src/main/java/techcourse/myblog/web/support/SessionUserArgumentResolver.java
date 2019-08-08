@@ -6,6 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.web.exception.InvalidUserSessionException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class SessionUserArgumentResolver implements HandlerMethodArgumentResolve
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
 
         User user = (User) Optional.ofNullable(req.getSession().getAttribute("user"))
-                .orElseThrow(() -> new InvalidUserSessionException());
+                .orElseThrow(InvalidUserSessionException::new);
 
         return new SessionUser(user);
     }

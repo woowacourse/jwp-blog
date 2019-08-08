@@ -3,6 +3,7 @@ package techcourse.myblog.service;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.common.UserCommonServiceTests;
+import techcourse.myblog.service.exception.LoginFailedException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

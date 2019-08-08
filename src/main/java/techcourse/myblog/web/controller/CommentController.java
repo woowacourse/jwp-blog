@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.dto.CommentResponse;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.support.SessionUser;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/articles/{articleId}/comments")
@@ -26,8 +28,11 @@ public class CommentController {
     }
 
     @GetMapping
-    public List<Comment> showComments(@PathVariable Long articleId) {
-        return commentService.findByArticleId(articleId);
+    public List<CommentResponse> showComments(@PathVariable Long articleId) {
+        return commentService.findByArticleId(articleId).stream()
+                .map(CommentResponse::of)
+                .collect(Collectors.toList())
+                ;
     }
 
     @GetMapping("/count")
@@ -36,23 +41,22 @@ public class CommentController {
     }
 
     @PostMapping
-    public Comment createComment(SessionUser loginUser, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
+    public CommentResponse createComment(SessionUser loginUser, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
         log.info("Comment create: contents={}", commentDto.getContents());
 
         Article article = articleReadService.findById(articleId);
         Comment comment = commentService.save(commentDto.toComment(loginUser.getUser(), article));
 
-        return comment;
+        return CommentResponse.of(comment);
     }
 
     @PutMapping("/{commentId}")
-    public Comment updateComment(SessionUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
+    public CommentResponse updateComment(SessionUser loginUser, @PathVariable Long commentId, @RequestBody CommentDto commentDto) {
         log.info("Comment update: id={}, contents={}", commentId, commentDto.getContents());
 
-        Article article = articleReadService.findById(articleId);
-        Comment updatedComment = commentService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
+        Comment updatedComment = commentService.modify(commentId, commentDto, loginUser.getUser());
 
-        return updatedComment;
+        return CommentResponse.of(updatedComment);
     }
 
     @DeleteMapping("/{commentId}")

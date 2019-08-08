@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
-import static techcourse.myblog.service.LoginFailedException.LOGIN_FAIL_MESSAGE;
+import static techcourse.myblog.service.exception.LoginFailedException.LOGIN_FAIL_MESSAGE;
 
 class LoginControllerTests extends ControllerTestTemplate {
     @Test

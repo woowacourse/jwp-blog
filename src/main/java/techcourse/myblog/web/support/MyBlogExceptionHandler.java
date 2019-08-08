@@ -2,15 +2,19 @@ package techcourse.myblog.web.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.CommentUpdateFailedException;
-import techcourse.myblog.domain.InvalidCommentException;
-import techcourse.myblog.service.*;
-import techcourse.myblog.web.controller.*;
+import techcourse.myblog.domain.exception.CommentUpdateFailedException;
+import techcourse.myblog.domain.exception.InvalidCommentException;
+import techcourse.myblog.dto.ErrorResponse;
+import techcourse.myblog.service.exception.*;
+import techcourse.myblog.web.exception.*;
 
 @ControllerAdvice
 public class MyBlogExceptionHandler {
@@ -64,6 +68,12 @@ public class MyBlogExceptionHandler {
         return new RedirectView("/login");
     }
 
+    @ExceptionHandler(UnauthorizedRequestException.class)
+    public RedirectView handleUnauthorizedRequest(UnauthorizedRequestException e, RedirectAttributes redirectAttributes) {
+        logError(e);
+        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
+    }
+
     @ExceptionHandler(MismatchAuthorException.class)
     public RedirectView handleMismatchArticleAuthorFail(MismatchAuthorException e, RedirectAttributes redirectAttributes) {
         logError(e);
@@ -76,35 +86,20 @@ public class MyBlogExceptionHandler {
         return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
-    @ExceptionHandler(InvalidCommentException.class)
-    public RedirectView handleCommentFail(InvalidCommentException e, RedirectAttributes redirectAttributes) {
+    @ExceptionHandler({InvalidCommentException.class, CommentUpdateFailedException.class, NotFoundCommentException.class, MismatchCommentWriterException.class})
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleCommentFail(RuntimeException e) {
         logError(e);
-        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
+        return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(CommentUpdateFailedException.class)
-    public RedirectView handleUpdateCommentFail(CommentUpdateFailedException e, RedirectAttributes redirectAttributes) {
-        logError(e);
-        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
-    }
-
-    @ExceptionHandler(UnauthorizedRequestException.class)
-    public RedirectView handleUnauthorizedRequest(UnauthorizedRequestException e, RedirectAttributes redirectAttributes) {
-        logError(e);
-        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
+    private void logError(Exception e) {
+        log.error("exception={}, error message={}", e.getClass().getName(), e.getMessage());
     }
 
     private RedirectView redirectToRootWithErrorMsg(RedirectAttributes redirectAttributes, String errorMsg) {
         redirectAttributes.addFlashAttribute("error", errorMsg);
         return new RedirectView("/");
-    }
-
-    @ExceptionHandler(NotFoundCommentException.class)
-    public RedirectView handleNotFoundCommentException() {
-        return new RedirectView("/");
-    }
-
-    private void logError(Exception e) {
-        log.error("exception={}, error message={}", e.getClass().getName(), e.getMessage());
     }
 }
