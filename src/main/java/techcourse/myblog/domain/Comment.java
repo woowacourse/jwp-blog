@@ -18,8 +18,8 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@EqualsAndHashCode
-public class Comment {
+@EqualsAndHashCode(callSuper = false)
+public class Comment extends Domain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,10 +27,6 @@ public class Comment {
     @Column(length = 255)
     @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -53,9 +49,5 @@ public class Comment {
     public Comment update(String contents) {
         this.contents = contents;
         return this;
-    }
-
-    public boolean isAuthorized(User user) {
-        return this.author.equals(user);
     }
 }

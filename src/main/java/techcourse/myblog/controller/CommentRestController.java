@@ -52,7 +52,7 @@ public class CommentRestController {
 
     @GetMapping("/total")
     public int getCountOfComment(@RequestParam Long articleId) {
-        return articleService.findCommentsByArticleId(articleId).size();
+        return commentService.findCommentsByArticleId(articleId).size();
     }
 
     @PostMapping

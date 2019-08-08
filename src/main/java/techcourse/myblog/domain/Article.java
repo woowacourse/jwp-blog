@@ -1,8 +1,5 @@
 package techcourse.myblog.domain;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.EqualsAndHashCode;
@@ -25,9 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Entity
 @Getter
-@EqualsAndHashCode
-@ToString
-public class Article {
+@EqualsAndHashCode(callSuper = false)
+public class Article extends Domain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,10 +36,6 @@ public class Article {
     @Column(nullable = false)
     @Lob
     private String contents;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User author;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -88,9 +79,5 @@ public class Article {
             log.debug(e.getMessage());
             return false;
         }
-    }
-
-    public boolean isAuthorized(User user) {
-        return this.author.equals(user);
     }
 }
