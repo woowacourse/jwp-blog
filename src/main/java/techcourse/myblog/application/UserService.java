@@ -2,6 +2,7 @@ package techcourse.myblog.application;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
 import techcourse.myblog.application.dto.UserResponse;
@@ -12,52 +13,52 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.support.encrytor.EncryptHelper;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
     private final EncryptHelper encryptHelper;
-    private final ModelMapper modelMapper;
 
-    public UserService(UserRepository userRepository, EncryptHelper encryptHelper, ModelMapper modelMapper) {
+    public UserService(UserRepository userRepository, EncryptHelper encryptHelper) {
         this.userRepository = userRepository;
         this.encryptHelper = encryptHelper;
-        this.modelMapper = modelMapper;
     }
 
     public void saveUser(UserRequest userRequest) {
-        User user = createUser(userRequest);
+        User user = userRequest.toEntity(this::encryptPassword);
         userRepository.save(user);
     }
 
-    private User createUser(UserRequest userRequest) {
-        userRequest.setPassword(encryptPassword(userRequest));
-        return modelMapper.map(userRequest, User.class);
+    private String encryptPassword(String password) {
+        return encryptHelper.encrypt(password);
     }
 
-    private String encryptPassword(UserRequest userRequest) {
-        return encryptHelper.encrypt(userRequest.getPassword());
+    public User findById(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new NoUserException("사용자를 찾을 수 없습니다: " + id));
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();
         List<UserResponse> userResponses = users.stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
+                .map(UserResponse::from)
                 .collect(Collectors.toList());
 
         return userResponses;
     }
 
+    @Transactional(readOnly = true)
     public UserResponse checkLogin(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
         checkPassword(loginRequest, user);
-        return modelMapper.map(user, UserResponse.class);
+        return UserResponse.from(user);
     }
 
     private void checkPassword(LoginRequest loginRequest, User user) {
@@ -66,11 +67,10 @@ public class UserService {
         }
     }
 
-    @Transactional
     public UserResponse editUserName(Long userId, String name) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
+        User user = findById(userId);
         changeName(name, user);
-        return modelMapper.map(user, UserResponse.class);
+        return UserResponse.from(user);
     }
 
     private void changeName(String name, User user) {

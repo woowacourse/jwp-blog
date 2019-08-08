@@ -3,6 +3,7 @@ package techcourse.myblog.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 public class ArticleServiceTests {
@@ -37,7 +38,7 @@ public class ArticleServiceTests {
     private ArticleService articleService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Mock
     private ArticleRepository articleRepository;
@@ -45,34 +46,41 @@ public class ArticleServiceTests {
     @Mock
     private ModelMapper modelMapper;
 
-    private User user = new User("bmo", "Password123!", "bmo@gmail.com");
-    private User notAuthorUser = new User("remo", "Password123!", "remo@reader.com");
+    private User user = spy(new User("bmo", "Password123!", "bmo@gmail.com"));
+    private User notAuthorUser = spy(new User("remo", "Password123!", "remo@reader.com"));
     private UserResponse userResponse = createUserResponse(USER_ID);
     private UserResponse notAuthorResponse = createUserResponse(NOT_AUTHOR_USER_ID);
-    private Article article = new Article(user, "title", "coverUrl", "contents");
+    private Article article = spy(new Article(user, "title", "coverUrl", "contents"));
     private ArticleDto articleDto = new ArticleDto(USER_ID, "title", "coverUrl", "contents");
 
 
     @BeforeEach
     void setUp() {
-        user.setId(USER_ID);
-        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
+//        user.setId(USER_ID);
+//        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
+        when(user.getId()).thenReturn(USER_ID);
+        when(notAuthorUser.getId()).thenReturn(NOT_AUTHOR_USER_ID);
+        doReturn(true).when(user).matchId(USER_ID);
+        doReturn(true).when(notAuthorUser).matchId(NOT_AUTHOR_USER_ID);
     }
 
     @Test
     void 존재하지_않는_유저_게시글_생성_실패() {
-        assertThrows(NoUserException.class, () -> articleService.post(articleDto, userResponse));
+        given(articleRepository.save(any())).willReturn(article);
+        given(userService.findById(userResponse.getId())).willThrow(new NoUserException(""));
+        assertThrows(NoUserException.class, () -> articleService.post(articleDto, userResponse.getId()));
     }
 
     @Test
     void 게시글_생성_성공() {
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
         given(modelMapper.map(articleDto, Article.class)).willReturn(article);
-        given(articleRepository.save(article)).willReturn(article);
+        given(articleRepository.save(any())).willReturn(article);
+        given(user.getId()).willReturn(USER_ID);
 
-        articleService.post(articleDto, userResponse);
+        articleService.post(articleDto, userResponse.getId());
 
-        verify(articleRepository).save(article);
+        verify(articleRepository).save(any());
     }
 
     @Test
@@ -93,9 +101,10 @@ public class ArticleServiceTests {
     void 다른_사람이_작성한_게시글_조회_실패() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
         given(modelMapper.map(notAuthorResponse, User.class)).willReturn(notAuthorUser);
+        doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-                articleService.findArticleWrittenByUser(ARTICLE_ID, notAuthorResponse)
+                articleService.findArticleWrittenByUser(ARTICLE_ID, notAuthorResponse.getId())
         );
     }
 
@@ -104,7 +113,7 @@ public class ArticleServiceTests {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
         given(modelMapper.map(userResponse, User.class)).willReturn(user);
 
-        articleService.findArticleWrittenByUser(ARTICLE_ID, userResponse);
+        articleService.findArticleWrittenByUser(ARTICLE_ID, userResponse.getId());
 
         verify(articleRepository).findById(ARTICLE_ID);
     }
@@ -112,64 +121,50 @@ public class ArticleServiceTests {
     @Test
     void 존재하지_않는_게시물_수정_실패() {
         assertThrows(NoArticleException.class, () ->
-                articleService.editArticle(articleDto, ARTICLE_ID, userResponse));
-    }
-
-    @Test
-    void 존재하지_않는_유저_게시물_수정_실패() {
-        given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-
-        assertThrows(NoUserException.class, () ->
-                articleService.editArticle(articleDto, ARTICLE_ID, userResponse));
+                articleService.editArticle(articleDto, ARTICLE_ID, userResponse.getId()));
     }
 
     @Test
     void 다른_사람이_게시글_수정_실패() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
+        given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
+        doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-                articleService.editArticle(articleDto, ARTICLE_ID, notAuthorResponse));
+                articleService.editArticle(articleDto, ARTICLE_ID, notAuthorResponse.getId()));
     }
 
     @Test
     void 게시물_수정_성공() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
         given(modelMapper.map(articleDto, Article.class)).willReturn(article);
 
-        assertDoesNotThrow(() -> articleService.editArticle(articleDto, ARTICLE_ID, userResponse));
+        assertDoesNotThrow(() -> articleService.editArticle(articleDto, ARTICLE_ID, userResponse.getId()));
     }
 
     @Test
     void 존재하지_않는_게시물_삭제_실패() {
         assertThrows(NoArticleException.class, () ->
-                articleService.deleteById(ARTICLE_ID, userResponse));
-    }
-
-    @Test
-    void 존재하지_않는_유저_게시물_삭제_실패() {
-        given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-
-        assertThrows(NoUserException.class, () ->
-                articleService.deleteById(ARTICLE_ID, userResponse));
+                articleService.deleteById(ARTICLE_ID, userResponse.getId()));
     }
 
     @Test
     void 다른_사람이_게시글_삭제_실패() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
+        given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
+        doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-                articleService.deleteById(ARTICLE_ID, notAuthorResponse));
+                articleService.deleteById(ARTICLE_ID, notAuthorResponse.getId()));
     }
 
     @Test
     void 게시물_삭제_성공() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
 
-        assertDoesNotThrow(() -> articleService.deleteById(ARTICLE_ID, userResponse));
+        assertDoesNotThrow(() -> articleService.deleteById(ARTICLE_ID, userResponse.getId()));
     }
 
     private UserResponse createUserResponse(Long userId) {

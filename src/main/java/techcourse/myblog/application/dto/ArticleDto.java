@@ -1,5 +1,7 @@
 package techcourse.myblog.application.dto;
 
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.support.validator.TitleConstraint;
 
 public class ArticleDto {
@@ -20,31 +22,18 @@ public class ArticleDto {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getCoverUrl() {
         return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
     }
 
     public String getContents() {
         return contents;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public Article toEntity(User author) {
+        return new Article(author, title, coverUrl, contents);
     }
 }

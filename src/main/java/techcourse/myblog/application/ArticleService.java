@@ -18,24 +18,22 @@ import java.util.List;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
+    private final UserService userService;
+
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
         this.articleRepository = articleRepository;
-        this.modelMapper = modelMapper;
+        this.userService = userService;
     }
 
     public List<Article> findAll() {
         return articleRepository.findAll();
     }
 
-    public Long post(ArticleDto articleDto, UserResponse userResponse) {
-        User author = userRepository.findById(userResponse.getId())
-                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
+    public Long post(ArticleDto articleDto, Long authorId) {
+        User author = userService.findById(authorId);
 
-        Article article = modelMapper.map(articleDto, Article.class);
+        Article article = articleDto.toEntity(author);
         article.setAuthor(author);
         Article savedArticle = articleRepository.save(article);
         return savedArticle.getId();
@@ -46,43 +44,34 @@ public class ArticleService {
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }
 
-    public Article findArticleWrittenByUser(Long articleId, UserResponse userResponse) {
+    public Article findArticleWrittenByUser(Long articleId, Long userId) {
         Article article = findArticleById(articleId);
-        User user = modelMapper.map(userResponse, User.class);
 
-        if (!article.isSameAuthor(user)) {
+        if (!article.matchAuthorId(userId)) {
             throw new NotSameAuthorException("해당 게시물의 작성자가 아닙니다.");
         }
 
         return article;
     }
 
-    // todo edit과 delete 모순 해결. article은 도대체 어디서 생성할 것인가....
     @Transactional
-    public void editArticle(ArticleDto articleDto, Long articleId, UserResponse userResponse) {
-        checkAuthenticatedAuthor(articleId, userResponse);
+    public void editArticle(ArticleDto articleDto, Long articleId, Long userId) {
+        Article article = findArticleById(articleId);
 
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
+        checkAuthenticatedAuthor(article, userId);
 
-
-        article.updateArticle(modelMapper.map(articleDto, Article.class));
+        article.updateArticle(articleDto.toEntity(article.getAuthor()));
     }
 
-    public void deleteById(Long articleId, UserResponse userResponse) {
-        checkAuthenticatedAuthor(articleId, userResponse);
+    public void deleteById(Long articleId, Long userId) {
+        Article article = findArticleById(articleId);
+        checkAuthenticatedAuthor(article, userId);
 
         articleRepository.deleteById(articleId);
     }
 
-    private void checkAuthenticatedAuthor(Long articleId, UserResponse userResponse) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
-
-        User author = userRepository.findById(userResponse.getId())
-                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
-
-        if (!article.isSameAuthor(author)) {
+    private void checkAuthenticatedAuthor(Article article, Long userId) {
+        if (!article.matchAuthorId(userId)) {
             throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");
         }
     }

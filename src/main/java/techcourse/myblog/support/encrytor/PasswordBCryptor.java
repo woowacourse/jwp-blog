@@ -1,6 +1,7 @@
 package techcourse.myblog.support.encrytor;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.stereotype.Component;
 
 public class PasswordBCryptor implements EncryptHelper {
 

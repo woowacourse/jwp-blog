@@ -75,7 +75,7 @@ public class Article {
         this.contents = contents;
     }
 
-    public boolean isSameAuthor(User author) {
-        return this.author.equals(author);
+    public boolean matchAuthorId(Long userId) {
+        return this.author.matchId(userId);
     }
 }

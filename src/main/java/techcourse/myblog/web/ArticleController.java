@@ -51,7 +51,7 @@ public class ArticleController {
     @PostMapping("/articles")
     public String saveArticle(@Valid ArticleDto articleDto, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        Long articleId = articleService.post(articleDto, userResponse);
+        Long articleId = articleService.post(articleDto, userResponse.getId());
 
         return "redirect:/articles/" + articleId;
     }
@@ -69,7 +69,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        Article article = articleService.findArticleWrittenByUser(articleId, userResponse);
+        Article article = articleService.findArticleWrittenByUser(articleId, userResponse.getId());
         model.addAttribute(ARTICLE_INFO, article);
 
         return "article-edit";
@@ -79,7 +79,7 @@ public class ArticleController {
     public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto, HttpSession httpSession, Model model) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
-        articleService.editArticle(articleDto, articleId, userResponse);
+        articleService.editArticle(articleDto, articleId, userResponse.getId());
         model.addAttribute(ARTICLE_INFO, articleDto);
 
         return "article";
@@ -89,7 +89,7 @@ public class ArticleController {
     public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
-        articleService.deleteById(articleId, userResponse);
+        articleService.deleteById(articleId, userResponse.getId());
 
         return "redirect:/";
     }

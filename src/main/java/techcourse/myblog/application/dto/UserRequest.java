@@ -1,10 +1,12 @@
 package techcourse.myblog.application.dto;
 
+import techcourse.myblog.domain.User;
 import techcourse.myblog.support.validator.EmailConstraint;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.function.Function;
 
 public class UserRequest {
     @NotBlank(message = "이름을 작성해주세요!")
@@ -52,5 +54,9 @@ public class UserRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public User toEntity(Function<String, String> encryptor) {
+        return new User(name, encryptor.apply(password), email);
     }
 }

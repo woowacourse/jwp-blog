@@ -17,6 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
@@ -46,8 +47,8 @@ public class CommentServiceTests {
     @Mock
     private ModelMapper modelMapper;
 
-    private User user = new User("bmo", "Password123!", "bmo@gmail.com");
-    private User notAuthorUser = new User("remo", "Password123!", "remo@reader.com");
+    private User user = spy(new User("bmo", "Password123!", "bmo@gmail.com"));
+    private User notAuthorUser = spy(new User("remo", "Password123!", "remo@reader.com"));
     private Article article = new Article(user, "title", "coverUrl", "contents");
     private Comment comment = new Comment("commentContents", user, article);
     private CommentRequest commentRequest = new CommentRequest("commentContents");
@@ -130,7 +131,8 @@ public class CommentServiceTests {
     @Test
     void 작성자가_아닌_회원이_댓글_삭제_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
+//        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
+        given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
         given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
@@ -163,7 +165,8 @@ public class CommentServiceTests {
     @Test
     void 작성자가_아닌_회원이_댓글_수정_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
+//        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
+        given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
         given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
         given(modelMapper.map(commentRequest, Comment.class)).willReturn(comment);
 

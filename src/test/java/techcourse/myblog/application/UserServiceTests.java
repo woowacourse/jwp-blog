@@ -16,6 +16,7 @@ import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.support.encrytor.EncryptHelper;
+import techcourse.myblog.support.encrytor.PasswordBCryptor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,23 +35,19 @@ public class UserServiceTests {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private ModelMapper modelMapper;
-
-    @Mock
-    private EncryptHelper encryptHelper;
-
-    private static final UserRequest USER_REQUEST_1 = new UserRequest("amo", "PassWord123!", "amo@woowahan.com");
-    private static final UserRequest USER_REQUEST_2 = new UserRequest("bmo", "PassWord123!", "bmo@woowahan.com");
+    private static final UserRequest USER_REQUEST_1 = new UserRequest("amo", "amo@woowahan.com", "PassWord123!");
+    private static final UserRequest USER_REQUEST_2 = new UserRequest("bmo", "bmo@woowahan.com", "PassWord123!");
     private static final LoginRequest LOGIN_REQUEST = new LoginRequest("amo@woowahan.com", "PassWord123!");
 
-    private static final User USER_1 = new User("amo", "PassWord123!", "amo@woowahan.com");
-    private static final User USER_2 = new User("bmo", "PassWord123!", "bmo@woowahan.com");
-    private static final User USER_3 = new User("cmo", "PassWord123!", "cmo@woowahan.com");
+    private static final Long USER_1_ID = 100L;
+    private static final User USER_1 = spy(new User("amo", new PasswordBCryptor().encrypt("PassWord123!"), "amo@woowahan.com"));
+    private static final User USER_2 = spy(new User("bmo", new PasswordBCryptor().encrypt("PassWord123!"), "bmo@woowahan.com"));
+    private static final User USER_3 = spy(new User("cmo", new PasswordBCryptor().encrypt("PassWord123!"), "cmo@woowahan.com"));
     private InOrder inOrder;
 
     @BeforeEach
     void setup() {
+        userService = new UserService(userRepository, new PasswordBCryptor());
         inOrder = inOrder(userRepository);
     }
 
@@ -59,17 +56,13 @@ public class UserServiceTests {
         userService.saveUser(USER_REQUEST_1);
         userService.saveUser(USER_REQUEST_2);
 
-        verify(userRepository, times(1)).save(USER_1);
-        verify(userRepository, times(1)).save(USER_2);
-        verify(userRepository, never()).save(USER_3);
-
-        inOrder.verify(userRepository).save(USER_1);
-        inOrder.verify(userRepository).save(USER_2);
-
+        verify(userRepository, times(2)).save(any());
     }
 
     @Test
     void update() {
+        doReturn(USER_1_ID).when(USER_1).getId();
+        doReturn(Optional.of(USER_1)).when(userRepository).findById(USER_1_ID);
         given(userRepository.findUserByEmail(USER_REQUEST_2.getEmail())).willReturn(Optional.of(USER_1));
         userService.editUserName(USER_1.getId(), USER_REQUEST_2.getName());
         verify(userRepository, times(1)).findById(USER_1.getId());
@@ -86,7 +79,7 @@ public class UserServiceTests {
         given(userRepository.findUserByEmail(USER_REQUEST_1.getEmail())).willReturn(Optional.of(USER_1));
         UserResponse userDto = userService.checkLogin(LOGIN_REQUEST);
 
-        assertThat(userDto).isEqualTo(USER_REQUEST_1);
+        assertThat(userDto.getEmail()).isEqualTo(USER_REQUEST_1.getEmail());
 
         verify(userRepository, times(1)).findUserByEmail(USER_REQUEST_1.getEmail());
     }
@@ -103,9 +96,7 @@ public class UserServiceTests {
         given(userRepository.findAll()).willReturn(users);
 
         List<UserResponse> userResponses = userService.findAll();
-
-        assertThat(userResponses.get(0).getId()).isEqualTo(USER_1.getId());
-        assertThat(userResponses.get(1).getId()).isEqualTo(USER_2.getId());
+        assertThat(userResponses).hasSize(2);
 
         verify(userRepository, times(1)).findAll();
     }
