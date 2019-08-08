@@ -12,7 +12,7 @@ import techcourse.myblog.template.LoginTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommentControllerTest extends LoginTemplate {
+public class CommentMvcControllerTest extends LoginTemplate {
     private static final String CONTENTS = "댓글썼당";
     private static final String SECOND_USER_NAME = "두번째유저";
     private static final String SECOND_USER_EMAIL = "second@user.com";
