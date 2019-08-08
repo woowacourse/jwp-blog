@@ -14,7 +14,7 @@ import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.dto.UserDto;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentRestControllerTest extends WebClientGenerator {

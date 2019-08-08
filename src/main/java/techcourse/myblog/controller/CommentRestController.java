@@ -33,7 +33,9 @@ public class CommentRestController {
     private UserSessionManager userSessionManager;
 
     @Autowired
-    public CommentRestController(ArticleService articleService, CommentService commentService, UserSessionManager userSessionManager/*UserRepository userRepository*/) {
+    public CommentRestController(final ArticleService articleService,
+                                 final CommentService commentService,
+                                 final UserSessionManager userSessionManager) {
         this.articleService = articleService;
         this.commentService = commentService;
         this.userSessionManager = userSessionManager;
