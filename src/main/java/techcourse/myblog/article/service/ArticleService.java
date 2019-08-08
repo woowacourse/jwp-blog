@@ -19,13 +19,10 @@ import techcourse.myblog.utils.page.PageRequest;
 
 import java.util.List;
 
-import static techcourse.myblog.utils.session.SessionContext.USER;
-
 @Service
 @Transactional
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
-    private static final String LOG_TAG = "[ArticleService]";
 
     private static final String ID = "id";
     private static final int START_PAGE = 1;
@@ -66,29 +63,19 @@ public class ArticleService {
         Article changedArticle = ArticleConverter.toEntity(articleRequestDto, currentArticle.getAuthor());
         User user = userService.getUserByEmail(userResponseDto.getEmail());
 
-        checkAuthentication(user.getId(), userResponseDto);
+        userService.checkAuthentication(user.getId(), userResponseDto);
         currentArticle.update(changedArticle, user);
 
         return currentArticle;
     }
 
     public void delete(long articleId, UserResponseDto userResponseDto) {
-        checkAuthentication(articleId, userResponseDto);
+        userService.checkAuthentication(articleId, userResponseDto);
         articleRepository.deleteById(articleId);
     }
 
     public List<Comment> getCommentsByArticleId(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         return article.getComments();
-    }
-
-    public void checkAuthentication(Long articleId, UserResponseDto userResponseDto) {
-        User user = userService.getUserByEmail(userResponseDto.getEmail());
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        log.debug("{} article.getAuthor().getEmail() >> {}", LOG_TAG, article.getAuthor().getEmail());
-
-        if (!article.isAuthor(user)) {
-            throw new NotFoundArticleException();
-        }
     }
 }

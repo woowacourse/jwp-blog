@@ -1,7 +1,13 @@
 package techcourse.myblog.user.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.article.domain.Article;
+import techcourse.myblog.article.exception.NotFoundArticleException;
+import techcourse.myblog.article.repository.ArticleRepository;
+import techcourse.myblog.comment.service.CommentService;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.user.domain.User;
@@ -17,10 +23,15 @@ import java.util.stream.StreamSupport;
 @Service
 @Transactional
 public class UserService {
-    private final UserRepository userRepository;
+    private static final String LOG_TAG = "[UserService]";
+    private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
-    public UserService(UserRepository userRepository) {
+    private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
+
+    public UserService(UserRepository userRepository, ArticleRepository articleRepository) {
         this.userRepository = userRepository;
+        this.articleRepository = articleRepository;
     }
 
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
@@ -55,5 +66,15 @@ public class UserService {
 
     public void deleteUser(UserResponseDto userResponseDto) {
         userRepository.delete(getUserByEmail(userResponseDto.getEmail()));
+    }
+
+    public void checkAuthentication(Long articleId, UserResponseDto userResponseDto) {
+        User user = userRepository.findByEmail(userResponseDto.getEmail()).orElseThrow(NotFoundUserException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        log.debug("{} article.getAuthor().getEmail() >> {}", LOG_TAG, article.getAuthor().getEmail());
+
+        if (!article.isAuthor(user)) {
+            throw new NotFoundArticleException();
+        }
     }
 }

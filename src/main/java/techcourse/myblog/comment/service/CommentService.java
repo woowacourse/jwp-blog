@@ -1,13 +1,10 @@
 package techcourse.myblog.comment.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.comment.domain.Comment;
-import techcourse.myblog.comment.exception.CommentAuthenticationException;
 import techcourse.myblog.comment.exception.NotFoundCommentException;
 import techcourse.myblog.comment.repository.CommentRepository;
 import techcourse.myblog.dto.CommentRequestDto;
@@ -18,9 +15,6 @@ import techcourse.myblog.user.service.UserService;
 @Service
 @Transactional
 public class CommentService {
-    private static final Logger log = LoggerFactory.getLogger(CommentService.class);
-    private static final String LOG_TAG = "[CommentService]";
-
     private final UserService userService;
     private final ArticleService articleService;
     private final CommentRepository commentRepository;
@@ -44,7 +38,7 @@ public class CommentService {
     public Comment update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
 
-        checkAuthentication(commentId, userResponseDto);
+        userService.checkAuthentication(commentId, userResponseDto);
         comment.update(commentRequestDto, userService.getUserByEmail(userResponseDto.getEmail()));
 
         return comment;
@@ -57,17 +51,7 @@ public class CommentService {
     public void remove(Long commentId, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
 
-        checkAuthentication(commentId, userResponseDto);
+        userService.checkAuthentication(commentId, userResponseDto);
         commentRepository.delete(comment);
-    }
-
-    public void checkAuthentication(Long commentId, UserResponseDto userResponseDto) {
-        User user = userService.getUserByEmail(userResponseDto.getEmail());
-        Comment comment = getCommentById(commentId);
-        log.debug("{} comment.getCommenter().getEmail() >> {}", LOG_TAG, comment.getCommenter().getEmail());
-
-        if (!comment.isCommenter(user)) {
-            throw new CommentAuthenticationException();
-        }
     }
 }
