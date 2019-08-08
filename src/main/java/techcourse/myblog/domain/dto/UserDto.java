@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,5 +39,10 @@ public class UserDto {
                 .email(email)
                 .password(password)
                 .build();
+    }
+
+    public UserDto(String userName, String email) {
+        this.userName = userName;
+        this.email = email;
     }
 }
