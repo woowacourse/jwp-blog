@@ -50,14 +50,14 @@ public class UserController {
         return "mypage";
     }
 
-    @GetMapping("/users/update/{id}")
+    @GetMapping("/users/updates/{id}")
     public String moveMyPageEdit(@PathVariable long id, Model model) {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
         return "mypage-edit";
     }
 
-    @PutMapping("/users/update/{id}")
+    @PutMapping("/users/updates/{id}")
     public String updateMyPage(@PathVariable long id, MyPageDto myPageDto, HttpSession httpSession) {
         User user = userService.updateUserInfo(id, myPageDto);
         httpSession.setAttribute(USER, user);
