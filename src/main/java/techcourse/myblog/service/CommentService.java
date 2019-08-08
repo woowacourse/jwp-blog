@@ -2,9 +2,11 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
+import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.exception.MismatchAuthorException;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
@@ -36,8 +38,10 @@ public class CommentService {
         throw new MismatchAuthorException();
     }
 
-    public Comment modify(Long id, Comment comment) {
-        return findById(id).update(comment);
+    public Comment modify(Long id, CommentDto commentDto, User user) {
+        Comment comment = findById(id);
+        Article article = comment.getArticle();
+        return comment.update(commentDto.toComment(user, article));
     }
 
     private Comment findById(Long id) {

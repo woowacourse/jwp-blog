@@ -115,8 +115,7 @@
 - [ ] 에러처리(비동기에서 리다이렉트로 에러처리 불가하므로...)
       <br>핸들러 메서드, html 부분 수정 필요
 - [x] 모든 엔터티의 공통 필드(ex: timestamp) 를 추상 클래스를 이용하여 중복 제거  
-- [ ] exception 패키지 분리하여 관리
+- [x] exception 패키지 분리하여 관리
 - [ ] read/write 서비스 하나 서비스로...
-- [ ] redirect:/~ ??
 - [ ] 리턴을 위한 dto
-- [ ] CommentController의 createComment 메서드 부분 (서비스 안으로 로직 이동)
+- [x] CommentController의 createComment 메서드 부분 (서비스 안으로 로직 이동)

@@ -49,8 +49,7 @@ public class CommentController {
     public Comment updateComment(SessionUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
         log.info("Comment update: id={}, contents={}", commentId, commentDto.getContents());
 
-        Article article = articleReadService.findById(articleId);
-        Comment updatedComment = commentService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
+        Comment updatedComment = commentService.modify(commentId, commentDto, loginUser.getUser());
 
         return updatedComment;
     }

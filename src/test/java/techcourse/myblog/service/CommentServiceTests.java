@@ -9,10 +9,13 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.exception.CommentUpdateFailedException;
 import techcourse.myblog.domain.repository.CommentRepository;
+import techcourse.myblog.dto.CommentDto;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 public class CommentServiceTests {
@@ -34,25 +37,20 @@ public class CommentServiceTests {
 
     @Test
     void 댓글_수정_성공() {
-        Comment updateComment = new Comment("new comment", author, article);
+        CommentDto updateCommentDto = new CommentDto("new comment");
 
-        assertDoesNotThrow(() -> commentService.modify(id, updateComment));
-        compareComment(commentRepository.findById(id).get(), updateComment);
+        assertDoesNotThrow(() -> commentService.modify(id, updateCommentDto, author));
+        assertThat(commentRepository.findById(id).get().getContents())
+                .isEqualTo(updateCommentDto.getContents());
     }
 
     @Test
     void 댓글_수정_실패() {
         User notAuthor = new User("notAuthor", "not@mail.com", "Passw0rd!");
-        Comment updateComment = new Comment("new comment", notAuthor, article);
+        CommentDto updateCommentDto = new CommentDto("new comment");
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
         assertThrows(CommentUpdateFailedException.class, () ->
-                commentService.modify(id, updateComment));
-    }
-
-    void compareComment(Comment comment1, Comment comment2) {
-        assertEquals(comment1.getContents(), comment2.getContents());
-        assertEquals(comment1.getArticle(), comment2.getArticle());
-        assertEquals(comment1.getWriter(), comment2.getWriter());
+                commentService.modify(id, updateCommentDto, notAuthor));
     }
 }
