@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controlloer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,8 +9,8 @@ import techcourse.myblog.service.dto.CommentDto;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
-import static techcourse.myblog.user.UserTest.user;
-import static techcourse.myblog.user.UserTest.user2;
+import static techcourse.myblog.domain.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user2;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTest extends AbstractControllerTest {
@@ -36,7 +36,7 @@ public class CommentControllerTest extends AbstractControllerTest {
                 .cookie("JSESSIONID", jSessionId)
                 .body(Mono.just(commentDto), CommentDto.class)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$..contents").value(hasItem("댓글입니다."));
@@ -54,7 +54,7 @@ public class CommentControllerTest extends AbstractControllerTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto),CommentDto.class)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$..contents").value(hasItem("수정된 댓글입니다."));
@@ -66,7 +66,7 @@ public class CommentControllerTest extends AbstractControllerTest {
         webTestClient.delete().uri("/articles/1/comment/2")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$..id").value(not("2"));

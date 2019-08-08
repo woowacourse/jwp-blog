@@ -3945,10 +3945,10 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 	Validation Mode: AUTO
 	Jar files URLs []
 	Managed classes names [
-		techcourse.myblog.article.Article
-		techcourse.myblog.comment.Comment
-		techcourse.myblog.date.BaseEntity
-		techcourse.myblog.user.User]
+		techcourse.myblog.domain.article.Article
+		techcourse.myblog.domain.comment.Comment
+		techcourse.myblog.baseEntity.BaseEntity
+		techcourse.myblog.domain.user.User]
 	Mapping files names []
 	Properties []
 2135 [restartedMain] DEBUG o.h.i.i.IntegratorServiceImpl - Adding Integrator [org.hibernate.cfg.beanvalidation.BeanValidationIntegrator].
@@ -4119,24 +4119,24 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 2513 [restartedMain] DEBUG o.h.e.j.e.s.IdentifierHelperBuilder - IdentifierCaseStrategy for both quoted and unquoted identifiers was set to the same strategy [MIXED]; that will likely lead to problems in schema update and validation if using quoted identifiers
 2521 [restartedMain] DEBUG o.h.boot.model.relational.Namespace - Created database namespace [logicalName=Name{catalog=null, schema=null}, physicalName=Name{catalog=null, schema=null}]
 2523 [restartedMain] DEBUG o.h.t.spi.TypeConfiguration$Scope - Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@1758927b] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@248626d6]
-2548 [restartedMain] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: techcourse.myblog.comment.Comment
+2548 [restartedMain] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: techcourse.myblog.domain.comment.Comment
 2561 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3DiscriminatorColumn{logicalColumnName'DTYPE', discriminatorTypeName='string'}
 2565 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Import with entity name Comment
-2569 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Bind entity techcourse.myblog.comment.Comment on table comment
+2569 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Bind entity techcourse.myblog.domain.comment.Comment on table comment
 2587 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(comment), mappingColumn=id, insertable=true, updatable=true, unique=false}
 2589 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property id with lazy=false
-2590 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.comment.Comment:id]
+2590 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.comment.Comment:id]
 2591 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for id
 2593 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property id
 2597 [restartedMain] DEBUG org.hibernate.cfg.BinderHelper - #makeIdGenerator(org.hibernate.mapping.SimpleValue([org.hibernate.mapping.Column(id)]), id, identity, , ...)
 2597 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(comment), mappingColumn=create_time, insertable=true, updatable=true, unique=false}
 2597 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property createTime with lazy=false
-2598 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.comment.Comment:createTime]
+2598 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.comment.Comment:createTime]
 2598 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for createTime
 2598 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property createTime
 2598 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(comment), mappingColumn=renew_time, insertable=true, updatable=true, unique=false}
 2598 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property renewTime with lazy=false
-2598 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.comment.Comment:renewTime]
+2598 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.comment.Comment:renewTime]
 2598 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for renewTime
 2598 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property renewTime
 2599 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3JoinColumn{logicalColumnName='author', referencedColumn='', mappedBy=''}
@@ -4144,62 +4144,62 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 2602 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property author
 2602 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(comment), mappingColumn=contents, insertable=true, updatable=true, unique=false}
 2602 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property contents with lazy=false
-2602 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.comment.Comment:contents]
+2602 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.comment.Comment:contents]
 2602 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for contents
 2602 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property contents
-2603 [restartedMain] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: techcourse.myblog.user.User
+2603 [restartedMain] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: techcourse.myblog.domain.user.User
 2603 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3DiscriminatorColumn{logicalColumnName'DTYPE', discriminatorTypeName='string'}
 2603 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Import with entity name User
-2603 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Bind entity techcourse.myblog.user.User on table user
+2603 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Bind entity techcourse.myblog.domain.user.User on table user
 2605 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(user), mappingColumn=user_id, insertable=true, updatable=true, unique=false}
 2605 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property userId with lazy=false
-2605 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.user.User:userId]
+2605 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.user.User:userId]
 2605 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for userId
 2605 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property userId
 2606 [restartedMain] DEBUG org.hibernate.cfg.BinderHelper - #makeIdGenerator(org.hibernate.mapping.SimpleValue([org.hibernate.mapping.Column(user_id)]), userId, identity, , ...)
 2606 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(user), mappingColumn=create_time, insertable=true, updatable=true, unique=false}
 2606 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property createTime with lazy=false
-2606 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.user.User:createTime]
+2606 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.user.User:createTime]
 2606 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for createTime
 2606 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property createTime
 2606 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(user), mappingColumn=renew_time, insertable=true, updatable=true, unique=false}
 2606 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property renewTime with lazy=false
-2606 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.user.User:renewTime]
+2606 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.user.User:renewTime]
 2606 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for renewTime
 2606 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property renewTime
 2606 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(user), mappingColumn=email, insertable=true, updatable=true, unique=true}
 2606 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property email with lazy=false
-2606 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.user.User:email]
+2606 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.user.User:email]
 2606 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for email
 2606 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property email
 2607 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(user), mappingColumn=password, insertable=true, updatable=true, unique=false}
 2608 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property password with lazy=false
-2608 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.user.User:password]
+2608 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.user.User:password]
 2608 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for password
 2608 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property password
 2608 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(user), mappingColumn=user_name, insertable=true, updatable=true, unique=false}
 2608 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property userName with lazy=false
-2608 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.user.User:userName]
+2608 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.user.User:userName]
 2608 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for userName
 2608 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property userName
-2608 [restartedMain] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: techcourse.myblog.article.Article
+2608 [restartedMain] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: techcourse.myblog.domain.article.Article
 2608 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3DiscriminatorColumn{logicalColumnName'DTYPE', discriminatorTypeName='string'}
 2608 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Import with entity name Article
-2608 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Bind entity techcourse.myblog.article.Article on table article
+2608 [restartedMain] DEBUG o.h.cfg.annotations.EntityBinder - Bind entity techcourse.myblog.domain.article.Article on table article
 2611 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(article), mappingColumn=article_id, insertable=true, updatable=true, unique=false}
 2611 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property articleId with lazy=false
-2611 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.article.Article:articleId]
+2611 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.article.Article:articleId]
 2611 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for articleId
 2612 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property articleId
 2612 [restartedMain] DEBUG org.hibernate.cfg.BinderHelper - #makeIdGenerator(org.hibernate.mapping.SimpleValue([org.hibernate.mapping.Column(article_id)]), articleId, identity, , ...)
 2612 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(article), mappingColumn=create_time, insertable=true, updatable=true, unique=false}
 2612 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property createTime with lazy=false
-2612 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.article.Article:createTime]
+2612 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.article.Article:createTime]
 2612 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for createTime
 2612 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property createTime
 2612 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(article), mappingColumn=renew_time, insertable=true, updatable=true, unique=false}
 2612 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property renewTime with lazy=false
-2612 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.article.Article:renewTime]
+2612 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.article.Article:renewTime]
 2612 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for renewTime
 2612 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property renewTime
 2612 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3JoinColumn{logicalColumnName='author', referencedColumn='', mappedBy=''}
@@ -4213,21 +4213,21 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 2618 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3JoinColumn{logicalColumnName='comments_KEY', referencedColumn='null', mappedBy='null'}
 2619 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3JoinColumn{logicalColumnName='null', referencedColumn='null', mappedBy=''}
 2619 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3JoinColumn{logicalColumnName='null', referencedColumn='null', mappedBy=''}
-2619 [restartedMain] DEBUG o.h.c.annotations.CollectionBinder - Collection role: techcourse.myblog.article.Article.comments
+2619 [restartedMain] DEBUG o.h.c.annotations.CollectionBinder - Collection role: techcourse.myblog.domain.article.Article.comments
 2620 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property comments
 2620 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(article), mappingColumn=contents, insertable=true, updatable=true, unique=false}
 2620 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property contents with lazy=false
-2620 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.article.Article:contents]
+2620 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.article.Article:contents]
 2621 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for contents
 2621 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property contents
 2621 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(article), mappingColumn=cover_url, insertable=true, updatable=true, unique=false}
 2621 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property coverUrl with lazy=false
-2621 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.article.Article:coverUrl]
+2621 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.article.Article:coverUrl]
 2621 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for coverUrl
 2621 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property coverUrl
 2621 [restartedMain] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(article), mappingColumn=title, insertable=true, updatable=true, unique=false}
 2621 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - MetadataSourceProcessor property title with lazy=false
-2621 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.article.Article:title]
+2621 [restartedMain] DEBUG o.h.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [techcourse.myblog.domain.article.Article:title]
 2621 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - building SimpleValue for title
 2621 [restartedMain] DEBUG o.h.cfg.annotations.PropertyBinder - Building property title
 2622 [restartedMain] DEBUG o.h.c.annotations.SimpleValueBinder - Starting fillSimpleValue for id
@@ -4249,16 +4249,16 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 2625 [restartedMain] DEBUG org.hibernate.mapping.PrimaryKey - Forcing column [id] to be non-null as it is part of the primary key for table [comment]
 2625 [restartedMain] DEBUG org.hibernate.mapping.PrimaryKey - Forcing column [user_id] to be non-null as it is part of the primary key for table [user]
 2625 [restartedMain] DEBUG org.hibernate.mapping.PrimaryKey - Forcing column [article_id] to be non-null as it is part of the primary key for table [article]
-2625 [restartedMain] DEBUG o.h.cfg.CollectionSecondPass - Second pass for collection: techcourse.myblog.article.Article.comments
-2626 [restartedMain] DEBUG o.h.c.annotations.CollectionBinder - Binding a OneToMany: techcourse.myblog.article.Article.comments through a foreign key
-2626 [restartedMain] DEBUG o.h.c.annotations.CollectionBinder - Mapping collection: techcourse.myblog.article.Article.comments -> comment
-2627 [restartedMain] DEBUG o.h.cfg.CollectionSecondPass - Mapped collection key: article_id, one-to-many: techcourse.myblog.comment.Comment
-2627 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.user.User
-2627 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.user.User
-2627 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.article.Article
-2628 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.user.User
-2628 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.user.User
-2628 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.article.Article
+2625 [restartedMain] DEBUG o.h.cfg.CollectionSecondPass - Second pass for collection: techcourse.myblog.domain.article.Article.comments
+2626 [restartedMain] DEBUG o.h.c.annotations.CollectionBinder - Binding a OneToMany: techcourse.myblog.domain.article.Article.comments through a foreign key
+2626 [restartedMain] DEBUG o.h.c.annotations.CollectionBinder - Mapping collection: techcourse.myblog.domain.article.Article.comments -> comment
+2627 [restartedMain] DEBUG o.h.cfg.CollectionSecondPass - Mapped collection key: article_id, one-to-many: techcourse.myblog.domain.comment.Comment
+2627 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.domain.user.User
+2627 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.domain.user.User
+2627 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.domain.article.Article
+2628 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.domain.user.User
+2628 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.domain.user.User
+2628 [restartedMain] DEBUG o.h.b.i.InFlightMetadataCollectorImpl - Resolving reference to class: techcourse.myblog.domain.article.Article
 2649 [restartedMain] DEBUG o.h.internal.SessionFactoryImpl - Building session factory
 2650 [restartedMain] DEBUG org.hibernate.cfg.Settings - SessionFactory name : null
 2650 [restartedMain] DEBUG org.hibernate.cfg.Settings - Automatic flush during beforeCompletion(): enabled
@@ -4298,12 +4298,12 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 2651 [restartedMain] DEBUG org.hibernate.cfg.Settings - JPA compliance - closed-handling : 
 2651 [restartedMain] DEBUG org.hibernate.cfg.Settings - JPA compliance - lists : 
 2651 [restartedMain] DEBUG org.hibernate.cfg.Settings - JPA compliance - transactions : 
-2708 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForUpdate as PreUpdate callback for entity techcourse.myblog.comment.Comment
-2708 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForCreate as PrePersist callback for entity techcourse.myblog.comment.Comment
-2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForUpdate as PreUpdate callback for entity techcourse.myblog.user.User
-2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForCreate as PrePersist callback for entity techcourse.myblog.user.User
-2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForUpdate as PreUpdate callback for entity techcourse.myblog.article.Article
-2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForCreate as PrePersist callback for entity techcourse.myblog.article.Article
+2708 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForUpdate as PreUpdate callback for entity techcourse.myblog.domain.comment.Comment
+2708 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForCreate as PrePersist callback for entity techcourse.myblog.domain.comment.Comment
+2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForUpdate as PreUpdate callback for entity techcourse.myblog.domain.user.User
+2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForCreate as PrePersist callback for entity techcourse.myblog.domain.user.User
+2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForUpdate as PreUpdate callback for entity techcourse.myblog.domain.article.Article
+2709 [restartedMain] DEBUG o.h.j.e.i.CallbackBuilderLegacyImpl - Adding touchForCreate as PrePersist callback for entity techcourse.myblog.domain.article.Article
 2720 [restartedMain] DEBUG o.h.internal.SessionFactoryImpl - Session factory constructed with filter configurations : {}
 2720 [restartedMain] DEBUG o.h.internal.SessionFactoryImpl - Instantiating session factory with properties: {gopherProxySet=false, hibernate.format_sql=true, awt.toolkit=sun.lwawt.macosx.LWCToolkit, hibernate.id.new_generator_mappings=true, file.encoding.pkg=sun.io, java.specification.version=1.8, sun.cpu.isalist=, hibernate.resource.beans.container=org.springframework.orm.hibernate5.SpringBeanContainer@2a93350d, hibernate.connection.handling_mode=DELAYED_ACQUISITION_AND_HOLD, sun.jnu.encoding=UTF-8, hibernate.dialect=org.hibernate.dialect.MySQL5Dialect, hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy, java.class.path=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/deploy.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/cldrdata.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/dnsns.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/jaccess.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/jfxrt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/localedata.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/nashorn.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/sunec.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext/zipfs.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/javaws.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/jfxswt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/management-agent.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/plugin.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/ant-javafx.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/javafx-mx.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/jconsole.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/packager.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/sa-jdi.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Users/kimheejoo/Desktop/jwp-blog/out/production/classes:/Users/kimheejoo/Desktop/jwp-blog/out/production/resources:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-validation/1.3.0.RELEASE/a9791affe229b42eae425486a9344a1dc13acf1c/spring-boot-starter-validation-1.3.0.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.8/448003bc1b234aac04b58e27d7755c12c3ec4236/lombok-1.18.8.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-devtools/2.1.6.RELEASE/1576e4c16cf810f8c40abf404ce3641a7d56eee3/spring-boot-devtools-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect/2.3.0/51c8c3fd5341e7f5e0410dc7056f7bece1acb4ad/thymeleaf-layout-dialect-2.3.0.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-thymeleaf/2.1.6.RELEASE/9d007e15b0f6c48005d1808d1c1b7f38e952ba79/spring-boot-starter-thymeleaf-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/2.1.6.RELEASE/8d232c9366b4ef3f5a919e48efb2228528391914/spring-boot-starter-web-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/2.1.6.RELEASE/3d2ff857d0cece1fea905e89371b802c5f5b0041/spring-boot-starter-data-jpa-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/net.rakugakibox.spring.boot/logback-access-spring-boot-starter/2.7.1/b02459abbd1b01d03dd3cc6020fec2c1d238cab/logback-access-spring-boot-starter-2.7.1.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.199/7bf08152984ed8859740ae3f97fae6c72771ae45/h2-1.4.199.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/8.0.16/6088b7a25188ab4b3ab865422a8ec77ade29236/mysql-connector-java-8.0.16.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-json/2.1.6.RELEASE/ed82ba4ed8a45855f5571c0fbc15537aa942763/spring-boot-starter-json-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-aop/2.1.6.RELEASE/93d2264fb36bdecaddcf2a4477d96a59709948d6/spring-boot-starter-aop-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-jdbc/2.1.6.RELEASE/8f9d678dad1c535377914c6ff3a4d470976a4de5/spring-boot-starter-jdbc-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter/2.1.6.RELEASE/22f085f39ded75b0b454ee7731eccae68b20f17e/spring-boot-starter-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/2.1.6.RELEASE/204079b2a82b794246fe911d29f1d9682efbd951/spring-boot-starter-tomcat-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-el/9.0.21/6a7ed3ad394b36d3f0f77745f424e19e976d2d61/tomcat-embed-el-9.0.21.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.2.2.Final/990905cd9184450c5f3e929ab2566305e3a67fa1/hibernate-validator-5.2.2.Final.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/2.1.6.RELEASE/875d84cfa6d5655bd11238c229e7acedf344024b/spring-boot-autoconfigure-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/2.1.6.RELEASE/b8a75ec9a9c570290523c4308c2255fbea6746c0/spring-boot-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/nz.net.ultraq.thymeleaf/thymeleaf-expression-processor/1.1.3/e74d87b7d068fb9b9f52dc764c53409d7e732670/thymeleaf-expression-processor-1.1.3.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy/2.5.7/99907efe4b69f800c42584386f5d668e4d952bd5/groovy-2.5.7.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.thymeleaf/thymeleaf-spring5/3.0.11.RELEASE/de7bf0adf13b5e9c4811f95edf18279da193c0c6/thymeleaf-spring5-3.0.11.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.thymeleaf.extras/thymeleaf-extras-java8time/3.0.4.RELEASE/36e7175ddce36c486fff4578b5af7bb32f54f5df/thymeleaf-extras-java8time-3.0.4.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.thymeleaf/thymeleaf/3.0.11.RELEASE/628ebb91f520053d4120b7b18bf78ff295d57461/thymeleaf-3.0.11.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.0.17.Final/af73055fc4a103ab347c56e7da5a143d68a0170/hibernate-validator-6.0.17.Final.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.1.8.RELEASE/d2b6359b3b502ce917879990fbee99723bfa78c5/spring-webmvc-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.1.8.RELEASE/6d7134733f05133d82440172c5f6f9fe001db7ed/spring-web-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/javax.transaction/javax.transaction-api/1.3/e006adf5cf3cca2181d16bd640ecb80148ec0fce/javax.transaction-api-1.3.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/javax.xml.bind/jaxb-api/2.3.1/8531ad5ac454cc2deb9d4d32c40c4d7451939b5d/jaxb-api-2.3.1.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.3.10.Final/e608b854325005edbf43cb2b6041fdafd3f2eb57/hibernate-core-5.3.10.Final.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/2.1.9.RELEASE/7ce2a4cc8c38ea4156435786a5d65ff7cbfdc15b/spring-data-jpa-2.1.9.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aspects/5.1.8.RELEASE/9ba80326ca4c7f938a93c41c943782fff0c98b2f/spring-aspects-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/2.1.6.RELEASE/9cb7228f463fce085317e2da8fb824568e697b7c/spring-boot-starter-logging-2.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/934c04d3cfef185a8008e7bf34331b79730a9d43/javax.annotation-api-1.3.2.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-access/1.2.3/e8a841cb796f6423c7afd8738df6e0e4052bf24a/logback-access-1.2.3.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.1.8.RELEASE/83ab599b042a4805bbee71b6241e9d073022d704/spring-context-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.1.8.RELEASE/c013c5603a05bee2a80cc2ec8f3fc11b15d4de3a/spring-aop-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-orm/5.1.8.RELEASE/9a39c5419a48531957ab92ae32ec80ce86367ef9/spring-orm-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jdbc/5.1.8.RELEASE/bf8affe2ce53e92e22bf3e2b85dfcbcde089bd0a/spring-jdbc-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.1.9.RELEASE/797e28eecdd88697b558799b657418c3063dc270/spring-data-commons-2.1.9.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-tx/5.1.8.RELEASE/a4941bf2e1a32e2d102dfeff8d542db8fd99a912/spring-tx-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.1.8.RELEASE/e35fa81d0142ef7c1247a7dee8b1ef2dd78c6322/spring-beans-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.1.8.RELEASE/4f8340d8d4f52dbd527bd696358923ff4df5be1a/spring-expression-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.1.8.RELEASE/37fd45c92cfd05b9ad173ee1184ec4221e0f931f/spring-core-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/javax.validation/validation-api/2.0.1.Final/cb855558e6271b1b32e716d24cb85c7f583ce09e/validation-api-2.0.1.Final.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.4.Final/965a18fdf939ee75e41f7918532d37b3a8350535/hibernate-commons-annotations-5.0.4.Final.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.2.Final/3789d00e859632e6c6206adc0c71625559e6e3b0/jboss-logging-3.3.2.Final.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.23/ec62d74fe50689c28c0ff5b35d3aebcaa8b5be68/snakeyaml-1.23.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.4.0/291658ac2ce2476256c7115943652c0accb5c857/classmate-1.4.0.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/ognl/ognl/3.1.12/a7fa0db32f882cd3bb41ec6c489853b3bfb6aebc/ognl-3.1.12.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.attoparser/attoparser/2.0.5.RELEASE/a93ad36df9560de3a5312c1d14f69d938099fa64/attoparser-2.0.5.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.unbescape/unbescape/1.1.6.RELEASE/7b90360afb2b860e09e8347112800d12c12b2a13/unbescape-1.1.6.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.zaxxer/HikariCP/3.2.0/6c66db1c636ee90beb4c65fe34abd8ba9396bca6/HikariCP-3.2.0.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.2.3/7c4f3c474fb2c041d8028740440937705ebb473a/logback-classic-1.2.3.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-to-slf4j/2.11.2/6d37bf7b046c0ce2669f26b99365a2cfa45c4c18/log4j-to-slf4j-2.11.2.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.slf4j/jul-to-slf4j/1.7.26/8031352b2bb0a49e67818bf04c027aa92e645d5c/jul-to-slf4j-1.7.26.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.26/77100a62c2e6f04b53977b9f541044d7d722693d/slf4j-api-1.7.26.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.9.9/4b04126963103216c9c43b0f34bbc36315654204/jackson-datatype-jdk8-2.9.9.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.9.9/a33df137557793b0404a486888dbe049f7abeeeb/jackson-datatype-jsr310-2.9.9.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-parameter-names/2.9.9/a92facb55a2538e7b2fe14294570a18b823ad431/jackson-module-parameter-names-2.9.9.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.9.9/d6eb9817d9c7289a91f043ac5ee02a6b3cc86238/jackson-databind-2.9.9.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/9.0.21/218f438e4812f268a1692511f897b401fc28cfa8/tomcat-embed-websocket-9.0.21.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/9.0.21/225a44fe65e9832f896e09f343ce107d38f3ee1b/tomcat-embed-core-9.0.21.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjweaver/1.9.4/9205229878f3d62fbd3a32a0fb6be2d6ad8589a9/aspectjweaver-1.9.4.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/javax.activation/javax.activation-api/1.2.0/85262acf3ca9816f9537ca47d5adeabaead7cb16/javax.activation-api-1.2.0.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/javax.persistence/javax.persistence-api/2.2/25665ac8c0b62f50e6488173233239120fc52c96/javax.persistence-api-2.2.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.23.2-GA/c5afe660a95e87ceb518e4f5cf02f5c56b547683/javassist-3.23.2-GA.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.9.13/cdaa4d47073aa70819649bf037cfefe75c39a4b6/byte-buddy-1.9.13.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.7/83cd2cd674a217ade95a4bb83a8a14f351f48bd0/antlr-2.7.7.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.5.Final/7060f67764565b9ee9d467e3ed0cb8a9c601b23a/jandex-2.0.5.Final.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.dom4j/dom4j/2.1.1/3dce5dbb3571aa820c677fadd8349bfa8f00c199/dom4j-2.1.1.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.1.8.RELEASE/60a3bb9c802ea03c955ee26526f8aebc9dd712b6/spring-jcl-5.1.8.RELEASE.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.9.0/7c10d545325e3a6e72e06381afe469fd40eb701/jackson-annotations-2.9.0.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.9.9/bfff5af9fb8347d26bbb7959cb9b4fe9a2b0ca5e/jackson-core-2.9.9.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.2.3/864344400c3d4d92dfeb0a305dc87d953677c03c/logback-core-1.2.3.jar:/Users/kimheejoo/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.2/f5e9a2ffca496057d6891a3de65128efc636e26e/log4j-api-2.11.2.jar:/Users/kimheejoo/Library/Application Support/JetBrains/Toolbox/apps/IDEA-U/ch-0/191.7479.19/IntelliJ IDEA.app/Contents/lib/idea_rt.jar, java.vm.vendor=Oracle Corporation, sun.arch.data.model=64, catalina.useNaming=false, java.vendor.url=http://java.oracle.com/, user.timezone=Asia/Seoul, os.name=Mac OS X, java.vm.specification.version=1.8, javax.persistence.validation.mode=AUTO, sun.java.launcher=SUN_STANDARD, user.country=KR, sun.boot.library.path=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib, spring.application.admin.enabled=true, sun.java.command=techcourse.myblog.MyblogApplication, hibernate.transaction.jta.platform=org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform@6acbc038, com.sun.management.jmxremote=, http.nonProxyHosts=local|*.local|169.254/16|*.169.254/16, javax.persistence.sharedCache.mode=UNSPECIFIED, spring.liveBeansView.mbeanDomain=, sun.cpu.endian=little, user.home=/Users/kimheejoo, user.language=ko, java.specification.vendor=Oracle Corporation, java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre, spring.output.ansi.enabled=always, file.separator=/, line.separator=
 , java.vm.specification.vendor=Oracle Corporation, java.specification.name=Java Platform API Specification, hibernate.transaction.coordinator_class=class org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorBuilderImpl, java.awt.graphicsenv=sun.awt.CGraphicsEnvironment, java.awt.headless=true, sun.boot.class.path=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/classes, hibernate.hbm2ddl.auto=create-drop, sun.management.compiler=HotSpot 64-Bit Tiered Compilers, ftp.nonProxyHosts=local|*.local|169.254/16|*.169.254/16, java.runtime.version=1.8.0_211-b12, user.name=kimheejoo, spring.jmx.enabled=true, path.separator=:, os.version=10.14.5, java.endorsed.dirs=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/endorsed, java.runtime.name=Java(TM) SE Runtime Environment, hibernate.ejb.persistenceUnitName=default, file.encoding=UTF-8, spring.beaninfo.ignore=true, java.vm.name=Java HotSpot(TM) 64-Bit Server VM, hibernate.show_sql=true, java.vendor.url.bug=http://bugreport.sun.com/bugreport/, java.io.tmpdir=/var/folders/2v/f2x_3ptj08bcdc3wgn_ng0lm0000gn/T/, com.zaxxer.hikari.pool_number=1, catalina.home=/private/var/folders/2v/f2x_3ptj08bcdc3wgn_ng0lm0000gn/T/tomcat.8993064115715383919.8080, java.version=1.8.0_211, hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy, user.dir=/Users/kimheejoo/Desktop/jwp-blog, os.arch=x86_64, PID=902, java.vm.specification.name=Java Virtual Machine Specification, user.language.format=ko-Kore, java.awt.printerjob=sun.lwawt.macosx.CPrinterJob, sun.os.patch.level=unknown, catalina.base=/private/var/folders/2v/f2x_3ptj08bcdc3wgn_ng0lm0000gn/T/tomcat.8993064115715383919.8080, hibernate.boot.CfgXmlAccessService.key=org.hibernate.boot.cfgxml.spi.LoadedConfig@2cad4aaf, java.library.path=/Users/kimheejoo/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:., java.vendor=Oracle Corporation, java.vm.info=mixed mode, java.vm.version=25.211-b12, hibernate.bytecode.use_reflection_optimizer=false, java.rmi.server.randomIDs=true, hibernate.connection.datasource=HikariDataSource (HikariPool-1), sun.io.unicode.encoding=UnicodeBig, java.ext.dirs=/Users/kimheejoo/Library/Java/Extensions:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/jre/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java, java.class.version=52.0, socksNonProxyHosts=local|*.local|169.254/16|*.169.254/16}
@@ -4313,35 +4313,35 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 2741 [restartedMain] DEBUG o.h.v.i.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
 2741 [restartedMain] DEBUG o.h.v.i.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
 2741 [restartedMain] DEBUG o.h.v.i.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
-2743 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.comment.Comment] is safe
-2743 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.comment.Comment
-2774 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.user.User] is safe
-2774 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.user.User
+2743 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.comment.Comment] is safe
+2743 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.comment.Comment
+2774 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.user.User] is safe
+2774 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.user.User
 2786 [restartedMain] DEBUG o.h.v.i.m.d.ConstraintDescriptorImpl - Adding composing constraint: ConstraintDescriptorImpl{annotation=javax.validation.constraints.Pattern, payloads=[], hasComposingConstraints=true, isReportAsSingleInvalidConstraint=false, elementType=FIELD, definedOn=DEFINED_LOCALLY, groups=[interface javax.validation.groups.Default], attributes={flags=[Ljavax.validation.constraints.Pattern$Flag;@3f676b96, groups=[Ljava.lang.Class;@50c544f4, regexp=.*, message={javax.validation.constraints.Pattern.message}, payload=[Ljava.lang.Class;@32492a48}, constraintType=GENERIC}.
-2794 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.article.Article] is safe
-2794 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.article.Article
+2794 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.article.Article] is safe
+2794 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.article.Article
 2797 [restartedMain] DEBUG o.h.secure.spi.JaccIntegrator - Skipping JACC integration as it was not enabled
 2798 [restartedMain] DEBUG o.h.internal.SessionFactoryImpl - Instantiated session factory
 2798 [restartedMain] DEBUG o.h.t.spi.TypeConfiguration$Scope - Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@1758927b] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@3ff2c720]
-2819 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.comment.Comment] is safe
-2819 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.comment.Comment
-2834 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.comment.Comment] is safe
-2834 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.comment.Comment
-2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.user.User] is safe
-2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.user.User
-2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.user.User] is safe
-2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.user.User
-3006 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.article.Article] is safe
-3006 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.article.Article
-3007 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.article.Article] is safe
-3007 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.article.Article
-3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister - Static SQL for collection: techcourse.myblog.article.Article.comments
+2819 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.comment.Comment] is safe
+2819 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.comment.Comment
+2834 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.comment.Comment] is safe
+2834 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.comment.Comment
+2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.user.User] is safe
+2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.user.User
+2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.user.User] is safe
+2994 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.user.User
+3006 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.article.Article] is safe
+3006 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.article.Article
+3007 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - Not known whether passed class name [techcourse.myblog.domain.article.Article] is safe
+3007 [restartedMain] DEBUG o.h.b.i.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : techcourse.myblog.domain.article.Article
+3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister - Static SQL for collection: techcourse.myblog.domain.article.Article.comments
 3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister -  Row insert: update comment set article_id=? where id=?
 3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister -  Row update: update comment set  where id=?
 3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister -  Row delete: update comment set article_id=null where article_id=? and id=?
 3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister -  One-shot delete: update comment set article_id=null where article_id=?
-3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister - Translating order-by fragment [id ASC] for collection role : techcourse.myblog.article.Article.comments
-3060 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister - Static SQL for entity: techcourse.myblog.comment.Comment
+3023 [restartedMain] DEBUG o.h.p.c.AbstractCollectionPersister - Translating order-by fragment [id ASC] for collection role : techcourse.myblog.domain.article.Article.comments
+3060 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister - Static SQL for entity: techcourse.myblog.domain.comment.Comment
 3060 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Version select: select id from comment where id =?
 3060 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Snapshot select: select comment_.id, comment_.create_time as create_t2_1_, comment_.renew_time as renew_ti3_1_, comment_.author as author5_1_, comment_.contents as contents4_1_ from comment comment_ where comment_.id=?
 3060 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Insert 0: insert into comment (create_time, renew_time, author, contents, id) values (?, ?, ?, ?, ?)
@@ -4361,22 +4361,22 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3097 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : contents
 3097 [restartedMain] DEBUG o.h.l.p.b.i.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
 3107 [restartedMain] DEBUG o.h.l.p.e.i.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
-3111 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.comment.Comment)
+3111 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.domain.comment.Comment)
     - Returns
-       - EntityReturnImpl(entity=techcourse.myblog.comment.Comment, querySpaceUid=<gen:0>, path=techcourse.myblog.comment.Comment)
-          - EntityAttributeFetchImpl(entity=techcourse.myblog.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.comment.Comment.author)
+       - EntityReturnImpl(entity=techcourse.myblog.domain.comment.Comment, querySpaceUid=<gen:0>, path=techcourse.myblog.domain.comment.Comment)
+          - EntityAttributeFetchImpl(entity=techcourse.myblog.domain.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.domain.comment.Comment.author)
     - QuerySpaces
-       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.comment.Comment)
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.domain.comment.Comment)
           - SQL table alias mapping - comment0_
           - alias suffix - 0_
           - suffixed key columns - {id1_1_0_}
           - JOIN (JoinDefinedByMetadata(author)) : <gen:0> -> <gen:1>
-             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.user.User)
+             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.domain.user.User)
                 - SQL table alias mapping - user1_
                 - alias suffix - 1_
                 - suffixed key columns - {user_id1_2_1_}
 
-3113 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.comment.Comment [NONE]: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from comment comment0_ left outer join user user1_ on comment0_.author=user1_.user_id where comment0_.id=?
+3113 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.domain.comment.Comment [NONE]: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from comment comment0_ left outer join user user1_ on comment0_.author=user1_.user_id where comment0_.id=?
 3113 [restartedMain] DEBUG o.h.l.p.b.i.spaces.QuerySpacesImpl - Adding QuerySpace : uid = <gen:0> -> org.hibernate.loader.plan.build.internal.spaces.EntityQuerySpaceImpl@6d563f0c]
 3113 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : createTime
 3113 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : renewTime
@@ -4390,25 +4390,25 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3114 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : contents
 3114 [restartedMain] DEBUG o.h.l.p.b.i.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
 3114 [restartedMain] DEBUG o.h.l.p.e.i.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
-3114 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.comment.Comment)
+3114 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.domain.comment.Comment)
     - Returns
-       - EntityReturnImpl(entity=techcourse.myblog.comment.Comment, querySpaceUid=<gen:0>, path=techcourse.myblog.comment.Comment)
-          - EntityAttributeFetchImpl(entity=techcourse.myblog.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.comment.Comment.author)
+       - EntityReturnImpl(entity=techcourse.myblog.domain.comment.Comment, querySpaceUid=<gen:0>, path=techcourse.myblog.domain.comment.Comment)
+          - EntityAttributeFetchImpl(entity=techcourse.myblog.domain.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.domain.comment.Comment.author)
     - QuerySpaces
-       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.comment.Comment)
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.domain.comment.Comment)
           - SQL table alias mapping - comment0_
           - alias suffix - 0_
           - suffixed key columns - {id1_1_0_}
           - JOIN (JoinDefinedByMetadata(author)) : <gen:0> -> <gen:1>
-             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.user.User)
+             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.domain.user.User)
                 - SQL table alias mapping - user1_
                 - alias suffix - 1_
                 - suffixed key columns - {user_id1_2_1_}
 
-3114 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.comment.Comment [READ]: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from comment comment0_ left outer join user user1_ on comment0_.author=user1_.user_id where comment0_.id=?
-3122 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_MERGE on entity techcourse.myblog.comment.Comment: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_ from comment comment0_ where comment0_.id=?
-3122 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_REFRESH on entity techcourse.myblog.comment.Comment: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_ from comment comment0_ where comment0_.id=?
-3123 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister - Static SQL for entity: techcourse.myblog.user.User
+3114 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.domain.comment.Comment [READ]: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from comment comment0_ left outer join user user1_ on comment0_.author=user1_.user_id where comment0_.id=?
+3122 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_MERGE on entity techcourse.myblog.domain.comment.Comment: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_ from comment comment0_ where comment0_.id=?
+3122 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_REFRESH on entity techcourse.myblog.domain.comment.Comment: select comment0_.id as id1_1_0_, comment0_.create_time as create_t2_1_0_, comment0_.renew_time as renew_ti3_1_0_, comment0_.author as author5_1_0_, comment0_.contents as contents4_1_0_ from comment comment0_ where comment0_.id=?
+3123 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister - Static SQL for entity: techcourse.myblog.domain.user.User
 3123 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Version select: select user_id from user where user_id =?
 3123 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Snapshot select: select user_.user_id, user_.create_time as create_t2_2_, user_.renew_time as renew_ti3_2_, user_.email as email4_2_, user_.password as password5_2_, user_.user_name as user_nam6_2_ from user user_ where user_.user_id=?
 3123 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Insert 0: insert into user (create_time, renew_time, email, password, user_name, user_id) values (?, ?, ?, ?, ?, ?)
@@ -4423,16 +4423,16 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3123 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : userName
 3123 [restartedMain] DEBUG o.h.l.p.b.i.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
 3123 [restartedMain] DEBUG o.h.l.p.e.i.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
-3123 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.user.User)
+3123 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.domain.user.User)
     - Returns
-       - EntityReturnImpl(entity=techcourse.myblog.user.User, querySpaceUid=<gen:0>, path=techcourse.myblog.user.User)
+       - EntityReturnImpl(entity=techcourse.myblog.domain.user.User, querySpaceUid=<gen:0>, path=techcourse.myblog.domain.user.User)
     - QuerySpaces
-       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.user.User)
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.domain.user.User)
           - SQL table alias mapping - user0_
           - alias suffix - 0_
           - suffixed key columns - {user_id1_2_0_}
 
-3124 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.user.User [NONE]: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
+3124 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.domain.user.User [NONE]: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
 3124 [restartedMain] DEBUG o.h.l.p.b.i.spaces.QuerySpacesImpl - Adding QuerySpace : uid = <gen:0> -> org.hibernate.loader.plan.build.internal.spaces.EntityQuerySpaceImpl@b61afe5]
 3124 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : createTime
 3124 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : renewTime
@@ -4441,19 +4441,19 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3124 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : userName
 3124 [restartedMain] DEBUG o.h.l.p.b.i.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
 3124 [restartedMain] DEBUG o.h.l.p.e.i.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
-3124 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.user.User)
+3124 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.domain.user.User)
     - Returns
-       - EntityReturnImpl(entity=techcourse.myblog.user.User, querySpaceUid=<gen:0>, path=techcourse.myblog.user.User)
+       - EntityReturnImpl(entity=techcourse.myblog.domain.user.User, querySpaceUid=<gen:0>, path=techcourse.myblog.domain.user.User)
     - QuerySpaces
-       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.user.User)
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.domain.user.User)
           - SQL table alias mapping - user0_
           - alias suffix - 0_
           - suffixed key columns - {user_id1_2_0_}
 
-3124 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.user.User [READ]: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
-3124 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_MERGE on entity techcourse.myblog.user.User: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
-3124 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_REFRESH on entity techcourse.myblog.user.User: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
-3124 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister - Static SQL for entity: techcourse.myblog.article.Article
+3124 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.domain.user.User [READ]: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
+3124 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_MERGE on entity techcourse.myblog.domain.user.User: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
+3124 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_REFRESH on entity techcourse.myblog.domain.user.User: select user0_.user_id as user_id1_2_0_, user0_.create_time as create_t2_2_0_, user0_.renew_time as renew_ti3_2_0_, user0_.email as email4_2_0_, user0_.password as password5_2_0_, user0_.user_name as user_nam6_2_0_ from user user0_ where user0_.user_id=?
+3124 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister - Static SQL for entity: techcourse.myblog.domain.article.Article
 3124 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Version select: select article_id from article where article_id =?
 3124 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Snapshot select: select article_.article_id, article_.create_time as create_t2_0_, article_.renew_time as renew_ti3_0_, article_.author as author7_0_, article_.contents as contents4_0_, article_.cover_url as cover_ur5_0_, article_.title as title6_0_ from article article_ where article_.article_id=?
 3124 [restartedMain] DEBUG o.h.p.e.AbstractEntityPersister -  Insert 0: insert into article (create_time, renew_time, author, contents, cover_url, title, article_id) values (?, ?, ?, ?, ?, ?, ?)
@@ -4478,24 +4478,24 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3127 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : title
 3127 [restartedMain] DEBUG o.h.l.p.b.i.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
 3127 [restartedMain] DEBUG o.h.l.p.e.i.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
-3128 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.article.Article)
+3128 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.domain.article.Article)
     - Returns
-       - EntityReturnImpl(entity=techcourse.myblog.article.Article, querySpaceUid=<gen:0>, path=techcourse.myblog.article.Article)
-          - EntityAttributeFetchImpl(entity=techcourse.myblog.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.article.Article.author)
-          - CollectionAttributeFetchImpl(collection=techcourse.myblog.article.Article.comments, querySpaceUid=<gen:2>, path=techcourse.myblog.article.Article.comments)
-             - (collection element) CollectionFetchableElementEntityGraph(entity=techcourse.myblog.comment.Comment, querySpaceUid=<gen:3>, path=techcourse.myblog.article.Article.comments.<elements>)
+       - EntityReturnImpl(entity=techcourse.myblog.domain.article.Article, querySpaceUid=<gen:0>, path=techcourse.myblog.domain.article.Article)
+          - EntityAttributeFetchImpl(entity=techcourse.myblog.domain.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.domain.article.Article.author)
+          - CollectionAttributeFetchImpl(collection=techcourse.myblog.domain.article.Article.comments, querySpaceUid=<gen:2>, path=techcourse.myblog.domain.article.Article.comments)
+             - (collection element) CollectionFetchableElementEntityGraph(entity=techcourse.myblog.domain.comment.Comment, querySpaceUid=<gen:3>, path=techcourse.myblog.domain.article.Article.comments.<elements>)
     - QuerySpaces
-       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.article.Article)
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.domain.article.Article)
           - SQL table alias mapping - article0_
           - alias suffix - 0_
           - suffixed key columns - {article_1_0_0_}
           - JOIN (JoinDefinedByMetadata(author)) : <gen:0> -> <gen:1>
-             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.user.User)
+             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.domain.user.User)
                 - SQL table alias mapping - user1_
                 - alias suffix - 1_
                 - suffixed key columns - {user_id1_2_1_}
 
-3128 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.article.Article [NONE]: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from article article0_ left outer join user user1_ on article0_.author=user1_.user_id where article0_.article_id=?
+3128 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.domain.article.Article [NONE]: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from article article0_ left outer join user user1_ on article0_.author=user1_.user_id where article0_.article_id=?
 3128 [restartedMain] DEBUG o.h.l.p.b.i.spaces.QuerySpacesImpl - Adding QuerySpace : uid = <gen:0> -> org.hibernate.loader.plan.build.internal.spaces.EntityQuerySpaceImpl@688f70d1]
 3128 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : createTime
 3128 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : renewTime
@@ -4514,26 +4514,26 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3128 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : title
 3128 [restartedMain] DEBUG o.h.l.p.b.i.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
 3128 [restartedMain] DEBUG o.h.l.p.e.i.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
-3128 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.article.Article)
+3128 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(entity=techcourse.myblog.domain.article.Article)
     - Returns
-       - EntityReturnImpl(entity=techcourse.myblog.article.Article, querySpaceUid=<gen:0>, path=techcourse.myblog.article.Article)
-          - EntityAttributeFetchImpl(entity=techcourse.myblog.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.article.Article.author)
-          - CollectionAttributeFetchImpl(collection=techcourse.myblog.article.Article.comments, querySpaceUid=<gen:2>, path=techcourse.myblog.article.Article.comments)
-             - (collection element) CollectionFetchableElementEntityGraph(entity=techcourse.myblog.comment.Comment, querySpaceUid=<gen:3>, path=techcourse.myblog.article.Article.comments.<elements>)
+       - EntityReturnImpl(entity=techcourse.myblog.domain.article.Article, querySpaceUid=<gen:0>, path=techcourse.myblog.domain.article.Article)
+          - EntityAttributeFetchImpl(entity=techcourse.myblog.domain.user.User, querySpaceUid=<gen:1>, path=techcourse.myblog.domain.article.Article.author)
+          - CollectionAttributeFetchImpl(collection=techcourse.myblog.domain.article.Article.comments, querySpaceUid=<gen:2>, path=techcourse.myblog.domain.article.Article.comments)
+             - (collection element) CollectionFetchableElementEntityGraph(entity=techcourse.myblog.domain.comment.Comment, querySpaceUid=<gen:3>, path=techcourse.myblog.domain.article.Article.comments.<elements>)
     - QuerySpaces
-       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.article.Article)
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=techcourse.myblog.domain.article.Article)
           - SQL table alias mapping - article0_
           - alias suffix - 0_
           - suffixed key columns - {article_1_0_0_}
           - JOIN (JoinDefinedByMetadata(author)) : <gen:0> -> <gen:1>
-             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.user.User)
+             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.domain.user.User)
                 - SQL table alias mapping - user1_
                 - alias suffix - 1_
                 - suffixed key columns - {user_id1_2_1_}
 
-3128 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.article.Article [READ]: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from article article0_ left outer join user user1_ on article0_.author=user1_.user_id where article0_.article_id=?
-3129 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_MERGE on entity techcourse.myblog.article.Article: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_ from article article0_ where article0_.article_id=?
-3129 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_REFRESH on entity techcourse.myblog.article.Article: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_ from article article0_ where article0_.article_id=?
+3128 [restartedMain] DEBUG o.h.loader.entity.plan.EntityLoader - Static select for entity techcourse.myblog.domain.article.Article [READ]: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_, user1_.user_id as user_id1_2_1_, user1_.create_time as create_t2_2_1_, user1_.renew_time as renew_ti3_2_1_, user1_.email as email4_2_1_, user1_.password as password5_2_1_, user1_.user_name as user_nam6_2_1_ from article article0_ left outer join user user1_ on article0_.author=user1_.user_id where article0_.article_id=?
+3129 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_MERGE on entity techcourse.myblog.domain.article.Article: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_ from article article0_ where article0_.article_id=?
+3129 [restartedMain] DEBUG org.hibernate.loader.Loader - Static select for action ACTION_REFRESH on entity techcourse.myblog.domain.article.Article: select article0_.article_id as article_1_0_0_, article0_.create_time as create_t2_0_0_, article0_.renew_time as renew_ti3_0_0_, article0_.author as author7_0_0_, article0_.contents as contents4_0_0_, article0_.cover_url as cover_ur5_0_0_, article0_.title as title6_0_0_ from article article0_ where article0_.article_id=?
 3132 [restartedMain] DEBUG o.h.l.p.b.i.spaces.QuerySpacesImpl - Adding QuerySpace : uid = <gen:0> -> org.hibernate.loader.plan.build.internal.spaces.CollectionQuerySpaceImpl@9bdf6cf]
 3132 [restartedMain] DEBUG o.h.l.p.b.i.spaces.QuerySpacesImpl - Adding QuerySpace : uid = <gen:1> -> org.hibernate.loader.plan.build.internal.spaces.EntityQuerySpaceImpl@3bab3cfc]
 3133 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : createTime
@@ -4548,30 +4548,30 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3133 [restartedMain] DEBUG o.h.p.w.spi.MetamodelGraphWalker - Visiting attribute path : contents
 3133 [restartedMain] DEBUG o.h.l.p.b.i.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
 3136 [restartedMain] DEBUG o.h.l.p.e.i.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
-3137 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(collection=techcourse.myblog.article.Article.comments)
+3137 [restartedMain] DEBUG o.h.l.p.b.spi.LoadPlanTreePrinter - LoadPlan(collection=techcourse.myblog.domain.article.Article.comments)
     - Returns
-       - CollectionReturnImpl(collection=techcourse.myblog.article.Article.comments, querySpaceUid=<gen:0>, path=[techcourse.myblog.article.Article.comments])
-          - (collection element) CollectionFetchableElementEntityGraph(entity=techcourse.myblog.comment.Comment, querySpaceUid=<gen:1>, path=[techcourse.myblog.article.Article.comments].<elements>)
-             - EntityAttributeFetchImpl(entity=techcourse.myblog.user.User, querySpaceUid=<gen:2>, path=[techcourse.myblog.article.Article.comments].<elements>.author)
+       - CollectionReturnImpl(collection=techcourse.myblog.domain.article.Article.comments, querySpaceUid=<gen:0>, path=[techcourse.myblog.domain.article.Article.comments])
+          - (collection element) CollectionFetchableElementEntityGraph(entity=techcourse.myblog.domain.comment.Comment, querySpaceUid=<gen:1>, path=[techcourse.myblog.domain.article.Article.comments].<elements>)
+             - EntityAttributeFetchImpl(entity=techcourse.myblog.domain.user.User, querySpaceUid=<gen:2>, path=[techcourse.myblog.domain.article.Article.comments].<elements>.author)
     - QuerySpaces
-       - CollectionQuerySpaceImpl(uid=<gen:0>, collection=techcourse.myblog.article.Article.comments)
+       - CollectionQuerySpaceImpl(uid=<gen:0>, collection=techcourse.myblog.domain.article.Article.comments)
           - SQL table alias mapping - comments0_
           - alias suffix - 0_
           - suffixed key columns - {article_6_1_0_}
           - entity-element alias suffix - 1_
           - 1_entity-element suffixed key columns - id1_1_1_
           - JOIN (JoinDefinedByMetadata(elements)) : <gen:0> -> <gen:1>
-             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.comment.Comment)
+             - EntityQuerySpaceImpl(uid=<gen:1>, entity=techcourse.myblog.domain.comment.Comment)
                 - SQL table alias mapping - comments0_
                 - alias suffix - 1_
                 - suffixed key columns - {id1_1_1_}
                 - JOIN (JoinDefinedByMetadata(author)) : <gen:1> -> <gen:2>
-                   - EntityQuerySpaceImpl(uid=<gen:2>, entity=techcourse.myblog.user.User)
+                   - EntityQuerySpaceImpl(uid=<gen:2>, entity=techcourse.myblog.domain.user.User)
                       - SQL table alias mapping - user1_
                       - alias suffix - 2_
                       - suffixed key columns - {user_id1_2_2_}
 
-3137 [restartedMain] DEBUG o.h.l.c.plan.CollectionLoader - Static select for collection techcourse.myblog.article.Article.comments: select comments0_.article_id as article_6_1_0_, comments0_.id as id1_1_0_, comments0_.id as id1_1_1_, comments0_.create_time as create_t2_1_1_, comments0_.renew_time as renew_ti3_1_1_, comments0_.author as author5_1_1_, comments0_.contents as contents4_1_1_, user1_.user_id as user_id1_2_2_, user1_.create_time as create_t2_2_2_, user1_.renew_time as renew_ti3_2_2_, user1_.email as email4_2_2_, user1_.password as password5_2_2_, user1_.user_name as user_nam6_2_2_ from comment comments0_ left outer join user user1_ on comments0_.author=user1_.user_id where comments0_.article_id=? order by comments0_.id asc
+3137 [restartedMain] DEBUG o.h.l.c.plan.CollectionLoader - Static select for collection techcourse.myblog.domain.article.Article.comments: select comments0_.article_id as article_6_1_0_, comments0_.id as id1_1_0_, comments0_.id as id1_1_1_, comments0_.create_time as create_t2_1_1_, comments0_.renew_time as renew_ti3_1_1_, comments0_.author as author5_1_1_, comments0_.contents as contents4_1_1_, user1_.user_id as user_id1_2_2_, user1_.create_time as create_t2_2_2_, user1_.renew_time as renew_ti3_2_2_, user1_.email as email4_2_2_, user1_.password as password5_2_2_, user1_.user_name as user_nam6_2_2_ from comment comments0_ left outer join user user1_ on comments0_.author=user1_.user_id where comments0_.article_id=? order by comments0_.id asc
 3169 [restartedMain] DEBUG org.hibernate.SQL - 
     
     drop table if exists article
@@ -4675,26 +4675,26 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3353 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
 3410 [restartedMain] DEBUG o.h.s.internal.StatisticsInitiator - Statistics initialized [enabled=false]
 3419 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
-3433 [restartedMain] DEBUG o.s.b.CachedIntrospectionResults - Not strongly caching class [techcourse.myblog.article.Article] because it is not cache-safe
-3454 [restartedMain] DEBUG o.s.b.CachedIntrospectionResults - Not strongly caching class [techcourse.myblog.user.User] because it is not cache-safe
-3464 [restartedMain] DEBUG o.s.b.CachedIntrospectionResults - Not strongly caching class [techcourse.myblog.comment.Comment] because it is not cache-safe
-3466 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Initializing repository instance for techcourse.myblog.article.ArticleRepository…
+3433 [restartedMain] DEBUG o.s.b.CachedIntrospectionResults - Not strongly caching class [techcourse.myblog.domain.article.Article] because it is not cache-safe
+3454 [restartedMain] DEBUG o.s.b.CachedIntrospectionResults - Not strongly caching class [techcourse.myblog.domain.user.User] because it is not cache-safe
+3464 [restartedMain] DEBUG o.s.b.CachedIntrospectionResults - Not strongly caching class [techcourse.myblog.domain.comment.Comment] because it is not cache-safe
+3466 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Initializing repository instance for techcourse.myblog.domain.article.ArticleRepository…
 3478 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
 3511 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
-3518 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Finished creation of repository instance for techcourse.myblog.article.ArticleRepository.
+3518 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Finished creation of repository instance for techcourse.myblog.domain.article.ArticleRepository.
 3521 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Autowiring by type from bean name 'articleService' via constructor to bean named 'articleRepository'
 3557 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Creating shared instance of singleton bean 'commentService'
 3558 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Creating shared instance of singleton bean 'commentRepository'
 3561 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
-3561 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Initializing repository instance for techcourse.myblog.comment.CommentRepository…
+3561 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Initializing repository instance for techcourse.myblog.domain.comment.CommentRepository…
 3562 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
 3563 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
-3565 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Finished creation of repository instance for techcourse.myblog.comment.CommentRepository.
+3565 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Finished creation of repository instance for techcourse.myblog.domain.comment.CommentRepository.
 3565 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Autowiring by type from bean name 'commentService' via constructor to bean named 'commentRepository'
 3567 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Creating shared instance of singleton bean 'loginService'
 3568 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Creating shared instance of singleton bean 'userRepository'
 3570 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
-3571 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Initializing repository instance for techcourse.myblog.user.UserRepository…
+3571 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Initializing repository instance for techcourse.myblog.domain.user.UserRepository…
 3572 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
 3573 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
 3586 [restartedMain] DEBUG o.s.d.j.r.query.JpaQueryFactory - Looking up query for method existsByEmail
@@ -4707,7 +4707,7 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: net.sf.log
 3639 [restartedMain] DEBUG o.h.e.t.internal.TransactionImpl - On TransactionImpl creation, JpaCompliance#isJpaTransactionComplianceEnabled == false
 3639 [restartedMain] DEBUG o.s.d.j.repository.query.NamedQuery - Did not find named query User.findByEmail
 3639 [restartedMain] DEBUG o.s.o.j.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler - Creating new EntityManager for shared EntityManager invocation
-3641 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Finished creation of repository instance for techcourse.myblog.user.UserRepository.
+3641 [restartedMain] DEBUG o.s.d.r.c.s.RepositoryFactorySupport - Finished creation of repository instance for techcourse.myblog.domain.user.UserRepository.
 3641 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Autowiring by type from bean name 'loginService' via constructor to bean named 'userRepository'
 3641 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Creating shared instance of singleton bean 'userService'
 3642 [restartedMain] DEBUG o.s.b.f.s.DefaultListableBeanFactory - Autowiring by type from bean name 'userService' via constructor to bean named 'userRepository'
@@ -5970,7 +5970,7 @@ Unconditional classes:
 38112 [http-nio-8080-exec-1] DEBUG o.h.q.c.internal.CriteriaQueryImpl - Rendered criteria query -> select generatedAlias0 from Article as generatedAlias0
 38125 [http-nio-8080-exec-1] DEBUG o.h.h.i.QueryTranslatorFactoryInitiator - QueryTranslatorFactory : org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory@4a8c0a67
 38125 [http-nio-8080-exec-1] INFO  o.h.h.i.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
-38136 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.QueryTranslatorImpl - parse() - HQL: select generatedAlias0 from techcourse.myblog.article.Article as generatedAlias0
+38136 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.QueryTranslatorImpl - parse() - HQL: select generatedAlias0 from techcourse.myblog.domain.article.Article as generatedAlias0
 38137 [http-nio-8080-exec-1] DEBUG o.h.hql.internal.ast.ErrorTracker - throwQueryException() : no errors
 38141 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.QueryTranslatorImpl - --- HQL AST ---
  \-[QUERY] Node: 'query'
@@ -5989,7 +5989,7 @@ Unconditional classes:
           \-[IDENT] Node: 'generatedAlias0'
 
 38153 [http-nio-8080-exec-1] DEBUG o.h.h.i.antlr.HqlSqlBaseWalker - select << begin [level=1, statement=select]
-38164 [http-nio-8080-exec-1] DEBUG o.h.h.internal.ast.tree.FromElement - FromClause{level=1} : techcourse.myblog.article.Article (generatedAlias0) -> article0_
+38164 [http-nio-8080-exec-1] DEBUG o.h.h.internal.ast.tree.FromElement - FromClause{level=1} : techcourse.myblog.domain.article.Article (generatedAlias0) -> article0_
 38165 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.tree.FromReferenceNode - Resolved : generatedAlias0 -> article0_.article_id
 38165 [http-nio-8080-exec-1] DEBUG o.h.h.i.antlr.HqlSqlBaseWalker - select : finishing up [level=1, statement=select]
 38165 [http-nio-8080-exec-1] DEBUG o.h.hql.internal.ast.HqlSqlWalker - processQuery() :  ( SELECT ( {select clause} article0_.article_id ) ( FromClause{level=1} article article0_ ) )
@@ -5998,13 +5998,13 @@ Unconditional classes:
 38171 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.QueryTranslatorImpl - --- SQL AST ---
  \-[SELECT] QueryNode: 'SELECT'  querySpaces (article)
     +-[SELECT_CLAUSE] SelectClause: '{select clause}'
-    |  +-[ALIAS_REF] IdentNode: 'article0_.article_id as article_1_0_' {alias=generatedAlias0, className=techcourse.myblog.article.Article, tableAlias=article0_}
+    |  +-[ALIAS_REF] IdentNode: 'article0_.article_id as article_1_0_' {alias=generatedAlias0, className=techcourse.myblog.domain.article.Article, tableAlias=article0_}
     |  \-[SQL_TOKEN] SqlFragment: 'article0_.create_time as create_t2_0_, article0_.renew_time as renew_ti3_0_, article0_.author as author7_0_, article0_.contents as contents4_0_, article0_.cover_url as cover_ur5_0_, article0_.title as title6_0_'
     \-[FROM] FromClause: 'from' FromClause{level=1, fromElementCounter=1, fromElements=1, fromElementByClassAlias=[generatedAlias0], fromElementByTableAlias=[article0_], fromElementsByPath=[], collectionJoinFromElementsByPath=[], impliedElements=[]}
-       \-[FROM_FRAGMENT] FromElement: 'article article0_' FromElement{explicit,not a collection join,not a fetch join,fetch non-lazy properties,classAlias=generatedAlias0,role=null,tableName=article,tableAlias=article0_,origin=null,columns={,className=techcourse.myblog.article.Article}}
+       \-[FROM_FRAGMENT] FromElement: 'article article0_' FromElement{explicit,not a collection join,not a fetch join,fetch non-lazy properties,classAlias=generatedAlias0,role=null,tableName=article,tableAlias=article0_,origin=null,columns={,className=techcourse.myblog.domain.article.Article}}
 
 38171 [http-nio-8080-exec-1] DEBUG o.h.hql.internal.ast.ErrorTracker - throwQueryException() : no errors
-38176 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.QueryTranslatorImpl - HQL: select generatedAlias0 from techcourse.myblog.article.Article as generatedAlias0
+38176 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.QueryTranslatorImpl - HQL: select generatedAlias0 from techcourse.myblog.domain.article.Article as generatedAlias0
 38176 [http-nio-8080-exec-1] DEBUG o.h.h.i.ast.QueryTranslatorImpl - SQL: select article0_.article_id as article_1_0_, article0_.create_time as create_t2_0_, article0_.renew_time as renew_ti3_0_, article0_.author as author7_0_, article0_.contents as contents4_0_, article0_.cover_url as cover_ur5_0_, article0_.title as title6_0_ from article article0_
 38176 [http-nio-8080-exec-1] DEBUG o.h.hql.internal.ast.ErrorTracker - throwQueryException() : no errors
 38188 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 

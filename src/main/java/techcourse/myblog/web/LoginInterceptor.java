@@ -2,7 +2,7 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

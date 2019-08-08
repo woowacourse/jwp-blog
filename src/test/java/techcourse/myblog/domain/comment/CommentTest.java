@@ -1,12 +1,12 @@
-package techcourse.myblog.comment;
+package techcourse.myblog.domain.comment;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.exception.InvalidAuthorException;
+import techcourse.myblog.domain.InvalidAuthorException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static techcourse.myblog.user.UserTest.user;
-import static techcourse.myblog.user.UserTest.user2;
+import static techcourse.myblog.domain.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user2;
 
 public class CommentTest {
     public static final Comment comment = Comment.builder()

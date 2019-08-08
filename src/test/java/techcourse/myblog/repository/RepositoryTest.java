@@ -4,12 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.article.ArticleRepository;
-import techcourse.myblog.comment.Comment;
-import techcourse.myblog.comment.CommentRepository;
-import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserRepository;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
