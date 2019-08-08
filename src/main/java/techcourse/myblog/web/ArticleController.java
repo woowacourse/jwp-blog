@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.ArticleService;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.web.dto.UserResponse;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 

@@ -1,6 +1,7 @@
-package techcourse.myblog.application.dto;
+package techcourse.myblog.web.dto;
 
 import techcourse.myblog.application.exception.JsonAPIException;
+import techcourse.myblog.web.dto.BaseResponse;
 
 public class ErrorResponse extends BaseResponse {
 
@@ -22,5 +23,20 @@ public class ErrorResponse extends BaseResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public static enum ErrorResult {
+        FAIL("fail"), ERROR("error");
+
+        private String result;
+
+        ErrorResult(String result) {
+            this.result = result;
+        }
+
+        @Override
+        public String toString() {
+            return result;
+        }
     }
 }

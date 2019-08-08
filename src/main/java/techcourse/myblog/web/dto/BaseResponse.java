@@ -1,4 +1,4 @@
-package techcourse.myblog.application.dto;
+package techcourse.myblog.web.dto;
 
 public class BaseResponse {
 

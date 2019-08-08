@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
-import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.web.dto.UserResponse;
 import techcourse.myblog.application.exception.EditException;
 import techcourse.myblog.application.exception.LoginException;
 import techcourse.myblog.application.exception.NoUserException;

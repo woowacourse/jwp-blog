@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.application.dto.ErrorResponse;
+import techcourse.myblog.web.dto.ErrorResponse;
 import techcourse.myblog.application.dto.LoginRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;

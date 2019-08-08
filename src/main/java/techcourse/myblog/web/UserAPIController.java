@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.UserService;
-import techcourse.myblog.application.dto.BaseResponse;
-import techcourse.myblog.application.dto.ErrorResponse;
+import techcourse.myblog.web.dto.BaseResponse;
+import techcourse.myblog.web.dto.ErrorResponse;
 import techcourse.myblog.application.dto.UserEditRequest;
 
 import javax.servlet.http.HttpSession;

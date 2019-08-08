@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
-import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.web.dto.UserResponse;
 import techcourse.myblog.application.exception.LoginException;
 import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.domain.User;

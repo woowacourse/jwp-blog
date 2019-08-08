@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import techcourse.myblog.application.UserService;
-import techcourse.myblog.application.dto.BaseResponse;
-import techcourse.myblog.application.dto.ErrorResponse;
+import techcourse.myblog.web.dto.BaseResponse;
+import techcourse.myblog.web.dto.ErrorResponse;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.exception.JsonAPIException;
 

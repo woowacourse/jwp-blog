@@ -11,8 +11,8 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.CommentRequest;
-import techcourse.myblog.application.dto.CommentResponse;
-import techcourse.myblog.application.dto.ErrorResponse;
+import techcourse.myblog.web.dto.CommentResponse;
+import techcourse.myblog.web.dto.ErrorResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,21 +54,20 @@ public class CommentAPIControllerTests {
             .expectStatus()
             .isCreated()
             .expectBody()
-            .jsonPath("$.result").isEqualTo("ok")
-            .jsonPath("$.comment.contents").isEqualTo(commentContents)
+            .jsonPath("$.contents").isEqualTo(commentContents)
         ;
     }
 
     @Test
     void 빈칸_입력_댓글_작성_실패_테스트() {
         String commentContents = BLANK;
-        requestSaveCommentJson(commentContents)
+        ErrorResponse res = requestSaveCommentJson(commentContents)
             .expectStatus()
             .is4xxClientError()
-            .expectBody()
-            .jsonPath("$.result").isEqualTo("fail")
-            .jsonPath("$.message").isEqualTo("댓글 내용을 입력하세요.")
-        ;
+            .expectBody(ErrorResponse.class)
+            .returnResult().getResponseBody();
+            assertThat(res.getResult()).isEqualTo("fail");
+            assertThat(res.getMessage()).isEqualTo("댓글 내용을 입력하세요.");
     }
 
     @Test
@@ -113,7 +112,7 @@ public class CommentAPIControllerTests {
             .expectBody(CommentResponse.class)
             .returnResult();
 
-        assertThat(response.getResponseBody().getComment().getContents()).isEqualTo(request.getContents());
+        assertThat(response.getResponseBody().getContents()).isEqualTo(request.getContents());
 
     }
 
@@ -128,9 +127,8 @@ public class CommentAPIControllerTests {
             .uri("/articles/1/comments/1")
             .header("Cookie", cookie)
             .exchange()
-            .expectBody()
-            .jsonPath("$.result").isEqualTo("ok")
-        ;
+            .expectStatus()
+            .isNoContent();
     }
 
     @Test
@@ -140,14 +138,18 @@ public class CommentAPIControllerTests {
         requestSaveCommentJson(commentContents);
 
         // 댓글 삭제
-        webTestClient.delete()
+        ErrorResponse res = webTestClient.delete()
             .uri("/articles/1/comments/999")
             .header("Cookie", cookie)
             .exchange()
-            .expectBody()
-            .jsonPath("$.result").isEqualTo("fail")
-            .jsonPath("$.message").isEqualTo("존재하지 않는 댓글입니다.")
-        ;
+            .expectStatus()
+            .is4xxClientError()
+            .expectBody(ErrorResponse.class)
+            .returnResult()
+            .getResponseBody();
+
+        assertThat(res.getResult()).isEqualTo("fail");
+        assertThat(res.getMessage()).isEqualTo("존재하지 않는 댓글입니다.");
     }
 
     @Test
