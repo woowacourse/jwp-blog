@@ -13,6 +13,7 @@ import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.support.encrytor.EncryptHelper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +43,10 @@ public class UserService {
             .orElseThrow(() -> new NoUserException("사용자를 찾을 수 없습니다: " + id));
     }
 
+    public boolean isEmailExist(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     @Transactional(readOnly = true)
     public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();
@@ -54,7 +59,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse checkLogin(LoginRequest loginRequest) {
-        User user = userRepository.findUserByEmail(loginRequest.getEmail())
+        User user = userRepository.findByEmail(loginRequest.getEmail())
             .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
         checkPassword(loginRequest, user);

@@ -17,6 +17,7 @@ public class Article {
     private User author;
     private String title;
     private String coverUrl;
+    @Lob
     private String contents;
 
     private Article() {

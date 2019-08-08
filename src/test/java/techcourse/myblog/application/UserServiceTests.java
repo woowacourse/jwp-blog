@@ -61,7 +61,7 @@ public class UserServiceTests {
     void update() {
         doReturn(USER_1_ID).when(USER_1).getId();
         doReturn(Optional.of(USER_1)).when(userRepository).findById(USER_1_ID);
-        given(userRepository.findUserByEmail(USER_REQUEST_2.getEmail())).willReturn(Optional.of(USER_1));
+        given(userRepository.findByEmail(USER_REQUEST_2.getEmail())).willReturn(Optional.of(USER_1));
         userService.update(USER_1.getId(), USER_REQUEST_2.getName());
         verify(userRepository, times(1)).findById(USER_1.getId());
         assertThat(USER_1.getName()).isEqualTo(USER_REQUEST_2.getName());
@@ -74,12 +74,12 @@ public class UserServiceTests {
 
     @Test
     void checkLogin() {
-        given(userRepository.findUserByEmail(USER_REQUEST_1.getEmail())).willReturn(Optional.of(USER_1));
+        given(userRepository.findByEmail(USER_REQUEST_1.getEmail())).willReturn(Optional.of(USER_1));
         UserResponse userDto = userService.checkLogin(LOGIN_REQUEST);
 
         assertThat(userDto.getEmail()).isEqualTo(USER_REQUEST_1.getEmail());
 
-        verify(userRepository, times(1)).findUserByEmail(USER_REQUEST_1.getEmail());
+        verify(userRepository, times(1)).findByEmail(USER_REQUEST_1.getEmail());
     }
 
     @Test

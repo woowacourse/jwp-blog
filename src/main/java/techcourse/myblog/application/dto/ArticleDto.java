@@ -1,5 +1,6 @@
 package techcourse.myblog.application.dto;
 
+import org.hibernate.validator.constraints.URL;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.support.validator.TitleConstraint;
@@ -8,6 +9,7 @@ public class ArticleDto {
     private Long id;
     @TitleConstraint
     private String title;
+    @URL
     private String coverUrl;
     private String contents;
 

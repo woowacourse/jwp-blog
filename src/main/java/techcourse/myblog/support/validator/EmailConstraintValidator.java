@@ -1,15 +1,15 @@
 package techcourse.myblog.support.validator;
 
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.application.UserService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class EmailConstraintValidator implements ConstraintValidator<EmailConstraint, String> {
-    private UserRepository userRepository;
+    private final UserService userService;
 
-    public EmailConstraintValidator(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public EmailConstraintValidator(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -23,10 +23,13 @@ public class EmailConstraintValidator implements ConstraintValidator<EmailConstr
             return false;
         }
 
-        context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate("중복된 이메일입니다!")
-            .addConstraintViolation();
+        if (userService.isEmailExist(value)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("중복된 이메일입니다!")
+                .addConstraintViolation();
+            return false;
+        }
 
-        return !userRepository.existsByEmail(value);
+        return true;
     }
 }

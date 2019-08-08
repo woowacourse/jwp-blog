@@ -10,6 +10,7 @@ import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -52,6 +53,10 @@ public class ArticleService {
         }
 
         return article;
+    }
+
+    public boolean isTitleExist(String title) {
+        return articleRepository.existsByTitle(title);
     }
 
     public void update(ArticleDto articleDto, Long articleId, Long userId) {
