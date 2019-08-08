@@ -8,7 +8,7 @@ import techcourse.myblog.dto.CommentRequestDto;
 import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -32,7 +32,7 @@ public class Comment {
     private Article article;
 
     @CreatedDate
-    private Date date;
+    private LocalDateTime date;
 
     public Comment() {
     }
@@ -55,7 +55,7 @@ public class Comment {
         return commenter;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
