@@ -7,7 +7,6 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleRequest;
 import techcourse.myblog.dto.ArticleResponse;
-import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
@@ -63,14 +62,6 @@ public class ArticleController {
         User user = (User) httpSession.getAttribute("user");
         articleService.deleteById(articleId, user);
         return "redirect:/";
-    }
-
-    @PutMapping("/{articleId}/comment/{commentId}")
-    public String updateComment(@PathVariable long articleId, @PathVariable long commentId,
-                                CommentRequest commentDto, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        articleService.updateComment(commentId, commentDto, user);
-        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}/comment/{commentId}")

@@ -125,20 +125,23 @@
                         </span>
                         <p id="comment-view-${id}" class="width-80">${contents}</p>
                         <div>
-                            <button id="comment-edit-button-${id}" class="pointer btn btn-icon" style="float: left;">
+                            <button id="comment-edit-button-${id}" class="pointer btn btn-icon"
+                            onclick="openCommentEditor(${id})" style="float: left;">
                                 <i class="ti-pencil text-dark font-size-10 pdd-horizontal-5"></i>
                             </button>
-                            <button id="comment-close-button-${id}" class="pointer btn btn-icon" style="float: left; display: none;">
+                            <button id="comment-close-button-${id}" class="pointer btn btn-icon"
+                            onclick="closeCommentEditor(${id})" style="float: left; display: none;">
                                 <i class="ti-close text-dark font-size-10 pdd-horizontal-5"></i>
                             </button>
-                            <button id="comment-delete-button-${id}" class="pointer btn btn-icon" style="float: left;">
+                            <button id="comment-delete-button-${id}" class="pointer btn btn-icon"
+                            onclick="deleteComment(${id})" style="float: left;">
                                 <i class="ti-trash text-dark font-size-10 pdd-horizontal-5"></i>
                             </button>
                         </div>
                         <div id="comment-editor-${id}" style="display: none;">
                             <input id="comment-contents-${id}" name="contents" type="hidden" required>
                             <div id="editSection-${id}"></div>
-                            <button class="btn btn-info float-right mrg-top-5 mrg-btm-3 top-10 bottom-5" onclick="editComment(${id})">수정</button>
+                            <button class="btn btn-info float-right mrg-btm-0 mrg-top-20 relative bottom-5" onclick="editComment(${id})">댓글 수정</button>
                         </div>
                         <p style="clear: both;"></p>
                     </div>
@@ -172,7 +175,7 @@
             'contents': contents
         }
         if (contents.length === 0) {
-            alert('댓글을 입력해주세요.')
+            alert('댓글을 입력해 주세요.')
             return
         }
 
@@ -204,6 +207,43 @@
             })
     }
 
+    const editComment = (id) => {
+        const contentsBox = document.getElementById('comment-contents-' + id)
+        const editedContents = contentsBox.getAttribute('value')
+        const commentRequest = {
+            "contents": editedContents
+        }
+
+        if (editedContents.length === 0) {
+            alert('댓글을 입력해 주세요.')
+            return
+        }
+
+        fetch(`${BASE_URL}/articles/${articleId}/comments/${id}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT',
+            body: JSON.stringify(commentRequest)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('댓글을 수정하는 중에 오류가 발생했습니다.')
+            })
+            .then(() => {
+                loadComments()
+                closeCommentEditor(id)
+            })
+            .catch((error) => {
+                console.log(error)
+                alert('권한이 없습니다.')
+                closeCommentEditor(id)
+            })
+    }
+
     const getCountOfComment = () => {
         fetch(`${BASE_URL}/articles/${articleId}/comments/total`)
             .then(response => {
@@ -219,6 +259,48 @@
             .catch(() => {
                 console.log('올바른 요청이 아닙니다.')
             })
+    }
+
+    let commentEditor
+
+    const openCommentEditor = (id) => {
+        const editTarget = document.getElementById('comment-editor-' + id)
+        editTarget.style.display = "block"
+
+        commentEditor = new tui.Editor({
+            el: document.querySelector('#editSection-' + id),
+            initialEditType: 'markdown',
+            previewStyle: 'horizontal',
+            events: {
+                change: function () {
+                    document.getElementById('comment-contents-' + id).setAttribute('value', commentEditor.getMarkdown())
+                }
+            },
+            initialValue: '',
+            height: '200px'
+        });
+
+        const commentEditContent = document.getElementById('comment-contents-' + id)
+        commentEditor.setValue('')
+        commentEditContent.setAttribute('value', '')
+
+        const editButton = document.getElementById('comment-edit-button-' + id)
+        editButton.style.display = "none"
+
+        const closeButton = document.getElementById('comment-close-button-' + id)
+        closeButton.style.display = "block"
+    }
+
+    const closeCommentEditor = (id) => {
+        const editTarget = document.getElementById('comment-editor-' + id)
+        editTarget.style.display = "none"
+        commentEditor = ''
+
+        const editButton = document.getElementById('comment-edit-button-' + id)
+        editButton.style.display = "block"
+
+        const closeButton = document.getElementById('comment-close-button-' + id)
+        closeButton.style.display = "none"
     }
 
     getCountOfComment()

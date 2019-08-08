@@ -37,6 +37,15 @@ public class CommentRestController {
         return CommentAssembler.writeDto(comment);
     }
 
+    @PutMapping("/{articleId}/comments/{commentId}")
+    public CommentResponse updateComment(@PathVariable long articleId, @PathVariable long commentId,
+                                         @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        checkAuthorize(user);
+        Comment comment = articleService.updateComment(commentId, commentRequest, user);
+        return CommentAssembler.writeDto(comment);
+    }
+
     @GetMapping("/{articleId}/comments/total")
     public int getCountOfComment(@PathVariable long articleId) {
         return articleService.getAllComments(articleId).size();
