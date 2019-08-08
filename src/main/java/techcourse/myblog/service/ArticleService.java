@@ -26,11 +26,6 @@ public class ArticleService extends AbstractDomainService<Article> {
         this.articleRepository = articleRepository;
     }
 
-    @Override
-    public Article save(Article article) {
-        return articleRepository.save(article);
-    }
-
     public Article select(Long id) {
         return findById(id);
     }
@@ -46,6 +41,11 @@ public class ArticleService extends AbstractDomainService<Article> {
 
     public List<Article> findAll() {
         return articleRepository.findAll();
+    }
+
+    @Override
+    public Article save(Article article) {
+        return articleRepository.save(article);
     }
 
     public Article update(Long id, Article updateArticle, User user) {

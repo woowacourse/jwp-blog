@@ -32,10 +32,17 @@ public class CommentService extends AbstractDomainService<Comment> {
         return commentRepository.save(comment);
     }
 
-    @Override
-    public void delete(Long id, User user) {
-        Comment comment = getAuthorizedDomain(id, user);
-        commentRepository.delete(comment);
+    public List<Comment> findAllByArticleId(Long articleId) {
+        return commentRepository.findAllByArticleId(articleId);
+    }
+
+    public List<Comment> findCommentsByArticleId(Long articleId) {
+        return commentRepository.findAllByArticleId(articleId);
+    }
+
+    public Comment update(Long commentId, CommentRequest commentRequest, User user) {
+        Comment comment = getAuthorizedDomain(commentId, user);
+        return comment.update(commentRequest.getContents());
     }
 
     @Override
@@ -54,16 +61,9 @@ public class CommentService extends AbstractDomainService<Comment> {
                 });
     }
 
-    public Comment update(Long commentId, CommentRequest commentRequest, User user) {
-        Comment comment = getAuthorizedDomain(commentId, user);
-        return comment.update(commentRequest.getContents());
-    }
-
-    public List<Comment> findAllByArticleId(Long articleId) {
-        return commentRepository.findAllByArticleId(articleId);
-    }
-
-    public List<Comment> findCommentsByArticleId(Long articleId) {
-        return commentRepository.findAllByArticleId(articleId);
+    @Override
+    public void delete(Long id, User user) {
+        Comment comment = getAuthorizedDomain(id, user);
+        commentRepository.delete(comment);
     }
 }
