@@ -4,12 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.CommentRequest;
 import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.*;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.domain.User;
 
 import java.util.Arrays;
 import java.util.Optional;

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserResponse;
@@ -41,9 +40,6 @@ public class ArticleServiceTests {
     @Mock
     private ArticleRepository articleRepository;
 
-    @Mock
-    private ModelMapper modelMapper;
-
     private User user = spy(new User("bmo", "Password123!", "bmo@gmail.com"));
     private User notAuthorUser = spy(new User("remo", "Password123!", "remo@reader.com"));
     private UserResponse userResponse = createUserResponse(USER_ID);
@@ -54,8 +50,6 @@ public class ArticleServiceTests {
 
     @BeforeEach
     void setUp() {
-//        user.setId(USER_ID);
-//        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
         when(user.getId()).thenReturn(USER_ID);
         when(notAuthorUser.getId()).thenReturn(NOT_AUTHOR_USER_ID);
         doReturn(true).when(user).matchId(USER_ID);
@@ -72,7 +66,6 @@ public class ArticleServiceTests {
     @Test
     void 게시글_생성_성공() {
         given(userService.findById(USER_ID)).willReturn(user);
-        given(modelMapper.map(articleDto, Article.class)).willReturn(article);
         given(articleRepository.save(any())).willReturn(article);
         given(user.getId()).willReturn(USER_ID);
 
@@ -98,7 +91,6 @@ public class ArticleServiceTests {
     @Test
     void 다른_사람이_작성한_게시글_조회_실패() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(modelMapper.map(notAuthorResponse, User.class)).willReturn(notAuthorUser);
         doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
@@ -109,7 +101,6 @@ public class ArticleServiceTests {
     @Test
     void 작성자가_작성한_게시글_조회_성공() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(modelMapper.map(userResponse, User.class)).willReturn(user);
 
         articleService.findArticleWrittenByUser(ARTICLE_ID, userResponse.getId());
 
@@ -136,7 +127,6 @@ public class ArticleServiceTests {
     void 게시물_수정_성공() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
         given(userService.findById(USER_ID)).willReturn(user);
-        given(modelMapper.map(articleDto, Article.class)).willReturn(article);
 
         assertDoesNotThrow(() -> articleService.editArticle(articleDto, ARTICLE_ID, userResponse.getId()));
     }
