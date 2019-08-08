@@ -25,7 +25,7 @@ public class TitleConstraintValidator implements ConstraintValidator<TitleConstr
                 .addConstraintViolation();
             return false;
         }
-        
+
         return true;
     }
 }

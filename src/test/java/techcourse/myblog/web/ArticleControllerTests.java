@@ -58,7 +58,6 @@ public class ArticleControllerTests {
             .consumeWith(response -> {
                 String body = new String(response.getResponseBody());
                 assertThat(body.contains(TITLE)).isTrue();
-                assertThat(body.contains(COVER_URL)).isTrue();
                 assertThat(body.contains(CONTENTS)).isTrue();
             });
     }

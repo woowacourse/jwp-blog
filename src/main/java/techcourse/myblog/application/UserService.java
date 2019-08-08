@@ -9,11 +9,10 @@ import techcourse.myblog.application.exception.EditException;
 import techcourse.myblog.application.exception.LoginException;
 import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.support.encrytor.EncryptHelper;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

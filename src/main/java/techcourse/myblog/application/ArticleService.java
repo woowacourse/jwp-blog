@@ -6,11 +6,10 @@ import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.exception.NoArticleException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.domain.User;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,7 +32,6 @@ public class ArticleService {
         User author = userService.findById(authorId);
 
         Article article = articleDto.toEntity(author);
-        article.setAuthor(author);
         Article savedArticle = articleRepository.save(article);
         return savedArticle.getId();
     }

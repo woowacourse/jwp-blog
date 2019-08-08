@@ -10,7 +10,7 @@ import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.domain.User;
 
 import java.util.Arrays;
@@ -19,8 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 public class CommentServiceTests {
@@ -49,7 +48,7 @@ public class CommentServiceTests {
     private User user = spy(new User("bmo", "Password123!", "bmo@gmail.com"));
     private User notAuthorUser = spy(new User("remo", "Password123!", "remo@reader.com"));
     private Article article = new Article(user, "title", "coverUrl", "contents");
-    private Comment comment = new Comment("commentContents", user, article);
+    private Comment comment = spy(new Comment("commentContents", user, article));
     private CommentRequest commentRequest = new CommentRequest("commentContents");
 
     @Test
@@ -59,7 +58,7 @@ public class CommentServiceTests {
 
         commentService.save(commentRequest, USER_ID, ARTICLE_ID);
 
-        verify(commentRepository).save(comment);
+        verify(commentRepository).save(any());
     }
 
     @Test
@@ -112,6 +111,7 @@ public class CommentServiceTests {
     void 댓글삭제_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
         given(userService.findById(USER_ID)).willReturn(user);
+        doReturn(true).when(comment).matchAuthorId(USER_ID);
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
@@ -122,6 +122,7 @@ public class CommentServiceTests {
     @Test
     void 존재하지_않는_회원_댓글삭제_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
+        doReturn(false).when(comment).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
@@ -134,6 +135,7 @@ public class CommentServiceTests {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
         given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
         given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
+        doReturn(false).when(comment).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
@@ -145,6 +147,7 @@ public class CommentServiceTests {
     void 댓글수정_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
         given(userService.findById(USER_ID)).willReturn(user);
+        doReturn(true).when(comment).matchAuthorId(USER_ID);
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
@@ -167,6 +170,7 @@ public class CommentServiceTests {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
         given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
         given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
+        doReturn(false).when(comment).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 

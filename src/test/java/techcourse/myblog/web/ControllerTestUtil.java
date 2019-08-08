@@ -11,7 +11,7 @@ public class ControllerTestUtil {
     public static final String EMAIL = "sloth@sloth.com";
     public static final String PASSWORD = "Password123!";
     public static final String TITLE = "googler bmo";
-    public static final String COVER_URL = "bmo.jpg";
+    public static final String COVER_URL = "https://images.pexels.com/photos/731217/pexels-photo-731217.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940";
     public static final String CONTENTS = "why bmo so great?";
 
     public static void signUp(WebTestClient webTestClient, String name, String email, String password) {
