@@ -44,7 +44,7 @@ public class RestCommentControllerTests extends AbstractControllerTests {
         String json = new String(Objects.requireNonNull(getRequest("/api/articles/1/comments").getResponseBody()));
         CommentResponseDto[] getResponses = objectMapper.readValue(json, CommentResponseDto[].class);
 
-        json = new String(Objects.requireNonNull(deleteRequest("/api/comments/3").getResponseBody()));
+        json = new String(Objects.requireNonNull(deleteRequest("/api/comments/2").getResponseBody()));
         CommentResponseDto[] deleteResponses = objectMapper.readValue(json, CommentResponseDto[].class);
         assertThat(getResponses.length).isGreaterThan(deleteResponses.length);
     }
