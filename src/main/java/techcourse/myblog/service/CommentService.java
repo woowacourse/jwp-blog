@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.CommentRequestDto;
+import techcourse.myblog.dto.CommentResponseDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.CommentAuthenticationException;
 import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.dto.CommentRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.utils.converter.CommentConverter;
 
 @Service
 @Transactional
@@ -29,23 +31,24 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public Comment addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
+    public CommentResponseDto addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
         String contents = commentRequestDto.getContents();
         User commenter = userService.getUserByEmail(userResponseDto.getEmail());
         Article article = articleService.findArticle(articleId);
 
         Comment comment = new Comment(contents, commenter, article);
         article.addComments(comment);
-        return comment;
+
+        return CommentConverter.toResponseDto(comment);
     }
 
-    public Comment update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
+    public CommentResponseDto update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
 
         checkAuthentication(commentId, userResponseDto);
         comment.update(commentRequestDto, userService.getUserByEmail(userResponseDto.getEmail()));
 
-        return comment;
+        return CommentConverter.toResponseDto(comment);
     }
 
     private Comment getCommentById(Long commentId) {
