@@ -22,47 +22,47 @@ public class CommentService {
     private ArticleService articleService;
 
     public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
-	this.commentRepository = commentRepository;
-	this.userService = userService;
-	this.articleService = articleService;
+        this.commentRepository = commentRepository;
+        this.userService = userService;
+        this.articleService = articleService;
     }
 
     public Comment findById(Long id) {
-	return commentRepository.findById(id)
-		.orElseThrow(NotFoundCommentException::new);
+        return commentRepository.findById(id)
+                .orElseThrow(NotFoundCommentException::new);
     }
 
     public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
-	Article article = articleService.findById(articleId);
-	return commentRepository.findAllByArticle(article)
-		.stream()
-		.map(this::toCommentResponseDto)
-		.collect(Collectors.toList());
+        Article article = articleService.findById(articleId);
+        return commentRepository.findAllByArticle(article)
+                .stream()
+                .map(this::toCommentResponseDto)
+                .collect(Collectors.toList());
     }
 
     public Comment save(UserSessionDto userSessionDto, CommentRequestDto commentRequestDto) {
-	User user = userService.findByUserSession(userSessionDto);
-	Article article = articleService.findById(commentRequestDto.getArticleId());
-	Comment comment = commentRequestDto.toEntity(user, article);
-	return commentRepository.save(comment);
+        User user = userService.findByUserSession(userSessionDto);
+        Article article = articleService.findById(commentRequestDto.getArticleId());
+        Comment comment = commentRequestDto.toEntity(user, article);
+        return commentRepository.save(comment);
     }
 
     public Comment update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
-	Comment comment = findById(commentId);
-	User author = userService.findByUserSession(userSessionDto);
-	comment.updateComment(commentRequestDto.toEntity(author));
-	return comment;
+        Comment comment = findById(commentId);
+        User author = userService.findByUserSession(userSessionDto);
+        comment.updateComment(commentRequestDto.toEntity(author));
+        return comment;
     }
 
     public void delete(UserSessionDto userSessionDto, Long commentId) {
-	Comment comment = findById(commentId);
-	User author = userService.findByUserSession(userSessionDto);
-	if (comment.matchAuthor(author)) {
-	    commentRepository.deleteById(commentId);
-	}
+        Comment comment = findById(commentId);
+        User author = userService.findByUserSession(userSessionDto);
+        if (comment.matchAuthor(author)) {
+            commentRepository.deleteById(commentId);
+        }
     }
 
     public CommentResponseDto toCommentResponseDto(Comment comment) {
-	return new CommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment());
+        return new CommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment());
     }
 }

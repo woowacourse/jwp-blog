@@ -15,16 +15,16 @@ public class LogInService {
     private UserRepository userRepository;
 
     public LogInService(UserRepository userRepository) {
-	this.userRepository = userRepository;
+        this.userRepository = userRepository;
     }
 
     public UserSessionDto logIn(LogInInfoDto logInInfoDto) {
-	User logInUser = userRepository.findByEmail(logInInfoDto.getEmail())
-		.orElseThrow(() -> new LogInException(NOT_FOUND_USER_MESSAGE));
+        User logInUser = userRepository.findByEmail(logInInfoDto.getEmail())
+                .orElseThrow(() -> new LogInException(NOT_FOUND_USER_MESSAGE));
 
-	if (logInUser.matchPassword(logInInfoDto.getPassword())) {
-	    return new UserSessionDto(logInUser.getId(), logInUser.getName(), logInUser.getEmail());
-	}
-	throw new LogInException(PASSWORD_FAIL_MESSAGE);
+        if (logInUser.matchPassword(logInInfoDto.getPassword())) {
+            return new UserSessionDto(logInUser.getId(), logInUser.getName(), logInUser.getEmail());
+        }
+        throw new LogInException(PASSWORD_FAIL_MESSAGE);
     }
 }

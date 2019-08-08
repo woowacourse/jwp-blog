@@ -4,6 +4,6 @@ public class NotFoundCommentException extends RuntimeException {
     public static final String NOT_FOUND_COMMENT_MESSAGE = "Not Found Comment";
 
     public NotFoundCommentException() {
-	super(NOT_FOUND_COMMENT_MESSAGE);
+        super(NOT_FOUND_COMMENT_MESSAGE);
     }
 }

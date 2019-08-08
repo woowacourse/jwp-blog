@@ -5,15 +5,15 @@ public class LogInInfoDto {
     private String password;
 
     public LogInInfoDto(String email, String password) {
-	this.email = email;
-	this.password = password;
+        this.email = email;
+        this.password = password;
     }
 
     public String getEmail() {
-	return email;
+        return email;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 }

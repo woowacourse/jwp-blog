@@ -12,12 +12,12 @@ public class IndexController {
     private ArticleService articleService;
 
     public IndexController(ArticleService articleService) {
-	this.articleService = articleService;
+        this.articleService = articleService;
     }
 
     @GetMapping
     public String index(Model model) {
-	model.addAttribute("articles", articleService.findAll());
-	return "index";
+        model.addAttribute("articles", articleService.findAll());
+        return "index";
     }
 }

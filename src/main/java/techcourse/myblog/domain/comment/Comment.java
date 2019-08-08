@@ -29,34 +29,34 @@ public class Comment {
     }
 
     public Comment(String comment, User author, Article article) {
-	this.comment = comment;
-	this.author = author;
-	this.article = article;
+        this.comment = comment;
+        this.author = author;
+        this.article = article;
     }
 
     public boolean matchAuthor(User author) {
-	return this.author.equals(author);
+        return this.author.equals(author);
     }
 
     public void updateComment(Comment paramComment) {
-	if (this.author.equals(paramComment.author)) {
-	    this.comment = paramComment.comment;
-	}
+        if (this.author.equals(paramComment.author)) {
+            this.comment = paramComment.comment;
+        }
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public String getComment() {
-	return comment;
+        return comment;
     }
 
     public Long getAuthorId() {
-	return author.getId();
+        return author.getId();
     }
 
     public String getAuthorName() {
-	return author.getName();
+        return author.getName();
     }
 }

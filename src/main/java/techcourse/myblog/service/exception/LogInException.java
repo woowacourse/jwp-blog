@@ -5,6 +5,6 @@ public class LogInException extends RuntimeException {
     public static final String PASSWORD_FAIL_MESSAGE = "Password Mismatch!";
 
     public LogInException(String message) {
-	super(message);
+        super(message);
     }
 }

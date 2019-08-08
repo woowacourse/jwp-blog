@@ -35,41 +35,41 @@ public class Article {
     }
 
     public Article(String title, String coverUrl, String contents, User author) {
-	this.title = title;
-	this.coverUrl = coverUrl;
-	this.contents = contents;
-	this.author = author;
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+        this.author = author;
     }
 
     public void updateArticle(Article article) {
-	if (matchAuthor(article.author)) {
-	    this.title = article.title;
-	    this.coverUrl = article.coverUrl;
-	    this.contents = article.contents;
-	}
+        if (matchAuthor(article.author)) {
+            this.title = article.title;
+            this.coverUrl = article.coverUrl;
+            this.contents = article.contents;
+        }
     }
 
     public boolean matchAuthor(User author) {
-	return this.author.equals(author);
+        return this.author.equals(author);
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public Long getAuthorId() {
-	return author.getId();
+        return author.getId();
     }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public String getCoverUrl() {
-	return coverUrl;
+        return coverUrl;
     }
 
     public String getContents() {
-	return contents;
+        return contents;
     }
 }

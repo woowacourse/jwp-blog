@@ -16,28 +16,28 @@ public class LogInController {
     private LoginChecker loginChecker;
 
     public LogInController(LogInService logInService, LoginChecker loginChecker) {
-	this.logInService = logInService;
-	this.loginChecker = loginChecker;
+        this.logInService = logInService;
+        this.loginChecker = loginChecker;
     }
 
     @GetMapping("/login")
     public String showLoginPage(HttpSession session) {
-	if (loginChecker.isLoggedIn(session)) {
-	    return "redirect:/";
-	}
-	return "login";
+        if (loginChecker.isLoggedIn(session)) {
+            return "redirect:/";
+        }
+        return "login";
     }
 
     @PostMapping("/login")
     public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
-	UserSessionDto userSession = logInService.logIn(logInInfoDto);
-	session.setAttribute(LoginChecker.LOGGED_IN_USER, userSession);
-	return "redirect:/";
+        UserSessionDto userSession = logInService.logIn(logInInfoDto);
+        session.setAttribute(LoginChecker.LOGGED_IN_USER, userSession);
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-	session.removeAttribute(LoginChecker.LOGGED_IN_USER);
-	return "redirect:/";
+        session.removeAttribute(LoginChecker.LOGGED_IN_USER);
+        return "redirect:/";
     }
 }

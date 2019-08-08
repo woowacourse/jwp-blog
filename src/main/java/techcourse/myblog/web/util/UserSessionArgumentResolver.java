@@ -20,20 +20,20 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-	return UserSessionDto.class.isAssignableFrom(parameter.getParameterType());
+        return UserSessionDto.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-	HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
-	HttpSession session = servletRequest.getSession();
-	UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
+        HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+        HttpSession session = servletRequest.getSession();
+        UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
 
-	if (userSessionDto == null) {
-	    log.debug("session is null");
-	    throw new NotLoggedInException();
-	}
-	log.debug("current login user id is {} - {}", userSessionDto.getId(), userSessionDto.getName());
-	return userSessionDto;
+        if (userSessionDto == null) {
+            log.debug("session is null");
+            throw new NotLoggedInException();
+        }
+        log.debug("current login user id is {} - {}", userSessionDto.getId(), userSessionDto.getName());
+        return userSessionDto;
     }
 }

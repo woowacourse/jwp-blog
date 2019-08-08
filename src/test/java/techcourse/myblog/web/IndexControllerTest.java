@@ -13,8 +13,8 @@ public class IndexControllerTest {
 
     @Test
     public void indexTest() {
-	webTestClient.get().uri("/")
-		.exchange()
-		.expectStatus().isOk();
+        webTestClient.get().uri("/")
+                .exchange()
+                .expectStatus().isOk();
     }
 }

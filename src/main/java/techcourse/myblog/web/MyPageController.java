@@ -18,27 +18,27 @@ public class MyPageController {
     private LoginChecker loginChecker;
 
     public MyPageController(UserService userService, LoginChecker loginChecker) {
-	this.userService = userService;
-	this.loginChecker = loginChecker;
+        this.userService = userService;
+        this.loginChecker = loginChecker;
     }
 
     @GetMapping("/{id}")
     public String showMyPage(@PathVariable("id") long id, Model model) {
-	model.addAttribute("user", userService.findUserPublicInfoById(id));
-	return "mypage";
+        model.addAttribute("user", userService.findUserPublicInfoById(id));
+        return "mypage";
     }
 
     @GetMapping("/{id}/edit")
     public String showMyPageEdit(@PathVariable("id") long id, Model model,
-				 HttpSession session, RedirectAttributes redirectAttributes) {
-	String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
-	if (errorMessage != null) {
-	    model.addAttribute("errorMessage", errorMessage);
-	}
-	if (loginChecker.isLoggedInSameId(session, id)) {
-	    model.addAttribute("user", userService.findUserPublicInfoById(id));
-	    return "mypage-edit";
-	}
-	return "redirect:/mypage/" + id;
+                                 HttpSession session, RedirectAttributes redirectAttributes) {
+        String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
+        if (errorMessage != null) {
+            model.addAttribute("errorMessage", errorMessage);
+        }
+        if (loginChecker.isLoggedInSameId(session, id)) {
+            model.addAttribute("user", userService.findUserPublicInfoById(id));
+            return "mypage-edit";
+        }
+        return "redirect:/mypage/" + id;
     }
 }

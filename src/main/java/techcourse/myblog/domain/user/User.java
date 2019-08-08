@@ -21,7 +21,7 @@ public class User {
 
     private static final String NAME_REGEX = "^[가-힣|a-zA-Z]+$";
     private static final String PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)" +
-	    "(?=.*[`~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?])(?!.*[가-힣])(?!.*[ㄱ-ㅎ])(?!.*[ㅏ-ㅣ]).*$";
+            "(?=.*[`~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?])(?!.*[가-힣])(?!.*[ㄱ-ㅎ])(?!.*[ㅏ-ㅣ]).*$";
 
     private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
@@ -54,88 +54,92 @@ public class User {
     }
 
     public User(String name, String email, String password) {
-	checkValidName(name);
-	checkValidPassword(password);
+        checkValidName(name);
+        checkValidPassword(password);
 
-	this.name = name;
-	this.email = email;
-	this.password = password;
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public boolean matchPassword(final String password) {
-	return this.password.equals(password);
+        return this.password.equals(password);
     }
 
     private void checkValidName(String name) {
-	checkValidNameLength(name);
-	checkValidNameCharacters(name);
+        checkValidNameLength(name);
+        checkValidNameCharacters(name);
     }
 
     private void checkValidNameLength(String name) {
-	int nameLength = name.length();
-	if (nameLength < MIN_NAME_LENGTH || nameLength > MAX_NAME_LENGTH) {
-	    throw new UserArgumentException(INVALID_NAME_LENGTH_MESSAGE);
-	}
+        int nameLength = name.length();
+        if (nameLength < MIN_NAME_LENGTH || nameLength > MAX_NAME_LENGTH) {
+            throw new UserArgumentException(INVALID_NAME_LENGTH_MESSAGE);
+        }
     }
 
     private void checkValidNameCharacters(String name) {
-	if (!matchRegex(name, NAME_PATTERN)) {
-	    throw new UserArgumentException(NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
-	}
+        if (!matchRegex(name, NAME_PATTERN)) {
+            throw new UserArgumentException(NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
+        }
     }
 
     private void checkValidPassword(String password) {
-	checkValidPasswordLength(password);
-	checkValidPasswordCharacters(password);
+        checkValidPasswordLength(password);
+        checkValidPasswordCharacters(password);
     }
 
     private void checkValidPasswordLength(String password) {
-	if (password.length() < MIN_PASSWORD_LENGTH) {
-	    throw new UserArgumentException(INVALID_PASSWORD_LENGTH_MESSAGE);
-	}
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new UserArgumentException(INVALID_PASSWORD_LENGTH_MESSAGE);
+        }
     }
 
     private void checkValidPasswordCharacters(String password) {
-	if (!matchRegex(password, PASSWORD_PATTERN)) {
-	    throw new UserArgumentException(INVALID_PASSWORD_MESSAGE);
-	}
+        if (!matchRegex(password, PASSWORD_PATTERN)) {
+            throw new UserArgumentException(INVALID_PASSWORD_MESSAGE);
+        }
     }
 
     private boolean matchRegex(String input, Pattern pattern) {
-	return pattern.matcher(input).find();
+        return pattern.matcher(input).find();
     }
 
-    public void updateName(String name) {
-	checkValidName(name);
-	this.name = name;
+    public void update(User other) {
+        updateName(other.name);
+    }
+
+    private void updateName(String name) {
+        checkValidName(name);
+        this.name = name;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public String getEmail() {
-	return email;
+        return email;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     @Override
     public boolean equals(Object o) {
-	if (this == o) return true;
-	if (o == null || getClass() != o.getClass()) return false;
-	User user = (User) o;
-	return email.equals(user.email);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return email.equals(user.email);
     }
 
     @Override
     public int hashCode() {
-	return Objects.hash(email);
+        return Objects.hash(email);
     }
 }

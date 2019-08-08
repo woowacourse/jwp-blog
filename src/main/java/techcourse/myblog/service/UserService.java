@@ -4,10 +4,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.exception.UserArgumentException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
-import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.service.dto.UserRequestDto;
-import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.dto.*;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
@@ -25,72 +22,72 @@ public class UserService {
     private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
-	this.userRepository = userRepository;
+        this.userRepository = userRepository;
     }
 
     public List<User> findAll() {
-	return userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public User findById(Long id) {
-	return userRepository.findById(id)
-		.orElseThrow(NotFoundUserException::new);
+        return userRepository.findById(id)
+                .orElseThrow(NotFoundUserException::new);
     }
 
     User findByUserSession(UserSessionDto userSessionDto) {
-	return findById(userSessionDto.getId());
+        return findById(userSessionDto.getId());
     }
 
     public UserPublicInfoDto findUserPublicInfoById(Long id) {
-	User user = findById(id);
-	return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+        User user = findById(id);
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
     }
 
     public UserPublicInfoDto findUserPublicInfoByArticle(ArticleDto article) {
-	User user = findById(article.getUserId());
-	return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+        User user = findById(article.getUserId());
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
     }
 
     public User save(UserRequestDto userRequestDto) {
-	try {
-	    validate(userRequestDto);
-	    return userRepository.save(userRequestDto.toEntity());
-	} catch (UserArgumentException e) {
-	    throw new SignUpException(e.getMessage());
-	}
+        try {
+            validate(userRequestDto);
+            return userRepository.save(userRequestDto.toEntity());
+        } catch (UserArgumentException e) {
+            throw new SignUpException(e.getMessage());
+        }
     }
 
     private void validate(UserRequestDto userRequestDto) {
-	checkDuplicatedEmail(userRequestDto.getEmail());
-	checkPasswordConfirm(userRequestDto);
+        checkDuplicatedEmail(userRequestDto.getEmail());
+        checkPasswordConfirm(userRequestDto);
     }
 
     private void checkDuplicatedEmail(String email) {
-	if (userRepository.findByEmail(email).isPresent()) {
-	    throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
-	}
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
+        }
     }
 
     private void checkPasswordConfirm(UserRequestDto userRequestDto) {
-	if (!userRequestDto.confirmPassword()) {
-	    throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
-	}
+        if (!userRequestDto.confirmPassword()) {
+            throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
+        }
     }
 
-    public void update(Long userId, UserRequestDto userRequestDto) {
-	try {
-	    User user = findById(userId);
-	    user.updateName(userRequestDto.getName());
-	} catch (NotFoundUserException | UserArgumentException e) {
-	    throw new UserUpdateException(e.getMessage());
-	}
+    public void update(Long userId, UserRequestUpdateDto userRequestUpdateDto) {
+        try {
+            User user = findById(userId);
+            user.update(userRequestUpdateDto.toEntity());
+        } catch (NotFoundUserException | UserArgumentException e) {
+            throw new UserUpdateException(e.getMessage());
+        }
     }
 
     public void delete(Long id) {
-	try {
-	    userRepository.deleteById(id);
-	} catch (IllegalArgumentException e) {
-	    throw new UserDeleteException(e.getMessage());
-	}
+        try {
+            userRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new UserDeleteException(e.getMessage());
+        }
     }
 }

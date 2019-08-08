@@ -11,34 +11,34 @@ public class ArticleDto {
     private String contents;
 
     public ArticleDto(Long id, Long userId, String title, String coverUrl, String contents) {
-	this.id = id;
-	this.userId = userId;
-	this.title = title;
-	this.coverUrl = coverUrl;
-	this.contents = contents;
+        this.id = id;
+        this.userId = userId;
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public Long getUserId() {
-	return userId;
+        return userId;
     }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public String getCoverUrl() {
-	return coverUrl;
+        return coverUrl;
     }
 
     public String getContents() {
-	return contents;
+        return contents;
     }
 
     public Article toEntity(User author) {
-	return new Article(title, coverUrl, contents, author);
+        return new Article(title, coverUrl, contents, author);
     }
 }

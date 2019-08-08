@@ -25,65 +25,65 @@ public class ArticleController {
     private LoginChecker loginChecker;
 
     public ArticleController(ArticleService articleService, UserService userService, CommentService commentService,
-			     LoginChecker loginChecker) {
-	this.articleService = articleService;
-	this.userService = userService;
-	this.commentService = commentService;
-	this.loginChecker = loginChecker;
+                             LoginChecker loginChecker) {
+        this.articleService = articleService;
+        this.userService = userService;
+        this.commentService = commentService;
+        this.loginChecker = loginChecker;
     }
 
     @GetMapping
     public String showArticles(Model model) {
-	model.addAttribute("articles", articleService.findAll());
-	return "index";
+        model.addAttribute("articles", articleService.findAll());
+        return "index";
     }
 
     @GetMapping("/new")
     public String showCreatePage(HttpSession session) {
-	loginChecker.getLoggedInUser(session);
-	return "article-edit";
+        loginChecker.getLoggedInUser(session);
+        return "article-edit";
     }
 
     @GetMapping("/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
-	ArticleDto articleDto = articleService.findArticleDtoById(id);
-	model.addAttribute("article", articleDto);
+        ArticleDto articleDto = articleService.findArticleDtoById(id);
+        model.addAttribute("article", articleDto);
 
-	UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoByArticle(articleDto);
-	model.addAttribute("articleUser", userPublicInfoDto);
+        UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoByArticle(articleDto);
+        model.addAttribute("articleUser", userPublicInfoDto);
 
-	List<CommentResponseDto> commentResponses = commentService.findCommentsByArticleId(id);
-	model.addAttribute("comments", commentResponses);
-	return "article";
+        List<CommentResponseDto> commentResponses = commentService.findCommentsByArticleId(id);
+        model.addAttribute("comments", commentResponses);
+        return "article";
     }
 
     @GetMapping("/{id}/edit")
     public String showEditPage(@PathVariable("id") Long articleId, Model model, UserSessionDto userSession) {
-	try {
-	    ArticleDto articleDto = articleService.authorize(userSession, articleId);
-	    model.addAttribute("article", articleDto);
-	    return "article-edit";
-	} catch (UserAuthorizationException e) {
-	    return "redirect:/articles/" + articleId;
-	}
+        try {
+            ArticleDto articleDto = articleService.authorize(userSession, articleId);
+            model.addAttribute("article", articleDto);
+            return "article-edit";
+        } catch (UserAuthorizationException e) {
+            return "redirect:/articles/" + articleId;
+        }
     }
 
     @PostMapping
     public String createArticle(ArticleDto articleDto, UserSessionDto userSession) {
-	ArticleDto savedArticleDto = articleService.save(userSession, articleDto);
-	return "redirect:/articles/" + savedArticleDto.getId();
+        ArticleDto savedArticleDto = articleService.save(userSession, articleDto);
+        return "redirect:/articles/" + savedArticleDto.getId();
     }
 
     @PutMapping("/{articleId}")
     public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto,
-			      UserSessionDto userSession) {
-	articleService.update(articleId, userSession, articleDto);
-	return "redirect:/articles/" + articleId;
+                              UserSessionDto userSession) {
+        articleService.update(articleId, userSession, articleDto);
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable("id") long articleId, UserSessionDto userSession) {
-	articleService.delete(articleId, userSession);
-	return "redirect:/";
+        articleService.delete(articleId, userSession);
+        return "redirect:/";
     }
 }

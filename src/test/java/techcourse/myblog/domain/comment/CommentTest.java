@@ -3,11 +3,9 @@ package techcourse.myblog.domain.comment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CommentTest {
     private static final String BASE_COMMENT = "comment";
