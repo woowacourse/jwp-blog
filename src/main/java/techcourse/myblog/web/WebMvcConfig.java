@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.interceptor.loggedIn.LoggedInInterceptor;
 import techcourse.myblog.interceptor.login.LoginInterceptor;
-import techcourse.myblog.utils.custum.LoginUserHandlerMethodArgumentResolver;
+import techcourse.myblog.web.argumentResolver.LoginUserHandlerMethodArgumentResolver;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public LoginUserHandlerMethodArgumentResolver loginUserResolver() {
         return new LoginUserHandlerMethodArgumentResolver();
     }
-    
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)

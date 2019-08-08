@@ -6,7 +6,7 @@ import techcourse.myblog.dto.comment.CommentRequest;
 import techcourse.myblog.dto.comment.CommentResponse;
 import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.utils.custum.LoginUser;
+import techcourse.myblog.utils.annotation.LoginUser;
 
 import javax.validation.Valid;
 
@@ -31,7 +31,7 @@ public class CommentController {
 
     @PutMapping(COMMENT + "/{articleId}" + "/{commentId}")
     @ResponseBody
-    public CommentResponse updateComment(@PathVariable Long articleId, @PathVariable Long commentId
+    public CommentResponse updateComment(@PathVariable Long commentId
             , @RequestBody @Valid CommentRequest commentRequest, @LoginUser UserResponse userResponse) {
 
         return commentService.update(commentId, commentRequest, userResponse);
@@ -39,8 +39,7 @@ public class CommentController {
 
     @DeleteMapping(COMMENT + "/{articleId}" + "/{commentId}")
     @ResponseBody
-    public void deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, @LoginUser UserResponse loginUser) {
+    public void deleteComment(@PathVariable Long commentId, @LoginUser UserResponse loginUser) {
         commentService.delete(commentId, loginUser);
     }
-
 }

@@ -15,7 +15,7 @@ import techcourse.myblog.dto.user.UpdateUserRequest;
 import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.utils.custum.LoginUser;
+import techcourse.myblog.utils.annotation.LoginUser;
 import techcourse.myblog.utils.model.ModelUtil;
 import techcourse.myblog.utils.session.SessionUtil;
 

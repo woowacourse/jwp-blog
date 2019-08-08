@@ -7,7 +7,7 @@ import techcourse.myblog.dto.article.ArticleRequest;
 import techcourse.myblog.dto.article.ArticleResponse;
 import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.utils.custum.LoginUser;
+import techcourse.myblog.utils.annotation.LoginUser;
 import techcourse.myblog.utils.model.ModelUtil;
 
 import javax.servlet.http.HttpSession;
