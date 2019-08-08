@@ -72,8 +72,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void modify(Long commentId, CommentDto commentDto, User user) {
+    public CommentDto modify(Long commentId, CommentDto commentDto, User user) {
         Comment comment = findCommentById(commentId);
         comment.modify(commentDto, user);
+        return commentAssembler.convertEntityToDto(comment);
     }
 }

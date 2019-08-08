@@ -37,8 +37,7 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession session) {
-        commentService.modify(commentId, commentDto, (User) session.getAttribute("user"));
-        return new RedirectView("/articles/" + articleId);
+    public @ResponseBody CommentDto updateComment(@RequestBody CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession session) {
+        return commentService.modify(commentId, commentDto, (User) session.getAttribute("user"));
     }
 }
