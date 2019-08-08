@@ -1,6 +1,7 @@
 package techcourse.myblog.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.exception.NoArticleException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
@@ -8,10 +9,10 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
@@ -22,6 +23,13 @@ public class ArticleService {
         this.userService = userService;
     }
 
+    @Transactional(readOnly = true)
+    public Article findById(Long id) {
+        return articleRepository.findById(id)
+            .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
+    }
+
+    @Transactional(readOnly = true)
     public List<Article> findAll() {
         return articleRepository.findAll();
     }
@@ -35,11 +43,13 @@ public class ArticleService {
         return savedArticle.getId();
     }
 
+    @Transactional(readOnly = true)
     public Article findArticleById(Long articleId) {
         return articleRepository.findById(articleId)
             .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }
 
+    @Transactional(readOnly = true)
     public Article findArticleWrittenByUser(Long articleId, Long userId) {
         Article article = findArticleById(articleId);
 
@@ -50,7 +60,6 @@ public class ArticleService {
         return article;
     }
 
-    @Transactional
     public void editArticle(ArticleDto articleDto, Long articleId, Long userId) {
         Article article = findArticleById(articleId);
 

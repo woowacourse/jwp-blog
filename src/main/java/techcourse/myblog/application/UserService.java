@@ -36,6 +36,7 @@ public class UserService {
         return encryptHelper.encrypt(password);
     }
 
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id)
             .orElseThrow(() -> new NoUserException("사용자를 찾을 수 없습니다: " + id));

@@ -1,11 +1,15 @@
 package techcourse.myblog.application;
 
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.application.dto.CommentRequest;
-import techcourse.myblog.application.exception.*;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.application.exception.CommentNotFoundException;
+import techcourse.myblog.application.exception.EmptyCommentRequestException;
+import techcourse.myblog.application.exception.NotSameAuthorException;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.domain.User;
 
 import javax.transaction.Transactional;
 import java.util.Collections;
@@ -15,13 +19,14 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
 
-    public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    private final ArticleService articleService;
+    private final UserService userService;
+
+    public CommentService(CommentRepository commentRepository, ArticleService articleService, UserService userService) {
         this.commentRepository = commentRepository;
-        this.articleRepository = articleRepository;
-        this.userRepository = userRepository;
+        this.articleService = articleService;
+        this.userService = userService;
     }
 
     public Comment save(CommentRequest commentRequest, Long articleId, Long userId) {
@@ -29,11 +34,9 @@ public class CommentService {
             throw new EmptyCommentRequestException();
         }
 
-        Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
+        Article article = articleService.findById(articleId);
 
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
+        User user = userService.findById(userId);
 
         Comment comment = new Comment(commentRequest.getContents(), user, article);
 
@@ -51,8 +54,7 @@ public class CommentService {
 
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = findCommentById(commentId);
-        User author = userRepository.findById(userId)
-            .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다."));
+        User author = userService.findById(userId);
 
         if (!comment.isSameAuthor(author)) {
             throw new NotSameAuthorException("해당 작성자만 댓글을 삭제할 수 있습니다.");
@@ -64,8 +66,7 @@ public class CommentService {
     @Transactional
     public void updateComment(Long commentId, Long userId, CommentRequest commentRequest) {
         Comment comment = findCommentById(commentId);
-        User author = userRepository.findById(userId)
-            .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다."));
+        User author = userService.findById(userId);
         Comment updatedComment = commentRequest.toEntity(author, comment.getArticle());
 
         try {
