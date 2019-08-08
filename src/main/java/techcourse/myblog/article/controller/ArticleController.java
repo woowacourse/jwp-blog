@@ -7,12 +7,7 @@ import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.utils.model.ModelUtil;
-import techcourse.myblog.utils.session.SessionUtil;
-
-import javax.servlet.http.HttpSession;
-
-import static techcourse.myblog.utils.session.SessionContext.USER;
+import techcourse.myblog.utils.model.ModelLogger;
 
 @Controller
 public class ArticleController {
@@ -24,7 +19,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        ModelUtil.addAttribute(model, "articles", articleService.findAll());
+        ModelLogger.addAttribute(model, "articles", articleService.findAll());
         return "index";
     }
 
@@ -35,15 +30,15 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
-        ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
-        ModelUtil.addAttribute(model, "comments", articleService.getCommentsByArticleId(articleId));
+        ModelLogger.addAttribute(model, "article", articleService.findArticle(articleId));
+        ModelLogger.addAttribute(model, "comments", articleService.getCommentsByArticleId(articleId));
 
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String getEditArticle(@PathVariable long articleId, Model model) {
-        ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
+        ModelLogger.addAttribute(model, "article", articleService.findArticle(articleId));
 
         return "article-edit";
     }

@@ -2,12 +2,12 @@ package techcourse.myblog.utils.session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import techcourse.myblog.utils.model.ModelUtil;
+import techcourse.myblog.utils.model.ModelLogger;
 
 import javax.servlet.http.HttpSession;
 
-public class SessionUtil {
-    private static final Logger log = LoggerFactory.getLogger(ModelUtil.class);
+public class SessionHelper {
+    private static final Logger log = LoggerFactory.getLogger(ModelLogger.class);
     private static final String BEFORE_SESSION = "Before Session : {} ";
     private static final String AFTER_SESSION = "After Session : {} ";
 

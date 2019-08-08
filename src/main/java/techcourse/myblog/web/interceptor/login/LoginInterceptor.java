@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.utils.session.SessionUtil;
+import techcourse.myblog.utils.session.SessionHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +30,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
 
         HttpSession session = request.getSession();
-        if (SessionUtil.isNull(session)) {
+        if (SessionHelper.isNull(session)) {
             response.sendRedirect("/login");
             return false;
         }

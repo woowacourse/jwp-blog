@@ -10,8 +10,8 @@ import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.user.exception.LoginException;
 import techcourse.myblog.user.service.LoginService;
 import techcourse.myblog.user.service.UserService;
-import techcourse.myblog.utils.model.ModelUtil;
-import techcourse.myblog.utils.session.SessionUtil;
+import techcourse.myblog.utils.model.ModelLogger;
+import techcourse.myblog.utils.session.SessionHelper;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -38,7 +38,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public String logout() {
-        SessionUtil.removeAttribute(session, USER);
+        SessionHelper.removeAttribute(session, USER);
         return "redirect:/";
     }
 
@@ -49,13 +49,13 @@ public class UserController {
         }
 
         UserResponseDto userResponseDto = loginService.loginByEmailAndPwd(userRequestDto);
-        SessionUtil.setAttribute(session, USER, userResponseDto);
+        SessionHelper.setAttribute(session, USER, userResponseDto);
         return "redirect:/";
     }
 
     @GetMapping("/users")
     public String users(Model model) {
-        ModelUtil.addAttribute(model, "users", userService.findAll());
+        ModelLogger.addAttribute(model, "users", userService.findAll());
         return "user-list";
     }
 
@@ -81,7 +81,7 @@ public class UserController {
         }
 
         UserResponseDto userResponseDto = userService.addUser(userRequestDto);
-        SessionUtil.setAttribute(session, USER, userResponseDto);
+        SessionHelper.setAttribute(session, USER, userResponseDto);
         return "redirect:/";
     }
 
@@ -92,14 +92,14 @@ public class UserController {
         }
 
         UserResponseDto userResponseDto = userService.updateUser(userRequestDto, origin);
-        SessionUtil.setAttribute(session, USER, userResponseDto);
+        SessionHelper.setAttribute(session, USER, userResponseDto);
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
     public String deleteUser(UserResponseDto userResponseDto) {
         userService.deleteUser(userResponseDto);
-        SessionUtil.removeAttribute(session, USER);
+        SessionHelper.removeAttribute(session, USER);
         return "redirect:/";
     }
 }
