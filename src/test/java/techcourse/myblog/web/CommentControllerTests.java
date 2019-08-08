@@ -4,9 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.comment.dto.CommentRequest;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -57,19 +60,26 @@ public class CommentControllerTests {
 
     @Test
     void 로그인한_상태로_댓글_작성() {
+        CommentRequest commentRequest = new CommentRequest("comment!");
+
         webTestClient.post().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments")
                 .cookie("JSESSIONID", jSessionId)
-                .body(BodyInserters.fromFormData("comment", "hello"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$[1].content").isNotEmpty()
+                .jsonPath("$[1].content").isEqualTo("comment!");
 
         webTestClient.get().uri("/articles/" + DEFAULT_ARTICLE_ID)
                 .exchange()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(Objects.requireNonNull(response.getResponseBody()));
-                    assertThat(body).contains("hello");
+                    assertThat(body).contains("comment!");
                 });
     }
 
@@ -93,21 +103,31 @@ public class CommentControllerTests {
 
     @Test
     void 댓글작성자가_댓글_수정() {
+        CommentRequest commentRequest = new CommentRequest("comment!");
+
         webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
                 .cookie("JSESSIONID", jSessionId)
-                .body(BodyInserters.fromFormData("comment", "newHello"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$[0].content").isNotEmpty()
+                .jsonPath("$[0].content").isEqualTo("comment!");
     }
 
     @Test
     void 댓글작성자가_아닌_회원이_댓글_수정() {
         String outsiderJSessionId = getJSessionId("john123@example.com", "p@ssW0rd");
+        CommentRequest commentRequest = new CommentRequest("comment!");
 
         webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
                 .cookie("JSESSIONID", outsiderJSessionId)
-                .body(BodyInserters.fromFormData("comment", "newHello"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/");
@@ -123,18 +143,24 @@ public class CommentControllerTests {
 
     @Test
     void 댓글작성자가_댓글_삭제() {
+        CommentRequest commentRequest = new CommentRequest("comment!");
+
         webTestClient.post().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments")
                 .cookie("JSESSIONID", jSessionId)
-                .body(BodyInserters.fromFormData("comment", "hello"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$[1].content").isNotEmpty()
+                .jsonPath("$[1].content").isEqualTo("comment!");
 
         webTestClient.delete().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + (DEFAULT_COMMENT_ID + AUTO_INCREMENT_ID))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+                .expectStatus().isOk();
     }
 
     @Test
