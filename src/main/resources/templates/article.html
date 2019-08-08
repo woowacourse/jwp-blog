@@ -158,9 +158,15 @@
             },
         }).then(res => res.json())
             .then(json => {
-                console.log(json);
                 const list = document.querySelector('.comment > ul');
-                list.innerHTML = list.innerHTML + `
+                        insertCommentHTML(list, json);
+                        editor.setMarkdown('');
+                        refreshCommentCount();
+        });
+    }
+
+    function insertCommentHTML(list, json) {
+        list.innerHTML = list.innerHTML + `
                 <li class="comment-item border bottom mrg-btm-30" id="comment-${json.comment.id}">
                             <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                             <div class="info">
@@ -177,7 +183,6 @@
                                     <input class= "none content-input" type="text" value="${json.comment.contents}" name="contents">
                                     <button onclick="showCommentInput(${json.comment.id})" class="show-button float-right pointer btn btn-icon">
                                         수정
-                                        <!--<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
                                     </button>
                                     <button onclick="updateComment(${json.comment.id})" class="update-button none float-right pointer btn btn-icon">
                                         확인
@@ -185,9 +190,6 @@
                                 </div>
                             </div>
                         </li>`;
-                        editor.setMarkdown('');
-                        refreshCommentCount();
-        });
     }
 
     function showCommentInput(commentId){
