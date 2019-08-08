@@ -2,9 +2,13 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
+import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.service.exception.MismatchCommentWriterException;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,24 +26,30 @@ public class CommentService {
         return Collections.unmodifiableList(commentRepository.findByArticleId(articleId));
     }
 
-    public void save(Comment comment) {
-        commentRepository.save(comment);
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
     }
 
-    public void deleteById(Long id, User user) {
+    public Long deleteById(Long id, User user) {
         if (findById(id).matchWriter(user)) {
             commentRepository.deleteById(id);
-            return;
+            return id;
         }
-        throw new MismatchAuthorException();
+        throw new MismatchCommentWriterException();
     }
 
-    public void modify(Long id, Comment comment) {
-        findById(id).update(comment);
+    public Comment modify(Long id, CommentDto commentDto, User user) {
+        Comment comment = findById(id);
+        Article article = comment.getArticle();
+        return comment.update(commentDto.toComment(user, article));
     }
 
     private Comment findById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(NotFoundCommentException::new);
+    }
+
+    public long countByArticleId(Long articleId) {
+        return commentRepository.countByArticleId(articleId);
     }
 }

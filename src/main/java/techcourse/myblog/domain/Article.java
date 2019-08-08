@@ -1,26 +1,20 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.UpdateTimestamp;
-import techcourse.myblog.service.MismatchAuthorException;
+import techcourse.myblog.service.exception.MismatchAuthorException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@EqualsAndHashCode(of = "id")
 @ToString
-public class Article {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Article extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String title;
 
@@ -35,14 +29,6 @@ public class Article {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
-
-    @CreationTimestamp
-    private LocalDateTime createTimeAt;
-    @UpdateTimestamp
-    private LocalDateTime updateTimeAt;
-
-    private Article() {
-    }
 
     public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;

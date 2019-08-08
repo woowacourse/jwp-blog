@@ -19,15 +19,6 @@ import static techcourse.myblog.validation.UserPattern.*;
 class UserControllerTests extends ControllerTestTemplate {
     private String savedUserUrl;
 
-    static Stream<Arguments> invalidParameters() {
-        return Stream.of(
-                Arguments.of("wrong!name", "e@mail.com", "p@ssw0RD!", NAME_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "wrong", "p@ssw00RD!", EMAIL_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "e@mail.com", "잘못된패스워드", PASSWORD_CONSTRAINT_MESSAGE),
-                Arguments.of("name", savedUserDto.getEmail(), "passw0RD!", DUPLICATED_USER_MESSAGE)
-        );
-    }
-
     @Test
     void 회원목록_페이지_요청() {
         httpRequest(GET, "/users").isOk();
@@ -54,6 +45,15 @@ class UserControllerTests extends ControllerTestTemplate {
     void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
         String signupFailRedirectUrl = getRedirectUrl(httpRequest(POST, "/users", parseUser(new UserDto(name, email, password))));
         assertThat(signupFailRedirectUrl).isEqualTo("/signup");
+    }
+
+    static Stream<Arguments> invalidParameters() {
+        return Stream.of(
+                Arguments.of("wrong!name", "e@mail.com", "p@ssw0RD!", NAME_CONSTRAINT_MESSAGE),
+                Arguments.of("name", "wrong", "p@ssw00RD!", EMAIL_CONSTRAINT_MESSAGE),
+                Arguments.of("name", "e@mail.com", "잘못된패스워드", PASSWORD_CONSTRAINT_MESSAGE),
+                Arguments.of("name", savedUserDto.getEmail(), "passw0RD!", DUPLICATED_USER_MESSAGE)
+        );
     }
 
     @Test

@@ -1,4 +1,4 @@
-package techcourse.myblog.web.controller;
+package techcourse.myblog.web.exception;
 
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;

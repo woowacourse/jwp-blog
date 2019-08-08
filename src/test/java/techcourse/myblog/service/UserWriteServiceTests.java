@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.common.UserCommonServiceTests;
+import techcourse.myblog.service.exception.NotFoundUserException;
+import techcourse.myblog.service.exception.SignUpFailedException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

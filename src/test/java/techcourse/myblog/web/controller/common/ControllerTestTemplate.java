@@ -83,7 +83,7 @@ public class ControllerTestTemplate {
                         .cookie("JSESSIONID", getLoginSessionId(loginUserDto)));
     }
 
-    private String getLoginSessionId(UserDto userDto) {
+    protected String getLoginSessionId(UserDto userDto) {
         return Objects.requireNonNull(httpRequest(POST, "/login", parseUser(userDto))
                 .isFound()
                 .returnResult(String.class)

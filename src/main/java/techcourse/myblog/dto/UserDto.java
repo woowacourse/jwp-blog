@@ -10,9 +10,6 @@ import javax.validation.constraints.Pattern;
 
 import static techcourse.myblog.validation.UserPattern.EMPTY_CONSTRAINT_MESSAGE;
 
-import static techcourse.myblog.validation.UserPattern.EMAIL_CONSTRAINT_MESSAGE;
-import static techcourse.myblog.validation.UserPattern.EMPTY_CONSTRAINT_MESSAGE;
-
 public class UserDto {
     @NotBlank(message = EMPTY_CONSTRAINT_MESSAGE,
             groups = {UserInfo.class})
