@@ -157,6 +157,12 @@
 <script type="text/javascript" th:inline="javascript">
     `use strict`
 
+    const HttpStatus = {
+        OK: 200,
+        CREATED: 201,
+        NO_CONTENT: 204
+    };
+
     const initValue = [[${article.contents}]];
 
     const viewer = tui.Editor.factory({
@@ -223,7 +229,7 @@
                         contents: editor.getMarkdown()
                     })
                 }).then(response => {
-                    if(response.status === 200){
+                    if(response.status === HttpStatus.CREATED){
                         return response.json();
                     }
                     throw response;
@@ -248,7 +254,7 @@
                         contents: inputComment.value
                     })
                 }).then(response => {
-                    if (response.status === 200) {
+                    if (response.status === HttpStatus.OK) {
                         return response.json();
                     }
                     throw response;
@@ -269,7 +275,7 @@
                 fetch('/articles/' + articleId + '/comment/' + commentId, {
                     method: 'DELETE'
                 }).then(response => {
-                    if (response.status === 200) {
+                    if (response.status === HttpStatus.OK) {
                         return response.text();
                     }
                     throw response;

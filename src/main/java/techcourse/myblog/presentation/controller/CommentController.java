@@ -30,21 +30,23 @@ public class CommentController {
     }
 
     @PostMapping
-    public Comment createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
+    public ResponseEntity<Comment> createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
         log.debug("comment save request data : -> {}, {}", articleId, commentDto);
         Article article = articleReadService.findById(articleId);
         Comment comment = commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
         log.debug("comment save response data : -> {}", comment);
-        return comment;
+
+        return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
 
     @PutMapping("/{commentId}")
-    public Comment updateComment(@PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
+    public ResponseEntity<Comment> updateComment(@PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
         log.debug("comment update request data : -> {}, {}", articleId, commentDto);
         Article article = articleReadService.findById(articleId);
         Comment comment = commentWriteService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
         log.debug("comment update response data : -> {}", comment);
-        return comment;
+
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
@@ -52,6 +54,7 @@ public class CommentController {
         log.debug("comment remove request data : -> {}", commentId);
         commentReadService.findById(commentId).validateAuthor(loginUser.getUser());
         commentWriteService.deleteById(commentId);
+
         return new ResponseEntity<>(DELETE_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 }

@@ -4,10 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.comment.Comment;
@@ -47,7 +45,7 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_상태_댓글작성_성공() {
-        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserDto)
+        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.CREATED, COMMENT_DTO, savedUserDto)
                 .jsonPath("$.contents").isEqualTo("contents")
                 .jsonPath("$.writer.id").isEqualTo(savedUser.getId())
                 .jsonPath("$.writer.name").isEqualTo(savedUser.getName())
@@ -104,7 +102,7 @@ class CommentControllerTests extends ControllerTestTemplate {
     }
 
     private String getCommentUrl() {
-        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserDto);
+        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.CREATED, COMMENT_DTO, savedUserDto);
 
         Comment comment = commentRepository.findAll().get(0);
 
