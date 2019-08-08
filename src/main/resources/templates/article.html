@@ -157,12 +157,10 @@
         function deleteComment(commentId) {
             deleteData('/articles/' + articleId + '/comment/' + commentId)
                 .then(data => {
-                    console.log(data);
                     print(data)
                     return JSON.stringify(data);
                 })
                 .catch(error => console.error(error));
-
         }
 
         function deleteData(url, data) {
@@ -200,7 +198,6 @@
                     return JSON.stringify(data);
                 })
                 .catch(error => console.error(error));
-
         }
 
         function putData(url, data) {
@@ -226,7 +223,7 @@
         let commentList;
         document.getElementById("comment-create").addEventListener('click', function () {
             const data = {contents: document.getElementById('comment-contents').value};
-            postData('http://localhost:8080/articles/' + aId + '/comment', data)
+            postData('/articles/' + aId + '/comment', data)
                 .then(data => {
                     commentList = data;
                     print(commentList)
