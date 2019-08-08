@@ -7,12 +7,12 @@ import techcourse.myblog.article.Article;
 import techcourse.myblog.article.dto.ArticleRequest;
 import techcourse.myblog.article.dto.ArticleResponse;
 import techcourse.myblog.article.exception.ArticleNotFoundException;
-import techcourse.myblog.article.presentation.ArticleRepository;
+import techcourse.myblog.article.persistence.ArticleRepository;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.user.User;
 import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.user.exception.UserNotFoundException;
-import techcourse.myblog.user.presentation.UserRepository;
+import techcourse.myblog.user.persistence.UserRepository;
 import techcourse.myblog.user.service.UserAssembler;
 
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package techcourse.myblog.user.presentation;
+package techcourse.myblog.user.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

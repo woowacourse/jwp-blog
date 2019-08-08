@@ -4,17 +4,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.Article;
 import techcourse.myblog.article.exception.ArticleNotFoundException;
-import techcourse.myblog.article.presentation.ArticleRepository;
+import techcourse.myblog.article.persistence.ArticleRepository;
 import techcourse.myblog.comment.Comment;
 import techcourse.myblog.comment.dto.CommentRequest;
 import techcourse.myblog.comment.dto.CommentResponse;
 import techcourse.myblog.comment.exception.CommentNotFoundException;
-import techcourse.myblog.comment.presentation.CommentRepository;
+import techcourse.myblog.comment.persistence.CommentRepository;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.user.User;
 import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.user.exception.UserNotFoundException;
-import techcourse.myblog.user.presentation.UserRepository;
+import techcourse.myblog.user.persistence.UserRepository;
 
 import java.util.List;
 

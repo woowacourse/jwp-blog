@@ -8,7 +8,7 @@ import techcourse.myblog.user.dto.UserRequest;
 import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.user.exception.DuplicatedEmailException;
 import techcourse.myblog.user.exception.UserNotFoundException;
-import techcourse.myblog.user.presentation.UserRepository;
+import techcourse.myblog.user.persistence.UserRepository;
 
 import java.util.Collections;
 import java.util.List;

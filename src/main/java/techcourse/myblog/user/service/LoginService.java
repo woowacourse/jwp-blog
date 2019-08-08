@@ -6,7 +6,7 @@ import techcourse.myblog.user.User;
 import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.user.exception.InvalidPasswordException;
 import techcourse.myblog.user.exception.UserNotFoundException;
-import techcourse.myblog.user.presentation.UserRepository;
+import techcourse.myblog.user.persistence.UserRepository;
 
 import java.util.Objects;
 
