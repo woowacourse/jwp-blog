@@ -157,7 +157,6 @@
         function deleteComment(commentId) {
             deleteData('/articles/' + articleId + '/comment/' + commentId)
                 .then(data => {
-                    console.log(data);
                     print(data)
                     return JSON.stringify(data);
                 })
@@ -295,10 +294,8 @@
                     '<p id="comment-edit-section" style="clear: both;"></p>\n' +
                     '</div>\n' +
                     '</li>';
-
-                document.getElementById('comment-list').innerHTML = template;
-
             }
+            document.getElementById('comment-list').innerHTML = template;
         }
     </script>
 </th:block>
