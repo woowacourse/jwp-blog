@@ -25,7 +25,7 @@ public class EmailConstraintValidator implements ConstraintValidator<EmailConstr
 
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate("중복된 이메일입니다!")
-                .addConstraintViolation();
+            .addConstraintViolation();
 
         return !userRepository.existsByEmail(value);
     }

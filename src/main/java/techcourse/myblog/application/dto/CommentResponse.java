@@ -15,9 +15,9 @@ public class CommentResponse extends BaseResponse {
     public CommentResponse(Comment comment) {
         super("ok");
         this.comment = new CommentDto(comment.getId(),
-                comment.getContents(),
-                comment.getAuthor().getName(),
-                comment.getCreatedTime()
+            comment.getContents(),
+            comment.getAuthor().getName(),
+            comment.getCreatedTime()
         );
     }
 

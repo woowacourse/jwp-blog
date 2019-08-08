@@ -16,10 +16,10 @@ public class ControllerTestUtil {
 
     public static void signUp(WebTestClient webTestClient, String name, String email, String password) {
         webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
+            .body(BodyInserters.fromFormData("name", name)
+                .with("email", email)
+                .with("password", password))
+            .exchange()
         ;
     }
 
@@ -27,27 +27,27 @@ public class ControllerTestUtil {
         LoginRequest request = new LoginRequest(email, password);
 
         return webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(request), LoginRequest.class)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body(Mono.just(request), LoginRequest.class)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .returnResult(String.class)
+            .getResponseHeaders()
+            .getFirst("Set-Cookie");
     }
 
     public static void writeArticle(WebTestClient webTestClient, String title, String coverUrl, String contents,
                                     String cookie) {
         webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
+            .uri("/articles")
+            .header("Cookie", cookie)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("title", title)
+                .with("coverUrl", coverUrl)
+                .with("contents", contents))
+            .exchange()
         ;
     }
 }

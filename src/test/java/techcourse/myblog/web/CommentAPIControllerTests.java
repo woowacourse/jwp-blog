@@ -51,11 +51,11 @@ public class CommentAPIControllerTests {
     void 댓글_작성_성공_테스트() {
         String commentContents = "comment contents";
         requestSaveCommentJson(commentContents)
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.result").isEqualTo("ok")
-                .jsonPath("$.comment.contents").isEqualTo(commentContents)
+            .expectStatus()
+            .isCreated()
+            .expectBody()
+            .jsonPath("$.result").isEqualTo("ok")
+            .jsonPath("$.comment.contents").isEqualTo(commentContents)
         ;
     }
 
@@ -63,11 +63,11 @@ public class CommentAPIControllerTests {
     void 빈칸_입력_댓글_작성_실패_테스트() {
         String commentContents = BLANK;
         requestSaveCommentJson(commentContents)
-                .expectStatus()
-                .is4xxClientError()
-                .expectBody()
-                .jsonPath("$.result").isEqualTo("fail")
-                .jsonPath("$.message").isEqualTo("댓글 내용을 입력하세요.")
+            .expectStatus()
+            .is4xxClientError()
+            .expectBody()
+            .jsonPath("$.result").isEqualTo("fail")
+            .jsonPath("$.message").isEqualTo("댓글 내용을 입력하세요.")
         ;
     }
 
@@ -82,14 +82,14 @@ public class CommentAPIControllerTests {
 
         CommentRequest request = new CommentRequest("changed comment");
         EntityExchangeResult<ErrorResponse> response = webTestClient.put()
-                .uri("/articles/1/comments/1")
-                .header("Cookie", anotherUserCookie)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(request), CommentRequest.class)
-                .exchange()
-                .expectStatus().is4xxClientError()
-                .expectBody(ErrorResponse.class)
-                .returnResult();
+            .uri("/articles/1/comments/1")
+            .header("Cookie", anotherUserCookie)
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body(Mono.just(request), CommentRequest.class)
+            .exchange()
+            .expectStatus().is4xxClientError()
+            .expectBody(ErrorResponse.class)
+            .returnResult();
 
         assertThat(response.getResponseBody().getResult()).isEqualTo("fail");
         assertThat(response.getResponseBody().getMessage()).isEqualTo("해당 작성자만 댓글을 수정할 수 있습니다.");
@@ -103,15 +103,15 @@ public class CommentAPIControllerTests {
 
         CommentRequest request = new CommentRequest("changed comment");
         EntityExchangeResult<CommentResponse> response = webTestClient.put()
-                .uri("/articles/1/comments/1")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(request), CommentRequest.class)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(CommentResponse.class)
-                .returnResult();
+            .uri("/articles/1/comments/1")
+            .header("Cookie", cookie)
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body(Mono.just(request), CommentRequest.class)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(CommentResponse.class)
+            .returnResult();
 
         assertThat(response.getResponseBody().getComment().getContents()).isEqualTo(request.getContents());
 
@@ -125,11 +125,11 @@ public class CommentAPIControllerTests {
 
         // 댓글 삭제
         webTestClient.delete()
-                .uri("/articles/1/comments/1")
-                .header("Cookie", cookie)
-                .exchange()
-                .expectBody()
-                .jsonPath("$.result").isEqualTo("ok")
+            .uri("/articles/1/comments/1")
+            .header("Cookie", cookie)
+            .exchange()
+            .expectBody()
+            .jsonPath("$.result").isEqualTo("ok")
         ;
     }
 
@@ -141,12 +141,12 @@ public class CommentAPIControllerTests {
 
         // 댓글 삭제
         webTestClient.delete()
-                .uri("/articles/1/comments/999")
-                .header("Cookie", cookie)
-                .exchange()
-                .expectBody()
-                .jsonPath("$.result").isEqualTo("fail")
-                .jsonPath("$.message").isEqualTo("존재하지 않는 댓글입니다.")
+            .uri("/articles/1/comments/999")
+            .header("Cookie", cookie)
+            .exchange()
+            .expectBody()
+            .jsonPath("$.result").isEqualTo("fail")
+            .jsonPath("$.message").isEqualTo("존재하지 않는 댓글입니다.")
         ;
     }
 
@@ -161,22 +161,22 @@ public class CommentAPIControllerTests {
 
         // 댓글 삭제
         webTestClient.delete()
-                .uri("/articles/1/comments/1")
-                .header("Cookie", anotherUserCookie)
-                .exchange()
-                .expectBody()
-                .jsonPath("$.result").isEqualTo("fail")
+            .uri("/articles/1/comments/1")
+            .header("Cookie", anotherUserCookie)
+            .exchange()
+            .expectBody()
+            .jsonPath("$.result").isEqualTo("fail")
         ;
     }
 
     private WebTestClient.ResponseSpec requestSaveCommentJson(String commentContents) {
         CommentRequest request = new CommentRequest(commentContents);
         return webTestClient.post()
-                .uri("/articles/1/comments")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .header("Cookie", cookie)
-                .body(Mono.just(request), CommentRequest.class)
-                .exchange();
+            .uri("/articles/1/comments")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .header("Cookie", cookie)
+            .body(Mono.just(request), CommentRequest.class)
+            .exchange();
     }
 
     @Test
@@ -187,15 +187,15 @@ public class CommentAPIControllerTests {
 
         // 댓글 조회
         webTestClient.get()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertTrue(body.contains(commentContents));
-                });
+            .uri("/articles/1")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody()
+            .consumeWith(response -> {
+                String body = new String(response.getResponseBody());
+                assertTrue(body.contains(commentContents));
+            });
     }
 }
 

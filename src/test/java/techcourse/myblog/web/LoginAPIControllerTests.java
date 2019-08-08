@@ -37,13 +37,13 @@ public class LoginAPIControllerTests {
         LoginRequest request = new LoginRequest(EMAIL, WRONG_PASSWORD);
 
         EntityExchangeResult<ErrorResponse> response = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(request), LoginRequest.class)
-                .exchange()
-                .expectStatus()
-                .is4xxClientError()
-                .expectBody(ErrorResponse.class)
-                .returnResult();
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body(Mono.just(request), LoginRequest.class)
+            .exchange()
+            .expectStatus()
+            .is4xxClientError()
+            .expectBody(ErrorResponse.class)
+            .returnResult();
 
         assertThat(response.getResponseBody().getMessage()).isEqualTo("비밀번호가 일치하지 않습니다!");
     }
@@ -53,13 +53,13 @@ public class LoginAPIControllerTests {
         LoginRequest request = new LoginRequest(EMAIL, PASSWORD);
 
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(request), LoginRequest.class)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectHeader()
-                .valueMatches("Location", ".*/")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .body(Mono.just(request), LoginRequest.class)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectHeader()
+            .valueMatches("Location", ".*/")
         ;
     }
 }

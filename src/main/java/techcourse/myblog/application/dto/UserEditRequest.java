@@ -7,7 +7,7 @@ public class UserEditRequest {
 
     @NotBlank(message = "이름을 작성해주세요!")
     @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
-            message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다!")
+        message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다!")
     private String name;
 
     public String getName() {

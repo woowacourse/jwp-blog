@@ -17,12 +17,12 @@ public class WebConfig {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new AuthInterceptor())
-                        .addPathPatterns("/mypage")
-                        .addPathPatterns("/mypage/*")
-                        .addPathPatterns("/mypage-edit")
-                        .addPathPatterns("/articles/*/edit")
-                        .addPathPatterns("/articles/*/comments")
-                        .addPathPatterns("/articles/*/comments/*")
+                    .addPathPatterns("/mypage")
+                    .addPathPatterns("/mypage/*")
+                    .addPathPatterns("/mypage-edit")
+                    .addPathPatterns("/articles/*/edit")
+                    .addPathPatterns("/articles/*/comments")
+                    .addPathPatterns("/articles/*/comments/*")
                 ;
             }
         };

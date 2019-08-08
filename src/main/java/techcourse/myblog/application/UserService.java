@@ -1,6 +1,5 @@
 package techcourse.myblog.application;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.LoginRequest;
@@ -46,8 +45,8 @@ public class UserService {
     public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();
         List<UserResponse> userResponses = users.stream()
-                .map(UserResponse::from)
-                .collect(Collectors.toList());
+            .map(UserResponse::from)
+            .collect(Collectors.toList());
 
         return userResponses;
     }
@@ -55,7 +54,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse checkLogin(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
+            .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
         checkPassword(loginRequest, user);
         return UserResponse.from(user);

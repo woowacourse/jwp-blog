@@ -1,5 +1,9 @@
 package techcourse.myblog.application.dto;
 
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
+
 import javax.validation.constraints.NotBlank;
 
 public class CommentRequest {
@@ -20,5 +24,9 @@ public class CommentRequest {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public Comment toEntity(User author, Article article) {
+        return new Comment(contents, author, article);
     }
 }

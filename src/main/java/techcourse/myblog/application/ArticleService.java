@@ -1,16 +1,12 @@
 package techcourse.myblog.application;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.NoArticleException;
-import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -41,7 +37,7 @@ public class ArticleService {
 
     public Article findArticleById(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
+            .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }
 
     public Article findArticleWrittenByUser(Long articleId, Long userId) {

@@ -3,7 +3,6 @@ package techcourse.myblog.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.AdditionalMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
@@ -16,7 +15,6 @@ import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 
 import java.util.Optional;
 
@@ -104,7 +102,7 @@ public class ArticleServiceTests {
         doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-                articleService.findArticleWrittenByUser(ARTICLE_ID, notAuthorResponse.getId())
+            articleService.findArticleWrittenByUser(ARTICLE_ID, notAuthorResponse.getId())
         );
     }
 
@@ -121,7 +119,7 @@ public class ArticleServiceTests {
     @Test
     void 존재하지_않는_게시물_수정_실패() {
         assertThrows(NoArticleException.class, () ->
-                articleService.editArticle(articleDto, ARTICLE_ID, userResponse.getId()));
+            articleService.editArticle(articleDto, ARTICLE_ID, userResponse.getId()));
     }
 
     @Test
@@ -131,7 +129,7 @@ public class ArticleServiceTests {
         doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-                articleService.editArticle(articleDto, ARTICLE_ID, notAuthorResponse.getId()));
+            articleService.editArticle(articleDto, ARTICLE_ID, notAuthorResponse.getId()));
     }
 
     @Test
@@ -146,7 +144,7 @@ public class ArticleServiceTests {
     @Test
     void 존재하지_않는_게시물_삭제_실패() {
         assertThrows(NoArticleException.class, () ->
-                articleService.deleteById(ARTICLE_ID, userResponse.getId()));
+            articleService.deleteById(ARTICLE_ID, userResponse.getId()));
     }
 
     @Test
@@ -156,7 +154,7 @@ public class ArticleServiceTests {
         doReturn(false).when(article).matchAuthorId(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class, () ->
-                articleService.deleteById(ARTICLE_ID, notAuthorResponse.getId()));
+            articleService.deleteById(ARTICLE_ID, notAuthorResponse.getId()));
     }
 
     @Test

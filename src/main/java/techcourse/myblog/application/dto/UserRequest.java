@@ -11,7 +11,7 @@ import java.util.function.Function;
 public class UserRequest {
     @NotBlank(message = "이름을 작성해주세요!")
     @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
-            message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다!")
+        message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다!")
     private String name;
 
     @NotBlank(message = "이메일을 작성해주세요!")
@@ -21,12 +21,12 @@ public class UserRequest {
 
     @NotBlank(message = "비밀번호를 작성해주세요!")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}",
-            message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합이어야 합니다!")
+        message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합이어야 합니다!")
     private String password;
 
     public UserRequest(@NotBlank(message = "이름을 작성해주세요!") @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
-            message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다!") String name, @NotBlank(message = "이메일을 작성해주세요!") @Email(message = "이메일 양식을 지켜주세요!") String email, @NotBlank(message = "비밀번호를 작성해주세요!") @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}",
-            message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합이어야 합니다!") String password) {
+        message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다!") String name, @NotBlank(message = "이메일을 작성해주세요!") @Email(message = "이메일 양식을 지켜주세요!") String email, @NotBlank(message = "비밀번호를 작성해주세요!") @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}",
+        message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합이어야 합니다!") String password) {
         this.name = name;
         this.email = email;
         this.password = password;

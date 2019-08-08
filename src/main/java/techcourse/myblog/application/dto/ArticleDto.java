@@ -25,6 +25,7 @@ public class ArticleDto {
     public String getTitle() {
         return title;
     }
+
     public String getCoverUrl() {
         return coverUrl;
     }

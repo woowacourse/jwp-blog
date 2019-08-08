@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
@@ -15,7 +14,6 @@ import techcourse.myblog.application.exception.LoginException;
 import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.support.encrytor.EncryptHelper;
 import techcourse.myblog.support.encrytor.PasswordBCryptor;
 
 import java.util.Arrays;

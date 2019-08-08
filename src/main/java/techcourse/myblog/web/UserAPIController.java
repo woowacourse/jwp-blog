@@ -30,7 +30,7 @@ public class UserAPIController {
                                                    BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new ErrorResponse(bindingResult.getAllErrors().get(0).getDefaultMessage()),
-                    HttpStatus.BAD_REQUEST);
+                HttpStatus.BAD_REQUEST);
         }
         httpSession.setAttribute(USER_INFO, userService.editUserName(userId, userEditRequest.getName()));
 

@@ -31,7 +31,7 @@ public class LoginAPIController {
                                               HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new ErrorResponse(bindingResult.getAllErrors().get(0).getDefaultMessage()),
-                    HttpStatus.BAD_REQUEST);
+                HttpStatus.BAD_REQUEST);
         }
 
         try {
