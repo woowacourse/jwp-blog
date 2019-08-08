@@ -117,5 +117,5 @@
 - [x] 모든 엔터티의 공통 필드(ex: timestamp) 를 추상 클래스를 이용하여 중복 제거  
 - [x] exception 패키지 분리하여 관리
 - [ ] read/write 서비스 하나 서비스로...
-- [ ] 리턴을 위한 dto
+- [x] 리턴을 위한 dto
 - [x] CommentController의 createComment 메서드 부분 (서비스 안으로 로직 이동)
