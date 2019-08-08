@@ -9,7 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.web.controller.BaseControllerTests;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ArticleApiTest extends BaseControllerTests {
+class ArticleRestControllerTest extends BaseControllerTests {
 
     @Autowired
     WebTestClient webTestClient;
@@ -32,7 +32,7 @@ class ArticleApiTest extends BaseControllerTests {
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .cookie(JSESSIONID, jSessionId)
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isOk();
     }
 
     @Test
@@ -41,6 +41,6 @@ class ArticleApiTest extends BaseControllerTests {
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .cookie(JSESSIONID, jSessionId)
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isOk();
     }
 }
