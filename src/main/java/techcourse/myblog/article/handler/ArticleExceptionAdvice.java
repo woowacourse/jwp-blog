@@ -1,4 +1,4 @@
-package techcourse.myblog.article.controller;
+package techcourse.myblog.article.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;

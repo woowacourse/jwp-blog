@@ -1,4 +1,4 @@
-package techcourse.myblog.comment.controller;
+package techcourse.myblog.comment.handler;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
