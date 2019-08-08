@@ -79,11 +79,9 @@
                 'Content-Type': 'application/json; charset=UTF-8'
             }
         }).then(res => {
-           if (res.status === 200) {
-               window.location.href = res.headers.get('Location');
-               return;
+           if (res.status !== 302) {
+               return res.json();
            }
-           return res.json();
         }).then(json => {
             const alertElm = document.querySelector('.alert.alert-danger');
             alertElm.innerText = json.message;
