@@ -40,7 +40,6 @@ public class CommentRestController {
         commentCreate.setArticleId(articleId);
         final CommentDto.Response savedComment = commentService.save(commentCreate, userSession.getId());
 
-        // TODO 생성 방식 수정
         CommentResponse commentResponse = new CommentResponse(savedComment.getId(), "등록 성공");
         return new ResponseEntity<>(commentResponse, HttpStatus.CREATED);
     }

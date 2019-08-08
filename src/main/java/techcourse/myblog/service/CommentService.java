@@ -58,7 +58,6 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentDto.Response> findAllByArticleId(final Long articleId) {
-        //TODO findAllByArticle(article) article 조회 안하는 방법
         final Article article = articleService.findById(articleId);
         final List<Comment> comments = commentRepository.findAllByArticle(article);
         return comments.stream()

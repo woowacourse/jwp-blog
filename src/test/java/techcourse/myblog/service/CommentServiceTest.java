@@ -107,19 +107,4 @@ class CommentServiceTest {
         // when & then
         assertThrows(AuthException.class, () -> commentService.delete(1L, ANOTHER_USER_ID));
     }
-
-    //
-//    @Test
-//    void update() {
-//        final String modifiedContents = "updateContents";
-//
-//        CommentDto.Update commentDto = new CommentDto.Update();
-//        commentDto.setId(commentId);
-//        commentDto.setArticleId(articleId);
-//        commentDto.setContents(modifiedContents);
-//
-//        final CommentDto.Response modifiedComment = commentService.update(commentDto, userId);
-//
-//        assertThat(modifiedContents).isEqualTo(modifiedComment.getContents());
-//    }
 }

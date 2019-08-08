@@ -48,8 +48,6 @@ class CommentControllerTests extends BaseControllerTests {
 
     @Test
     void update() {
-        //TODO Comment.id 리턴 받아서 넣어주기, 수정된 거 확인하기
-
         webTestClient.put().uri("/articles/{articleId}/comments/{id}", articleId, 4)
                 .cookie(JSESSIONID, jSessionId)
                 .body(fromFormData("contents", "modifiedContents"))
