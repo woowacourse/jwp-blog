@@ -1,6 +1,6 @@
 package techcourse.myblog.utils.converter;
 
-import techcourse.myblog.user.domain.User;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 

@@ -5,7 +5,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import techcourse.myblog.comment.exception.AuthenticationException;
+import techcourse.myblog.exception.exception.AuthenticationException;
 import techcourse.myblog.dto.UserResponseDto;
 
 import javax.servlet.http.HttpServletRequest;

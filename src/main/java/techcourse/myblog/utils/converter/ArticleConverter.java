@@ -1,7 +1,7 @@
 package techcourse.myblog.utils.converter;
 
-import techcourse.myblog.article.domain.Article;
-import techcourse.myblog.user.domain.User;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleRequestDto;
 
 public class ArticleConverter {
