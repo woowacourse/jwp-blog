@@ -26,7 +26,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public List<Comment> createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
+    public List<CommentDto> createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
         User author = (User) httpSession.getAttribute("user");
         Comment comment = commentService.createComment(commentDto, author);
         articleService.addComment(articleId, comment);
@@ -34,17 +34,16 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public List<Comment> updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
+    public List<CommentDto> updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         commentService.updateComment(commentId, user, commentDto);
         return articleService.findAllComments(articleId);
     }
 
     @DeleteMapping("/{commentId}")
-    public List<Comment> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
+    public List<CommentDto> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         commentService.deleteComment(commentId, user);
         return articleService.findAllComments(articleId);
     }
-
 }
