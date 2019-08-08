@@ -43,20 +43,19 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable long articleId, Model model) {
+    public String showArticle(@PathVariable Long articleId, Model model) {
         model.addAttribute("article", articleService.select(articleId));
-        model.addAttribute("comments", articleService.findCommentsByArticleId(articleId));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
-    public String editArticleForm(@PathVariable long articleId, Model model) {
+    public String editArticleForm(@PathVariable Long articleId, Model model) {
         model.addAttribute("article", articleService.select(articleId));
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public RedirectView editArticle(@PathVariable long articleId,
+    public RedirectView editArticle(@PathVariable Long articleId,
                                     @Valid ArticleDto articleDto,
                                     UserSession userSession) {
         articleService.update(articleId, articleDto.toDomain(), userSession.getUser());
@@ -64,7 +63,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public RedirectView deleteArticle(@PathVariable long articleId,
+    public RedirectView deleteArticle(@PathVariable Long articleId,
                                       UserSession userSession) {
         articleService.delete(articleId, userSession.getUser());
         return new RedirectView("/");
