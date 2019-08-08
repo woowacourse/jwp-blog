@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.ArticleResponseDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ArticleServiceTest {
 
     @Autowired
-    private ArticleService articleService;
+    private ArticleGenericService articleGenericService;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -41,32 +42,34 @@ class ArticleServiceTest {
 
     @Test
     void findTest() {
-        long id = articleService.add(articleDto, author).getId();
-        assertThat(articleService.findArticle(id).getTitle()).isEqualTo(articleDto.getTitle());
+        long id = articleGenericService.add(articleDto, author, Article.class).getId();
+        assertThat(articleGenericService.findArticle(id, ArticleResponseDto.class).getTitle()).isEqualTo(articleDto.getTitle());
+        assertThat(articleGenericService.findArticle(id, Article.class).getTitle()).isEqualTo(articleDto.getTitle());
     }
 
     @Test
     void updateTest() {
-        Article article = articleService.add(articleDto, author);
+        Article article = articleGenericService.add(articleDto, author, Article.class);
         Article editArticle = new Article("z", "x", "c", author);
         article.update(editArticle);
-        assertThat(articleService.findArticle(article.getId()).getTitle()).isEqualTo(editArticle.getTitle());
+        assertThat(articleGenericService.findArticle(article.getId(), Article.class).getTitle()).isEqualTo(editArticle.getTitle());
+        assertThat(articleGenericService.findArticle(article.getId(), ArticleResponseDto.class).getTitle()).isEqualTo(editArticle.getTitle());
     }
 
     @Test
     void findAllTest() {
-        int before = articleService.findAll().size();
-        articleService.add(new ArticleDto("1", "2", "3"), author);
-        List<Article> articles = articleService.findAll();
+        int before = articleGenericService.findAll(Article.class).size();
+        articleGenericService.add(new ArticleDto("1", "2", "3"), author, Article.class);
+        List<Article> articles = articleGenericService.findAll(Article.class);
         assertThat(articles.size()).isNotEqualTo(before);
     }
 
     @Test
     void deleteTest() {
-        long id = articleService.add(articleDto, author).getId();
-        int before = articleService.findAll().size();
-        articleService.delete(id, author);
-        List<Article> articles = articleService.findAll();
+        long id = articleGenericService.add(articleDto, author, Article.class).getId();
+        int before = articleGenericService.findAll(Article.class).size();
+        articleGenericService.delete(id, author);
+        List<Article> articles = articleGenericService.findAll(Article.class);
         assertThat(articles.size()).isNotEqualTo(before);
     }
 }

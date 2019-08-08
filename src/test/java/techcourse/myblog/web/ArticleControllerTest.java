@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.ArticleGenericService;
 
 import java.util.Arrays;
 
@@ -25,7 +25,7 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     private ArticleRepository articleRepository;
 
     @Autowired
-    private ArticleService articleService;
+    private ArticleGenericService articleGenericService;
 
     @Test
     void index() {
