@@ -2,16 +2,17 @@ package techcourse.myblog.web.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.service.CommentService;
 import techcourse.myblog.dto.CommentRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.service.CommentService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
-@Controller
+@RestController
 public class CommentController {
     private final CommentService commentService;
 
@@ -19,7 +20,6 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @ResponseBody
     @PostMapping("/article/{articleId}/comment")
     public ResponseEntity<Comment> saveComment(@PathVariable Long articleId, @RequestBody @Valid CommentRequestDto commentRequestDto,
                                                UserResponseDto userResponseDto) {
@@ -27,7 +27,6 @@ public class CommentController {
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    @ResponseBody
     @PutMapping("/article/{articleId}/comment/{commentId}")
     public ResponseEntity<Comment> updateComment(@PathVariable Long commentId, @RequestBody @Valid CommentRequestDto commentRequestDto,
                                                  UserResponseDto userResponseDto) {
@@ -37,10 +36,11 @@ public class CommentController {
     }
 
     @DeleteMapping("/article/{articleId}/comment/{commentId}")
-    public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, UserResponseDto userResponseDto) {
+    public void deleteComment(@PathVariable Long articleId, @PathVariable Long commentId,
+                              UserResponseDto userResponseDto, HttpServletResponse response) throws IOException {
         commentService.remove(commentId, userResponseDto);
 
-        return "redirect:/articles/" + articleId;
+        response.sendRedirect("/articles/" + articleId);
     }
 
 }

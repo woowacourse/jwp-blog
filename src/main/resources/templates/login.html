@@ -89,7 +89,7 @@
 
             window.location.href = response.url;
         }).then(text => {
-            if (text != undefined) {
+            if (text !== undefined) {
                 document.getElementById('error').style.display = 'block';
                 document.getElementById('error').innerText = text;
             }

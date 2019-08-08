@@ -1,6 +1,5 @@
 package techcourse.myblog.web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,13 +21,12 @@ import static techcourse.myblog.utils.session.SessionContext.USER;
 public class UserController {
     private final UserService userService;
     private final LoginService loginService;
-    @Autowired
     private HttpSession session;
 
-    @Autowired
-    public UserController(UserService userService, LoginService loginService) {
+    public UserController(UserService userService, LoginService loginService, HttpSession session) {
         this.userService = userService;
         this.loginService = loginService;
+        this.session = session;
     }
 
     @GetMapping("/login")
