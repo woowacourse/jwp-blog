@@ -36,16 +36,13 @@ public class CommentServiceTests {
     private CommentService commentService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Mock
     private CommentRepository commentRepository;
 
     @Mock
-    private ArticleRepository articleRepository;
-
-    @Mock
-    private ModelMapper modelMapper;
+    private ArticleService articleService;
 
     private User user = spy(new User("bmo", "Password123!", "bmo@gmail.com"));
     private User notAuthorUser = spy(new User("remo", "Password123!", "remo@reader.com"));
@@ -55,8 +52,8 @@ public class CommentServiceTests {
 
     @Test
     void 댓글작성_성공() {
-        given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(articleService.findById(ARTICLE_ID)).willReturn(article);
+        given(userService.findById(USER_ID)).willReturn(user);
 
         commentService.save(commentRequest, USER_ID, ARTICLE_ID);
 
@@ -65,7 +62,8 @@ public class CommentServiceTests {
 
     @Test
     void 댓글작성_존재하지_않는_게시글_오류() {
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
+        given(articleService.findById(ARTICLE_ID)).willThrow(new NoArticleException(""));
 
         assertThrows(NoArticleException.class,
             () -> commentService.save(commentRequest, USER_ID, ARTICLE_ID));
@@ -73,7 +71,8 @@ public class CommentServiceTests {
 
     @Test
     void 댓글작성_존재하지_않는_유저_오류() {
-        given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
+        given(articleService.findById(ARTICLE_ID)).willReturn(article);
+        given(userService.findById(USER_ID)).willThrow(new NoUserException(""));
 
         assertThrows(NoUserException.class,
             () -> commentService.save(commentRequest, USER_ID, ARTICLE_ID));
@@ -110,7 +109,7 @@ public class CommentServiceTests {
     @Test
     void 댓글삭제_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
@@ -124,7 +123,7 @@ public class CommentServiceTests {
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
-        assertThrows(NoUserException.class,
+        assertThrows(NotSameAuthorException.class,
             () -> commentService.deleteComment(COMMENT_ID, userResponse.getId()));
     }
 
@@ -132,7 +131,7 @@ public class CommentServiceTests {
     void 작성자가_아닌_회원이_댓글_삭제_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
         given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
-        given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
+        given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
@@ -143,8 +142,7 @@ public class CommentServiceTests {
     @Test
     void 댓글수정_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
-        given(modelMapper.map(commentRequest, Comment.class)).willReturn(comment);
+        given(userService.findById(USER_ID)).willReturn(user);
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
@@ -154,6 +152,7 @@ public class CommentServiceTests {
     @Test
     void 존재하지_않는_회원_댓글수정_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
+        given(userService.findById(NOT_AUTHOR_USER_ID)).willThrow(new NoUserException(""));
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
@@ -165,8 +164,7 @@ public class CommentServiceTests {
     void 작성자가_아닌_회원이_댓글_수정_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
         given(notAuthorUser.getId()).willReturn(NOT_AUTHOR_USER_ID);
-        given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
-        given(modelMapper.map(commentRequest, Comment.class)).willReturn(comment);
+        given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
 
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
