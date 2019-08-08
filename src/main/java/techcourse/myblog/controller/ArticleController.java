@@ -63,11 +63,4 @@ public class ArticleController {
         articleService.deleteById(articleId, user);
         return "redirect:/";
     }
-
-    @DeleteMapping("/{articleId}/comment/{commentId}")
-    public String deleteComment(@PathVariable long articleId, @PathVariable long commentId, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        articleService.deleteComment(commentId, user);
-        return "redirect:/articles/" + articleId;
-    }
 }

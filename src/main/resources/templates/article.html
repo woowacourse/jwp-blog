@@ -244,6 +244,31 @@
             })
     }
 
+    const deleteComment = (id) => {
+        fetch(`${BASE_URL}/articles/${articleId}/comments/${id}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "DELETE"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text()
+                }
+                throw new Error('올바른 응답이 아닙니다.')
+            })
+            .then(() => {
+                getCountOfComment()
+                loadComments()
+            })
+            .catch((error) => {
+                console.log(error)
+                alert('권한이 없습니다.')
+                closeCommentEditor(id)
+            })
+    }
+
     const getCountOfComment = () => {
         fetch(`${BASE_URL}/articles/${articleId}/comments/total`)
             .then(response => {

@@ -46,6 +46,13 @@ public class CommentRestController {
         return CommentAssembler.writeDto(comment);
     }
 
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public void delete(@PathVariable long articleId, @PathVariable long commentId, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        checkAuthorize(user);
+        articleService.deleteComment(commentId, user);
+    }
+
     @GetMapping("/{articleId}/comments/total")
     public int getCountOfComment(@PathVariable long articleId) {
         return articleService.getAllComments(articleId).size();
