@@ -17,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Convert(converter = EmailConverter.class)
+    @Embedded
     private Email email;
 
     @Convert(converter = PasswordConverter.class)

@@ -1,9 +1,16 @@
 package techcourse.myblog.user.domain.vo;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Email {
     private static final String EMAIL_REGEX = "^[_a-zA-Z0-9-.]+@[.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
 
-    private final String email;
+    @Column(name = "email")
+    private String email;
+
+    public Email() {}
 
     private Email(final String email) {
         this.email = validateEmail(email);
