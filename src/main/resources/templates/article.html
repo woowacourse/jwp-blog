@@ -129,27 +129,26 @@
             height: '200px'
         });
 
-        const commentTemplate =
-            "<li class=\"comment-item border bottom mrg-btm-30\">\n" +
-            "     <img class=\"thumb-img img-circle\"\n" +
-            "          src=\"https://avatars3.githubusercontent.com/u/50367798?v=4\" alt=\"\">\n" +
-            "     <div class=\"info\">\n" +
-            "          <a class=\"text-bold inline-block\"\n" +
-            "               href=\"/mypage/{{comment.author.id}}\">\n" +
-            "                    {{comment.author.name.name}}</a>\n" +
-            "          <form action=\"/articles/{{comment.article.id}}/comments/{{comment.id}}\" method=\"post\">\n" +
-            "               <input type=\"hidden\" name=\"_method\" value=\"delete\">" +
-            "               <button class=\"inline-block sub-title pull-right\" type=\"submit\">\n" +
-            "                    <i class=\"ti-trash text-dark font-size-16 pdd-horizontal-5\"></i>\n" +
-            "               </button>\n" +
-            "          </form>\n" +
-            "          <a class=\"inline-block sub-title pull-right\"\n" +
-            "                    href=\"/comments/{{comment.id}}/edit\">\n" +
-            "               <i class=\"ti-pencil text-dark font-size-16 pdd-horizontal-5\"></i>\n" +
-            "          </a>\n" +
-            "          <p class=\"width-80\">{{comment.contents}}</p>\n" +
-            "     </div>\n" +
-            "</li>";
+        const commentTemplate = `<li class="comment-item border bottom mrg-btm-30"">
+                                <img class="thumb-img img-circle"
+                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                                <div class="info">
+                                    <a class="text-bold inline-block"
+                                       href="/mypage/{{author.id}}">{{author.name.name}}</a>
+                                    <form action="/articles/{{article.id}}/comments/{{id}}"
+                                          method="post">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button class="inline-block sub-title pull-right"ype="submit">
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+                                    </form>
+                                    <a class="inline-block sub-title pull-right"
+                                       href="/comments/{{id}}/edit">
+                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                    </a>
+                                    <p class="width-80">{{contents}}</p>
+                                </div>
+                            </li>`;
 
         function saveComment() {
             console.log("saveComment 내부");
@@ -173,7 +172,7 @@
             const data = json;
             const commentItemTemplate = Handlebars.compile(commentTemplate);
             const comments = document.getElementById('comments');
-            comments.insertAdjacentHTML('beforeend', commentItemTemplate({"comment":data}));
+            comments.insertAdjacentHTML('beforeend', commentItemTemplate(data));
             editor.setValue("");
 
             const commentCount = document.getElementById('comment-count');
