@@ -2,12 +2,14 @@ package techcourse.myblog.user.domain.vo;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Pattern;
 
 @Embeddable
 public class Password {
     private static final String PASSWORD_REGEX = ".*(?=^.{8,}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*";
 
-    @Column(name = "password")
+    @Pattern(regexp = PASSWORD_REGEX)
+    @Column(name = "password", nullable = false)
     private String password;
 
     public Password() {}

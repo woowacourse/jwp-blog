@@ -2,12 +2,14 @@ package techcourse.myblog.user.domain.vo;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Pattern;
 
 @Embeddable
 public class Email {
     private static final String EMAIL_REGEX = "^[_a-zA-Z0-9-.]+@[.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
 
-    @Column(name = "email")
+    @Pattern(regexp = EMAIL_REGEX)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     public Email() {}
