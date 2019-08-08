@@ -1,10 +1,10 @@
 package techcourse.myblog.user.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import techcourse.myblog.user.dto.UserLoginDto;
 import techcourse.myblog.user.dto.UserResponseDto;
 import techcourse.myblog.user.exception.InvalidLoginFormException;
@@ -22,13 +22,8 @@ public class LoginRestController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String renderLoginPage() {
-        return "login";
-    }
-
     @PostMapping("/login")
-    public UserResponseDto login(@RequestBody @Valid UserLoginDto userDto,BindingResult result, HttpSession session) {
+    public UserResponseDto login(@RequestBody @Valid UserLoginDto userDto, BindingResult result, HttpSession session) {
         log.debug(">>> userDto : {}", userDto);
         if (result.hasErrors()) {
             throw new InvalidLoginFormException(result.getFieldError().getDefaultMessage());
@@ -36,11 +31,5 @@ public class LoginRestController {
         UserResponseDto user = userService.login(userDto);
         session.setAttribute("user", user);
         return user;
-    }
-
-    @GetMapping("/logout")
-    public RedirectView logout(HttpSession session) {
-        session.removeAttribute("user");
-        return new RedirectView("/");
     }
 }
