@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.LoginService;
 import techcourse.myblog.dto.LoginDto;
+import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
 

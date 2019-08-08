@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-<header id="header" class="header navbar bg-transparent no-border" th:fragment="header">
+<header class="header navbar bg-transparent no-border" id="header" th:fragment="header">
     <div class="header-container" xmlns:th="http://www.w3.org/1999/xhtml">
         <ul class="nav-left mrg-left-0">
             <li>
@@ -14,10 +14,10 @@
                 </a>
             </li>
         </ul>
-        <ul th:if="${session.user}" class="nav-right">
+        <ul class="nav-right" th:if="${session.user}">
             <li th:replace="fragments/logged-in :: logged-in"></li>
         </ul>
-        <ul th:unless="${session.user}" class="nav-right">
+        <ul class="nav-right" th:unless="${session.user}">
             <li th:replace="fragments/logged-out :: logged-out"></li>
         </ul>
     </div>

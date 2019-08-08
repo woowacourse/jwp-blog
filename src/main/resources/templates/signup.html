@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- include fragments/head -->
     <th:block th:replace="fragments/head"></th:block>
@@ -11,8 +11,10 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -20,7 +22,8 @@
     </div>
     <div class="authentication">
         <div class="sign-in-2">
-            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/images/default/bg.jpg')">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                 style="background-image: url('/images/default/bg.jpg')">
                 <div class="row">
                     <div class="col-md-10 mr-auto ml-auto">
                         <div class="row">
@@ -31,40 +34,63 @@
                                             <div class="card-body">
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
-                                                        <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">회원가입</h2>
+                                                        <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
+                                                            회원가입</h2>
                                                     </div>
-                                                    <div th:if="${error}" th:text="${message}" class="alert alert-danger" role="alert"></div>
-                                                    <form method="post" th:action="@{/users}" th:object="${userDto}" id="signup-form">
+                                                    <div class="alert alert-danger" role="alert"
+                                                         th:if="${error}" th:text="${message}"></div>
+                                                    <form id="signup-form" method="post" th:action="@{/users}"
+                                                          th:object="${userDto}">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control" th:field="*{name}" autofocus
-                                                                   required pattern="[a-zA-Z가-힣]{1,}" minlength="2" maxlength="10">
-                                                            <small class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                                                            <input autofocus class="form-control" maxlength="10"
+                                                                   minlength="2" name="name"
+                                                                   pattern="[a-zA-Z가-힣]{1,}" required th:field="*{name}"
+                                                                   type="text">
+                                                            <small class="text-danger"
+                                                                   th:errors="*{name}"
+                                                                   th:if="${#fields.hasErrors('name')}"></small>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" id="email" name="email" class="form-control" th:field="*{email}" required>
-                                                            <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                                                            <input class="form-control" id="email" name="email"
+                                                                   required th:field="*{email}" type="email">
+                                                            <small class="text-danger"
+                                                                   th:errors="*{email}"
+                                                                   th:if="${#fields.hasErrors('email')}"></small>
                                                             <small class="text-danger" id="email-error-message"></small>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" id="password" class="form-control" th:field="*{password}" placeholder="Password"
-                                                                   required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}" minlength="8">
-                                                            <small class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+                                                            <input class="form-control" id="password" minlength="8"
+                                                                   name="password"
+                                                                   pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}"
+                                                                   placeholder="Password"
+                                                                   required
+                                                                   th:field="*{password}"
+                                                                   type="password">
+                                                            <small class="text-danger"
+                                                                   th:errors="*{password}"
+                                                                   th:if="${#fields.hasErrors('password')}"></small>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="text-normal text-dark">Confirm Password</label>
-                                                            <input type="password" id="password-confirm" class="form-control" placeholder="Password">
-                                                            <small class="text-danger" id="password-error-message"></small>
+                                                            <label class="text-normal text-dark">Confirm
+                                                                Password</label>
+                                                            <input class="form-control" id="password-confirm"
+                                                                   placeholder="Password" type="password">
+                                                            <small class="text-danger"
+                                                                   id="password-error-message"></small>
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="button" class="btn btn-info btn-block border-radius-6 font-size-16 text-white" onclick="checkPasswordConfirm()">가입하기</button>
+                                                            <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
+                                                                    onclick="checkPasswordConfirm()"
+                                                                    type="button">가입하기
+                                                            </button>
                                                         </div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
-                                                        <a href="/login" class="text-info pointer mrg-left-5">로그인</a>
+                                                        <a class="text-info pointer mrg-left-5" href="/login">로그인</a>
                                                     </div>
                                                 </div>
                                             </div>

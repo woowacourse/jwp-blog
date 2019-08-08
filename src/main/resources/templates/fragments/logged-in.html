@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
 <ul>
-    <li th:fragment="logged-in" id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+    <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn" th:fragment="logged-in">
         <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-            <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+            <img alt="Brown" class="profile-img img-fluid"
+                 src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
             <div class="user-info text-white">
                 <span class="name pdd-right-5" th:text="${session.user.name}"></span>
             </div>
@@ -16,14 +17,14 @@
                     <span class="text-dark">마이 페이지</span>
                 </a>
             </li>
-            <li role="separator" class="divider"></li>
+            <li class="divider" role="separator"></li>
             <li class="text-dark">
                 <a href="/users">
                     <i class="ti-user pdd-right-10"></i>
                     <span class="text-dark">유저 목록</span>
                 </a>
             </li>
-            <li role="separator" class="divider"></li>
+            <li class="divider" role="separator"></li>
             <li class="text-dark">
                 <a href="/logout">
                     <i class="ti-power-off pdd-right-10"></i>

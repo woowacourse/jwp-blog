@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- include fragments/head -->
     <th:block th:replace="fragments/head"></th:block>
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/mypage.css">
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
 </head>
 <body>
 <div>
@@ -23,10 +23,10 @@
             <div class="col-md-7 mx-auto">
                 <div class="card">
                     <form method="post" th:action="'/users/updates/' + ${user.id}">
-                        <input type="hidden" name="_method" value="put">
+                        <input name="_method" type="hidden" value="put">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
+                            <button class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit">수정
                             </button>
                         </div>
                         <div class="card-block">
@@ -35,7 +35,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control" th:value="${user.name}">
+                                    <input class="form-control" name="name" th:value="${user.name}" type="text">
                                 </div>
                             </div>
                             <hr>
@@ -54,12 +54,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <label for="img-upload" class="pointer">
-                                            <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                                 width="117" alt="">
+                                        <label class="pointer" for="img-upload">
+                                            <img alt=""
+                                                 src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                                 width="117">
                                             <span class="btn btn-default display-block no-mrg-btm">Choose file</span>
-                                            <input class="d-none" type="file" name="uploadedimages0" multiple
-                                                   id="img-upload">
+                                            <input class="d-none" id="img-upload" multiple name="uploadedimages0"
+                                                   type="file">
                                         </label>
                                     </div>
                                 </div>
@@ -80,7 +81,7 @@
                                             <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                         </div>
                                         <div class="col-md-8 text-right">
-                                            <input type="text" name="snsGithub" class="form-control"
+                                            <input class="form-control" name="snsGithub" type="text"
                                                    value="https://www.github.com/profile">
                                         </div>
                                     </div>
@@ -95,7 +96,7 @@
                                             <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                         </div>
                                         <div class="col-md-8 text-right">
-                                            <input type="text" name="snsFacebook" class="form-control"
+                                            <input class="form-control" name="snsFacebook" type="text"
                                                    value="https://www.facebook.com/profile">
                                         </div>
                                     </div>

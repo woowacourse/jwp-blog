@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<header id="header" class="header navbar bg-transparent no-border" th:fragment="header">
+<header class="header navbar bg-transparent no-border" id="header" th:fragment="header">
     <div class="header-container">
         <ul class="nav-left mrg-left-0">
             <li>
                 <a href="/">
-                    <div id="logo-dark" class="logo logo-dark d-none"
+                    <div class="logo logo-dark d-none" id="logo-dark"
                          style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                    <div id="logo-white" class="logo logo-white"
+                    <div class="logo logo-white" id="logo-white"
                          style="background-image: url('/images/logo/logo_full_white.png')"></div>
                 </a>
             </li>
         </ul>
         <ul class="nav-right">
-            <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+            <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
                 <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                    <img class="profile-img img-fluid"
-                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                    <img alt="Brown"
+                         class="profile-img img-fluid"
+                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                     <div class="user-info text-white">
                         <span class="name pdd-right-5">Brown</span>
                     </div>
@@ -34,7 +35,7 @@
                             <span class="text-dark">마이 페이지</span>
                         </a>
                     </li>
-                    <li role="separator" class="divider"></li>
+                    <li class="divider" role="separator"></li>
                     <li class="text-dark">
                         <a href="index.html">
                             <i class="ti-power-off pdd-right-10"></i>

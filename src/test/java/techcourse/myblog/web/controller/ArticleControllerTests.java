@@ -25,11 +25,9 @@ public class ArticleControllerTests extends AuthedWebTestClient {
     private static final String EDIT_URL = "/edit";
     private static final String ARTICLE_PATTERN = ".*articles/";
     private static final String DELETE_PATTERN = ".*/";
-
+    private static int SEAN_ARTICLE_ID;
     @Autowired
     private UserRepository userRepository;
-
-    private static int SEAN_ARTICLE_ID;
 
     @BeforeEach
     void 게시글_작성() {

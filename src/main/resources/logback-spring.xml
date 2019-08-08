@@ -19,6 +19,6 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="dailyRollingFileAppender" />
+        <appender-ref ref="dailyRollingFileAppender"/>
     </root>
 </configuration>
