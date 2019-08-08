@@ -148,7 +148,7 @@
             return;
         }
 
-        const res = await fetch(window.location.pathname + '/comments', {
+        fetch(window.location.pathname + '/comments', {
             method: "POST",
             body: JSON.stringify({
                 contents: contents,
@@ -156,37 +156,38 @@
             headers: {
                 "Content-Type": "application/json; charset=UTF-8"
             },
+        }).then(res => res.json())
+            .then(json => {
+                console.log(json);
+                const list = document.querySelector('.comment > ul');
+                list.innerHTML = list.innerHTML + `
+                <li class="comment-item border bottom mrg-btm-30" id="comment-${json.id}">
+                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                            <div class="info">
+                                <span class="text-bold inline-block" >${json.authorName}</span>
+                                <span class="sub-title inline-block pull-right">
+                                    <i class="ti-timer pdd-right-5"></i>
+                                    <span>${json.createdTime}</span>
+                                </span>
+                                <p class="width-80 comment-contents">${json.contents}</p>
+                                <div class="comment-button" style = "margin-bottom:90px">
+                                    <button  class="btn btn-icon float-right pointer" type="button" onclick="deleteComment(${json.id})">
+                                        <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+                                    </button>
+                                    <input class= "none content-input" type="text" value="${json.contents}" name="contents">
+                                    <button onclick="showCommentInput(${json.id})" class="show-button float-right pointer btn btn-icon">
+                                        수정
+                                        <!--<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
+                                    </button>
+                                    <button onclick="updateComment(${json.id})" class="update-button none float-right pointer btn btn-icon">
+                                        확인
+                                    </button>
+                                </div>
+                            </div>
+                        </li>`;
+                        editor.setMarkdown('');
+                        refreshCommentCount();
         });
-        const { json } = res;
-        
-        const list = document.querySelector('.comment > ul');
-        list.innerHTML = list.innerHTML + `
-            <li class="comment-item border bottom mrg-btm-30" id="comment-${json.id}">
-                <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-                <div class="info">
-                    <span class="text-bold inline-block" >${json.authorName}</span>
-                    <span class="sub-title inline-block pull-right">
-                        <i class="ti-timer pdd-right-5"></i>
-                        <span>${json.createdTime}</span>
-                    </span>
-                    <p class="width-80 comment-contents">${json.contents}</p>
-                    <div class="comment-button" style = "margin-bottom:90px">
-                        <button  class="btn btn-icon float-right pointer" type="button" onclick="deleteComment(${json.id})">
-                            <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
-                        </button>
-                        <input class= "none content-input" type="text" value="${json.contents}" name="contents">
-                        <button onclick="showCommentInput(${json.id})" class="show-button float-right pointer btn btn-icon">
-                            수정
-                            <!--<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
-                        </button>
-                        <button onclick="updateComment(${json.id})" class="update-button none float-right pointer btn btn-icon">
-                            확인
-                        </button>
-                    </div>
-                </div>
-            </li>`;
-        editor.setMarkdown('');
-        refreshCommentCount();
     }
 
     function showCommentInput(commentId){
@@ -225,7 +226,7 @@
             return;
         }
 
-        const res = await fetch(window.location.pathname + '/comments/' + commentId, {
+        fetch(window.location.pathname + '/comments/' + commentId, {
             method : 'PUT',
             body: JSON.stringify({
                 contents: updatetInput,
@@ -233,23 +234,27 @@
             headers: {
                 "Content-Type": "application/json; charset=UTF-8"
             },
-        });
-        const { json } = res;
-        document.querySelector(`#comment-${commentId} .comment-contents`).innerText = json.contents;
-        hideCommentInput(json.id);
+        }).then(res => res.json())
+            .then(json => {
+                console.log(json);
+                document.querySelector(`#comment-${commentId} .comment-contents`).innerText = json.contents;
+                hideCommentInput(json.id);
+            });
     }
 
     function deleteComment(commentId) {
-        const res = await fetch(window.location.pathname + '/comments/' + commentId, {
+        fetch(window.location.pathname + '/comments/' + commentId, {
             method: 'DELETE'
+        }).then(res => {
+            refreshCommentCount();
+            if (res.status === 204) {
+                const target = document.getElementById("comment-" + commentId);
+                target.parentNode.removeChild(target);
+                return;
+            }
+
+            alert('비정상적인 접근입니다.');
         });
-        refreshCommentCount();
-        if (res.status === 204) {
-            const target = document.getElementById("comment-" + commentId);
-            target.parentNode.removeChild(target);
-            return;
-        }
-        alert('비정상적인 접근입니다.');
     }
 
     function refreshCommentCount() {
