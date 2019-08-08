@@ -77,4 +77,8 @@ public class UserService {
             throw new NotFoundUserException(userId);
         }
     }
+
+    public void checkMatchUser(User user, long id) {
+        user.checkMatchUser(id);
+    }
 }

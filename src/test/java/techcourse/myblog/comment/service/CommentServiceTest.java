@@ -89,14 +89,14 @@ public class CommentServiceTest {
     void 댓글_조회_테스트() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.of(comment));
 
-        assertThat(commentService.findById(COMMENT_ID)).isEqualTo(modelMapper.map(comment, CommentResponseDto.class));
+        assertThat(commentService.find(COMMENT_ID)).isEqualTo(modelMapper.map(comment, CommentResponseDto.class));
     }
 
     @Test
     void 댓글_조회_시_없는_댓글인_경우_예외처리() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.empty());
 
-        assertThrows(NotFoundCommentException.class, () -> commentService.findById(COMMENT_ID));
+        assertThrows(NotFoundCommentException.class, () -> commentService.find(COMMENT_ID));
     }
 
     @Test

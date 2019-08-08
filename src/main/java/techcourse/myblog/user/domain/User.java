@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.user.domain.vo.*;
 
 import javax.persistence.*;
@@ -41,6 +42,12 @@ public class User {
 
     public boolean checkPassword(String password) {
         return this.password.isCorrect(password);
+    }
+
+    public void checkMatchUser(long id) {
+        if (this.id != id) {
+            throw new NotMatchUserException();
+        }
     }
 }
 

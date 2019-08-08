@@ -10,7 +10,6 @@ import techcourse.myblog.article.dto.ArticleResponseDto;
 import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.exception.NotMatchUserException;
-import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.service.UserService;
 
 import java.util.List;
@@ -37,8 +36,7 @@ public class ArticleService {
     }
 
     public ArticleResponseDto save(ArticleCreateDto articleDto, long authorId) {
-        User author = userService.findById(authorId);
-        Article newArticle = articleDto.toArticle(author);
+        Article newArticle = articleDto.toArticle(userService.findById(authorId));
         return modelMapper.map(articleRepository.save(newArticle), ArticleResponseDto.class);
     }
 
@@ -60,20 +58,14 @@ public class ArticleService {
     }
 
     public ArticleResponseDto update(long articleId, ArticleUpdateDto articleDto, long authorId) {
-        Article article = checkAuthority(articleId, authorId);
+        Article article = findById(articleId);
+        userService.checkMatchUser(article.getAuthor(), authorId);
         return modelMapper.map(article.update(articleDto), ArticleResponseDto.class);
     }
 
     public void deleteById(long articleId, long authorId) {
-        Article article = checkAuthority(articleId, authorId);
+        Article article = findById(articleId);
+        userService.checkMatchUser(article.getAuthor(), authorId);
         articleRepository.delete(article);
-    }
-
-    private Article checkAuthority(long articleId, long authorId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
-        if (article.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
-        }
-        return article;
     }
 }

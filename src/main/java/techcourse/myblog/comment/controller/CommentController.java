@@ -28,7 +28,7 @@ public class CommentController {
 
     @GetMapping("/comments/{commentId}/edit")
     public String renderCommentEditPage(@PathVariable long commentId, Model model) {
-        model.addAttribute("comments", commentService.findById(commentId));
+        model.addAttribute("comments", commentService.find(commentId));
         return "comment-edit";
     }
 
