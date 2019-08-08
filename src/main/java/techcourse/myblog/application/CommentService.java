@@ -69,11 +69,10 @@ public class CommentService {
         User author = userService.findById(userId);
         Comment updatedComment = commentRequest.toEntity(author, comment.getArticle());
 
-        try {
-            comment.updateContents(updatedComment, author);
-        } catch (IllegalArgumentException e) {
+        if (!comment.isSameAuthor(author)) {
             throw new NotSameAuthorException("해당 작성자만 댓글을 수정할 수 있습니다.");
         }
+        comment.updateContents(updatedComment, author);
     }
 
 }
