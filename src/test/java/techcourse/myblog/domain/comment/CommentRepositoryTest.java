@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.comment;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -25,6 +26,7 @@ public class CommentRepositoryTest {
     UserRepository userRepository;
 
     @Test
+    @DisplayName("Comment 생성, 수정일자 등록 확인")
     public void checkLocalDate() {
         LocalDateTime localDateTime = LocalDateTime.now();
 

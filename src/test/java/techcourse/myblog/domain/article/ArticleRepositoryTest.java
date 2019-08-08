@@ -22,7 +22,7 @@ public class ArticleRepositoryTest {
     UserRepository userRepository;
 
     @Test
-    @DisplayName("생성, 수정일자 등록 확인")
+    @DisplayName("Article 생성, 수정일자 등록 확인")
     public void checkLocalDate() {
         LocalDate now = LocalDate.now();
 

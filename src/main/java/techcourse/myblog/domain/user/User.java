@@ -1,6 +1,7 @@
 package techcourse.myblog.domain.user;
 
 import org.hibernate.validator.constraints.Length;
+import techcourse.myblog.domain.BaseTimeEntity;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.exception.UserArgumentException;
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 import static techcourse.myblog.domain.exception.UserArgumentException.*;
 
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
     private static final int MIN_NAME_LENGTH = 2;
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MIN_PASSWORD_LENGTH = 8;
