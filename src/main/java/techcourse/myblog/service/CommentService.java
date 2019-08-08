@@ -8,7 +8,6 @@ import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 
 import java.util.Optional;
-
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
