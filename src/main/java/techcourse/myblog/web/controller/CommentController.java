@@ -42,13 +42,13 @@ public class CommentController {
         log.info("CommentDto : {}", commentDto);
         Comment comment = convert(commentDto, loginUser, articleId);
         Comment savedComment = commentService.save(comment);
-        return new ResponseEntity<>(savedComment, HttpStatus.OK);
+        return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{commentId}")
     public ResponseEntity<Comment> updateComment(@PathVariable long commentId, @LoginUser User loginUser, @RequestBody CommentDto commentDto) {
         Comment updatedComment = commentService.update(commentId, loginUser, commentDto.getContents());
-        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
+        return new ResponseEntity<>(updatedComment, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{commentId}")
