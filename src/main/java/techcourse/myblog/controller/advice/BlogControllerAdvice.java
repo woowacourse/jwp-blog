@@ -35,7 +35,8 @@ public class BlogControllerAdvice {
     }
 
     @ExceptionHandler({ArticleNotFoundException.class, CommentNotFoundException.class})
-    public String handleTextNotFondException(MisMatchAuthorException e, Model model) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleArticleNotFondException(Exception e, Model model) {
         model.addAttribute("error", e.getMessage());
         return "error";
     }
