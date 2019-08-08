@@ -13,6 +13,8 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.presentation.support.LoginUser;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/articles/{articleId}/comment")
 public class CommentController {
@@ -27,6 +29,15 @@ public class CommentController {
         this.commentReadService = commentReadService;
         this.commentWriteService = commentWriteService;
         this.articleReadService = articleReadService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Comment>> readComments(@PathVariable Long articleId) {
+        log.debug("comment save request data : -> {}", articleId);
+        List<Comment> comments = commentReadService.findByArticleId(articleId);
+        log.debug("comment save response data : -> {}", comments);
+
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     @PostMapping

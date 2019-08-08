@@ -66,42 +66,11 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
+                    <span id="comment-count" class="font-size-16 text-info"></span>
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">
-                            <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info view">
-                                <span class="text-bold inline-block" th:text="${comment.writer.name}"></span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span th:text="${comment.updateTimeAt}"></span>
-                                    <div th:if="${comment.writer.equals(session.user)}" class = "comment-btn">
-                                        <button class="btn btn-icon pointer comment-modify" type="button">
-                                            <i class ="ti-pencil text-dark font-size-16 pdd-horizon-5 comment-modify"></i>
-                                        </button>
-                                        <div class="form">
-                                            <button type="button" th:value="${comment.id}" class="btn btn-icon pointer comment-remove-button">
-                                                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5 comment-remove-button" th:value="${comment.id}"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </span>
-                                <p class="width-80" th:id="'comment-' + ${comment.id} + '-contents'" th:text="${comment.contents}"></p>
-                            </div>
-                            <form  method="post" th:action="${article.id} + '/comment/'+ ${comment.id}" class="edit edit-form">
-                                <input name="_method" type="hidden" value="PUT" />
-                                <input class="edit" th:id="'comment-' + ${comment.id}"name="contents" th:value="${comment.contents}">
-                                <button type="button" th:value="${comment.id}" class="btn btn-default comment-modify-button comment-modify">
-                                    <i class="ti-save "></i>
-                                </button>
-                                <button type="button" class="btn btn-default comment-modify">
-                                    <i class="ti-close comment-modify"></i>
-                                </button>
-                            </form>
-                        </li>
+
                     </ul>
 
                     <form th:method="post" th:action="${article.id} + '/comment'">
@@ -188,6 +157,12 @@
         const CommentController = function() {
             const commentService = new CommentService();
 
+            const readComments = function () {
+                onload = () => {
+                   commentService.read();
+                };
+            };
+
             const saveComment = function () {
                 const commentAddButton = document.querySelector('#save-comment-button');
                 commentAddButton.addEventListener('click', commentService.save);
@@ -205,6 +180,7 @@
             };
 
             const init = function() {
+                readComments();
                 saveComment();
                 updateComment();
                 removeComment();
@@ -218,6 +194,27 @@
         const CommentService = function() {
             const articleId = [[${article.id}]];
             const sessionUser = [[${session.user}]];
+            const commentCount = document.querySelector("#comment-count");
+
+            const read = () => {
+                fetch('/articles/' + articleId + '/comment')
+                    .then(response => {
+                    if(response.status === HttpStatus.OK){
+                        return response.json();
+                    }
+                    throw response;
+                }).then(comments => {
+                    const commentSize = comments.length;
+                    console.log(comments)
+
+                    for(let i = 0; i < commentSize; i++){
+                        appendComment(comments[i]);
+                        console.log(comments[i])
+                    }
+
+                    commentCount.innerText = String(commentSize);
+                }).catch(response => {response.json().then(json => alert(json.message))});
+            };
 
             const save = (event) => {
                 fetch('/articles/' + articleId + '/comment', {
@@ -233,8 +230,10 @@
                         return response.json();
                     }
                     throw response;
-                }).then(json => {
-                    appendComment(json)
+                }).then(comment => {
+                    appendComment(comment);
+                    let currentCommentCount = parseInt(commentCount.innerText)
+                    commentCount.innerText = String(currentCommentCount + 1);
                 }).catch(error => {error.json().then(json => alert(json.message))});
             };
 
@@ -281,11 +280,55 @@
                     throw response;
                 }).then(text => {
                     event.target.closest("LI").remove();
+                    let currentCommentCount = parseInt(commentCount.innerText);
+                    commentCount.innerText = String(currentCommentCount - 1);
                     alert(text);
                 }).catch(error => {
                     error.json().then(json => alert(json.message));
                 });
             };
+
+            const appendComment = (comment) => {
+                const commentList = document.querySelector('#comment-list');
+                const commentTemplate = document.querySelector('#comment-template').innerText;
+
+                const buttonsTemplate = document.querySelector('#comment-buttons-template').innerText;
+
+                var compiledCommentTemplate = compile(comment, commentTemplate);
+                if (comment.writer.id === sessionUser.id) {
+                    compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join(compile(comment, buttonsTemplate));
+                } else {
+                    compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join('');
+
+                }
+                commentList.insertAdjacentHTML("beforeend", compiledCommentTemplate);
+
+            };
+
+            function compile(object, template) {
+
+                const matchesFromTemplate = template.match(/{{\s*[\w\.]+\s*}}/g);
+                if (matchesFromTemplate !== null) {
+
+                    let matchResults = matchesFromTemplate.map((matches) => matches.match(/[\w\.]+/)[0]);
+                    for (let matches = matchResults.values(), matchIterator = matches.next(); !matchIterator.done; matchIterator = matches.next()) {
+                        let resolvedValue = resolve(matchIterator.value, object);
+                        if (resolvedValue) {
+                            template = template.replace('{{' + matchIterator.value + '}}',resolvedValue);
+                        }
+                    }
+
+                }
+                return template;
+
+            };
+
+            function resolve (path, obj) {
+                return path.split('.').reduce(function(prev, curr) {
+                    return prev ? prev[curr] : null
+                }, obj || self)
+            };
+
 
             const modifyToggle = (event) => {
                 if (event.target.classList.contains('comment-modify')) {
@@ -294,46 +337,8 @@
                 }
             };
 
-            const appendComment = (comment) => {
-                const commentList = document.querySelector('#comment-list');
-                const commentTemplate = document.querySelector('#comment-template').innerText;
-                const buttonsTemplate = document.querySelector('#comment-buttons-template').innerText;
-
-                let compiledCommentTemplate = compile(comment, commentTemplate);
-
-                if (comment.writer.id === sessionUser.id) {
-                    compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join(compile(comment, buttonsTemplate));
-                } else {
-                    compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join('');
-                }
-
-                commentList.insertAdjacentHTML("beforeend", compiledCommentTemplate);
-            };
-
-            const compile = (object, template) => {
-                const matchesFromTemplate = template.match(/{{\s*[\w\.]+\s*}}/g);
-
-                if (matchesFromTemplate !== null) {
-                    let matchResults = matchesFromTemplate.map((matches) => matches.match(/[\w\.]+/)[0]);
-
-                    for (let matches = matchResults.values(), matchIterator = matches.next(); !matchIterator.done; matchIterator = matches.next()) {
-                        let resolvedValue = resolve(matchIterator.value, object);
-                        if (resolvedValue) {
-                            template = template.replace('{{' + matchIterator.value + '}}',resolvedValue);
-                        }
-                    }
-                }
-
-                return template;
-            };
-
-            const resolve = function (path, obj) {
-                return path.split('.').reduce(function(prev, curr) {
-                    return prev ? prev[curr] : null
-                }, obj || self)
-            };
-
             return {
+                read: read,
                 save: save,
                 modifyToggle: modifyToggle,
                 modify: modify,
@@ -352,6 +357,7 @@
     })();
 
     button.init();
+
 </script>
 </body>
 </html>
