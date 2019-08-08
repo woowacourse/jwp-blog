@@ -1,4 +1,4 @@
-package techcourse.myblog.utils;
+package techcourse.myblog.errors;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

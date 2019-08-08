@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.user.exception.*;
-import techcourse.myblog.utils.Error;
+import techcourse.myblog.errors.Error;
 
 @ControllerAdvice(value = "techcourse.myblog.user.controller")
 public class UserExceptionAdvice {
