@@ -1,5 +1,7 @@
 package techcourse.myblog.user.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Pattern;
@@ -10,6 +12,7 @@ public class Password {
 
     @Pattern(regexp = PASSWORD_REGEX)
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
     public Password() {}
