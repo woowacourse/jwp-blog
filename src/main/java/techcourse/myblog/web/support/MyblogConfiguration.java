@@ -22,7 +22,8 @@ public class MyblogConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns("/js/**")
                 .excludePathPatterns("/signup")
                 .excludePathPatterns("/users")
-                .excludePathPatterns("/images/**");
+                .excludePathPatterns("/images/**")
+                .excludePathPatterns("/api/users");
     }
 
     @Override
