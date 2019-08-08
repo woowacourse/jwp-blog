@@ -99,14 +99,14 @@ class ArticleServiceTest {
     void 게시글_단건_조회_테스트() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.of(article));
 
-        assertThat(articleService.findById(ARTICLE_ID)).isEqualTo(modelMapper.map(article, ArticleResponseDto.class));
+        assertThat(articleService.find(ARTICLE_ID, AUTHOR_ID)).isEqualTo(modelMapper.map(article, ArticleResponseDto.class));
     }
 
     @Test
     void 게시글_단건_조회_시_예외처리() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.empty());
 
-        assertThrows(NotFoundArticleException.class, () -> articleService.findById(ARTICLE_ID));
+        assertThrows(NotFoundArticleException.class, () -> articleService.find(ARTICLE_ID, AUTHOR_ID));
     }
 
     @Test

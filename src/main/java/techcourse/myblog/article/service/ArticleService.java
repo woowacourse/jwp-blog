@@ -43,8 +43,20 @@ public class ArticleService {
         return modelMapper.map(articleRepository.save(newArticle), ArticleResponseDto.class);
     }
 
-    public ArticleResponseDto findById(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
+    public Article findById(long articleId) {
+        return articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
+    }
+
+    public ArticleResponseDto find(long articleId, long authorId) {
+        Article article = findById(articleId);
+        if (article.notMatchAuthorId(authorId)) {
+            throw new NotMatchUserException();
+        }
+        return modelMapper.map(article, ArticleResponseDto.class);
+    }
+
+    public ArticleResponseDto find(long articleId) {
+        Article article = findById(articleId);
         return modelMapper.map(article, ArticleResponseDto.class);
     }
 

@@ -42,17 +42,14 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable long articleId, Model model) {
-        model.addAttribute("article", articleService.findById(articleId));
+        model.addAttribute("article", articleService.find(articleId));
         model.addAttribute("comments", commentService.findAllByArticleId(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String renderUpdatePage(@PathVariable long articleId, Model model, UserSession userSession) {
-        ArticleResponseDto articleResponse = articleService.findById(articleId);
-        if (!articleResponse.matchAuthorId(userSession.getId())) {
-            throw new NotMatchUserException();
-        }
+        ArticleResponseDto articleResponse = articleService.find(articleId, userSession.getId());
         model.addAttribute("article", articleResponse);
         return "article-edit";
     }
