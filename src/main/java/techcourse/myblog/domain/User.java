@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +21,7 @@ public class User {
     private String name;
     private String password;
     @Column(unique = true)
+    @Email
     private String email;
 
     private User() {
