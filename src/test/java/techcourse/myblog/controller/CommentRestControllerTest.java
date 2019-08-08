@@ -18,7 +18,7 @@ class CommentRestControllerTest extends AbstractControllerTest {
     public void 댓글을_잘_불러오는지_확인한다() {
         when().
                 get("http://localhost:" + port + "/articles/1/comments").
-                then().
+        then().
                 statusCode(200).
                 body(containsString("댓글입니다"));
     }
@@ -31,9 +31,9 @@ class CommentRestControllerTest extends AbstractControllerTest {
                 contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).
                 sessionId(extractJSessionId(login(user1))).
                 body(commentRequest).
-                when().
+        when().
                 post("http://localhost:" + port + "/articles/1/comments").
-                then().
+        then().
                 statusCode(200).
                 body("contents", equalTo(commentRequest.getContents()));
     }
@@ -46,9 +46,9 @@ class CommentRestControllerTest extends AbstractControllerTest {
                 contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).
                 sessionId(extractJSessionId(login(user1))).
                 body(commentRequest).
-                when().
+        when().
                 put("http://localhost:" + port + "/articles/1/comments/1").
-                then().
+        then().
                 statusCode(200).
                 body("contents", equalTo(commentRequest.getContents()));
     }
@@ -61,9 +61,9 @@ class CommentRestControllerTest extends AbstractControllerTest {
                 contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).
                 sessionId(extractJSessionId(login(user2))).
                 body(commentRequest).
-                when().
+        when().
                 put("http://localhost:" + port + "/articles/1/comments/1").
-                then().
+        then().
                 statusCode(302);
     }
 
@@ -71,9 +71,9 @@ class CommentRestControllerTest extends AbstractControllerTest {
     public void 댓글을_잘_삭제하는지_확인한다() {
         given().
                 sessionId(extractJSessionId(login(user1))).
-                when().
+        when().
                 delete("http://localhost:" + port + "/articles/1/comments/3").
-                then().
+        then().
                 statusCode(200);
     }
 
@@ -81,9 +81,9 @@ class CommentRestControllerTest extends AbstractControllerTest {
     public void 작성자가_아닌_사람은_댓글을_삭제할_수_없다() {
         given().
                 sessionId(extractJSessionId(login(user2))).
-                when().
+        when().
                 delete("http://localhost:" + port + "/articles/1/comments/1").
-                then().
+        then().
                 statusCode(302);
     }
 }
