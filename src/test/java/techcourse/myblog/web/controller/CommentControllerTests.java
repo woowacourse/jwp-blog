@@ -81,8 +81,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
                 .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectStatus().isCreated()
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(2L)
                 .jsonPath("$.contents").isEqualTo(CONTENT)
@@ -94,7 +93,6 @@ public class CommentControllerTests extends AuthedWebTestClient {
         getStatus(POBI_EMAIL, UPDATED_COMMENT)
                 .expectStatus()
                 .isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(1L)
                 .jsonPath("$.contents").isEqualTo(UPDATED_COMMENT);
@@ -135,7 +133,6 @@ public class CommentControllerTests extends AuthedWebTestClient {
 
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
                 .exchange();
     }
