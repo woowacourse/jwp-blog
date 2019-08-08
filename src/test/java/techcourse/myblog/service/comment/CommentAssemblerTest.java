@@ -20,7 +20,7 @@ public class CommentAssemblerTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("john123@example.com", "john", "p@ssW0rd");
+        user = new User(999L, "john123@example.com", "john", "p@ssW0rd");
         article = new Article("title", "", "contents", user);
     }
 

@@ -15,7 +15,7 @@ public class UserAssemblerTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("john123@example.com", "john", "p@ssW0rd");
+        user = new User(0L, "john123@example.com", "john", "p@ssW0rd");
     }
 
     @Test
@@ -26,7 +26,7 @@ public class UserAssemblerTest {
 
     @Test
     void entity를_dto로_변환하는지_확인() {
-        UserResponse userResponse = new UserResponse(1L, "john123@example.com", "john");
+        UserResponse userResponse = new UserResponse(0L, "john123@example.com", "john");
         UserResponse convertToDto = convertToDto(user);
         assertThat(convertToDto.getEmail()).isEqualTo(userResponse.getEmail());
         assertThat(convertToDto.getName()).isEqualTo(userResponse.getName());

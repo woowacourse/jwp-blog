@@ -14,7 +14,7 @@ import static techcourse.myblog.article.service.ArticleAssembler.convertToDto;
 import static techcourse.myblog.article.service.ArticleAssembler.convertToEntity;
 
 public class ArticleAssemblerTest {
-    private static final User DEFAULT_AUTHOR = new User("user@example.com", "john", "p@ssW0rd");
+    private static final User DEFAULT_AUTHOR = new User(999L, "user@example.com", "john", "p@ssW0rd");
 
     private ArticleRequest articleRequest;
     private ArticleResponse articleResponse;

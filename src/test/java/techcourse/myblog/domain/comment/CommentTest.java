@@ -18,9 +18,9 @@ public class CommentTest {
 
     @BeforeEach
     void setUp() {
-        articleAuthor = new User("bbb@example.com", "james", "p@ssW0rd");
+        articleAuthor = new User(999L, "bbb@example.com", "james", "p@ssW0rd");
         article = new Article("title", "", "content", articleAuthor);
-        commentAuthor = new User("aaa@example.com", "john", "p@ssW0rd");
+        commentAuthor = new User(1000L, "aaa@example.com", "john", "p@ssW0rd");
         comment = new Comment("comment ~~~", commentAuthor, article);
     }
 

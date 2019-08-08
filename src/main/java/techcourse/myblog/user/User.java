@@ -23,7 +23,8 @@ public class User {
     public User() {
     }
 
-    public User(final String email, final String name, final String password) {
+    public User(final Long id, final String email, final String name, final String password) {
+        this.id = id;
         this.email = Objects.requireNonNull(email);
         this.name = Objects.requireNonNull(name);
         this.password = password;
@@ -66,12 +67,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(email, user.email);
+        return Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(id);
     }
 }

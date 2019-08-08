@@ -7,6 +7,8 @@ import techcourse.myblog.user.dto.UserResponse;
 import java.util.Objects;
 
 public class UserAssembler {
+    private static final long TEMP_ID = 0L;
+
     public static UserResponse convertToDto(final User user) {
         Objects.requireNonNull(user);
 
@@ -22,6 +24,6 @@ public class UserAssembler {
         String email = userRequest.getEmail();
         String name = userRequest.getName();
         String password = userRequest.getPassword();
-        return new User(email, name, password);
+        return new User(TEMP_ID, email, name, password);
     }
 }
