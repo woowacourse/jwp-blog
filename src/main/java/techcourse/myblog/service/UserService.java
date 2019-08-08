@@ -74,10 +74,11 @@ public class UserService {
         }
     }
 
-    public void update(Long userId, UserRequestUpdateDto userRequestUpdateDto) {
+    public User update(Long userId, UserRequestUpdateDto userRequestUpdateDto) {
         try {
             User user = findById(userId);
             user.update(userRequestUpdateDto.toEntity());
+            return user;
         } catch (NotFoundUserException | UserArgumentException e) {
             throw new UserUpdateException(e.getMessage());
         }

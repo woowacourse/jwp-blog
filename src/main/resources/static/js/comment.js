@@ -25,7 +25,6 @@ const CommentApp = (function () {
 
     const CommentService = function () {
         const remove = function (event) {
-            const articleId = document.getElementById('article-id').value;
             const btn = event.target;
             if (btn.classList.contains('delete-comment')) {
                 deleteComment(event);
@@ -33,9 +32,8 @@ const CommentApp = (function () {
         };
 
         const deleteComment = function (event) {
-            const articleId = document.getElementById('article-id').value;
             const btn = event.target;
-            const url = '/articles/' + articleId + '/comment/' + btn.value;
+            const url = '/comments/' + btn.value;
             const obj = {
                 method: 'DELETE',
                 headers: {
@@ -55,10 +53,9 @@ const CommentApp = (function () {
         };
 
         const update = function (event) {
-            const articleId = document.getElementById('article-id').value;
             const btn = event.target;
             if (btn.classList.contains("btn-lg")) {
-                const url = '/articles/' + articleId + '/comment/' + btn.value;
+                const url = '/comments/' + btn.value;
                 document.getElementById('comment-update-url').setAttribute('value', url);
             }
         };

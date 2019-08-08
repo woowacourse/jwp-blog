@@ -41,7 +41,7 @@ public class Comment extends BaseTimeEntity {
     }
 
     public void updateComment(Comment paramComment) {
-        if (this.author.equals(paramComment.author)) {
+        if (paramComment.matchAuthor(this.author)) {
             this.comment = paramComment.comment;
         }
     }

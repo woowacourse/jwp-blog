@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,10 +19,10 @@ public class UserRepositoryTest {
     @DisplayName("User 생성, 수정일자 등록 확인")
     public void checkLocalDate() {
 
-        LocalDateTime now = LocalDateTime.now();
-        User user = userRepository.save(new User("NAME", "user@test.test", "passWORD1!"));
+        LocalDate now = LocalDate.now();
+        User user = userRepository.save(new User("NAME", "new@test.test", "passWORD1!"));
 
-        assertThat(user.getCreatedDateTime().isAfter(now)).isTrue();
-        assertThat(user.getLastModifiedDateTime().isAfter(now)).isTrue();
+        assertThat(user.toCreatedDate().isEqual(now)).isTrue();
+        assertThat(user.toLastModifiedDate().isEqual(now)).isTrue();
     }
 }

@@ -18,6 +18,7 @@ import static techcourse.myblog.web.LogInControllerTest.USER_NAME;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentRestControllerTest {
 
+    public static final long BASE_ARTICLE_ID = 1L;
     @Autowired
     private WebTestClient webTestClient;
 
@@ -33,13 +34,12 @@ public class CommentRestControllerTest {
     }
 
     private CommentResponseDto save(CommentRequestDto requestDto) {
-        return sendRequestDto(HttpMethod.POST, requestDto, "/comment");
+        return sendRequestDto(HttpMethod.POST, requestDto, "/comments");
     }
 
     private CommentResponseDto sendRequestDto(HttpMethod method, CommentRequestDto requestDto, String uri) {
         return webTestClient.method(method).uri(uri)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(requestDto), CommentRequestDto.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -52,14 +52,13 @@ public class CommentRestControllerTest {
     @Test
     @DisplayName("댓글 변경 테스트")
     void updateTest() {
-        CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
+        CommentRequestDto requestDto = new CommentRequestDto(BASE_ARTICLE_ID, "hello");
         CommentResponseDto comment = save(requestDto);
 
-        Long articleId = requestDto.getArticleId();
         Long commentId = comment.getId();
 
-        CommentRequestDto updateDto = new CommentRequestDto(1L, "update");
-        String uri = "/articles/" + articleId + "/comment/" + commentId;
+        CommentRequestDto updateDto = new CommentRequestDto(BASE_ARTICLE_ID, "update");
+        String uri = "/comments/" + commentId;
         CommentResponseDto updatedComment = update(updateDto, uri);
 
         assertThat(updatedComment.getId()).isNotNull();
@@ -74,12 +73,11 @@ public class CommentRestControllerTest {
     @Test
     @DisplayName("댓글 삭제 테스트")
     void deleteTest() {
-        CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
+        CommentRequestDto requestDto = new CommentRequestDto(BASE_ARTICLE_ID, "hello");
         CommentResponseDto comment = save(requestDto);
 
-        Long articleId = requestDto.getArticleId();
         Long commentId = comment.getId();
-        String uri = "/articles/" + articleId + "/comment/" + commentId;
+        String uri = "/comments/" + commentId;
         CommentResponseDto deletedComment = delete(new CommentRequestDto(null, null), uri);
 
         assertThat(deletedComment.getId()).isEqualTo(commentId);

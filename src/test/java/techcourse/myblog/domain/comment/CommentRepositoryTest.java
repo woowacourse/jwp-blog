@@ -30,8 +30,8 @@ public class CommentRepositoryTest {
     public void checkLocalDate() {
         LocalDateTime localDateTime = LocalDateTime.now();
 
-        User author = userRepository.findById(1L).get();
-        Article article = articleRepository.findById(1L).get();
+        User author = userRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
+        Article article = articleRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
         Comment comment = new Comment("COMMENT", author, article);
 
         Comment savedComment = commentRepository.save(comment);
