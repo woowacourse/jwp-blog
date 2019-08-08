@@ -7,7 +7,7 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.service.exception.MismatchAuthorException;
+import techcourse.myblog.service.exception.MismatchCommentWriterException;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import java.util.Collections;
@@ -35,7 +35,7 @@ public class CommentService {
             commentRepository.deleteById(id);
             return id;
         }
-        throw new MismatchAuthorException();
+        throw new MismatchCommentWriterException();
     }
 
     public Comment modify(Long id, CommentDto commentDto, User user) {

@@ -8,10 +8,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.exception.CommentUpdateFailedException;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.exception.MismatchCommentWriterException;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -147,9 +149,16 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글삭제_실패() {
-        String otherUserDeleteCommentRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, DELETE, getCommentUrl()));
-
-        assertThat(otherUserDeleteCommentRedirectUrl.equals("/")).isTrue();
+//        String otherUserDeleteCommentRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, DELETE, getCommentUrl()));
+//
+//        assertThat(otherUserDeleteCommentRedirectUrl.equals("/")).isTrue();
+        webTestClient.delete().uri(getCommentUrl())
+                .cookie("JSESSIONID", getLoginSessionId(otherUserDto))
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.message").isEqualTo(MismatchCommentWriterException.MISMATCH_WRITER_ERROR_MESSAGE);
     }
 
     @Test
@@ -175,17 +184,16 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글수정_실패() {
-        String otherUserUpdateCommentRedirectUrl = getRedirectUrl(
-                webTestClient.put().uri(getCommentUrl())
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
-                        .body(Mono.just(updateCommentDto), CommentDto.class)
-                        .cookie("JSESSIONID", getLoginSessionId(otherUserDto))
-                        .exchange()
-                        .expectStatus()
-        );
-
-        assertThat(otherUserUpdateCommentRedirectUrl.equals("/")).isTrue();
+        webTestClient.put().uri(getCommentUrl())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(updateCommentDto), CommentDto.class)
+                .cookie("JSESSIONID", getLoginSessionId(otherUserDto))
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.message").isEqualTo(CommentUpdateFailedException.COMMENT_UPDATE_FAIL_ERROR_MSG);
     }
 
     private String getCommentUrl() {

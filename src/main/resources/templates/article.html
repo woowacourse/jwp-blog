@@ -141,11 +141,11 @@
 
     const drawComments = () => {
         fetch(commentUrl)
-        .then(response => responseChecker(response))
-        .then(comments => {
-            comments.forEach(comment => appendComment(comment))
-            drawCommentCount(comments.length)
-        }).catch((error) => {
+            .then(response => responseChecker(response))
+            .then(comments => {
+                comments.forEach(comment => appendComment(comment))
+                drawCommentCount(comments.length)
+            }).catch((error) => {
             console.log(error)
 
             alert(error.message());
@@ -154,6 +154,8 @@
 
     const responseChecker = (response) => {
         if (response.ok) {
+            // console.log("checkkk")
+            // console.log(response.json())
             return response.json()
         }
         throw new Error(response.json());
@@ -259,11 +261,19 @@
                         "Content-Type": "application/json; charset=utf-8"
                     },
                     body: JSON.stringify({contents: commentContents.value})
-                }).then(response => response.json())
-                    .then(json => {
-                        appendComment(json);
-                        countComment();
+                }).then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return response.json()
+                }).then(comment => {
+                    appendComment(comment);
+                    countComment();
+                }).catch(error => {
+                    error.json().then(errorResponse => {
+                        alert(errorResponse.message)
                     })
+                })
             }
 
             const modify = function (event) {
@@ -278,10 +288,18 @@
                             "Content-Type": "application/json; charset=utf-8"
                         },
                         body: JSON.stringify({contents: contents})
-                    }).then(response => response.json())
-                        .then(json => {
-                            updateComment(event.target.closest("li"), json)
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw response;
+                        }
+                        return response.json()
+                    }).then(json => {
+                        updateComment(event.target.closest("li"), json)
+                    }).catch(error => {
+                        error.json().then(errorResponse => {
+                            alert(errorResponse.message)
                         })
+                    })
                 }
             }
 
@@ -298,10 +316,18 @@
                     let commentId = event.target.closest('div').querySelector('input').value;
 
                     fetch(commentUrl + "/" + commentId, {method: "DELETE"})
-                    .then(response => response.json())
-                    .then(json => {
-                        event.target.closest('li').remove();
-                        countComment();
+                        .then(response => {
+                            if (!response.ok) {
+                                throw response;
+                            }
+                            return response.json()
+                        }).then(json => {
+                            event.target.closest('li').remove();
+                            countComment();
+                        }).catch(error => {
+                        error.json().then(errorResponse => {
+                            alert(errorResponse.message)
+                        })
                     })
                 }
             }
