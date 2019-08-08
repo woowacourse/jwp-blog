@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentAPIController {
+    private static final Logger log = LoggerFactory.getLogger(CommentAPIController.class);
 
     private final CommentService commentService;
 
@@ -32,6 +35,7 @@ public class CommentAPIController {
             Comment comment = commentService.save(commentRequest, articleId, userResponse.getId());
             return new ResponseEntity<>(new CommentResponse(comment), HttpStatus.CREATED);
         } catch (RuntimeException e) {
+            log.error("Error while write comment", e);
             throw new JsonAPIException(e.getMessage());
         }
 
@@ -45,7 +49,7 @@ public class CommentAPIController {
             commentService.delete(commentId, userResponse.getId());
             return new ResponseEntity<>(new BaseResponse("ok"), HttpStatus.OK);
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            log.error("Error while delete comment", e);
             throw new JsonAPIException(e.getMessage());
         }
     }
@@ -60,7 +64,7 @@ public class CommentAPIController {
             Comment comment = commentService.findById(commentId);
             return new ResponseEntity<>(new CommentResponse(comment), HttpStatus.OK);
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            log.error("Error while update comment", e);
             throw new JsonAPIException(e.getMessage());
         }
     }
