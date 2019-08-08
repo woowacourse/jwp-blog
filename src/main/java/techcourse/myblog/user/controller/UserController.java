@@ -3,14 +3,15 @@ package techcourse.myblog.user.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
-import techcourse.myblog.user.dto.UserCreateDto;
 import techcourse.myblog.user.dto.UserResponseDto;
 import techcourse.myblog.user.dto.UserUpdateDto;
 import techcourse.myblog.user.exception.InvalidEditFormException;
-import techcourse.myblog.user.exception.InvalidSignUpFormException;
 import techcourse.myblog.user.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -39,7 +40,7 @@ public class UserController {
 
     @GetMapping("/mypage/{userId}")
     public String renderMyPage(@PathVariable long userId, Model model) {
-        UserResponseDto user = userService.findById(userId);
+        UserResponseDto user = userService.find(userId);
         model.addAttribute("user", user);
         return "mypage";
     }
@@ -49,7 +50,7 @@ public class UserController {
         if (session.getId() != userId) {
             return "redirect:/";
         }
-        model.addAttribute("user", userService.findById(userId));
+        model.addAttribute("user", userService.find(userId));
         return "mypage-edit";
     }
 

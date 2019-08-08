@@ -43,9 +43,14 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserResponseDto findById(long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
+    public User findById(long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
+    }
+
+    public UserResponseDto find(long userId) {
+        User user = findById(userId);
         return modelMapper.map(user, UserResponseDto.class);
+
     }
 
     public UserResponseDto login(UserLoginDto userDto) {

@@ -8,7 +8,6 @@ import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.article.dto.ArticleCreateDto;
 import techcourse.myblog.article.dto.ArticleResponseDto;
 import techcourse.myblog.article.dto.ArticleUpdateDto;
-import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.comment.service.CommentService;
 
@@ -35,7 +34,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public RedirectView createArticle(ArticleCreateDto articleDto, UserSession userSession) {
+    public RedirectView createArticle2(ArticleCreateDto articleDto, UserSession userSession) {
         long newArticleId = articleService.save(articleDto, userSession.getId()).getId();
         return new RedirectView("/articles/" + newArticleId);
     }

@@ -84,14 +84,14 @@ class UserServiceTest {
     void 회원정보_단건_성공_조회_테스트() {
         given(userRepository.findById(USER_ID)).willReturn(Optional.of(user));
 
-        assertThat(userService.findById(USER_ID)).isEqualTo(modelMapper.map(user, UserResponseDto.class));
+        assertThat(userService.find(USER_ID)).isEqualTo(modelMapper.map(user, UserResponseDto.class));
     }
 
     @Test
     void 회원정보_단건_실패_조회_테스트() {
         given(userRepository.findById(USER_ID)).willReturn(Optional.empty());
 
-        assertThrows(NotFoundUserException.class, () -> userService.findById(USER_ID));
+        assertThrows(NotFoundUserException.class, () -> userService.find(USER_ID));
     }
 
     @Test

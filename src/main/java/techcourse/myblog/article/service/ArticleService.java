@@ -11,8 +11,7 @@ import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.user.domain.User;
-import techcourse.myblog.user.domain.UserRepository;
-import techcourse.myblog.user.exception.NotFoundUserException;
+import techcourse.myblog.user.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,12 +20,12 @@ import java.util.stream.Collectors;
 @Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public ArticleService(ArticleRepository articleRepository, UserService userService, ModelMapper modelMapper) {
         this.articleRepository = articleRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
@@ -38,7 +37,7 @@ public class ArticleService {
     }
 
     public ArticleResponseDto save(ArticleCreateDto articleDto, long authorId) {
-        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
+        User author = userService.findById(authorId);
         Article newArticle = articleDto.toArticle(author);
         return modelMapper.map(articleRepository.save(newArticle), ArticleResponseDto.class);
     }
