@@ -15,6 +15,8 @@ public class ArticleAssembler {
                 article.getTitle(),
                 article.getCoverUrl(),
                 article.getContents(),
+                article.getAuthor(),
+                article.getEmail(),
                 article.getCountOfComment()
         );
 

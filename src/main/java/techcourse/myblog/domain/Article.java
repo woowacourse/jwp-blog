@@ -73,6 +73,14 @@ public class Article extends Auditable {
         return contents;
     }
 
+    public String getAuthor() {
+        return author.getName();
+    }
+
+    public String getEmail() {
+        return author.getEmail();
+    }
+
     public List<Comment> getComments() {
         return java.util.Collections.unmodifiableList(comments);
     }
