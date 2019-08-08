@@ -4,17 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.UnFoundArticleException;
-import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.ArticleRepository;
 
 @Slf4j
 @Service
 @Transactional
-public class ArticleService extends DomainAbstractService {
+public class ArticleService extends AbstractDomainService<Article> {
 
     private static final String NOT_FOUND_ARTICLE_ERROR = "존재하지 않는 게시글";
 
@@ -25,15 +26,16 @@ public class ArticleService extends DomainAbstractService {
         this.articleRepository = articleRepository;
     }
 
+    @Override
     public Article save(Article article) {
         return articleRepository.save(article);
     }
 
-    public Article select(long id) {
+    public Article select(Long id) {
         return findById(id);
     }
 
-    private Article findById(long id) {
+    private Article findById(Long id) {
         return articleRepository
                 .findById(id)
                 .orElseThrow(() -> {
@@ -42,13 +44,13 @@ public class ArticleService extends DomainAbstractService {
                 });
     }
 
-    public Iterable<Article> findAll() {
+    public List<Article> findAll() {
         return articleRepository.findAll();
     }
 
-    public void update(Long id, Article updateArticle, User user) {
+    public Article update(Long id, Article updateArticle, User user) {
         Article article = getAuthorizedDomain(id, user);
-        article.update(updateArticle);
+        return article.update(updateArticle);
     }
 
     @Override
@@ -58,7 +60,8 @@ public class ArticleService extends DomainAbstractService {
         return article;
     }
 
-    public void delete(long id, User user) {
+    @Override
+    public void delete(Long id, User user) {
         Article article = getAuthorizedDomain(id, user);
         articleRepository.delete(article);
     }

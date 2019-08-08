@@ -11,13 +11,12 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.exception.NotFoundCommentException;
-import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.CommentRepository;
 
 @Slf4j
 @Service
 @Transactional
-public class CommentService extends DomainAbstractService {
+public class CommentService extends AbstractDomainService<Comment> {
 
     private static final String NOT_FOUND_COMMENT_ERROR = "존재하지 않는 댓글";
 
@@ -28,12 +27,14 @@ public class CommentService extends DomainAbstractService {
         this.commentRepository = commentRepository;
     }
 
+    @Override
     public Comment save(Comment comment) {
         return commentRepository.save(comment);
     }
 
-    public void delete(Long commentId, User user) {
-        Comment comment = getAuthorizedDomain(commentId, user);
+    @Override
+    public void delete(Long id, User user) {
+        Comment comment = getAuthorizedDomain(id, user);
         commentRepository.delete(comment);
     }
 
@@ -53,16 +54,16 @@ public class CommentService extends DomainAbstractService {
                 });
     }
 
-    public List<Comment> findCommentsByArticleId(long articleId) {
-        return commentRepository.findAllByArticleId(articleId);
-    }
-
     public Comment update(Long commentId, CommentRequest commentRequest, User user) {
         Comment comment = getAuthorizedDomain(commentId, user);
         return comment.update(commentRequest.getContents());
     }
 
     public List<Comment> findAllByArticleId(Long articleId) {
+        return commentRepository.findAllByArticleId(articleId);
+    }
+
+    public List<Comment> findCommentsByArticleId(Long articleId) {
         return commentRepository.findAllByArticleId(articleId);
     }
 }
