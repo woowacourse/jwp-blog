@@ -18,16 +18,12 @@ public class MyBlogApplication {
     @Bean
     public CommandLineRunner runner(UserRepository userRepository, ArticleRepository articleRepository) {
         return (args -> {
-            User cony = userRepository.save(
-                    new User("cony", "cony@cony.com", "@Password12")
-            );
-
             User luffy = userRepository.save(
                     new User("luffy", "luffy@luffy.com", "@Password12")
             );
 
             Article article = articleRepository.save(
-                    new Article("제목", "", "내용", cony)
+                    new Article("제목", "", "내용", luffy)
             );
         });
     }
