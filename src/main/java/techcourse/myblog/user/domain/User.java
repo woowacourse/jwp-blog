@@ -40,7 +40,7 @@ public class User {
         return this;
     }
 
-    public boolean checkPassword(String password) {
+    public boolean isPassword(String password) {
         return this.password.isCorrect(password);
     }
 

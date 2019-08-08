@@ -57,7 +57,7 @@ public class UserService {
         User user = userRepository.findByEmail(Email.of(userDto.getEmail()))
                 .orElseThrow(() -> new NotFoundUserException(userDto.getEmail()));
 
-        if (!user.checkPassword(userDto.getPassword())) {
+        if (!user.isPassword(userDto.getPassword())) {
             throw new NotMatchPasswordException();
         }
 
