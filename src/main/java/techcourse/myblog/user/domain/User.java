@@ -23,7 +23,7 @@ public class User {
     @Embedded
     private Password password;
 
-    @Convert(converter = NameConverter.class)
+    @Embedded
     private Name name;
 
     @Builder

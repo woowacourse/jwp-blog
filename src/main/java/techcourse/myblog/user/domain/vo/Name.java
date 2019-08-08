@@ -1,9 +1,18 @@
 package techcourse.myblog.user.domain.vo;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.validation.constraints.Pattern;
+
+@Embeddable
 public class Name {
     private static final String NAME_REGEX = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}";
 
-    private final String name;
+    @Pattern(regexp = NAME_REGEX)
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    public Name() {}
 
     private Name(final String name) {
         this.name = validateName(name);
