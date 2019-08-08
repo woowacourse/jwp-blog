@@ -8,11 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.annotation.LoginUser;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.exception.NotFoundArticleException;
-import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.service.dto.CommentResponse;
@@ -29,6 +25,13 @@ public class CommentController {
 
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseMessage> show(@PathVariable long articleId) {
+        List<CommentResponse> comments = commentService.getComments(articleId);
+        ResponseMessage<List<CommentResponse>> responseMessage = new ResponseMessage<>(comments, "", "");
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @PostMapping
