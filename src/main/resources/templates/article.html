@@ -136,38 +136,39 @@
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script src="/js/comment.js"></script>
 <script th:inline="javascript">
-    const DOMAIN_URL = location.protocol + "//" + location.host;
 
-    const commentHTML = "<li class=\"comment-item border bottom mrg-btm-30\">\n" +
-        "                            <img class=\"thumb-img img-circle\"\n" +
-        "                                 src=\"https://avatars3.githubusercontent.com/u/50367798?v=4\" alt=\"\">\n" +
-        "                            <div class=\"info\">\n" +
-        "                                <span href=\"\" class=\"text-bold inline-block\">{{commentAuthorName}}</span>\n" +
-        "                                <span class=\"sub-title inline-block pull-right\">\n" +
-        "                                    <i class=\"ti-timer pdd-right-5\"></i>\n" +
-        "                                    <span>6 min ago</span>\n" +
-        "                            </span>\n" +
-        "                                <p class=\"width-80\">{{comment}}</p>\n" +
-        "                            </div>\n" +
-        "                                <button type=\"button\" class=\"btn btn-primary btn-lg\" data-toggle=\"modal\"\n" +
-        "                                        data-target=\"#myModal\"\n" +
-        "                                        value=\"{{commentId}}\">\n" +
-        "                                    <i class=\"ti-pencil\"></i>\n" +
-        "                                </button>\n" +
-        "                                <button class=\"btn delete-comment\" value=\"{{commentId}}\">\n" +
-        "                                   🗑️\n" +
-        "                                </button>\n" +
-        "                        </li>"
+    const commentHTML = `<li class="comment-item border bottom mrg-btm-30">
+                            <img class="thumb-img img-circle"
+                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                            <div class="info">
+                                <span href="" class="text-bold inline-block">{{commentAuthorName}}</span>
+                                <span class="sub-title inline-block pull-right">
+                                    <i class="ti-timer pdd-right-5"></i>
+                                    <span>6 min ago</span>
+                            </span>
+                                <p class="width-80">{{comment}}</p>
+                            </div>
+                                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                        data-target="#myModal"
+                                        value="{{commentId}}">
+                                    <i class="ti-pencil"></i>
+                                </button>
+                                <button class="btn delete-comment" value="{{commentId}}">
+                                    🗑️
+                                </button>
+                        </li>`;
 
     const commentTemplate = Handlebars.compile(commentHTML);
 
-    const initValue = [[${article.contents}]]
+    const initValue = [[${article.contents}]];
+
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
         initialValue: initValue
-    })
+    });
+
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -179,6 +180,7 @@
         },
         height: '200px'
     });
+
     const editComment = new tui.Editor({
         el: document.querySelector('#commentEditSection'),
         initialEditType: 'markdown',
@@ -192,16 +194,8 @@
         height: '200px'
     });
 
-    function changeCommentEditAction(articleId, commentId) {
-        const url = "/articles/" + articleId + "/comment/" + commentId;
-        console.log("url is " + url);
-        document.getElementById('comment-update-url').setAttribute('value', url);
-    }
-
     document.getElementById("save-btn").addEventListener("click", function (e) {
-        const articleId = [[${article.id}]]
-        console.log("adsfsadfqwerqwer");
-        const URL = DOMAIN_URL + "/comment";
+        const articleId = [[${article.id}]];
         const obj = {
             method: 'POST',
             body: JSON.stringify({
@@ -213,7 +207,7 @@
             }
         };
 
-        fetch(URL, obj)
+        fetch('/comment', obj)
             .then(function (response) {
                 return response.json();
             })
@@ -229,9 +223,7 @@
     });
 
     const handleUpdate = function (e) {
-        console.log("update 실행");
         const url = document.getElementById("comment-update-url").value;
-        const URL = DOMAIN_URL + url;
         const obj = {
             method: 'PUT',
             body: JSON.stringify({
@@ -242,40 +234,25 @@
             }
         };
 
-        fetch(URL, obj)
+        fetch(url, obj)
             .then(function (response) {
                 return response.json();
             })
             .then(function (json) {
-                console.log(json);
                 const modal = document.getElementById("myModal");
 
                 modal.classList.remove("show");
-                $('#modal').modal('hide');
                 const items = document.getElementsByClassName("btn delete-comment");
 
                 for (const i in items) {
-                    console.log(items[i].value)
                     if (items[i].value == json.id) {
-                        console.log("수정!")
                         items[i].parentNode.querySelector("p").innerText = json.comment;
                         return;
                     }
                 }
             })
-
     };
 
     document.getElementById("comment-update-button").addEventListener("click", handleUpdate);
-
-    const handleDelete = function (e) {
-        console.log("delete 실행");
-        const url = document.getElementById("comment-update-url").value;
-        const URL = DOMAIN_URL + url;
-        fetch(URL)
-            .then(function (response) {
-                console.log("삭제 결과물 " + response);
-            })
-    }
 </script>
 </html>
