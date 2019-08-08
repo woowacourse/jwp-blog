@@ -4,23 +4,22 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
-public class CommentDTO {
-    public CommentDTO(String contents) {
-        this.contents = contents;
-    }
-
-    public CommentDTO() {
-    }
-
-    ;
+public class CommentDto {
     private String contents;
 
-    public void setContents(String contents) {
+    public CommentDto(String contents) {
         this.contents = contents;
+    }
+
+    public CommentDto() {
     }
 
     public String getContents() {
         return contents;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
     public Comment toDomain(Article article, User user) {

@@ -12,7 +12,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.domain.repository.UserRepository;
-import techcourse.myblog.service.dto.CommentDTO;
+import techcourse.myblog.service.dto.CommentDto;
 
 import java.util.List;
 
@@ -117,12 +117,12 @@ class CommentControllerTest {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
-            CommentDTO commentDTO = new CommentDTO(CONTENTS_1);
+            CommentDto commentDTO = new CommentDto(CONTENTS_1);
 
             webTestClient.post().uri(uri)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .body(Mono.just(commentDTO), CommentDto.class)
                     .exchange().expectStatus().isBadRequest();
 
             assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
@@ -133,12 +133,12 @@ class CommentControllerTest {
             Article foundArticle = articleRepository.findAll().get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            CommentDTO commentDTO = new CommentDTO(CONTENTS_2);
+            CommentDto commentDTO = new CommentDto(CONTENTS_2);
 
             webTestClient.put().uri(uri)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .body(Mono.just(commentDTO), CommentDto.class)
                     .exchange().expectStatus().isBadRequest();
 
             foundComment = commentReopsitory.findById(foundComment.getId()).get();
@@ -169,14 +169,14 @@ class CommentControllerTest {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
-            CommentDTO commentDTO = new CommentDTO("고고");
+            CommentDto commentDTO = new CommentDto("고고");
 
             webTestClient.post().uri(uri)
                     .header("cookie", cookie)
                     .header("referer", uri)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .body(Mono.just(commentDTO), CommentDto.class)
                     .exchange().expectStatus().isOk();
 
             assertThat(commentReopsitory.findAll().size()).isEqualTo(2);
@@ -188,14 +188,14 @@ class CommentControllerTest {
             Comment foundComment = commentReopsitory.findAll().get(0);
 
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            CommentDTO commentDTO = new CommentDTO(CONTENTS_2);
+            CommentDto commentDTO = new CommentDto(CONTENTS_2);
 
             webTestClient.put().uri(uri)
                     .header("cookie", cookie)
                     .header("referer", uri)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .body(Mono.just(commentDTO), CommentDto.class)
                     .exchange().expectStatus().isOk();
 
             foundComment = commentReopsitory.findById(foundComment.getId()).get();
@@ -227,13 +227,13 @@ class CommentControllerTest {
             Comment foundComment = commentReopsitory.findAll().get(0);
 
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            CommentDTO commentDTO = new CommentDTO(CONTENTS_2);
+            CommentDto commentDTO = new CommentDto(CONTENTS_2);
 
             webTestClient.put().uri(uri)
                     .header("cookie", anotherCookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDTO.class)
+                    .body(Mono.just(commentDTO), CommentDto.class)
                     .exchange().expectStatus().isBadRequest();
 
             foundComment = commentReopsitory.findById(foundComment.getId()).get();

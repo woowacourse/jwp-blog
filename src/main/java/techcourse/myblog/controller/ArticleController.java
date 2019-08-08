@@ -13,7 +13,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.domain.repository.ArticleRepository;
-import techcourse.myblog.service.dto.ArticleDTO;
+import techcourse.myblog.service.dto.ArticleDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -52,7 +52,7 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String create(ArticleDTO articleDTO, @LoginUser User user) {
+    public String create(ArticleDto articleDTO, @LoginUser User user) {
         Article article = articleDTO.toDomain(user);
 
         articleRepository.save(article);
@@ -77,7 +77,7 @@ public class ArticleController {
     @Transactional
     @PutMapping("/{articleId}")
     public String update(@PathVariable Long articleId, @LoginUser User user,
-                         ArticleDTO articleDTO) {
+                         ArticleDto articleDTO) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -96,7 +96,6 @@ public class ArticleController {
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         article.validate(user);
-
         articleRepository.deleteById(articleId);
         return "redirect:/";
     }

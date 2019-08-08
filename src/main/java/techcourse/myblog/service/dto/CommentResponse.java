@@ -1,11 +1,11 @@
 package techcourse.myblog.service.dto;
 
-public class CommentResponseDto {
+public class CommentResponse {
     private String userName;
     private String contents;
     private Long id;
 
-    public CommentResponseDto(String userName, String contents, Long id) {
+    public CommentResponse(String userName, String contents, Long id) {
         this.userName = userName;
         this.contents = contents;
         this.id = id;

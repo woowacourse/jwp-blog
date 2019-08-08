@@ -2,8 +2,8 @@ package techcourse.myblog.service.dto;
 
 import techcourse.myblog.domain.User;
 
-public class UserDTO implements DomainDTO<User> {
-    public UserDTO(String userName, String email, String password) {
+public class UserDto implements DomainDto<User> {
+    public UserDto(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
         this.password = password;

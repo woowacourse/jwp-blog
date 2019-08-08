@@ -11,7 +11,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.service.LoginService;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
 
@@ -30,7 +30,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(@ModelAttribute UserDTO userDTO, HttpSession session, RedirectAttributes redirectAttributes) {
+    public RedirectView login(@ModelAttribute UserDto userDTO, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
             User user = loginService.getLoginUser(userDTO);
             session.setAttribute("user", user);

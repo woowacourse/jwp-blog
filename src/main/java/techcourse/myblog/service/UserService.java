@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.domain.repository.UserRepository;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.UserDto;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(UserDTO userDTO) {
+    public User save(UserDto userDTO) {
         if (isDuplicateEmail(userDTO)) {
             throw new EmailRepetitionException("이메일이 중복입니다.");
         }
@@ -32,7 +32,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean isDuplicateEmail(UserDTO userDTO) {
+    public boolean isDuplicateEmail(UserDto userDTO) {
         return userRepository.existsByEmail(userDTO.getEmail());
     }
 
@@ -40,7 +40,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public User update(UserDTO userDTO) {
+    public User update(UserDto userDTO) {
         log.error("email {} ", userDTO.getEmail());
         log.error("name {} ", userDTO.getUserName());
         log.error("password {} ", userDTO.getPassword());

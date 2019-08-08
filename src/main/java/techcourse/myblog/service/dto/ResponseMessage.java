@@ -1,7 +1,7 @@
 package techcourse.myblog.service.dto;
 
-public class ResponseMessage {
-    private String status;
+public class ResponseMessage<T> {
+    private T data;
     private String message;
     private String errorMessage;
     private String errorCode;
@@ -10,19 +10,23 @@ public class ResponseMessage {
 
     }
 
-    public ResponseMessage(String status, String message, String errorMessage, String errorCode) {
-        this.status = status;
+    public ResponseMessage(String message, String errorMessage) {
         this.message = message;
         this.errorMessage = errorMessage;
-        this.errorCode = errorCode;
     }
 
-    public String getStatus() {
-        return status;
+    public ResponseMessage(T data, String message, String errorMessage) {
+        this.data = data;
+        this.message = message;
+        this.errorMessage = errorMessage;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public T getData() {
+        return data;
+    }
+
+    public void setData(final T data) {
+        this.data = data;
     }
 
     public String getMessage() {

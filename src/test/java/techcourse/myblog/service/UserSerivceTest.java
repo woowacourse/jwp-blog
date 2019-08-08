@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +16,7 @@ public class UserSerivceTest {
     private static final String TEST_EMAIL_2 = "test2@test.com";
     private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
     private static final String TEST_USERNAME = "test1";
-    private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
+    private static final UserDto userDTO = new UserDto(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
     private User user;
 
@@ -39,13 +39,13 @@ public class UserSerivceTest {
 
     @Test
     void 이메일로_중복인지_테스트() {
-        UserDTO userDTOTest = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
+        UserDto userDTOTest = new UserDto(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
         assertThat(userService.isDuplicateEmail(userDTOTest)).isTrue();
     }
 
     @Test
     void 이메일로_중복아닌지_테스트() {
-        UserDTO userDTOTest = new UserDTO(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
+        UserDto userDTOTest = new UserDto(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
         assertThat(userService.isDuplicateEmail(userDTOTest)).isFalse();
     }
 

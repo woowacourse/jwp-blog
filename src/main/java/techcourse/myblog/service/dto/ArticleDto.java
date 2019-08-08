@@ -4,8 +4,8 @@ import org.springframework.lang.NonNull;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
-public class ArticleDTO {
-    public ArticleDTO(String title, String contents, String coverUrl) {
+public class ArticleDto {
+    public ArticleDto(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;

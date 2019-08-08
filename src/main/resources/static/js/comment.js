@@ -1,7 +1,5 @@
 const COMMENT = (function () {
     'use strict';
-
-
     const CommentController = function () {
         const commentService = new CommentService();
 
@@ -105,11 +103,47 @@ const COMMENT = (function () {
     };
 })();
 
-COMMENT.init();
+window.onload = function() {
+    // commentLoad();
+    COMMENT.init();
+}
 
 const saveButton = document.querySelector('#comment-save-button');
 const articleId = document.querySelector('#article-id').value;
 saveButton.addEventListener('click', addCommentFetch);
+
+function commentLoad(){
+    fetch('/articles/' + articleId + '/comments',{
+        method:'get',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        credentials: 'include'
+    })
+    .then(function (response) {
+        if (response.ok) {
+            return response.json();
+        }
+        throw response;
+    })
+    .then((json) => {
+        console.log(json);
+        let commentListDto = {
+            comments: json.data.comments,
+        };
+        addCommentList(articleId, commentDto);
+    })
+    .catch((response) =>
+        response.json().then(json =>
+            alert(json.errorMessage)
+        )
+    );
+}
+function addCommentList(){
+    const commentContainer = document.getElementById('comment-list');
+    const commentList = commentLoad();
+}
+
 
 function addCommentFetch(e) {
     let contents = document.querySelector('#comment-contents').value;
@@ -130,9 +164,9 @@ function addCommentFetch(e) {
         .then((json) => {
             console.log(json);
             let commentDto = {
-                contents: json['contents'],
-                userName: json['userName'],
-                id: json['id']
+                contents: json.data.contents,
+                userName: json.data.userName,
+                id: json.data.id
             };
             addComment(articleId, commentDto);
         })
@@ -191,6 +225,8 @@ function updateCommentFetch(articleId, commentId, editParagraph, contents) {
         )
 }
 
+
+
 function addComment(articleId, commentDto) {
     console.log("abcd");
     let buttonTemplate = `
@@ -219,7 +255,6 @@ function addComment(articleId, commentDto) {
                 <p class="width-80">${commentDto.contents}</p>
             </div>
         </li>`;
-
     const comments = document.querySelector('#comment-list');
     comments.insertAdjacentHTML('beforeend', commentTemplate);
 }

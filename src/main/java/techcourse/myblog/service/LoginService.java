@@ -6,7 +6,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.domain.repository.UserRepository;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.UserDto;
 
 @Service
 @Transactional
@@ -17,7 +17,7 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public User getLoginUser(UserDTO userDTO) {
+    public User getLoginUser(UserDto userDTO) {
         User user = findByEmail(userDTO.getEmail());
 
         if (user == null) {

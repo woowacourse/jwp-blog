@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.UserDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,7 +28,7 @@ public class MypageController {
     }
 
     @PostMapping("/mypage")
-    public RedirectView update(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
+    public RedirectView update(@ModelAttribute UserDto userDTO, HttpServletRequest request) {
         User user = userService.update(userDTO);
         HttpSession session = request.getSession();
         session.setAttribute("user", user);

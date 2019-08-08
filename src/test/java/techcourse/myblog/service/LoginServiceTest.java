@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.NotFoundUserException;
-import techcourse.myblog.service.dto.UserDTO;
+import techcourse.myblog.service.dto.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,7 +21,7 @@ public class LoginServiceTest {
     private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";
     private static final String TEST_USERNAME = "test1";
 
-    private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
+    private static final UserDto userDTO = new UserDto(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
     private User user;
     private UserService userService;
@@ -46,7 +46,7 @@ public class LoginServiceTest {
 
     @Test
     void 로그인_아이디_찾기_실패_테스트() {
-        UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
+        UserDto userDTO = new UserDto(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
 
         assertThrows(NotFoundUserException.class, () -> {
             loginService.getLoginUser(userDTO);
@@ -55,7 +55,7 @@ public class LoginServiceTest {
 
     @Test
     void 로그인_패스워드_불일치_테스트() {
-        UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_2);
+        UserDto userDTO = new UserDto(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_2);
 
         assertThrows(LoginFailException.class, () -> {
             loginService.getLoginUser(userDTO);
