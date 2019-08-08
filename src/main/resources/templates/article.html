@@ -120,12 +120,9 @@
                                         <button type="button" class="float-right pointer btn btn-icon" th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
                                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
-                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}" method="post">
-                                            <input type="hidden" name="_method" value="DELETE"/>
-                                            <button type="submit" class="float-right pointer btn btn-icon">
-                                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
-                                            </button>
-                                        </form>
+                                        <button type="submit" class="float-right pointer btn btn-icon" th:onclick="'deleteComment('+${comment.id}+')'">
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
                                     </div>
 
 
@@ -219,7 +216,7 @@
                     '<button type="button" class="float-right pointer btn btn-icon" onclick=clickPencil(' + articleId + ',{{id}})>' +
                         '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
                     '</button>' +
-                    '<button type="submit" class="float-right pointer btn btn-icon">' +
+                    '<button type="submit" class="float-right pointer btn btn-icon" onclick=deleteComment({{id}})>' +
                         '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
                     '</button>' +
                 '</div>' +
@@ -260,6 +257,17 @@
         original.insertAdjacentHTML("afterend", commentItemTemplate(comment))
         original.remove()
         $('#exampleModal').modal('hide')
+    }
+
+    const deleteComment = async id => {
+        const url = "/articles/" + articleId + "/comments/" + id
+        const res = await fetch(url, {
+            method: "DELETE"
+        })
+        const isSucceeded = await res
+        if(isSucceeded) {
+            document.getElementById("comment-contents-" + id).parentNode.parentNode.remove()
+        }
     }
 </script>
 </body>

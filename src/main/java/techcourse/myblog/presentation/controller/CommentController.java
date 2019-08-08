@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.User;
@@ -29,11 +27,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, HttpSession session) {
-        commentService.delete(commentId, (User) session.getAttribute("user"));
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/" + articleId));
-        return modelAndView;
+    public @ResponseBody Boolean deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, HttpSession session) {
+        return commentService.delete(commentId, (User) session.getAttribute("user"));
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")

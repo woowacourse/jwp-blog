@@ -63,12 +63,13 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(long commentId, User user) {
+    public Boolean delete(long commentId, User user) {
         Comment comment = findCommentById(commentId);
         if (comment.isNotAuthor(user)){
             throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
         }
         commentRepository.deleteById(commentId);
+        return true;
     }
 
     @Transactional
