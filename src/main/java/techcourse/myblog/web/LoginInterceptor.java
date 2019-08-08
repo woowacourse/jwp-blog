@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        LoginUser user = (LoginUser) request.getSession().getAttribute("user");
-        if (user != null) {
-            response.sendRedirect("/");
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		LoginUser user = (LoginUser) request.getSession().getAttribute("user");
+		if (user != null) {
+			response.sendRedirect("/");
+			return false;
+		}
+		return true;
+	}
 }

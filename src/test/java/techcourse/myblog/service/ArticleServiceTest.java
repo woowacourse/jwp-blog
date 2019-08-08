@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,34 +26,34 @@ import static techcourse.myblog.domain.user.UserTest.user;
 @SpringBootTest
 public class ArticleServiceTest {
 
-    @Autowired
-    private ArticleService articleService;
+	@Autowired
+	private ArticleService articleService;
 
-    @MockBean(name = "articleRepository")
-    private ArticleRepository articleRepository;
+	@MockBean(name = "articleRepository")
+	private ArticleRepository articleRepository;
 
-    @MockBean(name = "httpSession")
-    private HttpSession httpSession;
+	@MockBean(name = "httpSession")
+	private HttpSession httpSession;
 
-    private ArticleDto articleDto = new ArticleDto();
+	private ArticleDto articleDto = new ArticleDto();
 
-    @Test
-    void 글_생성() {
-        given(httpSession.getAttribute("user")).willReturn(user);
-        given(articleRepository.save(any(Article.class))).willReturn(new Article());
+	@Test
+	void 글_생성() {
+		given(httpSession.getAttribute("user")).willReturn(user);
+		given(articleRepository.save(any(Article.class))).willReturn(new Article());
 
-        assertDoesNotThrow(() -> articleService.createArticle(articleDto, LoginUser.toLoginUser(user)));
-    }
+		assertDoesNotThrow(() -> articleService.createArticle(articleDto, LoginUser.toLoginUser(user)));
+	}
 
-    @Test
-    void 글_조회() {
-        given(articleRepository.findById(1L)).willReturn(Optional.of(article));
-        assertDoesNotThrow(() -> articleService.findArticleAndGetDto(1L));
-    }
+	@Test
+	void 글_조회() {
+		given(articleRepository.findById(1L)).willReturn(Optional.of(article));
+		assertDoesNotThrow(() -> articleService.findArticleAndGetDto(1L));
+	}
 
-    @Test
-    void 없는_글_조회() {
-        given(articleRepository.findById(1L)).willReturn(Optional.empty());
-        assertThrows(NotFoundObjectException.class, () -> articleService.findArticleAndGetDto(1L));
-    }
+	@Test
+	void 없는_글_조회() {
+		given(articleRepository.findById(1L)).willReturn(Optional.empty());
+		assertThrows(NotFoundObjectException.class, () -> articleService.findArticleAndGetDto(1L));
+	}
 }

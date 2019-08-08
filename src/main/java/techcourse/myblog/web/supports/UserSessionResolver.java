@@ -22,7 +22,7 @@ public class UserSessionResolver implements HandlerMethodArgumentResolver {
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		Object session = webRequest.getAttribute("user", RequestAttributes.SCOPE_SESSION);
 
-		if(session != null) {
+		if (session != null) {
 			return session;
 		}
 		throw new UnauthorizedException();

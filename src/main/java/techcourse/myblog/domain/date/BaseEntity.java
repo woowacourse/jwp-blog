@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-    @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime createTime;
+	@CreatedDate
+	@Column(nullable = false)
+	private LocalDateTime createTime;
 
-    @LastModifiedDate
-    private LocalDateTime renewTime;
+	@LastModifiedDate
+	private LocalDateTime renewTime;
 
 }

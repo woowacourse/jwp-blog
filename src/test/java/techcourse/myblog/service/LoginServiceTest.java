@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,45 +23,45 @@ import static techcourse.myblog.domain.user.UserTest.user;
 @SpringBootTest
 public class LoginServiceTest {
 
-    @MockBean(name = "userRepository")
-    private UserRepository userRepository;
+	@MockBean(name = "userRepository")
+	private UserRepository userRepository;
 
-    @Autowired
-    private LoginService loginService;
+	@Autowired
+	private LoginService loginService;
 
-    private AuthenticationDto authenticationDto = new AuthenticationDto();
+	private AuthenticationDto authenticationDto = new AuthenticationDto();
 
-    @Test
-    void 로그인_성공() {
-        UserDto userDto = new UserDto("heejoo", "heejoo@gmail.com");
+	@Test
+	void 로그인_성공() {
+		UserDto userDto = new UserDto("heejoo", "heejoo@gmail.com");
 
-        authenticationDto.setEmail(user.getEmail());
-        authenticationDto.setPassword(user.getPassword());
+		authenticationDto.setEmail(user.getEmail());
+		authenticationDto.setPassword(user.getPassword());
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-        LoginUser loginUser = loginService.login(authenticationDto);
+		LoginUser loginUser = loginService.login(authenticationDto);
 
-        assertThat(userDto.getEmail()).isEqualTo(loginUser.getEmail());
-        assertThat(userDto.getUserName()).isEqualTo(loginUser.getUserName());
-    }
+		assertThat(userDto.getEmail()).isEqualTo(loginUser.getEmail());
+		assertThat(userDto.getUserName()).isEqualTo(loginUser.getUserName());
+	}
 
-    @Test
-    void 로그인_이메일_실패() {
-        authenticationDto.setEmail("error@gmail.com");
+	@Test
+	void 로그인_이메일_실패() {
+		authenticationDto.setEmail("error@gmail.com");
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-        assertThrows(LoginException.class, () -> loginService.login(authenticationDto));
-    }
+		assertThrows(LoginException.class, () -> loginService.login(authenticationDto));
+	}
 
-    @Test
-    void 로그인_패스워드_실패() {
-        authenticationDto.setEmail(user.getEmail());
-        authenticationDto.setPassword("error");
+	@Test
+	void 로그인_패스워드_실패() {
+		authenticationDto.setEmail(user.getEmail());
+		authenticationDto.setPassword("error");
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-        assertThrows(LoginException.class, () -> loginService.login(authenticationDto));
-    }
+		assertThrows(LoginException.class, () -> loginService.login(authenticationDto));
+	}
 }

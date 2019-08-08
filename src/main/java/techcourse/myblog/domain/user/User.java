@@ -16,42 +16,42 @@ import javax.persistence.*;
 @EqualsAndHashCode
 public class User extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
 
-    @Column(nullable = false, length = 10)
-    @Length(min = 2, max = 10)
-    private String userName;
+	@Column(nullable = false, length = 10)
+	@Length(min = 2, max = 10)
+	private String userName;
 
-    @Column(nullable = false, unique = true, length = 50)
-    @Email
-    private String email;
+	@Column(nullable = false, unique = true, length = 50)
+	@Email
+	private String email;
 
-    @Column(nullable = false, length = 30)
-    @Length(min = 8)
-    private String password;
+	@Column(nullable = false, length = 30)
+	@Length(min = 8)
+	private String password;
 
-    @Builder
-    public User(String userName, String email, String password) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-    }
+	@Builder
+	public User(String userName, String email, String password) {
+		this.userName = userName;
+		this.email = email;
+		this.password = password;
+	}
 
-    public boolean matchPassword(String password) {
-        return this.password.equals(password);
-    }
+	public boolean matchPassword(String password) {
+		return this.password.equals(password);
+	}
 
-    public void changeUserName(String userName) {
-        this.userName = userName;
-    }
+	public void changeUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public void setId(Long userId) {
-        this.userId = userId;
-    }
+	public void setId(Long userId) {
+		this.userId = userId;
+	}
 
-    public boolean matchEmail(String email) {
-        return this.email.equals(email);
-    }
+	public boolean matchEmail(String email) {
+		return this.email.equals(email);
+	}
 }

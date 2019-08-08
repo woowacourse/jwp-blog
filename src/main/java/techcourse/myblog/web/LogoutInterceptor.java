@@ -13,21 +13,22 @@ import java.util.regex.Pattern;
 
 @Component
 public class LogoutInterceptor extends HandlerInterceptorAdapter {
-    private static String VALID_URL = "\\/articles\\/[0-9]*";
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        LoginUser user = (LoginUser) request.getSession().getAttribute("user");
-        String path = request.getRequestURI();
+	private static String VALID_URL = "\\/articles\\/[0-9]*";
 
-        if (Pattern.matches(VALID_URL, path) && request.getMethod().equals("GET")) {
-            return true;
-        }
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		LoginUser user = (LoginUser) request.getSession().getAttribute("user");
+		String path = request.getRequestURI();
 
-        if (user == null) {
-            response.sendRedirect("/login");
-            return false;
-        }
-        return true;
-    }
+		if (Pattern.matches(VALID_URL, path) && request.getMethod().equals("GET")) {
+			return true;
+		}
+
+		if (user == null) {
+			response.sendRedirect("/login");
+			return false;
+		}
+		return true;
+	}
 
 }

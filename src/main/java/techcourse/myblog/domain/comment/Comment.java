@@ -13,32 +13,32 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 public class Comment extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
-    private User author;
+	@ManyToOne
+	@JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+	private User author;
 
-    @Column(nullable = false)
-    @Lob
-    private String contents;
+	@Column(nullable = false)
+	@Lob
+	private String contents;
 
-    @Builder
-    public Comment(User author, String contents) {
-        this.author = author;
-        this.contents = contents;
-    }
+	@Builder
+	public Comment(User author, String contents) {
+		this.author = author;
+		this.contents = contents;
+	}
 
-    public void checkCorrespondingAuthor(User user) {
-        if (!author.equals(user)) {
-            throw new InvalidAuthorException();
-        }
-    }
+	public void checkCorrespondingAuthor(User user) {
+		if (!author.equals(user)) {
+			throw new InvalidAuthorException();
+		}
+	}
 
-    public void update(Comment updateComment, User user) {
-        checkCorrespondingAuthor(user);
-        this.contents = updateComment.contents;
-    }
+	public void update(Comment updateComment, User user) {
+		checkCorrespondingAuthor(user);
+		this.contents = updateComment.contents;
+	}
 }

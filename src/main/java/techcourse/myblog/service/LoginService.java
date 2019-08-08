@@ -13,17 +13,17 @@ import java.util.Optional;
 @Service
 public class LoginService {
 
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    public LoginService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	public LoginService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-    public LoginUser login(AuthenticationDto authenticationDto) {
-        User user = userRepository.findByEmail(authenticationDto.getEmail())
-                .orElseThrow(LoginException::notFoundEmail);
-        Optional.of(user).filter(u -> u.matchPassword(authenticationDto.getPassword()))
-                .orElseThrow(LoginException::notMatchPassword);
-        return LoginUser.toLoginUser(user);
-    }
+	public LoginUser login(AuthenticationDto authenticationDto) {
+		User user = userRepository.findByEmail(authenticationDto.getEmail())
+				.orElseThrow(LoginException::notFoundEmail);
+		Optional.of(user).filter(u -> u.matchPassword(authenticationDto.getPassword()))
+				.orElseThrow(LoginException::notMatchPassword);
+		return LoginUser.toLoginUser(user);
+	}
 }

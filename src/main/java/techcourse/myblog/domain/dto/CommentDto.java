@@ -12,14 +12,14 @@ import techcourse.myblog.domain.user.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
-    private Long id;
-    private String userName;
-    private String contents;
+	private Long id;
+	private String userName;
+	private String contents;
 
-    public Comment toEntity(User author) {
-        return Comment.builder()
-                .author(author)
-                .contents(contents)
-                .build();
-    }
+	public Comment toEntity(User author) {
+		return Comment.builder()
+				.author(author)
+				.contents(contents)
+				.build();
+	}
 }
