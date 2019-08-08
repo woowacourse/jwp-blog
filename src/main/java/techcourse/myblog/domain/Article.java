@@ -26,8 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Getter
 @EqualsAndHashCode
-@ToString
-public class Article {
+public class Article extends AbstractDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,12 +41,12 @@ public class Article {
     @Lob
     private String contents;
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
 
     public Article() {
     }
@@ -90,6 +89,7 @@ public class Article {
         }
     }
 
+    @Override
     public boolean isAuthorized(User user) {
         return this.author.equals(user);
     }
