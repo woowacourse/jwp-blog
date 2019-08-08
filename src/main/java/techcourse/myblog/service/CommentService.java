@@ -63,6 +63,7 @@ public class CommentService {
     }
 
     public CommentResponseDto toCommentResponseDto(Comment comment) {
-        return new CommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment());
+        return new CommentResponseDto(comment.getId(), comment.getAuthorId(),
+                comment.getAuthorName(), comment.getComment());
     }
 }

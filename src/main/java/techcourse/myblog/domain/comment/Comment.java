@@ -1,12 +1,13 @@
 package techcourse.myblog.domain.comment;
 
+import techcourse.myblog.domain.BaseTimeEntity;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 
 @Entity
-public class Comment {
+public class Comment extends BaseTimeEntity {
     private static final int COMMENT_LENGTH = 100;
 
     @Id

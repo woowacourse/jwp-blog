@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.article;
 
+import techcourse.myblog.domain.BaseTimeEntity;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
@@ -7,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Article {
+public class Article extends BaseTimeEntity {
     private static final int CONTENTS_LENGTH = 1000;
 
     @Id
