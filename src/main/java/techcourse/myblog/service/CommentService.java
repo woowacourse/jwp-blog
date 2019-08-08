@@ -9,6 +9,7 @@ import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
+import techcourse.myblog.service.util.DayCalculator;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -63,7 +64,8 @@ public class CommentService {
     }
 
     public CommentResponseDto toCommentResponseDto(Comment comment) {
+        int day = comment.subtractionOfDays(new DayCalculator());
         return new CommentResponseDto(comment.getId(), comment.getAuthorId(),
-                comment.getAuthorName(), comment.getComment());
+                comment.getAuthorName(), comment.getComment(), day);
     }
 }

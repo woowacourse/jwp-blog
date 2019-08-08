@@ -30,9 +30,6 @@ public class CommentServiceTest {
     @Autowired
     private ArticleService articleService;
 
-    @Autowired
-    private UserService userService;
-
     private Long articleId;
     private UserSessionDto baseUserSessionDto;
 

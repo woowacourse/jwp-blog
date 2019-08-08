@@ -2,13 +2,13 @@ package techcourse.myblog.service.dto;
 
 import techcourse.myblog.domain.user.User;
 
-public class UserRequestDto {
+public class UserRequestSignUpDto {
     private String name;
     private String email;
     private String password;
     private String passwordConfirm;
 
-    public UserRequestDto(String name, String email, String password, String passwordConfirm) {
+    public UserRequestSignUpDto(String name, String email, String password, String passwordConfirm) {
         this.name = name;
         this.email = email;
         this.password = password;

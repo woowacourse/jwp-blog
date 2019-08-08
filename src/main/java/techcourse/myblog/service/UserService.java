@@ -48,18 +48,18 @@ public class UserService {
         return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    public User save(UserRequestDto userRequestDto) {
+    public User save(UserRequestSignUpDto userRequestSignUpDto) {
         try {
-            validate(userRequestDto);
-            return userRepository.save(userRequestDto.toEntity());
+            validate(userRequestSignUpDto);
+            return userRepository.save(userRequestSignUpDto.toEntity());
         } catch (UserArgumentException e) {
             throw new SignUpException(e.getMessage());
         }
     }
 
-    private void validate(UserRequestDto userRequestDto) {
-        checkDuplicatedEmail(userRequestDto.getEmail());
-        checkPasswordConfirm(userRequestDto);
+    private void validate(UserRequestSignUpDto userRequestSignUpDto) {
+        checkDuplicatedEmail(userRequestSignUpDto.getEmail());
+        checkPasswordConfirm(userRequestSignUpDto);
     }
 
     private void checkDuplicatedEmail(String email) {
@@ -68,8 +68,8 @@ public class UserService {
         }
     }
 
-    private void checkPasswordConfirm(UserRequestDto userRequestDto) {
-        if (!userRequestDto.confirmPassword()) {
+    private void checkPasswordConfirm(UserRequestSignUpDto userRequestSignUpDto) {
+        if (!userRequestSignUpDto.confirmPassword()) {
             throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
         }
     }

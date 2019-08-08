@@ -5,6 +5,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.util.function.Function;
 
 @Entity
 public class Comment extends BaseTimeEntity {
@@ -43,6 +44,10 @@ public class Comment extends BaseTimeEntity {
         if (this.author.equals(paramComment.author)) {
             this.comment = paramComment.comment;
         }
+    }
+
+    public int subtractionOfDays(Function<Comment, Integer> supplier) {
+        return supplier.apply(this);
     }
 
     public Long getId() {

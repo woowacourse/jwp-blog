@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserRequestSignUpDto;
 import techcourse.myblog.service.dto.UserRequestUpdateDto;
 import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.web.util.LoginChecker;
@@ -37,8 +37,8 @@ public class UserController {
     }
 
     @PostMapping
-    public String createUser(UserRequestDto userRequestDto) {
-        userService.save(userRequestDto);
+    public String createUser(UserRequestSignUpDto userRequestSignUpDto) {
+        userService.save(userRequestSignUpDto);
         return "redirect:/login";
     }
 

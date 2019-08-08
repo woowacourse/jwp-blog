@@ -81,7 +81,7 @@
                                 <span th:text="${comment.authorName}" href="" class="text-bold inline-block">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${comment.subOfDays} + ' days ago'"></span>
                             </span>
                                 <p th:text="${comment.comment}" class="width-80"></p>
                             </div>
@@ -144,7 +144,7 @@
                                 <span href="" class="text-bold inline-block">{{commentAuthorName}}</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span>{{subOfDays}} days ago</span>
                             </span>
                                 <p class="width-80">{{comment}}</p>
                             </div>
@@ -218,6 +218,7 @@
                             "commentId": json.id
                             , "comment": json.comment
                             , "commentAuthorName": json.authorName
+                            , "subOfDays": json.subOfDays
                         }))
             })
     });

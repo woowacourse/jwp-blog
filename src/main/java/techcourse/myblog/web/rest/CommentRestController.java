@@ -37,7 +37,8 @@ public class CommentRestController {
                                                             @PathVariable("commentId") Long commentId,
                                                             UserSessionDto userSession) {
         commentService.delete(userSession, commentId);
-        return new ResponseEntity<>(new CommentResponseDto(commentId, null, null, null)
-                , HttpStatus.OK);
+        return new ResponseEntity<>(new CommentResponseDto(commentId, null,
+                null, null, null),
+                HttpStatus.OK);
     }
 }
