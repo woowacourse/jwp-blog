@@ -7,8 +7,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.exception.AuthException;
+import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.service.exception.AuthException;
 import techcourse.myblog.repository.CommentRepository;
 
 import java.util.Optional;

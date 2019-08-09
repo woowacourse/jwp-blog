@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techcourse.myblog.exception.AuthException;
+import techcourse.myblog.service.exception.AuthException;
 
 import javax.persistence.*;
 

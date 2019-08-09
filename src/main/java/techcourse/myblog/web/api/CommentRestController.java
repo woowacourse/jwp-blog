@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.web.UserSession;
 
 import java.net.URI;
@@ -35,8 +35,8 @@ public class CommentRestController {
 
     @PostMapping
     public ResponseEntity<CommentDto.Response> create(@PathVariable Long articleId,
-                                 @RequestBody CommentDto.Create commentCreate,
-                                 UserSession userSession) {
+                                                      @RequestBody CommentDto.Create commentCreate,
+                                                      UserSession userSession) {
         log.debug("contents: {}", commentCreate.getContents());
 
         commentCreate.setArticleId(articleId);

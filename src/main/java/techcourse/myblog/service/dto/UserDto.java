@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.service.dto;
 
 import lombok.*;
 import techcourse.myblog.domain.User;

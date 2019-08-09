@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.exception.AuthException;
 import techcourse.myblog.web.UserSession;
 
 import javax.servlet.http.HttpSession;

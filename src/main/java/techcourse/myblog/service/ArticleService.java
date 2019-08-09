@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.dto.ArticleDto;
 
 import java.util.List;
 

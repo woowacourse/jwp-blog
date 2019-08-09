@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.web.controller.BaseControllerTests;
 
 import java.io.IOException;

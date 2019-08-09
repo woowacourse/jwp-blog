@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.web.UserSession;
 
 @Deprecated

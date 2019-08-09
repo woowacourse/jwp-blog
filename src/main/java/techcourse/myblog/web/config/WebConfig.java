@@ -1,13 +1,13 @@
-package techcourse.myblog.config;
+package techcourse.myblog.web.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import techcourse.myblog.interceptor.GuestInterceptor;
-import techcourse.myblog.interceptor.LoginInterceptor;
-import techcourse.myblog.support.UserSessionArgumentResolver;
+import techcourse.myblog.web.interceptor.GuestInterceptor;
+import techcourse.myblog.web.interceptor.LoginInterceptor;
+import techcourse.myblog.web.support.UserSessionArgumentResolver;
 
 import java.util.List;
 

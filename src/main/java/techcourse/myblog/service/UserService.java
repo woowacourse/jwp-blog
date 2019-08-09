@@ -3,9 +3,9 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.ValidUserException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.exception.ValidUserException;
 
 import java.util.List;
 import java.util.Optional;

@@ -7,11 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.AuthException;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.exception.AuthException;
 import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;

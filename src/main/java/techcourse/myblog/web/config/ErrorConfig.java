@@ -1,11 +1,11 @@
-package techcourse.myblog.config;
+package techcourse.myblog.web.config;
 
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.WebRequest;
-import techcourse.myblog.exception.ValidUserException;
+import techcourse.myblog.service.exception.ValidUserException;
 
 import java.util.Map;
 

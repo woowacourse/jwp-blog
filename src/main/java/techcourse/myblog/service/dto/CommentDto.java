@@ -1,13 +1,21 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class CommentDto {
@@ -46,6 +54,7 @@ public class CommentDto {
     }
 
     @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
@@ -54,12 +63,14 @@ public class CommentDto {
         private Long id;
         private String contents;
         private String name;
-        private String modifiedDate;
+
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        private LocalDateTime modifiedDate;
 
         Response(Comment comment) {
             this.id = comment.getId();
             this.contents = comment.getContents();
-            this.modifiedDate = comment.getModifiedDate().format(DATE_TIME_FORMATTER);
+            this.modifiedDate = comment.getModifiedDate();
             this.name = comment.getUser().getName();
         }
 

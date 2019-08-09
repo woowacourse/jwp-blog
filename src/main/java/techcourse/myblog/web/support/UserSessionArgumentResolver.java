@@ -1,4 +1,4 @@
-package techcourse.myblog.support;
+package techcourse.myblog.web.support;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

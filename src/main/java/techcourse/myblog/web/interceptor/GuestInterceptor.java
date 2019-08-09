@@ -1,4 +1,4 @@
-package techcourse.myblog.interceptor;
+package techcourse.myblog.web.interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.regex.Pattern;
 
 import static techcourse.myblog.web.UserSession.USER_SESSION;
 
