@@ -7,12 +7,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.dto.ArticleRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.service.dto.ArticleRequestDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 import techcourse.myblog.utils.converter.ArticleConverter;
 import techcourse.myblog.utils.page.PageRequest;
 

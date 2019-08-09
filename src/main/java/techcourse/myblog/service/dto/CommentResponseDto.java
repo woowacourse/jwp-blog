@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.service.dto;
 
 import java.util.Date;
 
@@ -52,5 +52,15 @@ public class CommentResponseDto {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    @Override
+    public String toString() {
+        return "CommentResponseDto{" +
+                "id=" + id +
+                ", commenter=" + commenter +
+                ", createdDate=" + createdDate +
+                ", contents='" + contents + '\'' +
+                '}';
     }
 }

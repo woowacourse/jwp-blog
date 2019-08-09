@@ -8,11 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import techcourse.myblog.exception.NotFoundArticleException;
-import techcourse.myblog.exception.exception.AuthenticationException;
-import techcourse.myblog.exception.LoginException;
-import techcourse.myblog.exception.NotFoundUserException;
-import techcourse.myblog.exception.SignUpException;
+import techcourse.myblog.exception.*;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {

@@ -3,7 +3,7 @@ package techcourse.myblog.domain;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import techcourse.myblog.domain.base.BaseEntity;
 import techcourse.myblog.exception.CommentAuthenticationException;
-import techcourse.myblog.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
 
 import javax.persistence.*;
 

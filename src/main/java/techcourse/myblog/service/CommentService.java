@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.CommentRequestDto;
-import techcourse.myblog.dto.CommentResponseDto;
-import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.CommentAuthenticationException;
 import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.repository.CommentRepository;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 import techcourse.myblog.utils.converter.CommentConverter;
 
 @Service

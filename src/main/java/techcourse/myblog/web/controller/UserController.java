@@ -4,11 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 import techcourse.myblog.utils.model.ModelUtil;
 import techcourse.myblog.utils.session.SessionUtil;
 

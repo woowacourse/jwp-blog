@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserRequestDto;
 import techcourse.myblog.template.LoginTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;

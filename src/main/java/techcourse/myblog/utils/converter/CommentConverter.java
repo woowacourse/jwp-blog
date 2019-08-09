@@ -1,8 +1,8 @@
 package techcourse.myblog.utils.converter;
 
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.dto.CommentResponseDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 
 import java.util.Date;
 
@@ -12,6 +12,8 @@ public class CommentConverter {
         UserResponseDto commenter = UserConverter.toResponseDto(comment.getCommenter());
         Date createdDate = comment.getCreatedDate();
         String contents = comment.getContents();
+
+        log.info("{} toResponseDto() >> ({}, {}, {}, {})", LOG_TAG, id, commenter.getName(), createdDate, contents);
 
         return CommentResponseDto.of(id, commenter, createdDate, contents);
     }

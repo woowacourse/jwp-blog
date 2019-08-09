@@ -2,11 +2,12 @@ package techcourse.myblog.domain;
 
 import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.domain.base.BaseEntity;
-import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.InvalidNameException;
 import techcourse.myblog.exception.InvalidPasswordException;
+import techcourse.myblog.service.dto.UserRequestDto;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

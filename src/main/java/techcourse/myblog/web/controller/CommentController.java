@@ -3,9 +3,9 @@ package techcourse.myblog.web.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.dto.CommentRequestDto;
-import techcourse.myblog.dto.CommentResponseDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 import techcourse.myblog.service.CommentService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,13 +34,4 @@ public class CommentController {
 
         return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
-
-    @DeleteMapping("/article/{articleId}/comment/{commentId}")
-    public void deleteComment(@PathVariable Long articleId, @PathVariable Long commentId,
-                              UserResponseDto userResponseDto, HttpServletResponse response) throws IOException {
-        commentService.remove(commentId, userResponseDto);
-
-        response.sendRedirect("/articles/" + articleId);
-    }
-
 }

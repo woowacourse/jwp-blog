@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.SignUpException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.UserService;
 import techcourse.myblog.utils.converter.UserConverter;
 
 import java.util.Optional;

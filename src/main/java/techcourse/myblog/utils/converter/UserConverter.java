@@ -1,8 +1,8 @@
 package techcourse.myblog.utils.converter;
 
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 
 public class UserConverter {
     public static User toEntity(UserRequestDto dto) {

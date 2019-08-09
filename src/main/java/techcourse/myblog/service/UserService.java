@@ -2,12 +2,12 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.DuplicateUserException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 import techcourse.myblog.utils.converter.UserConverter;
 
 import java.util.List;

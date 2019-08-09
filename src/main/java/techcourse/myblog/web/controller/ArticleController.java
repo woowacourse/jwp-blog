@@ -5,8 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.dto.ArticleRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.service.dto.ArticleRequestDto;
+import techcourse.myblog.service.dto.UserResponseDto;
 import techcourse.myblog.utils.model.ModelUtil;
 
 @Controller

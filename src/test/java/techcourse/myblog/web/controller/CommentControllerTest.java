@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.template.LoginTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
