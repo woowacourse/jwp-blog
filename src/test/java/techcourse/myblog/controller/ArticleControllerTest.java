@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +60,10 @@ public class ArticleControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void 로그인_전에_글_수정을_시도하면_로그인_페이지로_리다이렉트한다() {
+    public void 로그인_전에_글_수정을_시도하면_메인으로_리다이렉트한다() {
         webTestClient.get().uri("articles/1/edit")
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/login.*");
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -83,83 +82,16 @@ public class ArticleControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void 로그인_전에_글_삭제를_시도하면_로그인_페이지로_리다이렉트한다() {
+    public void 로그인_전에_글_삭제를_시도하면_메인으로_리다이렉트한다() {
         webTestClient.delete().uri("articles/1")
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/login.*");
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
     public void 로그인_후에_글을_삭제한다() {
         String jSessionId = extractJSessionId(login(user1));
         webTestClient.delete().uri("/articles/2")
-                .cookie(JSESSIONID, jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/.*");
-    }
-
-    @Test
-    public void 로그인_전에_댓글_작성을_시도하면_로그인_페이지로_리다이렉트한다() {
-        webTestClient.post().uri("/articles/1/comment")
-                .body(BodyInserters
-                        .fromFormData(CONTENTS, CONTENTS))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/login.*");
-    }
-
-    @Test
-    public void 로그인_후에_댓글을_작성한다() {
-        String jSessionId = extractJSessionId(login(user1));
-        webTestClient.post().uri("/articles/1/comment")
-                .cookie(JSESSIONID, jSessionId)
-                .body(BodyInserters
-                        .fromFormData(CONTENTS, CONTENTS))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles.*");
-    }
-
-    @Test
-    public void 로그인_후에_댓글을_수정한다() {
-        String jSessionId = extractJSessionId(login(user1));
-        webTestClient.put().uri("/articles/1/comment/1")
-                .cookie(JSESSIONID, jSessionId)
-                .body(BodyInserters
-                        .fromFormData(CONTENTS, "new contents!"))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles.*");
-    }
-
-    @Test
-    public void 로그인_후에_댓글을_삭제한다() {
-        String jSessionId = extractJSessionId(login(user1));
-        webTestClient.delete().uri("/articles/1/comment/2")
-                .cookie(JSESSIONID, jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles.*");
-    }
-
-    @Test
-    public void 타인의_댓글_수정을_시도하면_메인으로_리다이렉트한다() {
-        String jSessionId = extractJSessionId(login(user2));
-        webTestClient.put().uri("/articles/1/comment/1")
-                .cookie(JSESSIONID, jSessionId)
-                .body(BodyInserters
-                        .fromFormData(CONTENTS, "new contents!"))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/.*");
-    }
-
-    @Test
-    public void 타인의_댓글_삭제를_시도하면_메인으로_리다이렉트한다() {
-        String jSessionId = extractJSessionId(login(user2));
-        webTestClient.delete().uri("/articles/1/comment/1")
                 .cookie(JSESSIONID, jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
