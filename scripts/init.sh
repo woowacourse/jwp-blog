@@ -7,7 +7,7 @@ cd app
 wget -O - https://raw.githubusercontent.com/Laterality/jwp-blog/step4/docker-compose.yml > docker-compose.yml
 wget -O - https://raw.githubusercontent.com/Laterality/jwp-blog/step4/scripts/nginx.conf > nginx.conf
 
-docker-compose up -d
+sudo docker-compose up -d
 
 # Show jenkins initial password
 echo Jenkins initial password: $(sudo docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword)
