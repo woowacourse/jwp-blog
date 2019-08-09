@@ -13,7 +13,6 @@ import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.UserAuthorizationException;
 import techcourse.myblog.web.util.LoginChecker;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -39,8 +38,7 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    public String showCreatePage(HttpSession session) {
-        loginChecker.getLoggedInUser(session);
+    public String showCreatePage(UserSessionDto userSessionDto) {
         return "article-edit";
     }
 
