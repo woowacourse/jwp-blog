@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.domain.ArticleRepository;
 import techcourse.myblog.article.exception.NotFoundArticleException;
-import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.comment.domain.Comment;
 import techcourse.myblog.comment.domain.CommentRepository;
 import techcourse.myblog.comment.dto.CommentCreateDto;
@@ -50,10 +49,7 @@ public class CommentService {
 
     public CommentResponseDto update(long commentId, long authorId, CommentUpdateDto commentUpdateDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
-        if (comment.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException(authorId);
-        }
-        Comment updatedComment = comment.updateComment(commentUpdateDto.getContents());
+        Comment updatedComment = comment.updateComment(commentUpdateDto.getContents(), authorId);
         return modelMapper.map(updatedComment, CommentResponseDto.class);
     }
 

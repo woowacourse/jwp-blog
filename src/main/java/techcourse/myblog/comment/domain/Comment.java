@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.article.domain.Article;
+import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
@@ -38,13 +39,16 @@ public class Comment {
         this.article = article;
     }
 
-    public Comment updateComment(String contents) {
-        this.contents = contents;
-        return this;
+    public Comment updateComment(String contents, long authorId) {
+        if (author.checkId(authorId)) {
+            this.contents = contents;
+            return this;
+        }
+        throw new NotMatchUserException(authorId);
     }
 
     public boolean notMatchAuthorId(long authorId) {
-        return author.getId() != authorId;
+        return !author.checkId(authorId);
     }
 
     public long getUserId() {

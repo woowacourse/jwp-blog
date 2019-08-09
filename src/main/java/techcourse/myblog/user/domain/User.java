@@ -41,6 +41,10 @@ public class User {
         return this;
     }
 
+    public boolean checkId(long id) {
+        return this.id == id;
+    }
+
     public String userName() {
         return name.getName();
     }

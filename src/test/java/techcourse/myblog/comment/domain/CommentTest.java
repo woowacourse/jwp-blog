@@ -35,7 +35,7 @@ public class CommentTest {
 
     @Test
     void 업데이트() {
-        comment.updateComment(CommentDataForTest.UPDATED_CONTENTS);
+        comment.updateComment(CommentDataForTest.UPDATED_CONTENTS, commentId);
         assertThat(comment.getContents()).isEqualTo(CommentDataForTest.UPDATED_CONTENTS);
     }
 
