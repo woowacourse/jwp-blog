@@ -39,8 +39,9 @@ public class CommentService {
                 .author(user)
                 .contents(commentDto.getContents())
                 .build();
+        Comment saved = commentRepository.save(comment);
 
-        return commentAssembler.convertEntityToDto(commentRepository.save(comment));
+        return commentAssembler.convertEntityToDto(saved);
     }
 
     private Comment findCommentById(Long commentId) {
@@ -65,7 +66,7 @@ public class CommentService {
     @Transactional
     public Boolean delete(long commentId, User user) {
         Comment comment = findCommentById(commentId);
-        if (comment.isNotAuthor(user)){
+        if (comment.isNotAuthor(user)) {
             throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
         }
         commentRepository.deleteById(commentId);

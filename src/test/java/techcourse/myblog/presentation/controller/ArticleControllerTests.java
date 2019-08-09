@@ -78,6 +78,7 @@ public class ArticleControllerTests extends ControllerTests {
                 .exchange()
                 .expectHeader().valueMatches("location", "(http://localhost:" + portNo + "/articles/" + articleId + ")(.*)")
                 .expectStatus().isFound();
+        deleteUser(sessionId);
     }
 
     @Test
@@ -138,6 +139,7 @@ public class ArticleControllerTests extends ControllerTests {
             assertThat(body).doesNotContain(COVER_URL + "123");
             assertThat(body).doesNotContain(CONTENTS + "123");
         });
+        deleteUser(sessionId);
     }
 
     @Test
@@ -188,6 +190,7 @@ public class ArticleControllerTests extends ControllerTests {
         webTestClient.get().uri("/articles/" + articleId)
                 .exchange()
                 .expectStatus().isOk();
+        deleteUser(sessionId);
     }
 
     @Test

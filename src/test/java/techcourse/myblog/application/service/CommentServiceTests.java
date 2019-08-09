@@ -31,6 +31,7 @@ public class CommentServiceTests {
     private static final String TITLE = "title";
     private static final String CONTENTS = "contents";
     private static final String COVER_URL = "cover_url";
+    private static final CommentDto requestCommentDto = new CommentDto(null, CONTENTS, null);
 
     private CommentService commentService;
 
@@ -49,9 +50,9 @@ public class CommentServiceTests {
     private User secondUser;
     @Mock
     private Article article;
-    @Mock
+
     private Comment firstComment;
-    @Mock
+    private Comment firstSavedComment;
     private Comment secondComment;
 
     public CommentServiceTests() {
@@ -85,18 +86,13 @@ public class CommentServiceTests {
     }
 
     private void initCommentMock() {
-        when(firstComment.getId()).thenReturn(1L);
-        when(firstComment.getAuthor()).thenReturn(firstUser);
-        when(firstComment.getContents()).thenReturn(CONTENTS);
-        when(firstComment.getArticle()).thenReturn(article);
-        when(firstComment.isNotAuthor(firstUser)).thenReturn(false);
-        when(firstComment.isNotAuthor(secondUser)).thenReturn(true);
-        when(secondComment.getId()).thenReturn(2L);
-        when(secondComment.getAuthor()).thenReturn(secondUser);
-        when(secondComment.getContents()).thenReturn(CONTENTS);
-        when(secondComment.getArticle()).thenReturn(article);
-        when(secondComment.isNotAuthor(secondUser)).thenReturn(false);
-        when(secondComment.isNotAuthor(firstUser)).thenReturn(true);
+        firstComment = new Comment.CommentBuilder()
+                .article(article)
+                .author(firstUser)
+                .contents(requestCommentDto.getContents())
+                .build();
+        firstSavedComment = new Comment(1L, CONTENTS, firstUser, article);
+        secondComment = new Comment(2L, CONTENTS, secondUser, article);
     }
 
     private void initUserServiceMock() {
@@ -112,7 +108,7 @@ public class CommentServiceTests {
 
     private void initCommentRepository() {
         Article article = articleService.findArticleById(EXIST_ARTICLE_ID);
-        when(commentRepository.save(firstComment)).thenReturn(firstComment);
+        when(commentRepository.save(firstComment)).thenReturn(firstSavedComment);
         when(commentRepository.findByArticle(article)).thenReturn(Arrays.asList(firstComment, secondComment));
         Mockito.doNothing().when(commentRepository).deleteById(1L);
         when(commentRepository.findById(1L)).thenReturn(Optional.of(firstComment));
@@ -122,8 +118,7 @@ public class CommentServiceTests {
 
     @Test
     void Comment_생성_테스트() {
-        CommentDto commentDto = new CommentDto(null, CONTENTS, null);
-        assertDoesNotThrow(() -> commentService.save(commentDto, EXIST_ARTICLE_ID, userService.findUserById(1L)));
+        assertDoesNotThrow(() -> commentService.save(requestCommentDto, EXIST_ARTICLE_ID, userService.findUserById(1L)));
     }
 
     @Test

@@ -6,6 +6,7 @@ import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.NotMatchCommentAuthorException;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Comment {
@@ -94,6 +95,19 @@ public class Comment {
 
     public Article getArticle() {
         return article;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Comment comment = (Comment) object;
+        return id == comment.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
