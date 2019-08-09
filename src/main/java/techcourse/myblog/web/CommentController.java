@@ -25,17 +25,6 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-//    @PostMapping("/comments")
-//    public String saveComment(@PathVariable("articleId") Long articleId, @Valid CommentRequest commentRequest,
-//                              BindingResult bindingResult, HttpSession httpSession) {
-//        if (!bindingResult.hasErrors()) {
-//            UserResponse user = (UserResponse) httpSession.getAttribute("user");
-//            commentService.save(commentRequest, articleId, user.getId());
-//        }
-//
-//        return "redirect:/articles/" + articleId;
-//    }
-
     @PostMapping("/comments")
     @ResponseBody
     public CommentResponse saveComment(@PathVariable("articleId") Long articleId, @RequestBody CommentRequest commentRequest,
@@ -46,15 +35,6 @@ public class CommentController {
         return commentService.save(commentRequest, articleId, user.getId());
     }
 
-//    @DeleteMapping("/comments/{commentId}")
-//    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-//                                HttpSession httpSession) {
-//        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-//        commentService.deleteComment(commentId, userResponse);
-//
-//        return "redirect:/articles/" + articleId;
-//    }
-
     @DeleteMapping("/comments/{commentId}")
     @ResponseBody
     public void deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
@@ -62,15 +42,6 @@ public class CommentController {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         commentService.deleteComment(commentId, userResponse);
     }
-
-//    @PutMapping("/comments/{commentId}")
-//    public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-//                                CommentRequest commentRequest, HttpSession httpSession) {
-//        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-//        commentService.updateComment(commentId, userResponse, commentRequest);
-//
-//        return "redirect:/articles/" + articleId;
-//    }
 
     @PutMapping("/comments/{commentId}")
     @ResponseBody
