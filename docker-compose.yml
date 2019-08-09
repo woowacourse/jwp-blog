@@ -3,6 +3,7 @@ version: "3"
 services:
   blog:
     image: laterality/jwp-blog:latest
+    container_name: blog
     depends_on: 
       - db
     ports: 
