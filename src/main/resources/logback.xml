@@ -32,7 +32,7 @@
     </logger>
 
     <!-- 기본 log level을 설정한다. -->
-    <root level="INFO">
+    <root level="WARN">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

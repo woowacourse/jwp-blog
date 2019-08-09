@@ -12,6 +12,7 @@ public class Article extends BaseTimeEntity {
     private static final int CONTENTS_LENGTH = 1000;
 
     @Id
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,7 +27,7 @@ public class Article extends BaseTimeEntity {
     private String contents;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
+    @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "FK_article_to_user"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 

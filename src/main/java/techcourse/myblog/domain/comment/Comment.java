@@ -14,6 +14,7 @@ public class Comment extends BaseTimeEntity {
     private static final int COMMENT_LENGTH = 100;
 
     @Id
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,12 +22,12 @@ public class Comment extends BaseTimeEntity {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_comment_to_user"))
+    @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "FK_comment_to_user"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "FK_comment_to_article"))
+    @JoinColumn(name = "article_id", nullable = false, foreignKey = @ForeignKey(name = "FK_comment_to_article"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
