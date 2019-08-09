@@ -27,6 +27,7 @@ services:
       - ./jenkins_home:/var/jenkins_home
     environment: 
       - JENKINS_USER=ubuntu
+      - "JENKINS_OPTS=--prefix=/jenkins"
     user: root
   nginx:
     image: nginx
