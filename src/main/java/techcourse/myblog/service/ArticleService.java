@@ -6,6 +6,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.dto.CommentDto;
+import techcourse.myblog.domain.dto.response.CommentResponseDto;
 import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.domain.dto.ArticleDto;
@@ -56,17 +57,17 @@ public class ArticleService {
 		articleRepository.deleteById(articleId);
 	}
 
-	public List<CommentDto> findAllComments(Long articleId) {
+	public List<CommentResponseDto> findAllComments(Long articleId) {
 		List<Comment> comments = articleRepository.findById(articleId)
 				.orElseThrow(NotFoundObjectException::new)
 				.getComments();
 		return convertCommentsToDto(comments);
 	}
 
-	private List<CommentDto> convertCommentsToDto(List<Comment> comments) {
-		List<CommentDto> commentDtos = new ArrayList<>();
+	private List<CommentResponseDto> convertCommentsToDto(List<Comment> comments) {
+		List<CommentResponseDto> commentDtos = new ArrayList<>();
 		comments.forEach(x ->
-				commentDtos.add(new CommentDto(x.getId(), x.getAuthor().getUserName(), x.getContents())));
+				commentDtos.add(new CommentResponseDto(x.getId(), x.getAuthor().getUserName(), x.getContents())));
 		return commentDtos;
 	}
 
