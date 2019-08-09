@@ -7,16 +7,18 @@ services:
       - 8080:8080
     volumes: 
       - ./log:/var/log/app
-    links: 
-      - db
+    networks:
+      - blog-net
   db:
     image: mysql:8.0.16
     container_name: my-db
     volumes:
       - ./db_data:/var/lib/mysql
-    environment: 
+    environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=myblog
+    networks:
+      - blog-net
   jenkins:
     image: laterality/jenkins:latest
     container_name: jenkins
@@ -29,6 +31,8 @@ services:
       - JENKINS_USER=ubuntu
       - "JENKINS_OPTS=--prefix=/jenkins"
     user: root
+    networks:
+      - blog-net
   nginx:
     image: nginx
     container_name: web
@@ -39,4 +43,8 @@ services:
     volumes:
       - ./nginx/log:/var/log/nginx
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - blog-net
 
+networks:
+  blog-net:
