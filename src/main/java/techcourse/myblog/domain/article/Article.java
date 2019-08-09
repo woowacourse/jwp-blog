@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Embedded
     private ArticleVo articleVo;
@@ -49,7 +49,7 @@ public class Article {
         return this.author.matchId(userId);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

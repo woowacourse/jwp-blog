@@ -10,6 +10,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByArticle(Article article);
 
-    @Query(value = "SELECT count(*) FROM comment c where c.article_id = :articleId", nativeQuery = true)
-    int countByArticleId(@Param("articleId") Long articleId);
+    int countByArticle_Id(long articleId);
 }

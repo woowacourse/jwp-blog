@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
@@ -32,8 +33,9 @@ public class Comment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
     private Comment() {

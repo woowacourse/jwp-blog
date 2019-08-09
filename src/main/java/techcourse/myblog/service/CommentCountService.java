@@ -12,6 +12,6 @@ public class CommentCountService {
     }
 
     public int countByArticleId(Long articleId) {
-        return commentRepository.countByArticleId(articleId);
+        return commentRepository.countByArticle_Id(articleId);
     }
 }
