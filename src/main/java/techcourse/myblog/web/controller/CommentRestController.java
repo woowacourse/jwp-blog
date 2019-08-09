@@ -13,10 +13,10 @@ import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
-public class CommentController {
+public class CommentRestController {
     private final CommentService commentService;
 
-    public CommentController(CommentService commentService) {
+    public CommentRestController(CommentService commentService) {
         this.commentService = commentService;
     }
 

@@ -21,7 +21,7 @@ import static techcourse.myblog.utils.session.SessionContext.USER;
 public class UserController {
     private final UserService userService;
     private final LoginService loginService;
-    private HttpSession session;
+    private final HttpSession session;
 
     public UserController(UserService userService, LoginService loginService, HttpSession session) {
         this.userService = userService;

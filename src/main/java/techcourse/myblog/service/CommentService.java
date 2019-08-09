@@ -37,7 +37,10 @@ public class CommentService {
         Article article = articleService.findArticle(articleId);
 
         Comment comment = new Comment(contents, commenter, article);
-        article.addComments(comment);
+        comment = commentRepository.save(comment);
+
+        log.info("{} article.getComments().size() with addComments() in Comment >> {}", LOG_TAG, article.getComments().size());
+        log.info("{} addComment() >> ({}, {}, {}, {})", LOG_TAG, comment.getId(), comment.getCommenter(), comment.getContents(), comment.getCreatedDate());
 
         return CommentConverter.toResponseDto(comment);
     }
