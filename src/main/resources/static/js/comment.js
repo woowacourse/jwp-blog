@@ -1,3 +1,7 @@
+window.onload = function () {
+    commentLoad();
+    COMMENT.init();
+};
 let buttonTemplate = `
             <button class="btn btn-icon float-right pointer comment-del-button"
                     type="button">
@@ -25,6 +29,8 @@ let commentTemplate = (id, userName, contents) => `
             </div>
         </li>`;
 
+const articleId = document.querySelector('#article-id').value;
+
 const COMMENT = (function () {
     'use strict';
     const CommentController = function () {
@@ -42,12 +48,16 @@ const COMMENT = (function () {
         const updateComment = function () {
             const comments = document.getElementById('comment-list');
             comments.addEventListener('click', commentService.update);
-
         };
+        const saveComment = function () {
+            const saveButton = document.querySelector('#comment-save-button');
+            saveButton.addEventListener('click', addCommentFetch);
+        }
         const init = function () {
             updateCommentForm();
             deleteComment();
             updateComment();
+            saveComment();
         };
         return {
             init: init
@@ -127,15 +137,6 @@ const COMMENT = (function () {
     };
 })();
 
-window.onload = function () {
-    commentLoad();
-    COMMENT.init();
-};
-
-const saveButton = document.querySelector('#comment-save-button');
-const articleId = document.querySelector('#article-id').value;
-saveButton.addEventListener('click', addCommentFetch);
-
 function commentLoad() {
     fetch('/articles/' + articleId + '/comments', {
         method: 'get',
@@ -144,21 +145,18 @@ function commentLoad() {
         },
         credentials: 'include'
     })
-        .then((response)=> {
+        .then((response) => {
             if (response.ok) {
                 return response.json();
-            }else
-            throw response;
+            } else
+                throw response;
         })
         .then((json) => {
             console.log(json);
-            let commentListDto = {
-                comments: json.data.comments,
-            };
+            let commentListDto = json.data;
             addCommentList(articleId, commentListDto);
         })
         .catch(
-
             response => {
                 response.json().then((json) => alert(json.errorMessage));
             }
@@ -168,8 +166,8 @@ function commentLoad() {
 function addCommentList(articleId, commentListDto) {
     const commentContainer = document.getElementById('comment-list');
     let comments = "";
-    commentListDto.forEach(function(element) {
-        comments += element;
+    commentListDto.forEach(function (element) {
+        comments += commentTemplate(element.id,element.userName,element.contents);
     });
     commentContainer.insertAdjacentHTML('beforeend', comments);
 }
@@ -253,7 +251,6 @@ function updateCommentFetch(articleId, commentId, editParagraph, contents) {
             response => response.json().then((json) => alert(json.errorMessage))
         )
 }
-
 
 function addComment(articleId, commentDto) {
     const comments = document.querySelector('#comment-list');

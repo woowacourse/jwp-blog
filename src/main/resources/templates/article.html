@@ -76,30 +76,7 @@
                     </div>
                     <div class="comment">
                         <ul class="list-unstyled list-info" id="comment-list">
-                            <li class="comment-item border bottom mrg-btm-30" th:data-comment-id="${comment.id}"
-                                th:each="comment : ${comments}">
-                                <img alt=""
-                                     class="thumb-img img-circle"
-                                     src="https://avatars2.githubusercontent.com/u/3433096?v=4">
-                                <div class="info">
-                                    <span class="text-bold inline-block" href="" th:text="${comment.author.userName}">JUN</span>
 
-                                    <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>p
-                                        <span>6 min ago</span>
-                                    </span>
-                                    <button class="btn btn-icon float-right pointer comment-del-button"
-                                            id="delete-button2" type="button"
-                                    >
-                                        <i class="ti-trash text-dark font-size-16 pdd-horizon-5 comment-del-button"></i>
-                                    </button>
-
-                                    <button class="comment-edit float-right pointer btn btn-icon">
-                                        <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                    </button>
-                                    <p class="width-80" th:text="${comment.contents}"></p>
-                                </div>
-                            </li>
                         </ul>
                     </div>
 
