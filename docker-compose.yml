@@ -35,5 +35,5 @@ services:
       - 80:80
     volumes:
       - ./nginx/log:/var/log/nginx
-      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
 
