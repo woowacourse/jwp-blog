@@ -40,18 +40,18 @@
                                             <div class="image-container col-md-4">
                                                 <div class="background-holder has-content"
                                                      style="background-image: url('/images/default/defaultImage.png')"
-                                                     th:if="${article.coverUrl==''}"></div>
+                                                     th:if="${article.contents.coverUrl==''}"></div>
                                                 <div class="background-holder has-content"
-                                                     th:style="'background-image: url(' + ${article.coverUrl} + ');'"
-                                                     th:unless="${article.coverUrl==''}"></div>
+                                                     th:style="'background-image: url(' + ${article.contents.coverUrl} + ');'"
+                                                     th:unless="${article.contents.coverUrl==''}"></div>
                                             </div>
                                             <div class="container-fluid">
                                                 <div class="row">
                                                     <div class="col-md-8 ml-auto">
                                                         <div class="pdd-vertical-30 pdd-horizon-25">
                                                             <h2 class="mrg-btm-20 text-bold"
-                                                                th:text="${article.title}"></h2>
-                                                            <p th:text="${article.contents}"></p>
+                                                                th:text="${article.contents.title}"></h2>
+                                                            <p th:text="${article.contents.contents}"></p>
                                                             <ul class="list-style-none pdd-left-0">
                                                                 <li class="inline-block mrg-right-5">
                                                                     <i class="ti-heart text-danger pdd-right-5"></i>

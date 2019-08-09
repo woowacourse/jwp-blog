@@ -135,7 +135,7 @@
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
     <script type="text/javascript" src="/js/comment.js"></script>
     <script th:inline="javascript" type="text/javascript">
-        const initValue = [[ ${article.contents}]];
+        const initValue = [[ ${article.contents.contents}]];
         const viewer = tui.Editor.factory({
             el: document.querySelector('#viewerSection'),
             viewer: true,

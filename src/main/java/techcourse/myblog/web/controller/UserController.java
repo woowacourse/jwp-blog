@@ -2,6 +2,7 @@ package techcourse.myblog.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,9 @@ import techcourse.myblog.service.exception.NotValidUserInfoException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
+
+@Scope(scopeName = SCOPE_PROTOTYPE)
 @Controller
 @RequestMapping("/users")
 public class UserController {

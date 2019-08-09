@@ -2,12 +2,12 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleAssembler;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.article.Contents;
 import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.comment.CommentAssembler;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.assembler.ArticleAssembler;
+import techcourse.myblog.service.assembler.CommentAssembler;
 import techcourse.myblog.service.dto.ResponseCommentDto;
 import techcourse.myblog.service.exception.NotFoundObjectException;
 
