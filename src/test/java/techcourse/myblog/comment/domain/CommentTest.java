@@ -8,7 +8,7 @@ import techcourse.myblog.data.UserDataForTest;
 import techcourse.myblog.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommentTest {
     private final User author = User.builder()
@@ -35,12 +35,12 @@ public class CommentTest {
 
     @Test
     void 업데이트() {
-        comment.updateComment(CommentDataForTest.UPDATED_CONTENTS, commentId);
+        comment.updateComment(CommentDataForTest.UPDATED_CONTENTS, 1);
         assertThat(comment.getContents()).isEqualTo(CommentDataForTest.UPDATED_CONTENTS);
     }
 
     @Test
     void checkPassword() {
-        assertFalse(comment.checkAuthor(1));
+        assertTrue(comment.checkAuthor(1));
     }
 }

@@ -12,6 +12,7 @@ import techcourse.myblog.user.exception.*;
 
 @ControllerAdvice
 public class UserExceptionAdvice {
+
     @ExceptionHandler(InvalidSignUpFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleInvalidSignUpFormException(InvalidSignUpFormException e, Model model) {
@@ -27,13 +28,6 @@ public class UserExceptionAdvice {
         return "mypage";
     }
 
-    @ExceptionHandler(InvalidLoginFormException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleInvalidLoginException(InvalidLoginFormException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "login";
-    }
-
     @ExceptionHandler(DuplicatedUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelDuplicatedUserException(DuplicatedUserException e, Model model) {
@@ -41,16 +35,9 @@ public class UserExceptionAdvice {
         return "/users/new";
     }
 
-    @ExceptionHandler(NotFoundUserException.class)
+    @ExceptionHandler({InvalidLoginFormException.class, NotFoundUserException.class, NotMatchPasswordException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleNotFoundUserException(NotFoundUserException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "/login";
-    }
-
-    @ExceptionHandler(NotMatchPasswordException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleNotMatchPasswordException(NotMatchPasswordException e, Model model) {
+    public String handleLoginException(RuntimeException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "/login";
     }

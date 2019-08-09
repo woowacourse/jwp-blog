@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static techcourse.myblog.data.ArticleDataForTest.*;
 import static techcourse.myblog.data.UserDataForTest.*;
@@ -152,7 +153,7 @@ class CommentServiceTest {
     void 맞지않는_작성자_deleteById() {
         when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
 
-        assertFalse(commentService.deleteById(comment.getId(), 10));
+        assertThrows(NotMatchUserException.class, () -> commentService.deleteById(comment.getId(), 10));
     }
 
     @Test
