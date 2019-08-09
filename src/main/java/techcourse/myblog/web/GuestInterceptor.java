@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.regex.Pattern;
 
 @Component
-public class LogoutInterceptor extends HandlerInterceptorAdapter {
+public class GuestInterceptor extends HandlerInterceptorAdapter {
     private static String VALID_URL = "\\/articles\\/[0-9]*";
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

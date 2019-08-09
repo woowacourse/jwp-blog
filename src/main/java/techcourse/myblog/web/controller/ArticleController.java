@@ -27,10 +27,9 @@ public class ArticleController {
     }
 
     @PostMapping("/new")
-    public String createArticle(Contents contents, Model model, HttpSession httpSession) {
+    public String createArticle(Contents contents, HttpSession httpSession) {
         User author = (User) httpSession.getAttribute("user");
         Article article = articleService.createArticle(contents, author);
-        model.addAttribute("article", article);
         return "redirect:/articles/" + article.getArticleId();
     }
 
@@ -54,8 +53,7 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable Long articleId, Contents contents, Model model, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
-        Article updateArticle = articleService.updateArticle(articleId, contents, user);
-        model.addAttribute("article", updateArticle);
+        articleService.updateArticle(articleId, contents, user);
         return "redirect:/articles/" + articleId;
     }
 
