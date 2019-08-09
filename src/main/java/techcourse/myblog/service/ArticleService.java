@@ -1,59 +1,60 @@
 package techcourse.myblog.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.translator.ArticleTranslator;
-import techcourse.myblog.translator.ModelTranslator;
+import techcourse.myblog.domain.exception.ArticleNotFoundException;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.util.Collections.unmodifiableList;
+
 @Service
-@Transactional
 public class ArticleService {
+    private static final String ARTICLE_ERROR = "해당하는 게시글을 찾지 못했습니다.";
 
     private final ArticleRepository articleRepository;
-    private final ModelTranslator<Article, ArticleDto> articleTranslator;
 
-    public ArticleService(final ArticleRepository articleRepository) {
+    @Autowired
+    public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
-        this.articleTranslator = new ArticleTranslator();
     }
 
-    public Article create(final ArticleDto articleDto) {
-        Article article = articleTranslator.toEntity(new Article(), articleDto);
+    @Transactional(readOnly = true)
+    public List<Article> findAll() {
+        return unmodifiableList(articleRepository.findAll());
+    }
+
+    @Transactional
+    public Article save(Article article) {
         return articleRepository.save(article);
     }
 
-    public List<Article> findAll() {
-        return articleRepository.findAll();
+    @Transactional
+    public Article findById(long articleId) {
+        return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(ARTICLE_ERROR));
     }
 
-    public Article findById(final Long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 게시글 입니다."));
+    @Transactional
+    public Article findById(long articleId, long loginUserId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(ARTICLE_ERROR));
+        article.isAuthor(loginUserId);
+        return article;
     }
 
-    public Article findById(final Long articleId, final User user) {
-        Article article = findById(articleId);
-        if (user.equals(article.getAuthor())) {
-            return article;
-        }
-        throw new NotMatchAuthenticationException("접근할 수 없는 게시글 입니다.");
+    @Transactional
+    public Article update(long id, Article articleToUpdate) {
+        Article originArticle = articleRepository.findArticleById(id);
+        long loginUserId = articleToUpdate.getAuthor().getId();
+        originArticle.update(articleToUpdate, loginUserId);
+
+        return originArticle;
     }
 
-    public Article update(final ArticleDto articleDto, final Long articleId, final User user) {
-        Article article = findById(articleId, user);
-        Article updateArticle = articleTranslator.toEntity(article, articleDto);
-        return articleRepository.save(updateArticle);
-    }
-
-    public void delete(final Long articleId, final User user) {
-        Article article = findById(articleId, user);
-        articleRepository.delete(article);
+    @Transactional
+    public void deleteById(long id) {
+        articleRepository.deleteById(id);
     }
 }

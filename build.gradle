@@ -14,14 +14,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'mysql:mysql-connector-java'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.apache.commons:commons-lang3:3.0'
 
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
-
+    runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.mockito:mockito-junit-jupiter:2.23.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -29,6 +29,7 @@ dependencies {
     }
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
     testImplementation 'com.h2database:h2'
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.2"
 
     implementation 'org.springframework.boot:spring-boot-devtools'
     compileOnly 'org.projectlombok:lombok:1.18.8'

@@ -1,58 +1,60 @@
 package techcourse.myblog.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.Comments;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.CommentRepository;
-
-import javax.transaction.Transactional;
-import java.util.List;
+import techcourse.myblog.domain.exception.CommentNotFoundException;
+import techcourse.myblog.domain.repository.CommentRepository;
+import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.web.annotation.LoginUser;
 
 @Service
-@Transactional
 public class CommentService {
+    private static final String COMMENT_ERROR = "댓글을 찾지 못했습니다.";
 
-    private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
+    private final ArticleService articleService;
 
-    public CommentService(final ArticleRepository articleRepository, final CommentRepository commentRepository) {
-        this.articleRepository = articleRepository;
+    @Autowired
+    public CommentService(CommentRepository commentRepository, ArticleService articleService) {
         this.commentRepository = commentRepository;
+        this.articleService = articleService;
     }
 
-    public Comment create(final Long articleId, final User user, final String content) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("해당 게시물이 없습니다."));
-
-        Comment comment = Comment.builder()
-                .content(content)
-                .user(user)
-                .article(article)
-                .build();
-
+    @Transactional
+    public Comment save(CommentDto commentDto, User loginUser, long articleId) {
+        Comment comment = convert(commentDto, loginUser, articleId);
         return commentRepository.save(comment);
     }
 
-    public List<Comment> findAllByArticleId(Long articleId) {
-        return commentRepository.findAllByArticleId(articleId);
+    @Transactional
+    public Comments findByArticle(long articleId) {
+        Article article = articleService.findById(articleId);
+        return new Comments(commentRepository.findCommentsByArticle(article));
     }
 
-    public void update(final Long commentId, final User user, final String content) {
-        Comment comment = findById(commentId);
-        comment.update(content, user);
+    @Transactional
+    public Comment update(long commentId, User user, String contents) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(COMMENT_ERROR));
+        comment.update(contents, user.getId());
+        return comment;
     }
 
-    public void delete(final Long commentId, final User user) {
-        Comment comment = findById(commentId);
-        comment.authorizeFor(user);
-
-        commentRepository.delete(comment);
+    private Comment convert(CommentDto commentDto, @LoginUser User loginUser, long articleId) {
+        Article article = articleService.findById(articleId);
+        return new Comment(commentDto.getContents(), loginUser, article);
     }
 
-    private Comment findById(final Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("해당 댓글을 찾을 수 없습니다"));
+    @Transactional
+    public void deleteById(long commentId, long loginUserId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(COMMENT_ERROR));
+        comment.isAuthor(loginUserId);
+        commentRepository.deleteById(commentId);
     }
 }

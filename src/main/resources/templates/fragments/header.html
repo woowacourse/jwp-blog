@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<header class="header navbar bg-transparent no-border" id="header" th:fragment="header">
+    <div class="header-container" xmlns:th="http://www.w3.org/1999/xhtml">
+        <ul class="nav-left mrg-left-0">
+            <li>
+                <a href="/">
+                    <div class="logo logo-dark d-none"
+                         style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                    <div class="logo logo-white"
+                         style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav-right" th:if="${session.user}">
+            <li th:replace="fragments/logged-in :: logged-in"></li>
+        </ul>
+        <ul class="nav-right" th:unless="${session.user}">
+            <li th:replace="fragments/logged-out :: logged-out"></li>
+        </ul>
+    </div>
+</header>
+</body>

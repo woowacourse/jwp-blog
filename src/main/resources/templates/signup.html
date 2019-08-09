@@ -1,87 +1,96 @@
 <!DOCTYPE html>
-<html lang="ko"
-      layout:decorate="~{layout/layout}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-
-<th:block layout:fragment="content">
-    <div class="app">
-        <div class="header navbar bg-transparent no-border">
-            <div class="header-container pdd-right-15">
-                <ul class="nav-left mrg-left-0">
-                    <li>
-                        <a href="/">
-                            <div class="logo logo-dark d-none"
-                                 style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                            <div class="logo logo-white"
-                                 style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- include fragments/head -->
+    <th:block th:replace="fragments/head"></th:block>
+</head>
+<body>
+<div class="app">
+    <div class="header navbar bg-transparent no-border">
+        <div class="header-container pdd-right-15">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <div class="authentication">
-            <div class="sign-in-2">
-                <div class="container-fluid no-pdd-horizon overlay-dark bg"
-                     style="background-image: url('/images/default/bg.jpg')">
-                    <div class="row">
-                        <div class="col-md-10 mr-auto ml-auto">
-                            <div class="row">
-                                <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
-                                    <div class="vertical-align full-height">
-                                        <div class="table-cell">
-                                            <div class="card min-width-480px">
-                                                <div class="card-body">
-                                                    <div class="pdd-horizon-30 pdd-vertical-30">
-                                                        <div class="mrg-btm-30">
-                                                            <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
-                                                                회원가입</h2>
+    </div>
+    <div class="authentication">
+        <div class="sign-in-2">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                 style="background-image: url('/images/default/bg.jpg')">
+                <div class="row">
+                    <div class="col-md-10 mr-auto ml-auto">
+                        <div class="row">
+                            <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
+                                <div class="vertical-align full-height">
+                                    <div class="table-cell">
+                                        <div class="card min-width-480px">
+                                            <div class="card-body">
+                                                <div class="pdd-horizon-30 pdd-vertical-30">
+                                                    <div class="mrg-btm-30">
+                                                        <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
+                                                            회원가입</h2>
+                                                    </div>
+                                                    <div class="alert alert-danger" role="alert"
+                                                         th:if="${error}" th:text="${message}"></div>
+                                                    <form id="signup-form" method="post" th:action="@{/users}"
+                                                          th:object="${userDto}">
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Username</label>
+                                                            <input autofocus class="form-control" maxlength="10"
+                                                                   minlength="2" name="name"
+                                                                   pattern="[a-zA-Z가-힣]{1,}" required th:field="*{name}"
+                                                                   type="text">
+                                                            <small class="text-danger"
+                                                                   th:errors="*{name}"
+                                                                   th:if="${#fields.hasErrors('name')}"></small>
                                                         </div>
-                                                        <form action="/users" id="form" method="post">
-                                                            <div class="form-group">
-                                                                <label class="text-normal text-dark">Username</label>
-                                                                <input class="form-control" maxlength="10" minlength="2"
-                                                                       name="name" pattern="[a-zA-Z가-힣]+" required
-                                                                       type="text">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="text-normal text-dark">Email
-                                                                    Address</label>
-                                                                <input class="form-control" name="email" required
-                                                                       type="email">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="text-normal text-dark">Password</label>
-                                                                <input class="form-control" id="password" minlength="8"
-                                                                       name="password" pattern="[a-zA-Z0-9~!@#$%^&*]+"
-                                                                       placeholder="Password" required
-                                                                       type="password">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="text-normal text-dark">Confirm
-                                                                    Password</label>
-                                                                <input class="form-control" id="password-confirm"
-                                                                       minlength="8"
-                                                                       pattern="[a-zA-Z0-9~!@#$%^&*]+"
-                                                                       placeholder="Password" required
-                                                                       type="password">
-                                                            </div>
-                                                            <div id="not-match"></div>
-                                                            <div class="alert alert-danger" role="alert"
-                                                                 th:if="${errorMessage} != ''"
-                                                                 th:text="${errorMessage}">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
-                                                                        type="submit">
-                                                                    가입하기
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                        <div class="text-dark">
-                                                            <span>이미 회원이신가요?</span>
-                                                            <a class="text-info pointer mrg-left-5" href="login.html">로그인</a>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Email Address</label>
+                                                            <input class="form-control" id="email" name="email"
+                                                                   required th:field="*{email}" type="email">
+                                                            <small class="text-danger"
+                                                                   th:errors="*{email}"
+                                                                   th:if="${#fields.hasErrors('email')}"></small>
+                                                            <small class="text-danger" id="email-error-message"></small>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Password</label>
+                                                            <input class="form-control" id="password" minlength="8"
+                                                                   name="password"
+                                                                   pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}"
+                                                                   placeholder="Password"
+                                                                   required
+                                                                   th:field="*{password}"
+                                                                   type="password">
+                                                            <small class="text-danger"
+                                                                   th:errors="*{password}"
+                                                                   th:if="${#fields.hasErrors('password')}"></small>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Confirm
+                                                                Password</label>
+                                                            <input class="form-control" id="password-confirm"
+                                                                   placeholder="Password" type="password">
+                                                            <small class="text-danger"
+                                                                   id="password-error-message"></small>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
+                                                                    onclick="checkPasswordConfirm()"
+                                                                    type="button">가입하기
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                    <div class="text-dark">
+                                                        <span>이미 회원이신가요?</span>
+                                                        <a class="text-info pointer mrg-left-5" href="/login">로그인</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -95,23 +104,21 @@
             </div>
         </div>
     </div>
-</th:block>
-<th:block layout:fragment="custom-js">
-    <script>
-        const password = document.getElementById('password');
-        const passwordConfirm = document.getElementById('password-confirm');
-        const signupForm = document.getElementById('form');
+</div>
 
-        signupForm.addEventListener('submit', e = > {
-            if(password.value !== passwordConfirm.value
-        )
-        {
-            alert('비밀번호를 확인해주세요!');
-            e.preventDefault();
-            return false;
+<script>
+    function checkPasswordConfirm() {
+        var password = document.getElementById("password").value;
+        var passwordConfirm = document.getElementById("password-confirm").value;
+        var errorMessage = document.getElementById("password-error-message");
+        if (password === passwordConfirm) {
+            document.getElementById("signup-form").submit();
+        } else {
+            errorMessage.innerText = "동일한 비밀번호를 입력하세요.";
         }
-        })
-        ;
-    </script>
-</th:block>
+    }
+</script>
+<!-- include fragments/footer -->
+<th:block th:replace="fragments/common_script"></th:block>
+</body>
 </html>

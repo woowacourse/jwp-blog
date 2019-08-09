@@ -1,52 +1,42 @@
 package techcourse.myblog.domain;
 
-import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
-    private Long id;
+    @Column(name = "id")
+    private long id;
+
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(unique = true)
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Builder
-    private User(final Long id, final String name, final String email, final String password) {
-        this.id = id;
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public boolean authenticate(String email, String password) {
-        return this.email.equals(email) && this.password.equals(password);
+    public void updateUserInfo(String name) {
+        this.name = name;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(email, user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email);
-    }
-
-    public boolean equals(String email) {
-        return this.email.equals(email);
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
     }
 }
