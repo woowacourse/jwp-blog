@@ -6,12 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.CommentRequest;
-import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.CommentRepository;
+import techcourse.myblog.web.dto.UserResponse;
 
 import java.util.Arrays;
 import java.util.Optional;

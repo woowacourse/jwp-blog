@@ -31,7 +31,7 @@ public class ControllerTestUtil {
             .body(Mono.just(request), LoginRequest.class)
             .exchange()
             .expectStatus()
-            .isOk()
+            .is3xxRedirection()
             .returnResult(String.class)
             .getResponseHeaders()
             .getFirst("Set-Cookie");

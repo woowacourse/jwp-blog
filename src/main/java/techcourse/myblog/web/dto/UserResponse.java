@@ -1,4 +1,4 @@
-package techcourse.myblog.application.dto;
+package techcourse.myblog.web.dto;
 
 import techcourse.myblog.domain.User;
 

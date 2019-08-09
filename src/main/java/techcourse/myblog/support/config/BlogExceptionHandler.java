@@ -1,6 +1,5 @@
 package techcourse.myblog.support.config;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,11 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.application.dto.BaseResponse;
-import techcourse.myblog.application.dto.ErrorResponse;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserEditRequest;
 import techcourse.myblog.application.exception.*;
+import techcourse.myblog.web.dto.ErrorResponse;
 
 @ControllerAdvice
 public class BlogExceptionHandler {
@@ -63,7 +61,9 @@ public class BlogExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(JsonAPIException.class)
-    public ResponseEntity<BaseResponse> handleJsonAPIException(JsonAPIException e) {
-        return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.BAD_REQUEST);
+    public ResponseEntity handleJsonAPIException(JsonAPIException e) {
+        return ResponseEntity
+            .badRequest()
+            .body(ErrorResponse.fail(e));
     }
 }

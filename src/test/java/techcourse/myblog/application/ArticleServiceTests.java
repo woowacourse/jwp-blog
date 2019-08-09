@@ -7,13 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.NoArticleException;
 import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.web.dto.UserResponse;
 
 import java.util.Optional;
 

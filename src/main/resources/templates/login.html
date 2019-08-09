@@ -79,15 +79,15 @@
                 'Content-Type': 'application/json; charset=UTF-8'
             }
         }).then(res => {
-           if (res.status === 200) {
-               window.location.href = res.headers.get('Location');
-               return;
-           }
-           return res.json();
-        }).then(json => {
-            const alertElm = document.querySelector('.alert.alert-danger');
-            alertElm.innerText = json.message;
-            alertElm.classList.remove('none');
+            if (res.redirected) {
+                window.location.href = res.url;
+            }
+
+            res.json().then(json => {
+                const alertElm = document.querySelector('.alert.alert-danger');
+                alertElm.innerText = json.message;
+                alertElm.classList.remove('none');
+            });
         });
     })
 </script>
