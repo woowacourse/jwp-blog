@@ -20,20 +20,27 @@ public class CommentController {
     }
 
     @PostMapping
-    public List<CommentResponse> addComment(@PathVariable final Long articleId, @RequestBody final CommentRequest commentRequest, final AccessUserInfo accessUserInfo) {
+    public List<CommentResponse> addComment(@PathVariable final Long articleId,
+                                            @RequestBody final CommentRequest commentRequest,
+                                            final AccessUserInfo accessUserInfo) {
         commentService.save(commentRequest, accessUserInfo.getUser().getId(), articleId);
         return commentService.findByArticleId(articleId);
     }
 
 
     @PutMapping("/{commentId}")
-    public List<CommentResponse> updateComment(@PathVariable final Long articleId, @PathVariable final Long commentId, @RequestBody final CommentRequest commentRequest, final AccessUserInfo accessUserInfo) {
+    public List<CommentResponse> updateComment(@PathVariable final Long articleId,
+                                               @PathVariable final Long commentId,
+                                               @RequestBody final CommentRequest commentRequest,
+                                               final AccessUserInfo accessUserInfo) {
         commentService.update(commentRequest, commentId, articleId, accessUserInfo.getUser());
         return commentService.findByArticleId(articleId);
     }
 
     @DeleteMapping("/{commentId}")
-    public List<CommentResponse> deleteComment(@PathVariable final Long articleId, @PathVariable final Long commentId, final AccessUserInfo accessUserInfo) {
+    public List<CommentResponse> deleteComment(@PathVariable final Long articleId,
+                                               @PathVariable final Long commentId,
+                                               final AccessUserInfo accessUserInfo) {
         commentService.delete(commentId, accessUserInfo.getUser());
         return commentService.findByArticleId(articleId);
     }

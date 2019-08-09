@@ -1,6 +1,9 @@
 package techcourse.myblog.article.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.Article;
@@ -15,8 +18,6 @@ import techcourse.myblog.user.exception.UserNotFoundException;
 import techcourse.myblog.user.persistence.UserRepository;
 import techcourse.myblog.user.service.UserAssembler;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
@@ -33,10 +34,9 @@ public class ArticleService {
         this.userRepository = userRepository;
     }
 
-    public List<ArticleResponse> findAll() {
-        List<Article> articles = articleRepository.findAll();
-
-        return Collections.unmodifiableList(articles.stream()
+    public Page<ArticleResponse> findAll(Pageable pageable) {
+        Page<Article> articles = articleRepository.findAll(pageable);
+        return new PageImpl<>(articles.stream()
                 .map(ArticleAssembler::convertToDto)
                 .collect(toList()));
     }

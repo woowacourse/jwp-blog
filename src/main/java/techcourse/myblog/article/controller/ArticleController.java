@@ -29,7 +29,7 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public String showArticle(@PathVariable final Long id, Model model) {
-        model.addAttribute("articleDTO", articleService.findById(id));
+        model.addAttribute("article", articleService.findById(id));
         return "article";
     }
 

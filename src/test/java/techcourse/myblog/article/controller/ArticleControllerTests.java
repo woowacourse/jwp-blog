@@ -171,10 +171,6 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/");
-
-        webTestClient.get().uri(articleLocation)
-                .exchange()
-                .expectStatus().isNoContent();
     }
 
     @Test

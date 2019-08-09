@@ -3,6 +3,7 @@ package techcourse.myblog.article.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.dto.ArticleRequest;
@@ -50,7 +51,7 @@ public class ArticleServiceTest {
 
     @Test
     void 모든_게시글_조회_확인() {
-        List<ArticleResponse> articleDtos = articleService.findAll();
+        List<ArticleResponse> articleDtos = articleService.findAll(PageRequest.of(0, 2)).getContent();
         assertThat(articleDtos).isEqualTo(Arrays.asList(articleService.findById(DEFAULT_ARTICLE_ID)));
     }
 
