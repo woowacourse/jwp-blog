@@ -1,9 +1,8 @@
 package techcourse.myblog.domain.article;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.exception.InvalidAuthorException;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserTest;
+import techcourse.myblog.exception.InvalidAuthorException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static techcourse.myblog.domain.user.UserTest.user;

@@ -1,19 +1,17 @@
 package techcourse.myblog.service;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.dto.CommentDto;
+import techcourse.myblog.domain.dto.response.LoginUser;
+import techcourse.myblog.exception.InvalidAuthorException;
+import techcourse.myblog.exception.NotFoundObjectException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import techcourse.myblog.domain.comment.CommentRepository;
-import techcourse.myblog.domain.dto.UserDto;
-import techcourse.myblog.domain.dto.response.LoginUser;
-import techcourse.myblog.exception.InvalidAuthorException;
-import techcourse.myblog.exception.NotFoundObjectException;
-import techcourse.myblog.domain.dto.CommentDto;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

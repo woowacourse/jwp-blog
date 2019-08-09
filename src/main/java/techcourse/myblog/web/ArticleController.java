@@ -7,7 +7,6 @@ import techcourse.myblog.domain.dto.ArticleDto;
 import techcourse.myblog.domain.dto.response.ArticleResponseDto;
 import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.supports.UserSession;
 
 import org.springframework.stereotype.Controller;

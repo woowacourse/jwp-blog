@@ -1,15 +1,13 @@
 package techcourse.myblog.web;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import techcourse.myblog.domain.dto.UserDto;
-import techcourse.myblog.domain.dto.response.LoginUser;
-import techcourse.myblog.domain.user.User;
-
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.regex.Pattern;
+
+import techcourse.myblog.domain.dto.response.LoginUser;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 @Component
 public class LogoutInterceptor extends HandlerInterceptorAdapter {
