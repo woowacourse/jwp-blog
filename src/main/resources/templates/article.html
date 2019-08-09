@@ -61,18 +61,23 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <form th:action="'/articles/' + ${article.id}" method="post">
+                <div class="float-right">
+                    <a th:href="|/articles/${article.id}/edit|" class="pointer btn btn-icon">
+                        <button type="submit" class="pointer btn btn-icon">
+                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                        </button>
+                    </a>
+                </div>
+                <form  class="float-right" th:action="'/articles/' + ${article.id}" method="post">
                     <input type="hidden" name="_method" value="delete"/>
-                    <a class="float-right pointer btn btn-icon">
-                        <button type="submit" class="float-right pointer btn btn-icon">
+                    <a class="pointer btn btn-icon">
+                        <button type="submit" class="pointer btn btn-icon">
                             <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                         </button>
                     </a>
                 </form>
-                < a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
-                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <div id="articleId" th:text="${article.id}" type="hidden"></div>
+                <div id="articleId" style="display: none" th:text="${article.id}"></div>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
@@ -107,11 +112,10 @@
                     <span class="font-size-16">댓글</span>
                     <span class="font-size-16 text-info">2</span>
                 </div>
-                <div class="comment">
-                    <div id="comment-div">
-                        <ul class="list-unstyled list-info" th:each="comment : ${comments}">
-
-                            <li class="comment-item border bottom mrg-btm-30">
+                <div id="comments"class="comment">
+                    <div>
+                        <ul id="comment-div"class="list-unstyled list-info">
+                            <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                                 <div class="info">
@@ -123,7 +127,7 @@
                                         <span>6 min ago</span>
                                     </span>
 
-                                    <div th:if="${comment.matchAuthor}">
+                                    <div th:if="${comment.getAuthor() == true}">
                                         <button type="button" class="float-right pointer btn btn-icon"
                                                 th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
                                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>

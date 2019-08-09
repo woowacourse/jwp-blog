@@ -1,6 +1,10 @@
 const articleApp = (function () {
     const articleId = document.getElementById('articleId').innerText;
-    const email = document.getElementById('session-email').innerText;
+
+    const header = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
 
     const ArticleEvent = function () {
         const articleService = new ArticleService();
@@ -35,84 +39,62 @@ const articleApp = (function () {
     const ArticleService = function () {
         const save = function () {
             const contents = document.getElementById('comment-contents').value;
-            fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments", {
+            fetch("http://localhost:8080/articles/" + articleId + "/comments", {
                 method: "POST",
                 body: JSON.stringify({
-                    email: email,
                     contents: contents,
                     articleId: articleId,
                 }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                    "Accept": "application/json; charset=UTF-8"
-                }
+                headers: header
             }).then(response => response.json())
                 .then(json => addTemplate(json))
         }
         const prepareEdit = function (event) {
-            if (event.target.classList.contains("ti-pencil")) {
+            if (event.target.id === "pencil") {
                 const litag = event.target.closest('li')
                 const ptag = litag.querySelector('p').innerText
+                console.log(ptag)
                 const input = litag.querySelector('input')
-                const confirmButton = litag.querySelector('button')
+                const confirmButton = litag.querySelectorAll('button')[2]
+                console.log(confirmButton.id)
                 confirmButton.setAttribute("style", "visibility:visible")
-                confirmButton.setAttribute("style", "visibility:visible");
                 input.value = ptag
                 input.setAttribute("style", "visibility:visible")
-                console.log("연필클릭")
             }
         }
 
         const update = function (event) {
-            if (event.target.classList.contains("btn-icon")) {
+            if (event.target.id === "save-confirm") {
                 const litag = event.target.closest('li')
                 const ptag = litag.querySelector('p')
-                const confirmButton = litag.querySelector('button')
+                const confirmButton = litag.querySelectorAll('button')[2]
                 const input = litag.querySelector('input')
-                const updateCommentId = litag.querySelectorAll('div')[1].id;
-                console.log("this is the id: " + updateCommentId);
+                const updateCommentId = litag.getAttribute("data-comment-id")
                 const updateCommentContents = input.value;
-                const commenterEmail = litag.querySelector('span').innerText;
-                console.log(commenterEmail);
-                console.log("this is the contents: " + updateCommentContents);
-                fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments/" + updateCommentId, {
+                fetch("/articles/" + articleId + "/comments/" + updateCommentId, {
                     method: "PUT",
                     body: JSON.stringify({
-                        email: commenterEmail,
                         contents: updateCommentContents,
-                        articleId: articleId,
                         id: updateCommentId
                     }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8",
-                        "Accept": "application/json; charset=UTF-8"
-                    }
+                    headers: header
                 })
                     .then(response => response.json())
                     .then(function (json) {
-                    console.log(json)
-                    input.setAttribute('style', "visibility:hidden");
-                    confirmButton.setAttribute('style', "visibility:hidden");
-                    ptag.innerText = json.contents;
+                        input.setAttribute('style', "visibility:hidden");
+                        confirmButton.setAttribute('style', "visibility:hidden");
+                        ptag.innerText = json.contents;
                 });
             }
         }
+
         const deleteComment = function (event) {
-            if (event.target.classList.contains("ti-trash")) {
+            if (event.target.id === "trash") {
                 const litag = event.target.closest('li');
                 const deleteCommentId = litag.querySelectorAll('div')[1].id;
-                const commenterEmail = litag.querySelector('span').innerText;
-                fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments/" + deleteCommentId, {
+                fetch("http://localhost:8080/articles/" + articleId + "/comments/" + deleteCommentId, {
                     method: "DELETE",
-                    body: JSON.stringify({
-                        email: commenterEmail,
-                        articleId: articleId,
-                        id: deleteCommentId
-                    }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8",
-                        "Accept": "application/json; charset=UTF-8"
-                    }
+                    headers: header
                 })
                     .then(function () {
                         litag.remove()
