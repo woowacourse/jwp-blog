@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%fullRequest%n%n%fullResponse</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %cyan([%logger{0}]) %m%n</pattern>
         </encoder>
     </appender>
-    <appender-ref ref="CONSOLE"/>
 
     <appender name="roll-by-time-and-size" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>target/log/roll-by-time-and-size/app.log</file>
@@ -22,8 +21,9 @@
         </encoder>
     </appender>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="roll-by-time-and-size"/>
-    </root>
+        <appender-ref ref="STDOUT"/>
 
+    </root>
 </configuration>

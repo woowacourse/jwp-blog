@@ -15,17 +15,19 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.h2database:h2'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     implementation 'org.projectlombok:lombok:1.18.8'
+    implementation 'com.h2database:h2'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
+    testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.2"
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
