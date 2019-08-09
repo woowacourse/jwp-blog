@@ -20,12 +20,16 @@ public class CommentGenericService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final ArticleGenericService articleGenericService;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
-    public CommentGenericService(CommentRepository commentRepository, UserService userService, ArticleGenericService articleGenericService) {
+    public CommentGenericService(CommentRepository commentRepository,
+                                 UserService userService,
+                                 ArticleGenericService articleGenericService,
+                                 ModelMapper modelMapper) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.articleGenericService = articleGenericService;
+        this.modelMapper = modelMapper;
     }
 
 

@@ -22,11 +22,12 @@ public class ArticleGenericService {
     private static final String NOT_EXIST_ARTICLE = "해당 아티클이 없습니다.";
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
-    public ArticleGenericService(ArticleRepository articleRepository, UserRepository userRepository) {
+    public ArticleGenericService(ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)

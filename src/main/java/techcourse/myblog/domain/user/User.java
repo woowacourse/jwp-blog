@@ -60,9 +60,10 @@ public class User {
         return email.getEmail();
     }
 
-    public void updateNameAndEmail(String name, String email) {
+    public User updateNameAndEmail(String name, String email) {
         this.name = UserName.of(name);
         this.email = UserEmail.of(email);
+        return this;
     }
 
     public boolean isMatchPassword(String password) {
