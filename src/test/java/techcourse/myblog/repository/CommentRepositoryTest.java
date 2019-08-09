@@ -29,14 +29,14 @@ class CommentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
-        article = articleRepository.save(new Article("a", "b", "c", user));
-        comment = commentRepository.save(new Comment("a", article, user));
+        user = userRepository.findByEmailEmail("test@test.com").get();
+        article = articleRepository.findById(1L).get();
+        comment = commentRepository.findById(1L).get();
     }
 
     @Test
     void 주인_댓글_테스트() {
-        comment.updateContents(new Comment("edited", article, user));
+        comment.updateContents(new Comment("edited", article, user), user);
         assertThat(
                 articleRepository.findById(article.getId()).get().getComments().stream()
                         .anyMatch(comment -> comment.getContents().equals("edited"))
@@ -46,16 +46,17 @@ class CommentRepositoryTest {
     @Test
     void 노예_아티클_테스트() {
         article.addComment(new Comment("z", article, user));
-        assertThat(articleRepository.findById(article.getId()).get().getComments().get(0).getContents()).isEqualTo("a");
-        assertThat(commentRepository.findAll().size()).isEqualTo(2);
-        assertThat(commentRepository.findAll().get(0).getContents()).isEqualTo("a");
+        assertThat(articleRepository.findById(article.getId()).get()
+                .getComments().stream()
+                .anyMatch(comment -> comment.getContents().equals("z"))).isTrue();
     }
 
     @Test
     void 노예_유저_테스트() {
-        user.updateNameAndEmail("name", "andole@naver.com");
-        assertThat(userRepository.findById(user.getId()).get().getName()).isEqualTo("name");
-        assertThat(articleRepository.findById(article.getId()).get().getAuthor().getName()).isEqualTo("name");
-        assertThat(commentRepository.findById(comment.getId()).get().getAuthor().getName()).isEqualTo("name");
+        user.updateNameAndEmail("update", "test@test.com");
+        assertThat(userRepository.findById(user.getId()).get().getName()).isEqualTo("update");
+        assertThat(articleRepository.findById(article.getId()).get().getAuthor().getName()).isEqualTo("update");
+        assertThat(commentRepository.findById(comment.getId()).get().getAuthor().getName()).isEqualTo("update");
+        user.updateNameAndEmail("test", "test@test.com");
     }
 }

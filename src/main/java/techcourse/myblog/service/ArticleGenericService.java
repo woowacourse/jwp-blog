@@ -1,5 +1,6 @@
 package techcourse.myblog.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,51 +14,58 @@ import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class ArticleService {
+public class ArticleGenericService {
     private static final String NOT_EXIST_ARTICLE = "해당 아티클이 없습니다.";
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
+    public ArticleGenericService(ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional(readOnly = true)
-    public List<Article> findAll() {
-        return articleRepository.findAll();
+    public <T> List<T> findAll(Class<T> type) {
+        return articleRepository.findAll().stream()
+                .map(article -> modelMapper.map(article, type))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<Article> findAllPage(Pageable pageable) {
+    public <T> List<T> findAllPage(Pageable pageable, Class<T> type) {
         Page<Article> page = articleRepository.findAll(pageable);
-        return page.getContent();
+        return page.getContent().stream()
+                .map(article -> modelMapper.map(article, type))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public Article findArticle(long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE));
+    public <T> T findArticle(long articleId, Class<T> type) {
+        return modelMapper.map(articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE)), type);
     }
 
     @Transactional
-    public Article add(ArticleDto articleDto, User author) {
+    public <T> T add(ArticleDto articleDto, User author, Class<T> type) {
         User user = userRepository.getOne(author.getId());
         Article article = articleDto.toEntity(user);
-        return articleRepository.save(article);
+        return modelMapper.map(articleRepository.save(article), type);
     }
 
-    public Article update(long articleId, ArticleDto articleDto, User author) {
+    public <T> T update(long articleId, ArticleDto articleDto, User author, Class<T> type) {
         User user = userRepository.findByEmailEmail(author.getEmail()).orElseThrow(UserException::new);
-        Article originArticle = findArticle(articleId);
+        Article originArticle = findArticle(articleId, Article.class);
         originArticle.update(articleDto.toEntity(user));
-        return originArticle;
+        return modelMapper.map(originArticle, type);
     }
 
     public void delete(long articleId, User author) {
-        Article article = findArticle(articleId);
+        Article article = findArticle(articleId, Article.class);
         if (article.isAuthor(author)) {
             articleRepository.deleteById(articleId);
             return;

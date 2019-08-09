@@ -11,6 +11,6 @@
             </li>
         </ul>
         <th:block
-                th:include="${session.userName} != null ? '/common/dropdown_login' : '/common/dropdown_logout'"></th:block>
+                th:include="${session.author} != null ? '/common/dropdown_login' : '/common/dropdown_logout'"></th:block>
     </div>
 </header>

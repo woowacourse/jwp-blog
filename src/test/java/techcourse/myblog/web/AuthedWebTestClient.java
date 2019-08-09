@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 
@@ -19,8 +18,6 @@ public abstract class AuthedWebTestClient {
 
     @Autowired
     protected WebTestClient webTestClient;
-    @Autowired
-    protected UserRepository userRepository;
 
     private String loginCookie() {
         log.debug("Start Authed Session ...");
@@ -42,12 +39,30 @@ public abstract class AuthedWebTestClient {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
+    protected WebTestClient.RequestBodySpec postJson(String uri) {
+        String cookie = loginCookie();
+        return webTestClient.post()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8);
+    }
+
     protected WebTestClient.RequestBodySpec put(String uri) {
         String cookie = loginCookie();
         return webTestClient.put()
                 .uri(uri)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    protected WebTestClient.RequestBodySpec putJson(String uri) {
+        String cookie = loginCookie();
+        return webTestClient.put()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8);
     }
 
     protected WebTestClient.RequestHeadersSpec get(String uri) {

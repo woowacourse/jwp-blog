@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.dto.ArticleResponseDto;
+import techcourse.myblog.service.ArticleGenericService;
 import techcourse.myblog.web.support.SessionInfo;
 import techcourse.myblog.web.support.UserSessionInfo;
 
@@ -16,28 +17,28 @@ import techcourse.myblog.web.support.UserSessionInfo;
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
-    private final ArticleService articleService;
+    private final ArticleGenericService articleGenericService;
 
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
+    public ArticleController(ArticleGenericService articleGenericService) {
+        this.articleGenericService = articleGenericService;
     }
 
     @GetMapping("/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
-        setArticleModel(model, articleService.findArticle(articleId));
+        setArticleModel(model, articleGenericService.findArticle(articleId, ArticleResponseDto.class));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String getEditArticle(@PathVariable long articleId, Model model) {
-        setArticleModel(model, articleService.findArticle(articleId));
+        setArticleModel(model, articleGenericService.findArticle(articleId, ArticleResponseDto.class));
         return "article-edit";
     }
 
     @PostMapping
     public String saveArticle(ArticleDto dto,
                               @SessionInfo UserSessionInfo userSessionInfo) {
-        return "redirect:/articles/" + articleService.save(dto, userSessionInfo.toUser()).getId();
+        return "redirect:/articles/" + articleGenericService.add(dto, userSessionInfo.toUser(), Article.class).getId();
     }
 
     @PutMapping("/{articleId}")
@@ -45,18 +46,18 @@ public class ArticleController {
                                      @SessionInfo UserSessionInfo userSessionInfo,
                                      ArticleDto dto,
                                      Model model) {
-        setArticleModel(model, articleService.update(articleId, dto, userSessionInfo.toUser()));
+        setArticleModel(model, articleGenericService.update(articleId, dto, userSessionInfo.toUser(), ArticleResponseDto.class));
         return "article";
     }
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId,
                                 @SessionInfo UserSessionInfo userSessionInfo) {
-        articleService.delete(articleId, userSessionInfo.toUser());
+        articleGenericService.delete(articleId, userSessionInfo.toUser());
         return "redirect:/";
     }
 
-    private void setArticleModel(Model model, Article article) {
-        model.addAttribute("article", article);
+    private void setArticleModel(Model model, ArticleResponseDto dto) {
+        model.addAttribute("article", dto);
     }
 }

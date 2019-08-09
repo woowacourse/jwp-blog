@@ -3,7 +3,6 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
@@ -20,8 +19,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void addUser(UserDto userDto) {
-        userRepository.save(userDto.toEntity());
+    public UserDto addUser(UserDto userDto) {
+        User user = userRepository.save(userDto.toEntity());
+        return new UserDto(user.getName(), user.getPassword(), user.getEmail());
     }
 
     @Transactional(readOnly = true)
@@ -36,8 +36,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserDto findUser(long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserException("존재하지 않는 회원입니다."));
+        return new UserDto(user.getName(), user.getPassword(), user.getEmail());
+    }
+
+    @Transactional(readOnly = true)
     public User getUserByEmail(String userEmail) {
-        return userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
+        return userRepository.findByEmailEmail(userEmail).orElseThrow(UserException::new);
     }
 
     public void deleteUser(String userEmail) {

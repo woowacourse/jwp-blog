@@ -60,13 +60,13 @@
                             <img alt="" class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4">
                             <div class="info">
-                                <span class="text-bold inline-block" th:text="${comment.getAuthor().getName()}"></span>
+                                <span class="text-bold inline-block" th:text="${comment.getAuthor()}"></span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                         <span th:text="${comment.modifiedDate}"></span>
                                         <span>
                                             <form method="post"
-                                                  th:action="${#strings.concat('/articles/', article.id, '/comment/', comment.getId())}">
+                                                  th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.getId())}">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <button class="ti-trash text-dark font-size-16 pdd-horizontal-5"
                                                     type="submit"></button>
@@ -78,7 +78,7 @@
                             </div>
                             <div style="visibility: hidden">
                                 <form method="post"
-                                      th:action="${#strings.concat('/articles/', article.id, '/comment/', comment.getId())}">
+                                      th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.getId())}">
                                     <input name="_method" type="hidden" value="PUT">
                                     <input class="comment-edit-text" name="contents" type="text">
                                 </form>
@@ -89,7 +89,7 @@
                         <!--<div id="editSection"></div>-->
                         <div class="col-lg-10 mx-auto">
                             <form accept-charset="utf-8" method="post" name="comment"
-                                  th:action="${#strings.concat('/articles/', article.id, '/comment')}">
+                                  th:action="${#strings.concat('/articles/', article.id, '/comments')}">
                                 <input name="contents" type="text">
                                 <button class="ti-pencil text-dark font-size-16 pdd-horizontal-5" id="comment-add-btn"
                                         type="submit">
@@ -125,6 +125,8 @@
         },
         height: '200px'
     });
+
+
 
 
 

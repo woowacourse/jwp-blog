@@ -3,7 +3,6 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.repository.UserRepository;
@@ -21,7 +20,7 @@ public class LoginService {
 
     @Transactional(readOnly = true)
     public User loginByEmailAndPwd(LoginDto loginDto) {
-        User user = userRepository.findByEmail(UserEmail.of(loginDto.getEmail()))
+        User user = userRepository.findByEmailEmail(loginDto.getEmail())
                 .orElseThrow(() -> new UserException(NOT_EXIST_USER));
         if (!user.isMatchPassword(loginDto.getPassword())) {
             throw new UserException(NOT_MATCH_PASSWORD);

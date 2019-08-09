@@ -10,7 +10,6 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentException;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
@@ -41,48 +40,52 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.findByEmail(UserEmail.of("test@test.com")).get();
+        user = userRepository.findByEmailEmail("test@test.com").get();
         articleRepository.deleteAll();
         article = articleRepository.save(new Article("a", "b", "c", user));
     }
 
     @Test
     void 코맨트_추가_테스트() {
-        Comment comment = commentService.addComment(article.getId(), user, new CommentDto("asd"));
+        Comment comment = commentService.add(article.getId(), user, new CommentDto("asd"));
         assertThat(comment.getAuthor().getName()).isEqualTo("test");
         assertThat(comment.getArticle().getTitle()).isEqualTo("a");
     }
 
     @Test
     void 코멘트_삭제_테스트() {
-        Comment comment = commentService.addComment(article.getId(), user, new CommentDto("comment"));
-        commentService.deleteComment(comment.getId(), user);
+        Comment comment = commentService.add(article.getId(), user, new CommentDto("comment"));
+        commentService.delete(comment.getId(), user);
         assertThatThrownBy(() -> commentRepository.findById(comment.getId()).orElseThrow(CommentException::new))
                 .isInstanceOf(CommentException.class);
     }
 
     @Test
     void 코멘트_수정_테스트() {
-        Comment comment = commentService.addComment(article.getId(), user, new CommentDto("abc"));
+        Comment comment = commentService.add(article.getId(), user, new CommentDto("abc"));
         article.addComment(comment);
         article = articleRepository.findById(article.getId()).get();
         comment = article.getComments().get(0);
-        comment.updateContents("updated");
+        comment.updateContents("updated", user);
         assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo("updated");
     }
 
     @Test
     void 다른사람이_수정_테스트() {
-        Comment comment = commentService.addComment(article.getId(), user, new CommentDto("abc"));
-        assertThatThrownBy(() -> commentService.updateComment(article.getId(), "abc@gmail.com", new CommentDto("edit")))
+        Comment comment = commentService.add(article.getId(), user, new CommentDto("abc"));
+        assertThatThrownBy(() ->
+                commentService.update(article.getId(),
+                        new User("hacker", "A!1bcdefg", "hacker@hacker.com"),
+                        new CommentDto("edit")))
                 .isInstanceOf(CommentException.class);
     }
 
     @Test
     void 다른사람이_삭제_테스트() {
-        Comment comment = commentService.addComment(article.getId(), user, new CommentDto("abc"));
+        Comment comment = commentService.add(article.getId(), user, new CommentDto("abc"));
         assertThatThrownBy(() ->
-                commentService.deleteComment(article.getId(), new User("hacker", "A!1bcdefg", "hacker@hacker.com")))
+                commentService.delete(article.getId(),
+                        new User("hacker", "A!1bcdefg", "hacker@hacker.com")))
                 .isInstanceOf(CommentException.class);
     }
 }
