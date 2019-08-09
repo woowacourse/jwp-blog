@@ -8,7 +8,7 @@ import javax.validation.Validator;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-public class UserTest {
+public class UserTests {
     Validator validator = Validation.byDefaultProvider().configure().buildValidatorFactory().getValidator();
 
     @Test
