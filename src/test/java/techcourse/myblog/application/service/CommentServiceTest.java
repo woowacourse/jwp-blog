@@ -7,7 +7,8 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
+import techcourse.myblog.application.dto.CommentResponseDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
@@ -36,7 +37,8 @@ class CommentServiceTest {
 
     private InOrder inOrder;
     Comment comment;
-    CommentDto commentDto;
+    CommentResponseDto commentResponseDto;
+    CommentRequestDto commentRequestDto;
     User user;
     Article article;
 
@@ -47,8 +49,10 @@ class CommentServiceTest {
         user = new User("zino@zino.zino", "hyo.hyo.hyo", "zhiynooh");
         article = new Article("title", "coverUrl", "반갑다 나는 효오다", user);
 
+        commentRequestDto = new CommentRequestDto();
+        commentRequestDto.setContents(contents);
         comment = new Comment(contents, user, article);
-        commentDto = CommentDto.of(comment);
+        commentResponseDto = CommentResponseDto.of(comment);
     }
 
     @Test
@@ -58,7 +62,7 @@ class CommentServiceTest {
         given(userService.findUserByEmail(user.getEmail())).willReturn(user);
         given(articleService.findArticleById(articleId)).willReturn(article);
 
-        commentService.save(commentDto, user.getEmail(), articleId);
+        commentService.save(commentRequestDto, user.getEmail(), articleId);
 
         verify(CommentRepository, times(1)).save(comment);
     }
@@ -69,7 +73,7 @@ class CommentServiceTest {
         given(CommentRepository.findById(commentId)).willReturn(Optional.of(comment));
         given(userService.findUserByEmail(user.getEmail())).willReturn(user);
 
-        assertDoesNotThrow(() -> commentService.update(commentId, commentDto, user.getEmail()));
+        assertDoesNotThrow(() -> commentService.update(commentId, commentRequestDto, user.getEmail()));
     }
 
     @Test

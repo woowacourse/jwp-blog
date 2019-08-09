@@ -3,7 +3,8 @@ package techcourse.myblog.application.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
+import techcourse.myblog.application.dto.CommentResponseDto;
 import techcourse.myblog.application.service.exception.NotExistCommentException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
@@ -27,24 +28,24 @@ public class CommentService {
     }
 
     @Transactional
-    public long save(CommentDto commentDto, String userEmail, long articleId) {
+    public CommentResponseDto save(CommentRequestDto commentRequestDto, String userEmail, long articleId) {
         User user = userService.findUserByEmail(userEmail);
         Article article = articleService.findArticleById(articleId);
 
-        Comment comment = new Comment(commentDto.getContents(), user, article);
-        return commentRepository.save(comment).getId();
+        Comment comment = new Comment(commentRequestDto.getContents(), user, article);
+        return CommentResponseDto.of(commentRepository.save(comment));
     }
 
     @Transactional(readOnly = true)
-    public List<CommentDto> findAllByArticleId(Long articleId) {
+    public List<CommentResponseDto> findAllByArticleId(Long articleId) {
         List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         return comments.stream()
-                .map(CommentDto::of)
+                .map(CommentResponseDto::of)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void update(long commentId, CommentDto commentDto, String email) {
+    public CommentResponseDto update(long commentId, CommentRequestDto commentRequestDto, String email) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
 
@@ -52,15 +53,22 @@ public class CommentService {
 
         User user = userService.findUserByEmail(email);
 
-        comment.modify(commentDto.getContents(), user);
+        return CommentResponseDto.builder()
+                .id(comment.getId())
+                .contents(comment.modify(commentRequestDto.getContents(), user))
+                .build();
     }
 
     @Transactional
-    public void delete(Long commentId, String email) {
+    public CommentResponseDto delete(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
 
         userService.checkEmail(comment.getUser(), email);
         commentRepository.deleteById(commentId);
+
+        return CommentResponseDto.builder()
+                .id(commentId)
+                .build();
     }
 }
