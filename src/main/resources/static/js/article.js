@@ -84,7 +84,7 @@ const articleApp = (function () {
                         input.setAttribute('style', "visibility:hidden");
                         confirmButton.setAttribute('style', "visibility:hidden");
                         ptag.innerText = json.contents;
-                });
+                    });
             }
         }
 

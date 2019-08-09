@@ -1,10 +1,13 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.vo.CommentContents;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -25,6 +28,11 @@ public class Comment {
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
+
+    @CreationTimestamp
+    private LocalDateTime createdTimeAt;
+    @UpdateTimestamp
+    private LocalDateTime updateTimeAt;
 
     private Comment() {
     }
@@ -59,7 +67,7 @@ public class Comment {
         return article;
     }
 
-    public void changeContent(CommentContents commentContents) {
+    public void updateContents(CommentContents commentContents) {
         this.commentContents = commentContents;
     }
 
@@ -84,8 +92,6 @@ public class Comment {
     public Long getArticleId() {
         return article.getId();
     }
-
-    public boolean isNotValidCommenter(String email) {
-        return this.getAuthor().isNotMatchEmail(email);
-    }
 }
+
+

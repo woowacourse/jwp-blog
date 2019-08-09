@@ -68,7 +68,7 @@
                         </button>
                     </a>
                 </div>
-                <form  class="float-right" th:action="'/articles/' + ${article.id}" method="post">
+                <form class="float-right" th:action="'/articles/' + ${article.id}" method="post">
                     <input type="hidden" name="_method" value="delete"/>
                     <a class="pointer btn btn-icon">
                         <button type="submit" class="pointer btn btn-icon">
@@ -112,9 +112,9 @@
                     <span class="font-size-16">댓글</span>
                     <span class="font-size-16 text-info">2</span>
                 </div>
-                <div id="comments"class="comment">
+                <div id="comments" class="comment">
                     <div>
-                        <ul id="comment-div"class="list-unstyled list-info">
+                        <ul id="comment-div" class="list-unstyled list-info">
                             <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">

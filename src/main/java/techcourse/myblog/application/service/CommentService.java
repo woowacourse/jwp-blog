@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.converter.CommentConverter;
 import techcourse.myblog.application.dto.CommentDto;
-import techcourse.myblog.application.dto.CommentJsonDto;
-import techcourse.myblog.application.dto.UpdateCommentJsonDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
@@ -46,8 +44,7 @@ public class CommentService {
     public List<CommentDto> findAllCommentsByArticleId(Long articleId, String sessionEmail) {
         Article article = articleService.findById(articleId);
         List<Comment> comments = commentRepository.findByArticle(article);
-        List<CommentDto> commentDtos = commentConverter.toDto(comments, sessionEmail);
-        return commentDtos;
+        return commentConverter.toDtos(comments, sessionEmail);
     }
 
     public void delete(long commentId) {
@@ -57,40 +54,30 @@ public class CommentService {
     @Transactional
     public void modify(Long commentId, CommentContents commentContents) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다"));
-        comment.changeContent(commentContents);
+        comment.updateContents(commentContents);
     }
 
     public void checkAuthor(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
         User author = comment.getAuthor();
-        if (!author.isNotMatchEmail(email)) {
-            throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
+        if (author.isNotMatchEmail(email)) {
+            throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다.");
         }
     }
 
-    public CommentJsonDto saveJson(CommentJsonDto commentJsonDto, String loginUserEmail) {
-        String commentUserEmail = commentJsonDto.getEmail();
-        User loginUser = userService.findUserByEmail(loginUserEmail);
-        User commentUser = userService.findUserByEmail(commentJsonDto.getEmail());
-        Boolean isValidUser = loginUser.isMatchEmail(commentUserEmail);
-
-        Article article = articleService.findById(commentJsonDto.getArticleId());
-        Comment comment = commentConverter.toEntity(commentJsonDto.getContents(), commentUser, article);
+    public CommentDto saveComment(CommentDto commentDto, String userEmail) {
+        User user = userService.findUserByEmail(userEmail);
+        Article article = articleService.findById(commentDto.getArticleId());
+        Comment comment = commentConverter.toEntity(commentDto.getContents(), user, article);
         Comment savedComment = commentRepository.save(comment);
-        CommentJsonDto responseCommentJsonDto = commentConverter.toCommentJsonDto(savedComment, isValidUser);
-        return responseCommentJsonDto;
+        return commentConverter.toDto(savedComment);
     }
 
     @Transactional
-    public UpdateCommentJsonDto update(CommentJsonDto commentJsonDto) {
-        Comment comment = commentRepository.findById(commentJsonDto.getId())
+    public CommentDto update(CommentDto commentDto) {
+        Comment comment = commentRepository.findById(commentDto.getId())
                 .orElseThrow(IllegalArgumentException::new);
-        if (comment.isNotValidCommenter(commentJsonDto.getEmail())) {
-            throw new IllegalArgumentException("댓글 작성자가 아닙니다.");
-        }
-        ;
-        comment.changeContent(new CommentContents(commentJsonDto.getContents()));
-        return commentConverter.toUpdateCommentJsonDto(comment);
+        comment.updateContents(new CommentContents(commentDto.getContents()));
+        return commentConverter.toDto(comment);
     }
-
 }

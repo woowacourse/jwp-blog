@@ -8,7 +8,7 @@ import techcourse.myblog.domain.Article;
 
 @Component
 public class ArticleConverter extends Converter<ArticleDto, Article> {
-    private static final Logger log = LoggerFactory.getLogger(ArticleConverter.class);
+    private static Logger logger = LoggerFactory.getLogger(ArticleConverter.class);
 
     private ArticleConverter() {
         super(articleDto -> new Article(new Article.ArticleBuilder()
@@ -21,8 +21,8 @@ public class ArticleConverter extends Converter<ArticleDto, Article> {
                             , article.getTitle()
                             , article.getCoverUrl()
                             , article.getContents()); //getAuthor지움
-                    log.info("Article " + article);
-                    log.info("ArticleDto Author " + articleDto.getAuthor());
+                    logger.info("Article : {}", article);
+                    logger.info("ArticleDto Author  : {}", articleDto.getAuthor());
 
                     return articleDto;
                 });

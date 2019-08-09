@@ -58,7 +58,7 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NotExistArticleIdException(""));
 
-        article.modify(articleConverter.convertFromDto(articleDto));
+        article.update(articleConverter.convertFromDto(articleDto));
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +71,7 @@ public class ArticleService {
         User author = findById(articleId).getAuthor();
         log.info("author: " + author);
         log.info("email: " + email);
-        if (!author.isNotMatchEmail(email)) {
+        if (!author.isNotMatchName(email)) {
             throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
         }
     }

@@ -18,11 +18,12 @@ import java.util.List;
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private UserConverter userConverter = UserConverter.getInstance();
+    private UserConverter userConverter;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserConverter userConverter) {
         this.userRepository = userRepository;
+        this.userConverter = userConverter;
     }
 
     @Transactional
@@ -57,7 +58,7 @@ public class UserService {
     public void login(LoginDto loginDto) {
         String password = loginDto.getPassword();
         User user = findUserByEmail(loginDto.getEmail());
-        if (!user.authenticate(password)) {
+        if (!user.isMatchPassword(password)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
@@ -72,5 +73,10 @@ public class UserService {
     @Transactional
     public void removeByEmail(String email) {
         userRepository.deleteByEmail(email);
+    }
+
+    public User findUserByName(String authorName) {
+        return userRepository.findByName(authorName)
+                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
     }
 }

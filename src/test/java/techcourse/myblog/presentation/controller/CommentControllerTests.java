@@ -17,7 +17,7 @@ public class CommentControllerTests extends BasicControllerTests {
         result = writeArticle(sessionId);
         articleUri = result.getResponseHeaders().getLocation().getPath();
         System.out.println(">>> " + articleUri);
-        CommentDto commentDto = new CommentDto(null,"abcd", null, 2L,  null);
+        CommentDto commentDto = new CommentDto(null, "abcd", null, 2L, null);
         webTestClient.post().uri(articleUri + "/comments")
                 .header("Cookie", sessionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -40,7 +40,7 @@ public class CommentControllerTests extends BasicControllerTests {
         result = writeArticle(sessionId);
         articleUri = result.getResponseHeaders().getLocation().getPath();
 
-        CommentDto commentDto = new CommentDto(3L,"abcd", null, 2L,  null);
+        CommentDto commentDto = new CommentDto(3L, "abcd", null, 2L, null);
         webTestClient.post().uri(articleUri + "/comments")
                 .header("Cookie", sessionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -50,7 +50,7 @@ public class CommentControllerTests extends BasicControllerTests {
                 .expectStatus()
                 .isOk();
 
-        CommentDto expectUpdateCommentDto = new CommentDto(3L,"kangmin",null, 2L, null);
+        CommentDto expectUpdateCommentDto = new CommentDto(3L, "kangmin", null, 2L, null);
         System.out.println(articleUri);
         webTestClient.put().uri(articleUri + "/comments/3")
                 .header("Cookie", sessionId)
@@ -74,7 +74,7 @@ public class CommentControllerTests extends BasicControllerTests {
         result = writeArticle(sessionId);
         articleUri = result.getResponseHeaders().getLocation().getPath();
 
-        CommentDto commentDto = new CommentDto(null,"abcd", null, 2L,  null);
+        CommentDto commentDto = new CommentDto(null, "abcd", null, 2L, null);
         webTestClient.post().uri(articleUri + "/comments")
                 .header("Cookie", sessionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -89,8 +89,8 @@ public class CommentControllerTests extends BasicControllerTests {
                 .jsonPath("$.contents").isEqualTo("abcd")
                 .jsonPath("$.articleId").isEqualTo("2");
 
-        webTestClient.delete().uri(articleUri+"/comments/3")
-                .header("Cookie",sessionId)
+        webTestClient.delete().uri(articleUri + "/comments/3")
+                .header("Cookie", sessionId)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus()

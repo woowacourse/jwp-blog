@@ -1,9 +1,13 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -11,11 +15,20 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column
+    @Size(max = 30)
     private String title;
     @Lob
+    @Column(nullable = false)
+    @Size(max = 50)
     private String coverUrl;
+    @Column(nullable = false)
+    @Size(max = 255)
     private String contents;
+    @CreationTimestamp
+    private LocalDateTime createdTimeAt;
+    @UpdateTimestamp
+    private LocalDateTime updateTimeAt;
 
     @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
@@ -69,7 +82,7 @@ public class Article {
         this.contents = contents;
     }
 
-    public void modify(Article article) {
+    public void update(Article article) {
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();
         this.contents = article.getContents();

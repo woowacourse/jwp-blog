@@ -113,7 +113,6 @@ public class UserServiceTests {
         UserDto userDto = new UserDto(email, name, password);
         userService.save(userDto);
 
-        //userDto.setPassword("zinozinozi");
         assertThrows(NotMatchPasswordException.class, () -> userService.login(LoginDto.of(userDto)));
 
         userService.removeByEmail(email);

@@ -1,11 +1,11 @@
 package techcourse.myblog.application.converter;
 
+import org.springframework.stereotype.Component;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.User;
 
+@Component
 public class UserConverter extends Converter<UserDto, User> {
-    private static UserConverter converter = new UserConverter();
-
     private UserConverter() {
         super(userDto -> new User(userDto.getEmail(), userDto.getName(), userDto.getPassword())
                 , user -> {
@@ -13,9 +13,5 @@ public class UserConverter extends Converter<UserDto, User> {
                     userDto.setId(user.getId());
                     return userDto;
                 });
-    }
-
-    public static UserConverter getInstance() {
-        return converter;
     }
 }
