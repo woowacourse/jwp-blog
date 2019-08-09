@@ -36,7 +36,7 @@ public class ArticleCommonServiceTests {
     protected void compareArticle(Article article1, Article article2) {
         assertThat(article1.getTitle()).isEqualTo(article2.getTitle());
         assertThat(article1.getCoverUrl()).isEqualTo(article2.getCoverUrl());
-        assertThat(article1.getFeature()).isEqualTo(article2.getFeature());
+        assertThat(article1.getArticleFeature()).isEqualTo(article2.getArticleFeature());
     }
 }
 */

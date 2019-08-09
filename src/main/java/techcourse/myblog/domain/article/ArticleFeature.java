@@ -16,7 +16,7 @@ import javax.persistence.Lob;
 @Getter
 @EqualsAndHashCode(of = {"title", "coverUrl", "contents"})
 @Embeddable
-public class Feature {
+public class ArticleFeature {
     private static final int TITLE_LENGTH = 50;
 
     @Column(nullable = false, length = TITLE_LENGTH)
@@ -30,7 +30,7 @@ public class Feature {
     @Lob
     private String contents;
 
-    public Feature(String title, String coverUrl, String contents) {
+    public ArticleFeature(String title, String coverUrl, String contents) {
         validateEmpty(title, "제목은 비어있을 수 없습니다.");
         validateEmpty(contents, "내용은 비어있을 수 없습니다.");
         this.title = title;
@@ -50,7 +50,7 @@ public class Feature {
 
     @Override
     public String toString() {
-        return "Feature {" +
+        return "ArticleFeature {" +
                 "title=" + title +
                 ", coverUrl=" + coverUrl +
                 ", contents=" + contents +

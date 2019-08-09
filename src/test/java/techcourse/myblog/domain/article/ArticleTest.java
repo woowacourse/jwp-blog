@@ -24,6 +24,6 @@ class ArticleTest {
 
         assertThat(originalArticle.getTitle()).isEqualTo(editedArticle.getTitle());
         assertThat(originalArticle.getCoverUrl()).isEqualTo(editedArticle.getCoverUrl());
-        assertThat(originalArticle.getFeature()).isEqualTo(editedArticle.getFeature());
+        assertThat(originalArticle.getArticleFeature()).isEqualTo(editedArticle.getArticleFeature());
     }
 }*/

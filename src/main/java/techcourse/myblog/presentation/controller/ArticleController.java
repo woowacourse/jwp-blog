@@ -10,7 +10,7 @@ import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.ArticleWriteService;
 import techcourse.myblog.application.CommentReadService;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.Feature;
+import techcourse.myblog.domain.article.ArticleFeature;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.presentation.support.LoginUser;
 
@@ -39,9 +39,9 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(LoginUser loginUser, Feature feature) {
-        log.debug("article save request data : -> {}", feature);
-        Article savedArticle = articleWriteService.save(feature.toArticle(loginUser.getUser()));
+    public RedirectView createArticle(LoginUser loginUser, ArticleFeature articleFeature) {
+        log.debug("article save request data : -> {}", articleFeature);
+        Article savedArticle = articleWriteService.save(articleFeature.toArticle(loginUser.getUser()));
         log.debug("article save response data : -> {}", savedArticle);
         return new RedirectView("/articles/" + savedArticle.getId());
     }
@@ -67,9 +67,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, Feature feature) {
-        log.debug("article modify request data : -> {}, {}", articleId, feature);
-        articleWriteService.update(articleId, feature, loginUser.getUser());
+    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, ArticleFeature articleFeature) {
+        log.debug("article modify request data : -> {}, {}", articleId, articleFeature);
+        articleWriteService.update(articleId, articleFeature, loginUser.getUser());
         return new RedirectView("/articles/" + articleId);
     }
 

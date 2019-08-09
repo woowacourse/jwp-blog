@@ -27,7 +27,7 @@ public class Article {
     private Long id;
 
     @Embedded
-    private Feature feature;
+    private ArticleFeature articleFeature;
 
     @ManyToOne
     @JoinColumn(name = FK_FIELD_NAME, foreignKey = @ForeignKey(name = FK_NAME))
@@ -40,14 +40,14 @@ public class Article {
     @UpdateTimestamp
     private LocalDateTime updateTimeAt;
     
-    public Article(Feature feature, User user) {
-        this.feature = feature;
+    public Article(ArticleFeature articleFeature, User user) {
+        this.articleFeature = articleFeature;
         this.author = user;
     }
 
     public void update(Article article) {
         validateAuthor(article);
-        this.feature = article.feature;
+        this.articleFeature = article.articleFeature;
     }
 
     public void validateAuthor(User user) {
@@ -72,7 +72,7 @@ public class Article {
     public String toString() {
         return "Article{" +
                 "id=" + id +
-                ", feature='" + feature + '\'' +
+                ", articleFeature='" + articleFeature + '\'' +
                 ", author=" + author +
                 ", createTimeAt=" + createTimeAt +
                 ", updateTimeAt=" + updateTimeAt +

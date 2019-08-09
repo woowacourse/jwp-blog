@@ -38,7 +38,7 @@
 //
 //        originalComment.update(editedComment);
 //
-//        assertThat(originalComment.getFeature()).isEqualTo(editedComment.getFeature());
+//        assertThat(originalComment.getArticleFeature()).isEqualTo(editedComment.getArticleFeature());
 //    }
 //
 //    @Test

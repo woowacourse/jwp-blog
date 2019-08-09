@@ -39,15 +39,15 @@
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"
-                                                 th:style="'background:url(' + ${article.feature.coverUrl} + ');'"></div>
+                                                 th:style="'background:url(' + ${article.articleFeature.coverUrl} + ');'"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 th:text="${article.feature.title}" class="mrg-btm-20 text-bold">
+                                                        <h2 th:text="${article.articleFeature.title}" class="mrg-btm-20 text-bold">
                                                             title</h2>
-                                                        <p th:text="${article.feature.contents}">contents</p>
+                                                        <p th:text="${article.articleFeature.contents}">contents</p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>

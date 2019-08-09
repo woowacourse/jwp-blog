@@ -51,7 +51,7 @@ public class CommentWrtieServiceTests {
     }
 
     void compareComment(Comment comment1, Comment comment2) {
-        assertEquals(comment1.getFeature(), comment2.getFeature());
+        assertEquals(comment1.getArticleFeature(), comment2.getArticleFeature());
         assertEquals(comment1.getArticle(), comment2.getArticle());
         assertEquals(comment1.getWriter(), comment2.getWriter());
     }
