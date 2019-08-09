@@ -1,3 +1,30 @@
+let buttonTemplate = `
+            <button class="btn btn-icon float-right pointer comment-del-button"
+                    type="button">
+                <i class="ti-trash text-dark font-size-16 pdd-horizon-5 comment-del-button"></i>
+            </button>
+        
+        <button class="comment-edit float-right pointer btn btn-icon">
+            <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+        </button>`;
+
+let commentTemplate = (id, userName, contents) => `
+        <li class="comment-item border bottom mrg-btm-30" data-comment-id ="${id}">
+            <img alt=""
+                 class="thumb-img img-circle"
+                 src="https://avatars2.githubusercontent.com/u/3433096?v=4">
+            <div class="info">
+                <span class="text-bold inline-block" >${userName}</span>
+
+                <span class="sub-title inline-block pull-right">
+        <i class="ti-timer pdd-right-5"></i>p
+        <span>6 min ago</span>
+    </span>
+                ${buttonTemplate}
+                <p class="width-80">${contents}</p>
+            </div>
+        </li>`;
+
 const COMMENT = (function () {
     'use strict';
     const CommentController = function () {
@@ -11,12 +38,12 @@ const COMMENT = (function () {
         const deleteComment = function () {
             const comments = document.getElementById('comment-list');
             comments.addEventListener('click', commentService.remove);
-        }
+        };
         const updateComment = function () {
             const comments = document.getElementById('comment-list');
             comments.addEventListener('click', commentService.update);
 
-        }
+        };
         const init = function () {
             updateCommentForm();
             deleteComment();
@@ -65,27 +92,24 @@ const COMMENT = (function () {
             }
         };
         const remove = function (event) {
-            const targetButton = event.target
+            const targetButton = event.target;
             if (targetButton.classList.contains("comment-del-button")) {
-                const comment = targetButton.closest('li')
-                let id = comment.dataset.commentId
+                const comment = targetButton.closest('li');
+                let id = comment.dataset.commentId;
                 deleteCommentFetch(articleId, id, comment);
             }
-        }
+        };
 
         const update = function (event) {
-            const targetButton = event.target
+            const targetButton = event.target;
             if (targetButton.classList.contains("comment-edit-finish-button")) {
-                const comment = targetButton.closest('li')
-                let id = comment.dataset.commentId
-                let p = comment.getElementsByTagName("p")[0]
+                const comment = targetButton.closest('li');
+                let id = comment.dataset.commentId;
+                let p = comment.getElementsByTagName("p")[0];
                 let editedContents = document.getElementById("comment-contents" + id).value;
-                console.log(editedContents)
                 updateCommentFetch(articleId, id, p, editedContents);
             }
-        }
-
-
+        };
         return {
             updateForm: updateForm,
             remove: remove,
@@ -103,47 +127,52 @@ const COMMENT = (function () {
     };
 })();
 
-window.onload = function() {
-    // commentLoad();
+window.onload = function () {
+    commentLoad();
     COMMENT.init();
-}
+};
 
 const saveButton = document.querySelector('#comment-save-button');
 const articleId = document.querySelector('#article-id').value;
 saveButton.addEventListener('click', addCommentFetch);
 
-function commentLoad(){
-    fetch('/articles/' + articleId + '/comments',{
-        method:'get',
+function commentLoad() {
+    fetch('/articles/' + articleId + '/comments', {
+        method: 'get',
         headers: {
             'Content-Type': 'application/json; charset=UTF-8'
         },
         credentials: 'include'
     })
-    .then(function (response) {
-        if (response.ok) {
-            return response.json();
-        }
-        throw response;
-    })
-    .then((json) => {
-        console.log(json);
-        let commentListDto = {
-            comments: json.data.comments,
-        };
-        addCommentList(articleId, commentDto);
-    })
-    .catch((response) =>
-        response.json().then(json =>
-            alert(json.errorMessage)
+        .then((response)=> {
+            if (response.ok) {
+                return response.json();
+            }else
+            throw response;
+        })
+        .then((json) => {
+            console.log(json);
+            let commentListDto = {
+                comments: json.data.comments,
+            };
+            addCommentList(articleId, commentListDto);
+        })
+        .catch(
+
+            response => {
+                response.json().then((json) => alert(json.errorMessage));
+            }
         )
-    );
-}
-function addCommentList(){
-    const commentContainer = document.getElementById('comment-list');
-    const commentList = commentLoad();
 }
 
+function addCommentList(articleId, commentListDto) {
+    const commentContainer = document.getElementById('comment-list');
+    let comments = "";
+    commentListDto.forEach(function(element) {
+        comments += element;
+    });
+    commentContainer.insertAdjacentHTML('beforeend', comments);
+}
 
 function addCommentFetch(e) {
     let contents = document.querySelector('#comment-contents').value;
@@ -226,35 +255,7 @@ function updateCommentFetch(articleId, commentId, editParagraph, contents) {
 }
 
 
-
 function addComment(articleId, commentDto) {
-    console.log("abcd");
-    let buttonTemplate = `
-            <button class="btn btn-icon float-right pointer comment-del-button"
-                    type="button">
-                <i class="ti-trash text-dark font-size-16 pdd-horizon-5 comment-del-button"></i>
-            </button>
-        
-        <button class="comment-edit float-right pointer btn btn-icon">
-            <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-        </button>`;
-
-    let commentTemplate = `
-        <li class="comment-item border bottom mrg-btm-30" data-comment-id ="${commentDto.id}">
-            <img alt=""
-                 class="thumb-img img-circle"
-                 src="https://avatars2.githubusercontent.com/u/3433096?v=4">
-            <div class="info">
-                <span class="text-bold inline-block" >${commentDto.userName}</span>
-
-                <span class="sub-title inline-block pull-right">
-        <i class="ti-timer pdd-right-5"></i>p
-        <span>6 min ago</span>
-    </span>
-                ${buttonTemplate}
-                <p class="width-80">${commentDto.contents}</p>
-            </div>
-        </li>`;
     const comments = document.querySelector('#comment-list');
-    comments.insertAdjacentHTML('beforeend', commentTemplate);
+    comments.insertAdjacentHTML('beforeend', commentTemplate(commentDto.id, commentDto.userName, commentDto.contents));
 }

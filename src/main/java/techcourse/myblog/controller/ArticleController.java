@@ -11,8 +11,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.annotation.LoginUser;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.service.dto.ArticleDto;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,31 +22,25 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private final ArticleRepository articleRepository;
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
+    private final ArticleRepository articleRepository;
     public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
-
     @GetMapping("/{articleId}")
     public String show(@PathVariable Long articleId, HttpSession session, Model model) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-
         model.addAttribute("article", article);
         model.addAttribute("comments", article.getComments());
-
         Optional<User> user = Optional.ofNullable((User) session.getAttribute("user"));
         user.ifPresent(value -> model.addAttribute("user", value));
-
         return "article";
     }
 
     @GetMapping("/new")
-    public String createForm(HttpSession session, @LoginUser User user,
-                             Model model) {
+    public String createForm(@LoginUser User user, Model model) {
         model.addAttribute("user", user);
         return "article-edit";
     }
@@ -87,7 +81,6 @@ public class ArticleController {
 
         return "redirect:/articles/" + articleId;
     }
-
 
 
     @DeleteMapping("/{articleId}")
