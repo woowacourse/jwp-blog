@@ -1,27 +1,22 @@
 package learningtest;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 import techcourse.myblog.repository.ArticleRepository;
-
-import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 public class Mockito2Test {
+
     @Mock
     ArticleRepository articleRepository;
 
     @Test
-    public void hasLocalMockInThisTest(@Mock List<Integer> localList) {
-        localList.add(100);
-    }
+    public void mockTest() {
 
-    @Test
-    void asd() {
         when(articleRepository.findById(1L)).thenReturn(null);
 
         System.out.println(articleRepository.findById(1L));
