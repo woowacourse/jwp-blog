@@ -10,7 +10,7 @@ import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-class CommentRestControllerTest extends AbstractControllerTest {
+class CommentApiControllerTest extends AbstractControllerTest {
     @LocalServerPort
     private int port;
 

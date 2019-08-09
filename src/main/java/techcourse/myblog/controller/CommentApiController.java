@@ -15,11 +15,11 @@ import java.util.List;
 
 @RequestMapping("/articles")
 @RestController
-public class CommentRestController {
+public class CommentApiController {
     private ArticleService articleService;
 
     @Autowired
-    public CommentRestController(ArticleService articleService) {
+    public CommentApiController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
