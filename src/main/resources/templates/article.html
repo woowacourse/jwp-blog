@@ -66,48 +66,14 @@
                 </div>
                 <div class="comment">
                     <ul id="comment-list" class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
-                            <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <span th:text="${comment.getCommenter().getName()}" href="" class="text-bold inline-block"></span>
-                            <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span th:text="${comment.getMinAgo() + ' min ago'}">6 min ago</span>
-                            </span>
-
-                            <!--평소에 보여지는 것-->
-                            <div class="view info">
-                                <p th:text="${comment.getComment()}" class="width-80 target"></p>
-
-                                <form th:action="@{/comments/{id}(id=${comment.getId()})}" th:method="delete">
-                                    <button id="remove-btn" type="submit" class="btn btn-default">
-                                        <i class="ti-close"></i>
-                                    </button>
-                                </form>
-                            </div>
-
-                            <!--클릭하면 보여지는 것-->
-                            <div class="edit info">
-                                <form th:action="@{/comments/{id}(id=${comment.id})}" th:method="put">
-                                    <input name="comment" type="text" th:value="${comment.getComment()}">
-                                    <button id="modify-btn" type="submit" class="btn btn-default">
-                                        <i class="ti-save"></i>
-                                    </button>
-                                </form>
-                            </div>
-
-                        </li>
                     </ul>
-                    <form th:action="@{/articles/{id}/comments(id=${article.id})}" method="post">
-                        <div class="add-comment">
-                            <input id="article-contents" name="comment" type="hidden">
-                            <div id="editSection"></div>
-                        </div>
-                        <button id="save-btn" type="submit" class="btn btn-default">
-                            <i class="ti-save"></i>
-                        </button>
-                    </form>
-
+                    <div class="add-comment">
+                        <input id="article-contents" name="comment" type="hidden">
+                        <div id="editSection"></div>
+                    </div>
+                    <button id="comment-save-btn" type="submit" class="btn btn-default">
+                        <i class="ti-save"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -116,9 +82,10 @@
 
 <div th:include="fragments/main/js :: js"></div>
 <script src="/js/index.js"></script>
-<script src="/js/comment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
+    let articleId = /*[[${article.getId()}]]*/ 'default';
     const initValue = /*[[${article.contents}]]*/ 'default';
 
     const viewer = tui.Editor.factory({
@@ -141,5 +108,7 @@
     });
     /*]]>*/
 </script>
+<script src="/js/comment-template.js"></script>
+<script src="/js/comment.js"></script>
 </body>
 </html>

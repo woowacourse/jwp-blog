@@ -94,17 +94,17 @@
 
 (추가)
 
-- [ ] 패키지 분리
-- [ ] 컨트롤러 분리
+- [x] 패키지 분리
+- [x] 컨트롤러 분리
 - [x] ~~AccountController 테스트 코드 중복 제거~~
 - [x] ~~AccountController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가~~
-- [ ] ArticleController 테스트 코드 중복 제거
-- [ ] ArticleController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가
+- [x] ArticleController 테스트 코드 중복 제거
+- [x] ArticleController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가
 - [x] ~~컨트롤러 Exception Handler 와 404 에러 페이지 추가~~
-- [ ] url /articles를 prefix로 빼기 (/writing -> /articles/writing)
+- [x] url /articles를 prefix로 빼기 (/writing -> /articles/writing)
 - [x] ~~html에서 form 중복 제거하기 (article-edit.html)~~
 - [x] ~~html에서 form 중복 제거하기 (header.html)~~
-- [ ] 테스트할 때만 h2 사용하기  
+- [x] 테스트할 때만 h2 사용하기  
 - [ ] 자기가 쓴 글만 수정할 수 있도록 하기
 
 
@@ -123,4 +123,28 @@
 - ~~Add modifyCommentById controller method in CommentController~~
 - ~~Add deleteCommentById controller method in CommentController~~
 - ~~게시글 삭제시 댓글도 삭제~~
+- ~~aws ec2 인스턴스 설정 쉘 스크립트 작성~~
+- ~~배포 쉘 스크립트 작성~~
+- 댓글 수정 Restful 백엔드 작업
+    - ~~RestCommentController 클래스 생성~~
+    - RestCommentService 클래스 생성
+    - ~~GET 메서드~~
+    - ~~POST 메서드~~
+    - ~~DELETE 메서드~~
+    - ~~PUT 메서드~~
 - 댓글 수정 프론트엔드 작업
+    - ~~댓글 추가 버튼 누를 시 POST ajax 요청~~
+    - ~~리스폰스가 정상적으로 왔을 시 현재 댓글들을 지우고 응답으로 온 댓글들로 대체~~
+    - ~~댓글 삭제 버튼 누를 시 DELETE ajax 요청~~
+    - ~~댓글 수정 버튼 누를 시 PUT ajax 요청~~
+    - ~~article.html 이 로드될 시 GET ajax 요청~~
+- ~~자기가 쓴 댓글만 수정/삭제 가능~~
+
+리팩토링
+- ~~컨트롤러 클래스를 추상화한 AbstractControllerTests 작성~~
+    - ~~Setup 에서 로그인~~
+    - ~~EntityExchangeResult 를 반환하는 GET 요청 메서드~~
+    - ~~EntityExchangeResult 를 반환하는 POST 요청 메서드~~
+    - ~~EntityExchangeResult 를 반환하는 PUT 요청 메서드~~
+    - ~~EntityExchangeResult 를 반환하는 DELETE 요청 메서드~~
+    - ~~annotation argument resolver 로 세션에서 사용자 가져오기~~

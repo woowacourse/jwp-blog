@@ -30,6 +30,7 @@ public class TestDataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         User user = new User("abcdeFGHI", "abcdEFGH123!@#", "abc@hi.com");
         userRepository.save(user);
+        userRepository.save(new User("moomin", "mooMIN123!@#", "moomin@naver.com"));
         Article article = new Article("testTitle", "testContents", "https://www.incimages.com/uploaded_files/image/970x450/getty_509107562_2000133320009280346_351827.jpg");
         article.setAuthor(user);
         articleRepository.save(article);

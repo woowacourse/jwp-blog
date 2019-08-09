@@ -41,4 +41,8 @@ public class Comment {
     public void update(Comment comment) {
         this.comment = comment.getComment();
     }
+
+    public boolean writtenBy(User user) {
+        return commenter.equals(user);
+    }
 }

@@ -285,7 +285,7 @@ public class ArticleControllerTests {
         return body;
     }
 
-    EntityExchangeResult<byte[]> getRequest(String uri) {
+    protected EntityExchangeResult<byte[]> getRequest(String uri) {
         return webTestClient.get()
                 .uri(uri)
                 .header("Cookie", cookie)
@@ -294,7 +294,7 @@ public class ArticleControllerTests {
                 .returnResult();
     }
 
-    EntityExchangeResult<byte[]> postFormRequest(String uri, Class mappingClass, String... args) {
+    protected EntityExchangeResult<byte[]> postFormRequest(String uri, Class mappingClass, String... args) {
         return webTestClient.post()
                 .uri(uri)
                 .header("Cookie", cookie)
@@ -305,7 +305,7 @@ public class ArticleControllerTests {
                 .returnResult();
     }
 
-    EntityExchangeResult<byte[]> deleteRequest(String uri) {
+    protected EntityExchangeResult<byte[]> deleteRequest(String uri) {
         return webTestClient.delete()
                 .uri(uri)
                 .header("Cookie", cookie)
@@ -314,7 +314,7 @@ public class ArticleControllerTests {
                 .returnResult();
     }
 
-    EntityExchangeResult<byte[]> putFormRequest(String uri, Class mappingClass, String... args) {
+    protected EntityExchangeResult<byte[]> putFormRequest(String uri, Class mappingClass, String... args) {
         return webTestClient.put()
                 .uri(uri)
                 .header("Cookie", cookie)
@@ -325,7 +325,7 @@ public class ArticleControllerTests {
                 .returnResult();
     }
 
-    private void assertTest(String body, String... args) {
+    protected void assertTest(String body, String... args) {
         for (String arg : args) {
             assertThat(body.contains(arg)).isTrue();
         }

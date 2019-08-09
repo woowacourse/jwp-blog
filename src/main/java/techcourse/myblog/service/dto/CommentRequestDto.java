@@ -11,7 +11,6 @@ import techcourse.myblog.domain.User;
 @Setter
 @NoArgsConstructor
 public class CommentRequestDto {
-    private long id;
     private String comment;
 
     public Comment toComment(User commenter, Article article) {
