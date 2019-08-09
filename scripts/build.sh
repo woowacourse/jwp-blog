@@ -1,3 +1,7 @@
 #!/bin/bash
 ./gradlew clean build
-docker build -t laterality/myblog:latest .
+
+# Remove existing image
+docker rmi laterality/myblog:latest
+
+docker-compose build blog

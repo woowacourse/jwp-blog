@@ -6,6 +6,7 @@
 * Application log: ~/app/log
 * Jenkins home directory: ~/app/jenkins_home
 * Mysql data: ~/app/db_data
+* nginx log: ~/app/nginx/log/
 
 ## 초기 설정
 

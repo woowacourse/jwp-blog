@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  blog:
+    image: laterality/myblog:latest
+    ports: 
+      - 8080:8080
+    volumes: 
+      - ./log:/var/log/app
+    links: 
+      - my-db:db
+  mysql:
+    image: mysql:8.0.16
+    container_name: my-db
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment: 
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=myblog
+  jenkins:
+    image: laterality/jenkins:latest
+    container_name: jenkins
+    ports: 
+      - 8000:8080
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins_home:/var/jenkins_home
+    environment: 
+      - JENKINS_USER=ubuntu
+    user: root
+  nginx:
+    image: nginx
+    container_name: web
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/log:/var/log/nginx
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+
