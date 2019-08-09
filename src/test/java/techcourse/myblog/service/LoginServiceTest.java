@@ -36,11 +36,11 @@ class LoginServiceTest {
     @Mock
     UserRepository userRepository;
 
-    User user;
+    private User user;
 
     @BeforeEach
     void setUp() {
-         user = new User(USER_NAME, TEST_EMAIL, TEST_PASSWORD);
+        user = new User(USER_NAME, TEST_EMAIL, TEST_PASSWORD);
     }
 
     @Test

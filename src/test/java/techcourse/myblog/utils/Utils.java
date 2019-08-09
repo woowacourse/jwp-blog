@@ -3,11 +3,12 @@ package techcourse.myblog.utils;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.CommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.UserDto;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -32,10 +33,10 @@ public class Utils {
                 .getHeader("Location");
     }
 
-    public static String createComment(CommentDto commentDto, String cookie, String baseUrl) {
+    public static String createComment(RequestCommentDto requestCommentDto, String cookie, String baseUrl) {
         return given()
-                .param("articleId", commentDto.getArticleId())
-                .param("contents", commentDto.getContents())
+                .param("articleId", requestCommentDto.getArticleId())
+                .param("contents", requestCommentDto.getContents())
                 .cookie(cookie)
                 .post(baseUrl + "/comments")
                 .getHeader("Location");
@@ -62,12 +63,7 @@ public class Utils {
     }
 
     public static String getResponseBody(byte[] body) {
-        try {
-            return new String(body, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("인코딩 에러");
-        }
+        return new String(body, StandardCharsets.UTF_8);
     }
 
     public static String getRedirectedLocationOf(WebTestClient.ResponseSpec responseSpec) {

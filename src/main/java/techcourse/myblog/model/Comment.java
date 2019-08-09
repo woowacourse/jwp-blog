@@ -16,10 +16,11 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long id;
 
-    @Column(name = "CONTENTS", nullable = false, columnDefinition = "TEXT")
     @NonNull
+    @Column(name = "contents", nullable = false, columnDefinition = "TEXT")
     private String contents;
 
     @CreationTimestamp
@@ -32,12 +33,12 @@ public class Comment {
 
     @NonNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User author;
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ARTICLE_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_article"))
+    @JoinColumn(name = "article_id", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
     public Comment update(Comment comment) {

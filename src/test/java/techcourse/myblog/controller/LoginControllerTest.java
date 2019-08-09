@@ -81,7 +81,7 @@ class LoginControllerTest {
 
     @Test
     @DisplayName("비밀번호가 틀린 경우 로그인에 실패한다.")
-    void failLoginWhenWrongPassword() {
+    void failLoginWhenngPassword() {
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("email", EMAIL)

@@ -20,5 +20,4 @@ public class HomeController {
         model.addAttribute("articles", articleService.getAllArticles());
         return "index";
     }
-
 }
