@@ -2,7 +2,7 @@ version: "3"
 
 services:
   blog:
-    image: laterality/myblog:latest
+    image: laterality/jwp-blog:latest
     ports: 
       - 8080:8080
     volumes: 
