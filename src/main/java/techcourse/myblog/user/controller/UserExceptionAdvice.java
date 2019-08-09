@@ -38,7 +38,7 @@ public class UserExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelDuplicatedUserException(DuplicatedUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/signup";
+        return "/users/new";
     }
 
     @ExceptionHandler(NotFoundUserException.class)

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
+@RequestMapping("/users")
 @Controller
 public class UserController {
     private final UserService userService;
@@ -26,12 +27,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/new")
     public String renderSignUpPage() {
         return "signup";
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public RedirectView createUser(@Valid UserCreateDto userCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
@@ -40,21 +41,21 @@ public class UserController {
         return new RedirectView("/login");
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public String readUsers(Model model) {
         List<UserResponseDto> users = userService.findAll();
         model.addAttribute("users", users);
         return "user-list";
     }
 
-    @GetMapping("/mypage/{userId}")
+    @GetMapping("/{userId}")
     public String renderMyPage(@PathVariable long userId, Model model) {
         UserResponseDto user = userService.findById(userId);
         model.addAttribute("user", user);
         return "mypage";
     }
 
-    @GetMapping("/mypage/{userId}/edit")
+    @GetMapping("/{userId}/edit")
     public String renderEditMyPage(@PathVariable long userId, UserSession session, Model model) {
         UserResponseDto user = userService.findById(userId);
         if (!session.getEmail().equals(user.getEmail())) {
@@ -64,7 +65,7 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PutMapping("/users/{userId}")
+    @PutMapping("/{userId}")
     public RedirectView updateUser(@PathVariable long userId, HttpSession session,
                                    @Valid UserUpdateDto userUpdateDto, BindingResult result) {
         if (result.hasErrors()) {
@@ -72,10 +73,10 @@ public class UserController {
         }
         UserResponseDto updatedUser = userService.update(userId, userUpdateDto);
         session.setAttribute("user", updatedUser);
-        return new RedirectView("/mypage/" + userId);
+        return new RedirectView("/users/" + userId);
     }
 
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     public RedirectView deleteUser(@PathVariable long userId, UserSession session) {
         UserResponseDto user = userService.findById(userId);
         if (!session.getEmail().equals(user.getEmail())) {

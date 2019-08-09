@@ -1,57 +1,38 @@
 package techcourse.myblog.comment.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
-import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.comment.dto.CommentCreateDto;
+import techcourse.myblog.comment.dto.CommentResponseDto;
 import techcourse.myblog.comment.dto.CommentUpdateDto;
-import techcourse.myblog.comment.exception.InvalidCommentLengthException;
 import techcourse.myblog.comment.service.CommentService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import java.util.List;
 
-@Controller
+@RequestMapping("/articles/{articleId}/comments")
+@RestController
 public class CommentController {
-
-    private final CommentService commentService;
+    private CommentService commentService;
 
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
 
-    @GetMapping("/comments/{commentId}/edit")
-    public String renderCommentEditPage(@PathVariable long commentId, Model model) {
-        model.addAttribute("comments", commentService.findById(commentId));
-        return "comment-edit";
-    }
-
-    @PostMapping("/articles/{articleId}/comments")
-    public RedirectView createComment(@PathVariable long articleId, UserSession userSession, CommentCreateDto commentCreateDto) {
+    @PostMapping
+    public List<CommentResponseDto> add(@RequestBody CommentCreateDto commentCreateDto, @PathVariable long articleId, UserSession userSession) {
         commentService.save(articleId, userSession.getId(), commentCreateDto);
-        return new RedirectView("/articles/" + articleId);
+        return commentService.findAllByArticleId(articleId);
     }
 
-    @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession,
-                                      @Valid CommentUpdateDto commentUpdateDto, BindingResult result, HttpServletRequest request) {
-        if (result.hasErrors()) {
-            request.setAttribute("articleId", articleId);
-            throw new InvalidCommentLengthException();
-        }
+    @PutMapping("/{commentId}")
+    public List<CommentResponseDto> update(@RequestBody CommentUpdateDto commentUpdateDto, @PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
         commentService.update(commentId, userSession.getId(), commentUpdateDto);
-        return new RedirectView("/articles/" + articleId);
+        return commentService.findAllByArticleId(articleId);
     }
 
-    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView deleteComment(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
-        if (!commentService.deleteById(commentId, userSession.getId())) {
-            throw new NotMatchUserException(userSession.getId());
-        }
-        return new RedirectView("/articles/" + articleId);
+    @DeleteMapping("/{commentId}")
+    public List<CommentResponseDto> delete(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
+        commentService.deleteById(commentId, userSession.getId());
+        return commentService.findAllByArticleId(articleId);
     }
 }

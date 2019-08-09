@@ -114,7 +114,6 @@ class CommentServiceTest {
 
         assertThat(commentService.findAllByArticleId(article.getId()).get(0).getId()).isEqualTo(commentResponseDto.getId());
         assertThat(commentService.findAllByArticleId(article.getId()).get(0).getContents()).isEqualTo(commentResponseDto.getContents());
-        assertThat(commentService.findAllByArticleId(article.getId()).get(0).getArticle()).isEqualTo(commentResponseDto.getArticle());
         assertThat(commentService.findAllByArticleId(article.getId()).get(0).getAuthor()).isEqualTo(commentResponseDto.getAuthor());
     }
 
@@ -138,7 +137,6 @@ class CommentServiceTest {
 
         CommentResponseDto result = commentService.update(comment.getId(), author.getId(), commentUpdateDto);
         assertThat(result.getAuthor()).isEqualTo(commentResponseDto.getAuthor());
-        assertThat(result.getArticle()).isEqualTo(commentResponseDto.getArticle());
         assertThat(result.getContents()).isEqualTo(commentResponseDto.getContents());
         assertThat(result.getId()).isEqualTo(commentResponseDto.getId());
     }
@@ -178,7 +176,6 @@ class CommentServiceTest {
         CommentResponseDto result = commentService.findById(comment.getId());
         assertThat(result.getId()).isEqualTo(commentResponseDto.getId());
         assertThat(result.getContents()).isEqualTo(commentResponseDto.getContents());
-        assertThat(result.getArticle()).isEqualTo(commentResponseDto.getArticle());
         assertThat(result.getAuthor()).isEqualTo(commentResponseDto.getAuthor());
     }
 }
