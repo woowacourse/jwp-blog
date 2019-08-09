@@ -57,7 +57,6 @@ public class ArticleService {
         final Article article = findById(id);
 
         ArticleDto.Response articleDto = ArticleDto.Response.createBy(article);
-        articleDto.setComments(article.getComments());
         return articleDto;
     }
 
@@ -67,7 +66,6 @@ public class ArticleService {
 
         article.isWrittenBy(userId);
         ArticleDto.Response articleDto = ArticleDto.Response.createBy(article);
-        articleDto.setComments(article.getComments());
         return articleDto;
     }
 

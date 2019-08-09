@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.web.UserSession;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
         final ArticleDto.Response articleDto = articleService.getOne(id);
-        final List<Comment> comments = articleDto.getComments();
+        final List<CommentDto.Response> comments = articleDto.getComments();
 
         model.addAttribute("article", articleDto);
         model.addAttribute("comments", comments);

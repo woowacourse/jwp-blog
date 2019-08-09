@@ -7,6 +7,9 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class ArticleDto {
 
@@ -46,21 +49,20 @@ public class ArticleDto {
         private String contents;
         private String title;
         private String coverUrl;
-        private List<Comment> comments;
+        private List<CommentDto.Response> comments;
 
         Response(Article article) {
             id = article.getId();
             contents = article.getContents();
             title = article.getTitle();
             coverUrl = article.getCoverUrl();
+            comments = article.getComments().stream()
+                    .map(CommentDto.Response::createByComment)
+                    .collect(Collectors.toList());
         }
 
         public static Response createBy(Article article) {
             return new ArticleDto.Response(article);
-        }
-
-        public void setComments(List<Comment> comments) {
-            this.comments = comments;
         }
     }
 }
