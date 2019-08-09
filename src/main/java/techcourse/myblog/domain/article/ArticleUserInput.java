@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class ArticleVo {
+public class ArticleUserInput {
     private static final int CONTENTS_LENGTH = 1000;
 
     @Column(nullable = false)
@@ -19,10 +19,10 @@ public class ArticleVo {
     @Column(nullable = false, length = CONTENTS_LENGTH)
     private String contents;
 
-    private ArticleVo() {
+    private ArticleUserInput() {
     }
 
-    public ArticleVo(String title, String coverUrl, String contents) {
+    public ArticleUserInput(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;

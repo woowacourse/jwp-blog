@@ -17,7 +17,7 @@ public class Article {
     private long id;
 
     @Embedded
-    private ArticleVo articleVo;
+    private ArticleUserInput articleUserInput;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -32,16 +32,16 @@ public class Article {
     private Article() {
     }
 
-    public Article(User author, ArticleVo articleVo) {
+    public Article(User author, ArticleUserInput articleUserInput) {
         this.author = author;
-        this.articleVo = articleVo;
+        this.articleUserInput = articleUserInput;
     }
 
-    public void updateArticle(ArticleVo articleVo, Long userId) {
+    public void updateArticle(ArticleUserInput articleVo, Long userId) {
         if (!author.matchId(userId)) {
             throw new UserMismatchException();
         }
-        this.articleVo = articleVo;
+        this.articleUserInput = articleVo;
 
     }
 
@@ -58,14 +58,14 @@ public class Article {
     }
 
     public String getTitle() {
-        return articleVo.getTitle();
+        return articleUserInput.getTitle();
     }
 
     public String getCoverUrl() {
-        return articleVo.getCoverUrl();
+        return articleUserInput.getCoverUrl();
     }
 
     public String getContents() {
-        return articleVo.getContents();
+        return articleUserInput.getContents();
     }
 }

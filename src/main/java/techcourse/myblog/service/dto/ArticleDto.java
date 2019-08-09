@@ -1,7 +1,7 @@
 package techcourse.myblog.service.dto;
 
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleVo;
+import techcourse.myblog.domain.article.ArticleUserInput;
 import techcourse.myblog.domain.user.User;
 
 public class ArticleDto {
@@ -49,11 +49,11 @@ public class ArticleDto {
     }
 
     public Article toEntity(User author) {
-        ArticleVo articleVo = this.toVo();
-        return new Article(author, articleVo);
+        ArticleUserInput articleUserInput = this.toVo();
+        return new Article(author, articleUserInput);
     }
 
-    public ArticleVo toVo() {
-        return new ArticleVo(title, coverUrl, contents);
+    public ArticleUserInput toVo() {
+        return new ArticleUserInput(title, coverUrl, contents);
     }
 }
