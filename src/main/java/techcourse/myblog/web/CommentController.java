@@ -1,10 +1,8 @@
 package techcourse.myblog.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.CommentRequest;
@@ -21,14 +19,14 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    public CommentController(CommentService commentService, ObjectMapper objectMapper) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
 
     @PostMapping("/comments")
     @ResponseBody
-    public CommentResponse saveComment(@PathVariable("articleId") Long articleId, @RequestBody CommentRequest commentRequest,
-                                       BindingResult bindingResult, HttpSession httpSession) {
+    public CommentResponse saveComment(@PathVariable("articleId") Long articleId,
+                                       @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         log.info(commentRequest.getContents());
 
         UserResponse user = (UserResponse) httpSession.getAttribute("user");
@@ -37,15 +35,14 @@ public class CommentController {
 
     @DeleteMapping("/comments/{commentId}")
     @ResponseBody
-    public void deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                HttpSession httpSession) {
+    public void deleteComment(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         commentService.deleteComment(commentId, userResponse);
     }
 
     @PutMapping("/comments/{commentId}")
     @ResponseBody
-    public CommentResponse updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+    public CommentResponse updateComment(@PathVariable("commentId") Long commentId,
                                          @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         return commentService.updateComment(commentId, userResponse, commentRequest);

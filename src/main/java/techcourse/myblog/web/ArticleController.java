@@ -9,7 +9,6 @@ import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.support.encrytor.PasswordBCryptor;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
