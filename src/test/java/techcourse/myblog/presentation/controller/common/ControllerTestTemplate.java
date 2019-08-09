@@ -31,9 +31,11 @@ import static techcourse.myblog.utils.UserTestObjects.SIGN_UP_USER_DTO;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ControllerTestTemplate {
+    protected static final String MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE = "댓글 작성자가 아닙니다.";
+    protected static final String DELETE_SUCCESS_MESSAGE = "삭제가 완료되었습니다.";
     private static final String JSESSIONID = "JSESSIONID";
-    public static final String LOGIN_URL = "/login";
-    
+    private static final String LOGIN_URL = "/login";
+
     @Autowired
     protected WebTestClient webTestClient;
 
@@ -68,6 +70,10 @@ public class ControllerTestTemplate {
 
     protected StatusAssertions loginAndRequestWithData(HttpMethod method, String path, MultiValueMap<String, String> data, UserDto userDto) {
         return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userDto)));
+    }
+
+    protected BodyContentSpec loginAndRequest(HttpMethod method, String path, HttpStatus httpStatus, UserDto userDto) {
+        return httpRequest(makeRequestSpec(method, path).cookie(JSESSIONID, getLoginSessionId(userDto)), httpStatus);
     }
 
     protected BodyContentSpec loginAndRequestWithMonoData(HttpMethod method, String path, HttpStatus httpStatus, Object object, UserDto userDto) {

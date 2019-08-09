@@ -11,10 +11,10 @@
     <th:block th:include="includes/header :: header"></th:block>
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg"
-             th:style="'background-image: url(' + ${article.coverUrl} + ');'">
+             th:style="'background-image: url(' + ${article.feature.coverUrl} + ');'">
 
             <div class="padding-30">
-                <h1 th:text="${article.title}" class="text-center cover-title"></h1>
+                <h1 th:text="${article.feature.title}" class="text-center cover-title"></h1>
             </div>
         </div>
     </div>
@@ -26,11 +26,11 @@
                     <a th:if="${article.author.equals(session.user)}" th:href="'/articles/' + ${article.id} + '/edit'" class="pointer btn btn-icon">
                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                     </a>
-                    <div th:if="${article.author.equals(session.user)}" class="form">
-                        <button class="btn btn-icon pointer" id="article-delete-button" type="button">
+                    <form th:if="${article.author.equals(session.user)}" class="form" th:action="'/articles/' + ${article.id}" th:method="delete">
+                        <button class="btn btn-icon pointer" id="article-delete-button" type="submit">
                             <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                         </button>
-                    </div>
+                    </form>
                 </div>
                 <div id="viewerSection"></div>
             </div>
@@ -157,7 +157,7 @@
 <script type="text/javascript" th:inline="javascript">
     `use strict`
 
-    const initValue = [[${article.contents}]];
+    const initValue = [[${article.feature.contents}]];
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),

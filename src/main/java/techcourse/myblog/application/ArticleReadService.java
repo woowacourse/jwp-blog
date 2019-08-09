@@ -27,9 +27,4 @@ public class ArticleReadService {
         return articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
     }
-
-    public Article findByIdAndAuthor(Long articleId, User user) {
-        return articleRepository.findByIdAndAuthor(articleId, user)
-                .orElseThrow(NotFoundArticleException::new);
-    }
 }

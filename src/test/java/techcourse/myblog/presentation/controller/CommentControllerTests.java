@@ -23,9 +23,6 @@ import static techcourse.myblog.utils.CommentTestObjects.UPDATE_COMMENT_DTO;
 import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
 class CommentControllerTests extends ControllerTestTemplate {
-    private static final String MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE = "댓글 작성자가 아닙니다.";
-    private static final String DELETE_SUCCESS_MESSAGE = "삭제가 완료되었습니다.";
-
     @Autowired
     private CommentRepository commentRepository;
 

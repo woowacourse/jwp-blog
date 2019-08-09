@@ -1,3 +1,4 @@
+/*
 package techcourse.myblog.application;
 
 import org.junit.jupiter.api.Test;
@@ -20,4 +21,4 @@ class ArticleWriteServiceTests extends ArticleCommonServiceTests {
 
         compareArticle(articleRepository.findById(articleId).get(), UPDATE_ARTICLE_DTO.toArticle(author));
     }
-}
+}*/

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpStatus;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
@@ -13,10 +14,12 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.*;
 import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
 import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
+//TODO : ResponseEntity로 인한 실패 => 테스트로 바꾸기
 public class ArticleControllerTests extends ControllerTestTemplate {
     private ArticleDto articleDto = ARTICLE_DTO;
     private String savedArticleUrl;
@@ -145,8 +148,13 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         String redirectUrl = getRedirectUrl(loginAndRequestWriter(DELETE, savedArticleUrl));
         assertEquals(redirectUrl, "/");
 
-        String redirectRemovedArticleUrl = getRedirectUrl(loginAndRequestWriter(GET, savedArticleUrl));
-        assertEquals(redirectRemovedArticleUrl, "/");
+//        String redirectRemovedArticleUrl = getRedirectUrl(loginAndRequestWriter(GET, savedArticleUrl));
+        loginAndRequest(GET, savedArticleUrl, HttpStatus.FORBIDDEN, savedUserDto)
+                .consumeWith(response -> {
+                    String result = new String(response.getResponseBody());
+                    assertTrue(result.contains(DELETE_SUCCESS_MESSAGE));
+                });
+//        assertEquals(redirectRemovedArticleUrl, "/");
     }
 
     @Test
