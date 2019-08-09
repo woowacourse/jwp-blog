@@ -58,19 +58,6 @@ public class Comment {
         return author.checkId(authorId);
     }
 
-    public Comment updateComment2(String contents, long authorId) {
-        authorValidation(authorId);
-        this.contents = contents;
-        return this;
-    }
-
-    public boolean authorValidation(long authorId) {
-        if (author.checkId(authorId)) {
-            return true;
-        }
-        throw new NotMatchUserException(authorId);
-    }
-
     public long getUserId() {
         return author.getId();
     }
