@@ -1,10 +1,5 @@
 package techcourse.myblog.exception;
 
-public class ArticleNotFoundException extends IllegalArgumentException {
-    public ArticleNotFoundException() {
-    }
+public class ArticleNotFoundException extends RuntimeException {
 
-    public ArticleNotFoundException(String s) {
-        super(s);
-    }
 }

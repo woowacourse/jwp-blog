@@ -1,50 +1,43 @@
 package techcourse.myblog.web;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserLoginRequestDto;
-import techcourse.myblog.service.LoginService;
+import techcourse.myblog.service.dto.user.UserResponse;
+import techcourse.myblog.service.login.LoginService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.util.SessionKeys.USER;
+import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
 
-@Slf4j
 @Controller
 public class LoginController {
-    private final LoginService loginService;
+    final private LoginService loginservice;
 
-    public LoginController(final LoginService loginService) {
-        this.loginService = loginService;
+    @Autowired
+    public LoginController(LoginService loginService) {
+        this.loginservice = loginService;
     }
 
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLogin() {
         return "login";
     }
 
-    @GetMapping("/signup")
-    public String showSignUpPage() {
-        return "signup";
-    }
+    @PostMapping("/users/login")
+    public String processLogin(final HttpSession session, final String email, final String password) {
+        UserResponse userResponse = loginservice.findByEmailAndPassword(email, password);
+        UserResponse retrieveUser = loginservice.findByEmail(userResponse.getEmail());
 
-    @PostMapping("/login")
-    public String login(UserLoginRequestDto userLoginRequestDto, HttpSession httpSession) {
-        log.info("login post request params={}", userLoginRequestDto);
-        loginService.checkLogin(userLoginRequestDto.getEmail(), userLoginRequestDto.getPassword());
-
-        User user = loginService.findByEmail(userLoginRequestDto.getEmail());
-        httpSession.setAttribute(USER, user);
+        session.setAttribute(USER_SESSION_KEY, retrieveUser);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession httpSession) {
-        log.info("logout get request params={}", httpSession.getAttribute(USER));
-        httpSession.removeAttribute(USER);
+    public String logOut(final HttpServletRequest request) {
+        request.getSession().removeAttribute(USER_SESSION_KEY);
         return "redirect:/";
     }
 }
