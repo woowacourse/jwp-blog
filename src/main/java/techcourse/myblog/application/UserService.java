@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
 import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.application.exception.DuplicatedEmailException;
 import techcourse.myblog.application.exception.EditException;
 import techcourse.myblog.application.exception.LoginException;
 import techcourse.myblog.application.exception.NoUserException;
@@ -37,7 +38,14 @@ public class UserService {
 
     private User createUser(UserRequest userRequest) {
         userRequest.setPassword(encryptPassword(userRequest));
+        checkDuplicatedEmail(userRequest);
         return modelMapper.map(userRequest, User.class);
+    }
+
+    private void checkDuplicatedEmail(UserRequest userRequest) {
+        if(userRepository.existsByEmail(userRequest.getEmail())) {
+            throw new DuplicatedEmailException("중복된 이메일입니다!");
+        }
     }
 
     private String encryptPassword(UserRequest userRequest) {
