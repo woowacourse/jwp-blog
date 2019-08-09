@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.dto.CommentDto;
+import techcourse.myblog.domain.dto.response.ArticleResponseDto;
 import techcourse.myblog.domain.dto.response.CommentResponseDto;
 import techcourse.myblog.domain.dto.response.LoginUser;
 import techcourse.myblog.exception.NotFoundObjectException;
@@ -26,11 +26,11 @@ public class ArticleService {
 		this.userService = userService;
 	}
 
-	public ArticleDto createArticle(ArticleDto articleDto, LoginUser loginUser) {
+	public ArticleResponseDto createArticle(ArticleDto articleDto, LoginUser loginUser) {
 		User user = userService.findByEmail(loginUser.getEmail());
 		Article article = articleDto.toEntity(user);
 		article = articleRepository.save(article);
-		return ArticleDto.toArticleDto(article);
+		return ArticleResponseDto.toArticleResponseDto(article);
 	}
 
 	private Article findArticle(Long articleId) {
@@ -38,17 +38,17 @@ public class ArticleService {
 				.orElseThrow(NotFoundObjectException::new);
 	}
 
-	public ArticleDto findArticleAndGetDto(Long articleId) {
-		return ArticleDto.toArticleDto(findArticle(articleId));
+	public ArticleResponseDto findArticleAndGetDto(Long articleId) {
+		return ArticleResponseDto.toArticleResponseDto(findArticle(articleId));
 	}
 
 	@Transactional
-	public ArticleDto updateArticle(Long articleId, ArticleDto articleDto, LoginUser loginUser) {
+	public ArticleResponseDto updateArticle(Long articleId, ArticleDto articleDto, LoginUser loginUser) {
 		User user = userService.findByEmail(loginUser.getEmail());
 		Article article = findArticle(articleId);
 		article.update(articleDto.toEntity(user));
 
-		return ArticleDto.toArticleDto(article);
+		return ArticleResponseDto.toArticleResponseDto(article);
 	}
 
 	public void deleteArticle(Long articleId, LoginUser loginUser) {

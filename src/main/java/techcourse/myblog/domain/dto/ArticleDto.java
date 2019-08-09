@@ -1,6 +1,5 @@
 package techcourse.myblog.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +9,6 @@ import techcourse.myblog.domain.user.User;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ArticleDto {
 	private Long articleId;
 	private String title;
@@ -30,10 +28,5 @@ public class ArticleDto {
 				.contents(contents)
 				.author(author)
 				.build();
-	}
-
-	public static ArticleDto toArticleDto(Article article) {
-		return new ArticleDto(article.getArticleId(), article.getTitle(),
-				article.getCoverUrl(), article.getContents());
 	}
 }
