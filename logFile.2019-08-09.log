@@ -27,3 +27,180 @@
 16402 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
 16454 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
 16465 [main] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 15.52 seconds (JVM running for 18.387)
+2471 [main] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on DESKTOP-2HMBVFM with PID 20148 (C:\Users\JH\Desktop\Level2\jwp-blog\out\production\classes started by JH in C:\Users\JH\Desktop\Level2\jwp-blog)
+2480 [main] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+4545 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data repositories in DEFAULT mode.
+4741 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 181ms. Found 3 repository interfaces.
+5486 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$5dbcb330] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+6917 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+6979 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+7024 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+7025 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.21]
+7840 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+7841 [main] INFO  o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 5208 ms
+8119 [main] INFO  n.r.s.b.l.a.LogbackAccessContext - Configured the Logback-access: context=[default], config=[classpath:logback-access.xml]
+8501 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+8969 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+9176 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+9417 [main] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.3.10.Final}
+9423 [main] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+10005 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+10637 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+14117 [main] INFO  o.h.t.s.internal.SchemaCreatorImpl - HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@28cf179c'
+14125 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+16480 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+16657 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+17008 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+17435 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+17498 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+17505 [main] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 16.147 seconds (JVM running for 19.25)
+21817 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+21819 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+21854 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 35 ms
+23388 [http-nio-8080-exec-1] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [1,380] milliseconds.
+23512 [http-nio-8080-exec-1] INFO  o.h.h.i.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
+47042 [http-nio-8080-exec-9] INFO  t.m.a.service.ArticleService - Article{id=null, title='rr', coverUrl='', contents='aa', author='User{id : 2 email : easy@gmail.com}'}
+6515463 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h16m26s302ms539µs291ns).
+7216444 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m40s975ms755µs669ns).
+2809 [main] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on DESKTOP-2HMBVFM with PID 21544 (C:\Users\JH\Desktop\Level2\jwp-blog\out\production\classes started by JH in C:\Users\JH\Desktop\Level2\jwp-blog)
+2827 [main] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+5185 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data repositories in DEFAULT mode.
+5470 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 267ms. Found 3 repository interfaces.
+6269 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b38a2296] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+7649 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+7678 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+7714 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+7715 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.21]
+8523 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+8524 [main] INFO  o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 5482 ms
+8867 [main] INFO  n.r.s.b.l.a.LogbackAccessContext - Configured the Logback-access: context=[default], config=[classpath:logback-access.xml]
+9309 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+9877 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+10169 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+10468 [main] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.3.10.Final}
+10474 [main] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+11020 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+11781 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+15929 [main] INFO  o.h.t.s.internal.SchemaCreatorImpl - HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@46fa2a7e'
+15935 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+18402 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+18562 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+18959 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+19360 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+19434 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+19441 [main] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 18.118 seconds (JVM running for 21.369)
+42597 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+42599 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+42631 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 32 ms
+49724 [http-nio-8080-exec-7] INFO  o.h.h.i.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
+51493 [http-nio-8080-exec-7] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [1,264] milliseconds.
+58903 [http-nio-8080-exec-1] INFO  t.m.a.service.ArticleService - Article{id=null, title='qwer', coverUrl='', contents='asdf', author='User{id : 2 email : easy@gmail.com}'}
+2945 [main] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on DESKTOP-2HMBVFM with PID 16900 (C:\Users\JH\Desktop\Level2\jwp-blog\out\production\classes started by JH in C:\Users\JH\Desktop\Level2\jwp-blog)
+2957 [main] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+5115 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data repositories in DEFAULT mode.
+5366 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 235ms. Found 3 repository interfaces.
+6321 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$fa26c7bc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+7740 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+7815 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+7884 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+7885 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.21]
+8638 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+8639 [main] INFO  o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 5562 ms
+8922 [main] INFO  n.r.s.b.l.a.LogbackAccessContext - Configured the Logback-access: context=[default], config=[classpath:logback-access.xml]
+9335 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+9792 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+10066 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+10357 [main] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.3.10.Final}
+10362 [main] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+10974 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+11750 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+15499 [main] INFO  o.h.t.s.internal.SchemaCreatorImpl - HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@23358740'
+15507 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+17887 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+18049 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+18369 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+18844 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+18915 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+18922 [main] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 17.53 seconds (JVM running for 20.735)
+29414 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+29416 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+29450 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 34 ms
+35407 [http-nio-8080-exec-2] INFO  o.h.h.i.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
+37217 [http-nio-8080-exec-2] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [1,281] milliseconds.
+47774 [http-nio-8080-exec-6] INFO  t.m.a.service.ArticleService - Article{id=null, title='rrr', coverUrl='', contents='aa', author='User{id : 2 email : easy@gmail.com}'}
+2699 [main] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on DESKTOP-2HMBVFM with PID 16832 (C:\Users\JH\Desktop\Level2\jwp-blog\out\production\classes started by JH in C:\Users\JH\Desktop\Level2\jwp-blog)
+2707 [main] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+4866 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data repositories in DEFAULT mode.
+5091 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 209ms. Found 3 repository interfaces.
+5792 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$1a7bb5cd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+7553 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+7619 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+7659 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+7660 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.21]
+8440 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+8441 [main] INFO  o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 5451 ms
+8793 [main] INFO  n.r.s.b.l.a.LogbackAccessContext - Configured the Logback-access: context=[default], config=[classpath:logback-access.xml]
+9218 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+9760 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+10051 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+10275 [main] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.3.10.Final}
+10280 [main] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+10861 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+11624 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+15554 [main] INFO  o.h.t.s.internal.SchemaCreatorImpl - HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@6ab1f85b'
+15562 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+17902 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+18073 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+18409 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+18814 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+18875 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+18882 [main] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 17.686 seconds (JVM running for 21.046)
+29274 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+29276 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+29308 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 31 ms
+42123 [http-nio-8080-exec-3] INFO  o.h.h.i.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
+43959 [http-nio-8080-exec-3] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [1,293] milliseconds.
+53564 [http-nio-8080-exec-7] INFO  t.m.a.service.ArticleService - Article{id=null, title='eas', coverUrl='', contents='y', author='User{id : 2 email : easy@gmail.com}'}
+2414 [main] INFO  techcourse.myblog.MyblogApplication - Starting MyblogApplication on DESKTOP-2HMBVFM with PID 6192 (C:\Users\JH\Desktop\Level2\jwp-blog\out\production\classes started by JH in C:\Users\JH\Desktop\Level2\jwp-blog)
+2422 [main] INFO  techcourse.myblog.MyblogApplication - No active profile set, falling back to default profiles: default
+4509 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data repositories in DEFAULT mode.
+4740 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 215ms. Found 3 repository interfaces.
+5591 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$dfe19409] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+6975 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+7038 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+7071 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+7072 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.21]
+7911 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+7912 [main] INFO  o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 5316 ms
+8236 [main] INFO  n.r.s.b.l.a.LogbackAccessContext - Configured the Logback-access: context=[default], config=[classpath:logback-access.xml]
+8704 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+9202 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+9427 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+9656 [main] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.3.10.Final}
+9660 [main] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+10221 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+10970 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+15046 [main] INFO  o.h.t.s.internal.SchemaCreatorImpl - HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@7438c3d5'
+15052 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+17366 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+17522 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+17908 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+18342 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+18411 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+18417 [main] INFO  techcourse.myblog.MyblogApplication - Started MyblogApplication in 17.213 seconds (JVM running for 20.312)
+25072 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+25074 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+25108 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 34 ms
+26657 [http-nio-8080-exec-1] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [1,418] milliseconds.
+26845 [http-nio-8080-exec-1] INFO  o.h.h.i.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
+49681 [http-nio-8080-exec-7] INFO  t.m.a.service.ArticleService - Article{id=null, title='ra', coverUrl='', contents='qwer', author='User{id : 2 email : easy@gmail.com}'}

@@ -236,8 +236,8 @@
                 "Content-Type": "application/json; charset=UTF-8"
             }
         })
-        const comment = await res.json()
-        document.getElementById("comment-list").insertAdjacentHTML("beforeend", commentItemTemplate(comment))
+        const result = await res.json()
+        document.getElementById("comment-list").insertAdjacentHTML("beforeend", commentItemTemplate(result.data))
         editor.setValue('')
     }
 
@@ -252,11 +252,16 @@
                 "Content-Type": "application/json; charset=UTF-8"
             }
         })
-        const comment = await res.json()
-        const original = document.getElementById("content-input-" + id).parentNode.parentNode
-        original.insertAdjacentHTML("afterend", commentItemTemplate(comment))
-        original.remove()
-        $('#exampleModal').modal('hide')
+        const result = await res.json()
+        if(result.success) {
+            const original = document.getElementById("content-input-" + id).parentNode.parentNode
+            original.insertAdjacentHTML("afterend", commentItemTemplate(reslut.data))
+            original.remove()
+            $('#exampleModal').modal('hide')
+        }
+        else {
+            alert(result.message)
+        }
     }
 
     const deleteComment = async id => {
@@ -264,9 +269,13 @@
         const res = await fetch(url, {
             method: "DELETE"
         })
-        const isSucceeded = await res
-        if(isSucceeded) {
+        const result = await res.json()
+        console.log(result)
+        if(result.success) {
             document.getElementById("comment-contents-" + id).parentNode.parentNode.remove()
+        }
+        else{
+            alert(result.message)
         }
     }
 </script>
