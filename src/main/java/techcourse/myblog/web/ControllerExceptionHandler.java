@@ -30,6 +30,7 @@ public class ControllerExceptionHandler {
     public RedirectView duplicateEmailException(DuplicateEmailException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", true);
         redirectAttributes.addFlashAttribute("message", e.getMessage());
+        log.debug("e.errorMessage: {}", e.getMessage());
         return new RedirectView("/signup");
     }
 
@@ -37,6 +38,7 @@ public class ControllerExceptionHandler {
     public String userNotFoundException(UserNotFoundException e, Model model) {
         model.addAttribute("error", true);
         model.addAttribute("message", e.getMessage());
+        log.debug("e.errorMessage: {}", e.getMessage());
         return "/login";
     }
 
@@ -44,16 +46,19 @@ public class ControllerExceptionHandler {
     public String misMatchPasswordException(MisMatchPasswordException e, Model model) {
         model.addAttribute("error", true);
         model.addAttribute("message", e.getMessage());
+        log.debug("e.errorMessage: {}", e.getMessage());
         return "/login";
     }
 
     @ExceptionHandler(ArticleNotFoundException.class)
     public String articleNotFoundException(ArticleNotFoundException e, Model model) {
+        log.debug("e.errorMessage: {}", e.getMessage());
         return "redirect:/";
     }
 
     @ExceptionHandler(InvalidAccessException.class)
     public RedirectView invalidAccessException(InvalidAccessException e, HttpServletRequest request) {
+        log.debug("e.errorMessage: {}", e.getMessage());
         String url = request.getRequestURL().toString();
         url = url.replace("/edit", "");
         if (url.contains("comments")) {

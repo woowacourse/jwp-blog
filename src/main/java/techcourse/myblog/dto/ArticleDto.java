@@ -1,5 +1,6 @@
 package techcourse.myblog.dto;
 
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
@@ -7,6 +8,7 @@ import techcourse.myblog.domain.User;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@ToString
 public class ArticleDto {
     private static final String CONTENTS_BLANK_ERROR = "내용을 입력해주세요.";
     private static final String TITLE_BLANK_ERROR = "제목을 입력해주세요.";

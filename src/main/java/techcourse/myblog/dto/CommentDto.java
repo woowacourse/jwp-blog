@@ -1,25 +1,36 @@
 package techcourse.myblog.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import techcourse.myblog.domain.User;
 
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+
+@Setter
+@Getter
+@ToString
 public class CommentDto {
+    @NotBlank
+    private long id;
+
     @NotBlank
     private String contents;
 
-    @NotNull
-    private long articleId;
+    @NotBlank
+    private LocalDateTime updatedDate;
 
-    public CommentDto(@NotBlank String contents, @NotNull long articleId) {
+    @NotBlank
+    private User author;
+
+    public CommentDto() {
+    }
+
+    public CommentDto(@NotBlank long id, @NotBlank String contents, @NotBlank LocalDateTime updatedDate, @NotBlank User author) {
+        this.id = id;
         this.contents = contents;
-        this.articleId = articleId;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public long getArticleId() {
-        return articleId;
+        this.updatedDate = updatedDate;
+        this.author = author;
     }
 }

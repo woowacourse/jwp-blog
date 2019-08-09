@@ -9,7 +9,6 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.annotation.LoginUser;
 
 import javax.validation.Valid;
@@ -18,34 +17,36 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private static final String USER = "user";
     private static final String ARTICLE = "article";
+    private static final String REDIRECT_ARTICLES = "redirect:/articles/";
 
     private final ArticleService articleService;
-    private final CommentService commentService;
 
     @Autowired
-    public ArticleController(ArticleService articleService, CommentService commentService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.commentService = commentService;
     }
 
     @PostMapping("")
     public String createArticle(@Valid ArticleDto newArticleDto, @LoginUser User loginUser) {
+        log.info("user : {}", loginUser);
+        log.info("new ArticleData : {}", newArticleDto);
         Article article = articleService.save(newArticleDto.toEntity(loginUser));
-        return "redirect:/articles/" + article.getId();
+        return REDIRECT_ARTICLES + article.getId();
     }
 
     @GetMapping("/{articleId}")
     public String selectArticle(@PathVariable long articleId, Model model) {
+        log.info("articleId : {}", articleId);
         Article article = articleService.findById(articleId);
         model.addAttribute(ARTICLE, article);
-        model.addAttribute("comments", commentService.findByArticle(article));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String moveArticleEditPage(@PathVariable long articleId, Model model, @LoginUser User loginUser) {
+        log.info("articleId : {}", articleId);
+        log.info("user : {}", loginUser);
         Article article = articleService.findById(articleId, loginUser.getId());
         model.addAttribute(ARTICLE, article);
         return "article-edit";
@@ -53,13 +54,18 @@ public class ArticleController {
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable long articleId, @Valid ArticleDto updateArticleDto, @LoginUser User loginUser, Model model) {
+        log.info("user : {}", loginUser);
+        log.info("articleId : {}", articleId);
+        log.info("updatedArticleDto : {}", updateArticleDto);
         Article updateArticle = articleService.update(articleId, updateArticleDto.toEntity(loginUser));
         model.addAttribute(ARTICLE, updateArticle);
-        return "redirect:/articles/" + updateArticle.getId();
+        return REDIRECT_ARTICLES + updateArticle.getId();
     }
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId, @LoginUser User loginUser) {
+        log.info("articleId : {}", articleId);
+        log.info("user : {}", loginUser);
         Article article = articleService.findById(articleId, loginUser.getId());
         articleService.deleteById(article.getId());
         return "redirect:/";

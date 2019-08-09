@@ -14,7 +14,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -23,7 +22,10 @@ dependencies {
 
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     runtimeOnly 'mysql:mysql-connector-java'
-    
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
@@ -31,4 +33,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
     testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.2"
     testImplementation 'com.h2database:h2:1.4.194'
+
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
 }

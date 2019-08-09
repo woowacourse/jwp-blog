@@ -29,7 +29,6 @@ public class UserControllerTests extends AuthedWebTestClient {
     private static final String LOCATION = "Location";
     private static final String UPDATE_URL = "/users/update/";
     private static final String DELETE_URL = "/users/delete/";
-    private static final String LOGIN_URL = "/login";
     private static final String USERS_URL = "/users";
     private static final String JOIN_URL = "/signup";
     private static final String MY_PAGES_URL = "/mypages/";
@@ -101,7 +100,6 @@ public class UserControllerTests extends AuthedWebTestClient {
     void mypage_업데이트() {
         webTestClient.put().uri(UPDATE_URL + userId)
                 .cookie(JSESSIONID, getResponseCookie(TEST_EMAIL, TEST_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData(NAME, TEST_NAME))
                 .exchange()
                 .expectStatus().is3xxRedirection()
