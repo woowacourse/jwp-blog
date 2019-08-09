@@ -79,21 +79,31 @@
 ### 회원 수정
 - [X] ``GET /mypage`` 로 요청시 회원 정보 페이지로 이동 (200 OK)
 - [X] ``GET /mypage/edit`` 로 요청시 회원정보 수정페이지로 이동 (200 OK)
-- [X] ``POST /mypage``로 요청시 회원 정보 수정하고 ``GET /mypage`` 로 redirect  
-- [ ] 회원 정보 수정 테스트 코드!
+- [X] ``POST /mypage``로 요청시 회원 정보 수정하고 ``GET /mypage`` 로 redirect
 
 ### 회원 탈퇴
 - [X] MyPage > profile 하단 > 탈퇴 버튼 추가
 - [X] 탈퇴버튼 클릭시 ``DELETE /users`` 로 요청 ~ 탈퇴 처리 후 ``GET /`` 로 redirect
 
 ### 게시글 수정
-- [ ] 작성자만 게시글 수정 가능하도록 하기
+- [X] 작성자만 게시글 수정 가능하도록 하기
 - [X] 게시글 생성 시 사용자 정보 같이 저장하기
 - [X] 객체 연관관계 수정하기
 
 ### 댓글 등록 및 수정
 - [X] 댓글 생성 기능 구현 ``POST /comments/{article_id}``
 - [X] 댓글 조회 기능 구현 - CommentService
-- [ ] 댓글 수정 기능 구현 ``PUT /comments/{comment_id}``
+- [X] 댓글 수정 기능 구현 ``PUT /comments/{comment_id}``
 - [X] 댓글 삭제 기능 구현 ``DELETE /comments/{article_id}/{comment_id}``
-- [ ] 수정/삭제는 댓글 작성자만 가능
+- [X] 수정/삭제는 댓글 작성자만 가능
+
+### 비동기 통신&API / 댓글 추가 기능 구현
+- 댓글 기능을 비동기 방식으로 구현하기
+    - [X] 댓글 조회 비동기 방식으로 구현
+    - [X] 댓글 추가 비동기 방식으로 구현
+    - [X] 댓글 수정 비동기 방식으로 구현
+    - [X] 댓글 삭제 비동기 방식으로 구현
+- [ ] Script를 활용하여 자동 배포하기
+- [ ] RollingFileAppender를 이용하여 배포한 서버의 로그를 저장하기
+- [X] application.properties 를 application.yml 로 변경하기
+- [X] Test Code 를 RestAssured 로 작성하기

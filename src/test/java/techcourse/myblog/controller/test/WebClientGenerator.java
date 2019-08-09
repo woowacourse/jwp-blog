@@ -52,6 +52,12 @@ public class WebClientGenerator {
                 .exchange();
     }
 
+    public MultiValueMap<String, ResponseCookie> getLoginCookie(UserDto userDto) {
+        return responseSpec(POST, "/login", parser(userDto))
+                .returnResult(Void.class)
+                .getResponseCookies();
+    }
+
     private WebTestClient.RequestHeadersSpec<?> requestWithCookie(HttpMethod method, String uri, MultiValueMap<String, String> data) {
         return webTestClient.method(method)
                 .uri(uri)

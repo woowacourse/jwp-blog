@@ -19,7 +19,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @EqualsAndHashCode
-public class Comment {
+public class Comment extends AbstractDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,12 +30,12 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User author;
+    @JoinColumn(name = "article_id")
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "article_id")
-    private Article article;
+    private User author;
 
     public Comment() {
     }
@@ -55,6 +55,7 @@ public class Comment {
         return this;
     }
 
+    @Override
     public boolean isAuthorized(User user) {
         return this.author.equals(user);
     }

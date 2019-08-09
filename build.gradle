@@ -20,8 +20,14 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
+    testImplementation 'io.rest-assured:json-schema-validator:4.0.0'
+    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.199'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+    implementation 'io.rest-assured:json-path:4.0.0'
+    implementation 'io.rest-assured:xml-path:4.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-devtools'
