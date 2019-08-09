@@ -1,7 +1,5 @@
 package techcourse.myblog.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
@@ -27,23 +25,37 @@ public class CommentService {
         this.articleService = articleService;
     }
 
-    @Transactional
     public void addComment(CommentRequestDto commentRequestDto, long articleId, User user) {
         commentRepository.save(commentRequestDto.toComment(user, articleService.findById(articleId)));
     }
 
     @Transactional
-    public Comment update(long commentId, CommentRequestDto commentRequestDto) {
+    public long update(long commentId, CommentRequestDto commentRequestDto, User user) {
+        validateCommenter(commentId, user);
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.update(commentRequestDto.toComment());
-        return comment;
+        return comment.getArticle().getId();
     }
 
-    public Comment save(Comment newComment) {
-        return commentRepository.save(newComment);
+    public void save(Comment newComment) {
+        commentRepository.save(newComment);
     }
 
-    public List<Comment> findByArticle(Article article) {
+    public long delete(long commentId, User user) {
+        long articleId = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new).getArticle().getId();
+        validateCommenter(commentId, user);
+        commentRepository.deleteById(commentId);
+        return articleId;
+    }
+
+    public List<CommentResponseDto> findAllByArticleId(long articleId) {
+        return findAllByArticle(articleService.findById(articleId))
+                .stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<Comment> findAllByArticle(Article article) {
         return Collections.unmodifiableList(commentRepository.findAllByArticleOrderByCreatedAt(article));
     }
 
@@ -53,46 +65,10 @@ public class CommentService {
                 .collect(Collectors.toList()));
     }
 
-    public void deleteById(long commentId) {
-        commentRepository.deleteById(commentId);
-    }
-
-    public List<CommentResponseDto> findAllByArticleId(long articleId) {
-        return findByArticle(articleService.findById(articleId))
-                .stream()
-                .map(CommentResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    public void validateCommenter(long commentId, User commenter) {
+    private void validateCommenter(long commentId, User commenter) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         if (!comment.writtenBy(commenter)) {
             throw new CommenterMismatchException();
         }
-    }
-
-    public ResponseEntity<List<CommentResponseDto>> makeResponseWithCommentsOf(long articleId) {
-        return new ResponseEntity<>(findAllByArticleId(articleId), HttpStatus.OK);
-    }
-
-    public long getArticleIdOf(long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-        return comment.getArticle().getId();
-    }
-
-    @Transactional
-    public ResponseEntity<List<CommentResponseDto>> updateAndMakeResponseWithCommentsOf(long commentId, CommentRequestDto commentRequestDto, User user) {
-        long articleId = getArticleIdOf(commentId);
-        validateCommenter(commentId, user);
-        update(commentId, commentRequestDto);
-        return makeResponseWithCommentsOf(articleId);
-    }
-
-    @Transactional
-    public ResponseEntity<List<CommentResponseDto>> deleteAndMakeResponseWithCommentsOf(long commentId, User user) {
-        long articleId = getArticleIdOf(commentId);
-        validateCommenter(commentId, user);
-        deleteById(commentId);
-        return makeResponseWithCommentsOf(articleId);
     }
 }

@@ -30,8 +30,8 @@ public class CommentController {
         return "redirect:/articles/" + comment.getArticle().getId();
     }
 
-    @PutMapping("/{commentId}")
-    public String processUpdateComment(@PathVariable long commentId, CommentRequestDto commentRequestDto) {
-        return "redirect:/articles/" + commentService.update(commentId, commentRequestDto).getArticle().getId();
-    }
+//    @PutMapping("/{commentId}")
+//    public String processUpdateComment(@PathVariable long commentId, CommentRequestDto commentRequestDto) {
+//        return "redirect:/articles/" + commentService.update(commentId, commentRequestDto).getArticle().getId();
+//    }
 }

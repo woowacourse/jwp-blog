@@ -25,7 +25,7 @@ public class RestCommentController {
 
     @GetMapping("/articles/{articleId}/comments")
     public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable long articleId) {
-        return commentService.makeResponseWithCommentsOf(articleId);
+        return ResponseEntity.ok(commentService.findAllByArticleId(articleId));
     }
 
     @PostMapping("/articles/{articleId}/comments")
@@ -33,25 +33,26 @@ public class RestCommentController {
                                                                   @RequestBody CommentRequestDto commentRequestDto,
                                                                   @LoggedInUser User user) {
         commentService.addComment(commentRequestDto, articleId, user);
-        return commentService.makeResponseWithCommentsOf(articleId);
+        return ResponseEntity.ok(commentService.findAllByArticleId(articleId));
     }
 
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<List<CommentResponseDto>> updateComment(@PathVariable long commentId,
                                                                   @RequestBody CommentRequestDto commentRequestDto,
                                                                   @LoggedInUser User user) {
-        return commentService.updateAndMakeResponseWithCommentsOf(commentId, commentRequestDto, user);
+        long articleId = commentService.update(commentId, commentRequestDto, user);
+        return ResponseEntity.ok(commentService.findAllByArticleId(articleId));
     }
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<List<CommentResponseDto>> deleteComment(@PathVariable long commentId,
                                                                   @LoggedInUser User user) {
-        return commentService.deleteAndMakeResponseWithCommentsOf(commentId, user);
+        long articleId = commentService.delete(commentId, user);
+        return ResponseEntity.ok(commentService.findAllByArticleId(articleId));
     }
 
     @ExceptionHandler(CommenterMismatchException.class)
     public ResponseEntity<String> handleCommenterMismatchException() {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
-
 }

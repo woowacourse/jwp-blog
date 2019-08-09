@@ -64,7 +64,7 @@ public class ArticleController {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
         model.addAttribute("comments",
-                commentService.commentsToDtos(commentService.findByArticle(article)));
+                commentService.commentsToDtos(commentService.findAllByArticle(article)));
         return "article";
     }
 
@@ -88,7 +88,6 @@ public class ArticleController {
         commentService.save(newComment);
         return "redirect:/articles/" + articleId;
     }
-
 
     @ExceptionHandler(BindException.class)
     public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
