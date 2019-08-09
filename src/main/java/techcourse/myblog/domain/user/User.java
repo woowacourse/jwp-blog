@@ -2,13 +2,10 @@ package techcourse.myblog.domain.user;
 
 import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.domain.BaseTimeEntity;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.exception.UserArgumentException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -44,12 +41,6 @@ public class User extends BaseTimeEntity {
     @Length(min = MIN_PASSWORD_LENGTH)
     @javax.validation.constraints.Pattern(regexp = PASSWORD_REGEX)
     private String password;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Article> articles;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
 
     protected User() {
     }

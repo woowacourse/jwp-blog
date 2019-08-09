@@ -1,11 +1,11 @@
 package techcourse.myblog.domain.article;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.domain.BaseTimeEntity;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Article extends BaseTimeEntity {
@@ -27,10 +27,8 @@ public class Article extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
 
     protected Article() {
     }

@@ -1,5 +1,7 @@
 package techcourse.myblog.domain.comment;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.domain.BaseTimeEntity;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
@@ -20,10 +22,12 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_comment_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "FK_comment_to_article"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     private Comment() {
