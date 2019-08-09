@@ -79,4 +79,18 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         return comment.getArticle().getId();
     }
+
+    public ResponseEntity<List<CommentResponseDto>> updateAndMakeResponseWithCommentsOf(long commentId, CommentRequestDto commentRequestDto, User user) {
+        long articleId = getArticleIdOf(commentId);
+        validateCommenter(commentId, user);
+        update(commentId, commentRequestDto);
+        return makeResponseWithCommentsOf(articleId);
+    }
+
+    public ResponseEntity<List<CommentResponseDto>> deleteAndMakeResponseWithCommentsOf(long commentId, User user) {
+        long articleId = getArticleIdOf(commentId);
+        validateCommenter(commentId, user);
+        deleteById(commentId);
+        return makeResponseWithCommentsOf(articleId);
+    }
 }

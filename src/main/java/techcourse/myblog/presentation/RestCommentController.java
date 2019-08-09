@@ -40,19 +40,13 @@ public class RestCommentController {
     public ResponseEntity<List<CommentResponseDto>> updateComment(@PathVariable long commentId,
                                                                   @RequestBody CommentRequestDto commentRequestDto,
                                                                   @LoggedInUser User user) {
-        long articleId = commentService.getArticleIdOf(commentId);
-        commentService.validateCommenter(commentId, user);
-        commentService.update(commentId, commentRequestDto);
-        return commentService.makeResponseWithCommentsOf(articleId);
+        return commentService.updateAndMakeResponseWithCommentsOf(commentId, commentRequestDto, user);
     }
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<List<CommentResponseDto>> deleteComment(@PathVariable long commentId,
                                                                   @LoggedInUser User user) {
-        long articleId = commentService.getArticleIdOf(commentId);
-        commentService.validateCommenter(commentId, user);
-        commentService.deleteById(commentId);
-        return commentService.makeResponseWithCommentsOf(articleId);
+        return commentService.deleteAndMakeResponseWithCommentsOf(commentId, user);
     }
 
     @ExceptionHandler(CommenterMismatchException.class)
