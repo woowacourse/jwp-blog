@@ -8,8 +8,8 @@ services:
     volumes: 
       - ./log:/var/log/app
     links: 
-      - my-db:db
-  mysql:
+      - blog-db:db
+  blog-db:
     image: mysql:8.0.16
     container_name: my-db
     volumes:
