@@ -1,7 +1,5 @@
 package techcourse.myblog.dto;
 
-import techcourse.myblog.domain.comment.Comment;
-
 import java.util.List;
 
 public class ArticleResponseDto {
@@ -9,7 +7,7 @@ public class ArticleResponseDto {
     private String title;
     private String contents;
     private String coverUrl;
-    private List<Comment> comments;
+    private List<CommentResponseDto> comments;
 
     public ArticleResponseDto() {
     }
@@ -46,11 +44,11 @@ public class ArticleResponseDto {
         this.coverUrl = coverUrl;
     }
 
-    public List<Comment> getComments() {
+    public List<CommentResponseDto> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(List<CommentResponseDto> comments) {
         this.comments = comments;
     }
 }

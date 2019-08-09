@@ -60,7 +60,7 @@
                             <img alt="" class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4">
                             <div class="info">
-                                <span class="text-bold inline-block" th:text="${comment.getAuthor().getName()}"></span>
+                                <span class="text-bold inline-block" th:text="${comment.getAuthor()}"></span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                         <span th:text="${comment.modifiedDate}"></span>
@@ -125,6 +125,7 @@
         },
         height: '200px'
     });
+
 
 
 
