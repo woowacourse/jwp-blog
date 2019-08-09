@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+    compile group: 'log4j', name: 'apache-log4j-extras', version: '1.0'
     implementation 'org.mockito:mockito-junit-jupiter:3.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
