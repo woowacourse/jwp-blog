@@ -33,6 +33,7 @@ public class ArticleController {
         ModelAndView modelAndView = new ModelAndView("/article");
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("comments", commentService.findAllCommentsByArticleId(articleId, email.getEmail()));
+        modelAndView.addObject("sessionEmail", email.getEmail());
         return modelAndView;
     }
 

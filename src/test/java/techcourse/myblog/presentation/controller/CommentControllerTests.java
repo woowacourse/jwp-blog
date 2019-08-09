@@ -2,7 +2,10 @@ package techcourse.myblog.presentation.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.application.dto.CommentJsonDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTests extends BasicControllerTests {
@@ -82,18 +85,60 @@ public class CommentControllerTests extends BasicControllerTests {
     }
 
     @Test
-    void update_when_different_person_login() {
-        prepareTestForComment();
-        sessionId = logInAndGetSessionIdDiff();
-
-        webTestClient.put().uri(articleUri+"/comments/" + ID)
+    void create_ajax_comment_test() {
+        registerUser();
+        sessionId = logInAndGetSessionId();
+        result = writeArticle(sessionId);
+        articleUri = result.getResponseHeaders().getLocation().getPath();
+        CommentJsonDto commentJsonDto = new CommentJsonDto("hard@gmail.com", "777", 2L, null, null);
+        webTestClient.post().uri(articleUri + "/jsoncomments")
                 .header("Cookie", sessionId)
-                .body(BodyInserters.fromFormData("contents", "7788"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentJsonDto), CommentJsonDto.class)
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection();
+                .isOk()
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.email").isEqualTo("hard@gmail.com")
+                .jsonPath("$.contents").isEqualTo("777")
+                .jsonPath("$.articleId").isEqualTo("2");
+    }
 
-        checkTestPass("7788", false);
-        finishTestForComment();
+    @Test
+    void update_ajax_comment_test() {
+        registerUser();
+        sessionId = logInAndGetSessionId();
+        result = writeArticle(sessionId);
+        articleUri = result.getResponseHeaders().getLocation().getPath();
+        CommentJsonDto commentJsonDto = new CommentJsonDto("hard@gmail.com", "777", 2L, null, true);
+        webTestClient.post().uri(articleUri + "/jsoncomments")
+                .header("Cookie", sessionId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentJsonDto), CommentJsonDto.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        CommentJsonDto expectUpdateCommentJsonDto = new CommentJsonDto("hard@gmail.com", "8888", 2L, 3L, true);
+        System.out.println(articleUri);
+        webTestClient.put().uri(articleUri + "/jsoncomments/1")
+                .header("Cookie", sessionId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(expectUpdateCommentJsonDto), CommentJsonDto.class)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.email").isEqualTo("hard@gmail.com")
+                .jsonPath("$.contents").isEqualTo("8888")
+                .jsonPath("$.articleId").isEqualTo(2L)
+                .jsonPath("$.id").isEqualTo(3L);
     }
 }

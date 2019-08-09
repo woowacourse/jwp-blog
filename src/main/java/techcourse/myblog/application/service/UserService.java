@@ -73,4 +73,8 @@ public class UserService {
     public void removeByEmail(String email) {
         userRepository.deleteByEmail(email);
     }
+
+    public Boolean checkValidity(String commentUserEmail, String loginUserEmail) {
+        return findUserByEmail(loginUserEmail).isMatchEmail(commentUserEmail);
+    }
 }

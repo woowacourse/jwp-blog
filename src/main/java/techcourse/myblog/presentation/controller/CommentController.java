@@ -1,14 +1,15 @@
 package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.annotation.EmailAnnot;
+import techcourse.myblog.application.dto.CommentJsonDto;
+import techcourse.myblog.application.dto.UpdateCommentJsonDto;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.Email;
 import techcourse.myblog.domain.vo.CommentContents;
@@ -43,5 +44,25 @@ public class CommentController {
         commentService.checkAuthor(commentId, email.getEmail());
         commentService.modify(commentId, commentContents);
         return new RedirectView("/articles/"+articleId);
+    }
+
+    @PostMapping("/articles/{articleId}/jsoncomments")
+    @ResponseBody
+    public CommentJsonDto saveComment(@RequestBody CommentJsonDto commentJsonDto, @EmailAnnot Email email) {
+        CommentJsonDto responseCommentJsonDto = commentService.saveJson(commentJsonDto, email.getEmail());
+        return responseCommentJsonDto;
+    }
+    @PutMapping("/articles/{articleId}/jsoncomments/{updateCommentId}")
+    @ResponseBody
+    public UpdateCommentJsonDto updateComment(@RequestBody CommentJsonDto commentJsonDto){
+        UpdateCommentJsonDto responseUpdateCommentJsonDto = commentService.update(commentJsonDto);
+        return responseUpdateCommentJsonDto;
+    }
+
+    @DeleteMapping("/articles/{articleId}/jsoncomments/{deleteCommentId}")
+    @ResponseBody
+    public ResponseEntity deleteComment(@RequestBody CommentJsonDto commentJsonDto){
+        commentService.delete(commentJsonDto.getId());
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

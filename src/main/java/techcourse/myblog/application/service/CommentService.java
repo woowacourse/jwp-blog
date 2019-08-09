@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.converter.CommentConverter;
 import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentJsonDto;
+import techcourse.myblog.application.dto.UpdateCommentJsonDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
@@ -61,8 +63,32 @@ public class CommentService {
     public void checkAuthor(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
         User author = comment.getAuthor();
-        if (!author.compareEmail(email)) {
+        if (!author.isNotMatchEmail(email)) {
             throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
         }
     }
+
+    public CommentJsonDto saveJson(CommentJsonDto commentJsonDto,String loginUserEmail) {
+        Boolean isValidUser = userService.checkValidity(commentJsonDto.getEmail(), loginUserEmail);
+
+        User commentUser = userService.findUserByEmail(commentJsonDto.getEmail());
+
+        Article article = articleService.findById(commentJsonDto.getArticleId());
+        Comment savedComment = commentRepository.save(commentConverter.toEntity(commentJsonDto.getContents(),
+                commentUser, article));
+
+        return commentConverter.toCommentJsonDto(savedComment, isValidUser);
+    }
+
+    @Transactional
+    public UpdateCommentJsonDto update(CommentJsonDto commentJsonDto) {
+        Comment comment = commentRepository.findById(commentJsonDto.getId())
+                .orElseThrow(IllegalArgumentException::new);
+        if(comment.isNotValidCommenter(commentJsonDto.getEmail())){
+            throw new IllegalArgumentException("댓글 작성자가 아닙니다.");
+        }
+        comment.changeContent(new CommentContents(commentJsonDto.getContents()));
+        return commentConverter.toUpdateCommentJsonDto(comment);
+    }
+
 }

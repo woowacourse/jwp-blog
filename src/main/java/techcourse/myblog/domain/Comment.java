@@ -43,8 +43,16 @@ public class Comment {
         return commentContents;
     }
 
+    public String getCommentContents() {
+        return commentContents.getContents();
+    }
+
     public User getAuthor() {
         return author;
+    }
+
+    public String getUserEmail() {
+        return author.getEmail();
     }
 
     public Article getArticle() {
@@ -71,5 +79,13 @@ public class Comment {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public Long getArticleId() {
+        return article.getId();
+    }
+
+    public boolean isNotValidCommenter(String email) {
+        return this.getAuthor().isNotMatchEmail(email);
     }
 }
