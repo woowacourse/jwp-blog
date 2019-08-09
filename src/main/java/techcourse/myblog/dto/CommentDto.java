@@ -1,6 +1,6 @@
 package techcourse.myblog.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,13 +8,14 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CommentDto {
 
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class Create {
         private Long articleId;
         private String contents;
@@ -31,6 +32,7 @@ public class CommentDto {
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class Update {
         private Long id;
         private Long articleId;
@@ -45,17 +47,19 @@ public class CommentDto {
 
     @Getter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response {
+        private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         private Long id;
         private String contents;
         private String name;
-        @JsonFormat(pattern = "yyyy-mm-dd HH:mm")
-        private LocalDateTime modifiedDate;
+        private String modifiedDate;
 
         Response(Comment comment) {
             this.id = comment.getId();
             this.contents = comment.getContents();
-            this.modifiedDate = comment.getModifiedDate();
+            this.modifiedDate = comment.getModifiedDate().format(DATE_TIME_FORMATTER);
             this.name = comment.getUser().getName();
         }
 
