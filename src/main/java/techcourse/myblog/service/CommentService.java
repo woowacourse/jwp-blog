@@ -8,10 +8,6 @@ import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 
 import java.util.Optional;
-<<<<<<< HEAD
-
-=======
->>>>>>> 6965e70b348d50fbf24db299dd625f4078160a6a
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
