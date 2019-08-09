@@ -12,12 +12,13 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.*;
 import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
-import static techcourse.myblog.utils.CommentTestObjects.COMMENT_DTO;
-import static techcourse.myblog.utils.CommentTestObjects.UPDATE_COMMENT_DTO;
+import static techcourse.myblog.utils.CommentTestObjects.*;
 import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
 class CommentControllerTests extends ControllerTestTemplate {
@@ -29,12 +30,40 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     private String savedArticleUrl;
     private CommentDto commentDto;
+    private Integer commentCount;
 
     @BeforeEach
     public void setup() {
         super.setup();
         savedArticleUrl = getRedirectUrl(loginAndRequestWithDataWriter(POST, "/articles/write", parseArticle(ARTICLE_DTO)));
         commentDto = COMMENT_DTO;
+        commentCount = 0;
+    }
+
+    @Test
+    void 댓글_조회() {
+        getCommentUrl(COMMENT_DTO);
+        getCommentUrl(COMMENT_DTO1);
+        getCommentUrl(COMMENT_DTO2);
+
+        loginAndRequest(GET, savedArticleUrl + "/comment", savedUserDto)
+                .isOk()
+                .expectBody()
+                .jsonPath("$[0].contents").isEqualTo("contents")
+                .jsonPath("$[0].writer.id").isEqualTo(savedUser.getId())
+                .jsonPath("$[0].writer.name").isEqualTo(savedUser.getName())
+                .jsonPath("$[0].writer.email").isEqualTo(savedUser.getEmail())
+
+                .jsonPath("$[1].contents").isEqualTo("contents1")
+                .jsonPath("$[1].writer.id").isEqualTo(savedUser.getId())
+                .jsonPath("$[1].writer.name").isEqualTo(savedUser.getName())
+                .jsonPath("$[1].writer.email").isEqualTo(savedUser.getEmail())
+
+                .jsonPath("$[2].contents").isEqualTo("contents2")
+                .jsonPath("$[2].writer.id").isEqualTo(savedUser.getId())
+                .jsonPath("$[2].writer.name").isEqualTo(savedUser.getName())
+                .jsonPath("$[2].writer.email").isEqualTo(savedUser.getEmail())
+        ;
     }
 
     @Test
@@ -54,18 +83,37 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃_상태_댓글삭제_리다이렉트() {
-        String deleteUrl = getCommentUrl();
+        String deleteUrl = getCommentUrl(COMMENT_DTO);
         String redirectUrl = getRedirectUrl(httpRequest(DELETE, deleteUrl));
         assertEquals("/login", redirectUrl);
     }
 
     @Test
     void 작성자_로그인_상태_댓글삭제_성공() {
-        loginAndRequestWithMonoData(DELETE, getCommentUrl(), HttpStatus.OK, COMMENT_DTO, savedUserDto)
+        getCommentUrl(COMMENT_DTO);
+        String commentUrl = getCommentUrl(COMMENT_DTO1);
+        getCommentUrl(COMMENT_DTO2);
+        loginAndRequestWithMonoData(DELETE, commentUrl, HttpStatus.OK, COMMENT_DTO, savedUserDto)
                 .consumeWith(response -> {
                     String result = new String(response.getResponseBody());
                     assertTrue(result.contains(DELETE_SUCCESS_MESSAGE));
                 });
+
+        loginAndRequest(GET, savedArticleUrl + "/comment", savedUserDto)
+                .isOk()
+                .expectBody()
+                .jsonPath("$[0].contents").isEqualTo(COMMENT_DTO.getContents())
+                .jsonPath("$[0].writer.id").isEqualTo(savedUser.getId())
+                .jsonPath("$[0].writer.name").isEqualTo(savedUser.getName())
+                .jsonPath("$[0].writer.email").isEqualTo(savedUser.getEmail())
+
+                .jsonPath("$[1].contents").isEqualTo(COMMENT_DTO2.getContents())
+                .jsonPath("$[1].writer.id").isEqualTo(savedUser.getId())
+                .jsonPath("$[1].writer.name").isEqualTo(savedUser.getName())
+                .jsonPath("$[1].writer.email").isEqualTo(savedUser.getEmail())
+
+                .jsonPath("$.size()").isEqualTo(commentCount - 1);
+
     }
 
     @Test
@@ -73,21 +121,21 @@ class CommentControllerTests extends ControllerTestTemplate {
         UserDto other = READER_DTO;
         userRepository.save(other.toUser());
 
-        loginAndRequestWithMonoData(DELETE, getCommentUrl(), HttpStatus.FORBIDDEN, COMMENT_DTO, other)
+        loginAndRequestWithMonoData(DELETE, getCommentUrl(COMMENT_DTO), HttpStatus.FORBIDDEN, COMMENT_DTO, other)
                 .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE);
     }
 
     @Test
     void 로그아웃_상태_댓글수정_리다이렉트() {
-        String commentUrl = getCommentUrl();
+        String commentUrl = getCommentUrl(COMMENT_DTO);
         String redirectUrl = getRedirectUrl(httpRequestWithData(PUT, commentUrl, parser(UPDATE_COMMENT_DTO)));
-    
+
         assertEquals("/login", redirectUrl);
     }
 
     @Test
     void 작성자_로그인_상태_댓글수정_성공() {
-        loginAndRequestWithMonoData(PUT, getCommentUrl(), HttpStatus.OK, UPDATE_COMMENT_DTO, savedUserDto)
+        loginAndRequestWithMonoData(PUT, getCommentUrl(COMMENT_DTO), HttpStatus.OK, UPDATE_COMMENT_DTO, savedUserDto)
                 .jsonPath("$.contents").isEqualTo("new-contents");
     }
 
@@ -96,15 +144,16 @@ class CommentControllerTests extends ControllerTestTemplate {
         UserDto other = READER_DTO;
         userRepository.save(other.toUser());
 
-        loginAndRequestWithMonoData(PUT, getCommentUrl(), HttpStatus.FORBIDDEN, UPDATE_COMMENT_DTO, other)
+        loginAndRequestWithMonoData(PUT, getCommentUrl(COMMENT_DTO), HttpStatus.FORBIDDEN, UPDATE_COMMENT_DTO, other)
                 .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE);
 
     }
 
-    private String getCommentUrl() {
-        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.CREATED, COMMENT_DTO, savedUserDto);
-
-        Comment comment = commentRepository.findAll().get(0);
+    private String getCommentUrl(CommentDto commentDto) {
+        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.CREATED, commentDto, savedUserDto);
+        List<Comment> comments = commentRepository.findAll();
+        Comment comment = comments.get(comments.size() - 1);
+        commentCount++;
 
         return "/articles/" + comment.getArticle().getId() + "/comment/" + comment.getId();
     }
