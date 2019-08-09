@@ -1,18 +1,17 @@
 package techcourse.myblog.web;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.UserService;
+
 import javax.servlet.http.HttpSession;
 
-@Controller
+@RestController
 public class CommentController {
     private final UserService userService;
     private final ArticleService articleService;
@@ -33,29 +32,41 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comment")
-    public RedirectView writeComment(@PathVariable long articleId, String contents, HttpSession session) {
-        commentService.write(articleService.maybeArticle(articleId).get(), getCurrentUser(session), contents);
-        return new RedirectView("/articles/" + articleId);
+    public ResponseEntity<CommentDTO> writeComment(@PathVariable long articleId, @RequestBody CommentDTO comment, HttpSession session) {
+        Comment written = commentService.write(
+                articleService.maybeArticle(articleId).get(), getCurrentUser(session), comment.getContents()
+        );
+        if (written != null) {
+            return new ResponseEntity<>(
+                    new CommentDTO(written.getId(), written.getAuthor().getName(), written.getContents(), written.getCreatedTimeAt()),
+                    HttpStatus.OK
+            );
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public RedirectView updateComment(
-            @PathVariable long articleId,
-            @PathVariable long commentId,
-            String contents,
-            HttpSession session
-    ) {
-        commentService.tryUpdate(commentId, contents, getCurrentUser(session));
-        return new RedirectView("/articles/" + articleId);
+    @GetMapping("/comment/{commentId}")
+    public ResponseEntity<CommentDTO> getComment(@PathVariable long commentId, HttpSession session) {
+        return commentService.find(commentId).map(comment ->
+            new ResponseEntity<>(
+                    new CommentDTO(commentId, comment.getAuthor().getName(), comment.getContents(), comment.getCreatedTimeAt()),
+                    HttpStatus.OK
+            )
+        ).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
-    public RedirectView deleteComment(
-            @PathVariable long articleId,
-            @PathVariable long commentId,
-            HttpSession session
-    ) {
+    @PutMapping("/comment/{commentId}")
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable long commentId, @RequestBody CommentDTO comment, HttpSession session) {
+        Comment written = commentService.tryUpdate(commentId, comment.getContents(), getCurrentUser(session));
+        return new ResponseEntity<>(
+                new CommentDTO(written.getId(), written.getAuthor().getName(), written.getContents(), written.getCreatedTimeAt()),
+                HttpStatus.OK
+        );
+    }
+
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable long commentId, HttpSession session) {
         commentService.delete(commentId, getCurrentUser(session));
-        return new RedirectView("/articles/" + articleId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
 

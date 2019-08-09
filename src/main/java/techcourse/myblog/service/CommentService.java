@@ -7,6 +7,7 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 
+import java.util.Optional;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -15,14 +16,19 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    public Optional<Comment> find(long id) {
+        return commentRepository.findById(id);
+    }
+
     public Comment write(Article article, User user, String contents) {
         return commentRepository.save(new Comment(article, user, contents));
     }
 
     @Transactional
-    public void tryUpdate(long commentId, String contents, User author) {
-        commentRepository.findById(commentId).filter(comment -> comment.isSameAuthor(author))
-                                            .ifPresent(comment -> comment.setContents(contents));
+    public Comment tryUpdate(long commentId, String contents, User author) {
+        return commentRepository.findById(commentId).filter(comment -> comment.isSameAuthor(author))
+                                                    .map(comment -> comment.setContents(contents))
+                                                    .orElse(null);
     }
 
     @Transactional
