@@ -5,6 +5,7 @@ cd app
 
 # Download docker-compose.yml
 wget -O - https://raw.githubusercontent.com/Laterality/jwp-blog/step4/docker-compose.yml > docker-compose.yml
+wget -O - https://raw.githubusercontent.com/Laterality/jwp-blog/step4/scripts/nginx.conf > nginx.conf
 
 docker-compose up -d
 
