@@ -55,9 +55,7 @@ public class CommentService {
 
     public boolean deleteById(long commentId, long authorId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
-        if (comment.notMatchAuthorId(authorId)) {
-            return false;
-        }
+        comment.deleteValidation(authorId);
         commentRepository.deleteById(commentId);
         return true;
     }

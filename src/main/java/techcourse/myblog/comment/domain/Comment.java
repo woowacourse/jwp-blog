@@ -40,15 +40,35 @@ public class Comment {
     }
 
     public Comment updateComment(String contents, long authorId) {
-        if (author.checkId(authorId)) {
+        if (checkAuthor(authorId)) {
             this.contents = contents;
             return this;
         }
         throw new NotMatchUserException(authorId);
     }
 
-    public boolean notMatchAuthorId(long authorId) {
-        return !author.checkId(authorId);
+    public boolean deleteValidation(long authorId) {
+        if (checkAuthor(authorId)) {
+            return true;
+        }
+        throw new NotMatchUserException(authorId);
+    }
+
+    public boolean checkAuthor(long authorId) {
+        return author.checkId(authorId);
+    }
+
+    public Comment updateComment2(String contents, long authorId) {
+        authorValidation(authorId);
+        this.contents = contents;
+        return this;
+    }
+
+    public boolean authorValidation(long authorId) {
+        if (author.checkId(authorId)) {
+            return true;
+        }
+        throw new NotMatchUserException(authorId);
     }
 
     public long getUserId() {

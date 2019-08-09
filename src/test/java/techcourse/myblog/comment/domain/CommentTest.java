@@ -41,6 +41,6 @@ public class CommentTest {
 
     @Test
     void checkPassword() {
-        assertFalse(comment.notMatchAuthorId(1));
+        assertFalse(comment.checkAuthor(1));
     }
 }
