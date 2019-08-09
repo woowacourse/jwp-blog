@@ -26,21 +26,18 @@
                             <div class="mx-auto full-height col-md-4">
                                 <div class="vertical-align full-height">
                                     <div class="table-cell padding-20">
-                                        <div th:if="${error} != null" class="alert alert-danger" th:text="${error.errorMessage}"></div>
+                                        <div class="none alert alert-danger"></div>
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
                                                         <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">로그인</h2>
                                                     </div>
-                                                    <form action="/login" method="post" th:object="${loginRequest}">
                                                         <div class="form-group">
-                                                            <input type="email" name="email" class="form-control" placeholder="Id" required th:field="*{email}">
-                                                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>
+                                                            <input type="email" name="email" class="form-control" placeholder="Id" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <input type="password" name="password" class="form-control" placeholder="Password" required th:field="*{password}">>
-                                                            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
+                                                            <input type="password" name="password" class="form-control" placeholder="Password" required>
                                                         </div>
                                                         <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                             <input id="agreement" name="agreement" type="checkbox">
@@ -50,9 +47,8 @@
                                                             <a href="">Forgot Password?</a>
                                                         </div>
                                                         <div class="mrg-top-20 text-right">
-                                                            <input type="submit" class="btn btn-tumblr">로그인</input>
+                                                            <input type="button" class="btn btn-tumblr" value="로그인"/>
                                                         </div>
-                                                    </form>
                                                     <div class="text-dark">
                                                         <span>아직 회원이 아니신가요?</span>
                                                         <a href="/signup" class="text-info pointer mrg-left-5">회원가입</a>
@@ -72,6 +68,28 @@
 </div>
 
 <th:block th:include="/fragments/main-js :: mainJs"/>
-
+<script>
+    document.querySelector('.card .card-body input.btn').addEventListener('click', () => {
+        const email = document.querySelector('input[type=email]').value;
+        const password = document.querySelector('input[type=password]').value;
+        fetch('/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password}),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            }
+        }).then(res => {
+           if (res.status === 200) {
+               window.location.href = res.headers.get('Location');
+               return;
+           }
+           return res.json();
+        }).then(json => {
+            const alertElm = document.querySelector('.alert.alert-danger');
+            alertElm.innerText = json.message;
+            alertElm.classList.remove('none');
+        });
+    })
+</script>
 </body>
 </html>

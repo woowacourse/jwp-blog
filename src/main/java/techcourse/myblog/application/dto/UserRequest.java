@@ -1,7 +1,5 @@
 package techcourse.myblog.application.dto;
 
-import techcourse.myblog.support.validator.EmailConstraint;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,7 +12,6 @@ public class UserRequest {
 
     @NotBlank(message = "이메일을 작성해주세요!")
     @Email(message = "이메일 양식을 지켜주세요!")
-    @EmailConstraint
     private String email;
 
     @NotBlank(message = "비밀번호를 작성해주세요!")

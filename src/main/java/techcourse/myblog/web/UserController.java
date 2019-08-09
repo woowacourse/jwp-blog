@@ -3,7 +3,10 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.application.UserService;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserEditRequest;
@@ -47,7 +50,11 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String showUsers(Model model) {
+    public String showUsers(Model model, HttpSession httpSession) {
+        if (httpSession.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
         model.addAttribute(USERS_INFO, userService.findAll());
 
         return "user-list";
@@ -65,17 +72,6 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PostMapping("/login")
-    public String login(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpSession httpSession) {
-        if (bindingResult.hasErrors()) {
-            return "login";
-        }
-
-        httpSession.setAttribute(USER_INFO, userService.checkLogin(loginRequest));
-
-        return "redirect:/";
-    }
-
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         request.getSession().removeAttribute(USER_INFO);
@@ -83,15 +79,6 @@ public class UserController {
         return "redirect:/";
     }
 
-    @PutMapping("/users/{userId}")
-    public String editUser(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest, BindingResult bindingResult, HttpServletRequest request) {
-        if (bindingResult.hasErrors()) {
-            return "mypage-edit";
-        }
-        request.getSession().setAttribute(USER_INFO, userService.editUserName(userId, userEditRequest.getName()));
-
-        return "redirect:/";
-    }
 
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId, HttpServletRequest request) {

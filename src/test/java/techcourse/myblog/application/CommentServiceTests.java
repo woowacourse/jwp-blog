@@ -8,10 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.CommentRequest;
 import techcourse.myblog.application.dto.UserResponse;
-import techcourse.myblog.application.exception.CommentNotFoundException;
-import techcourse.myblog.application.exception.NoArticleException;
-import techcourse.myblog.application.exception.NoUserException;
-import techcourse.myblog.application.exception.NotSameAuthorException;
+import techcourse.myblog.application.exception.*;
 import techcourse.myblog.domain.*;
 
 import java.util.Arrays;
@@ -31,6 +28,7 @@ public class CommentServiceTests {
     private static final String NAME = "bmo";
     private static final String EMAIL = "bmo@gmail.com";
     private static final long NOT_AUTHOR_USER_ID = 2L;
+    private static final String BLANK = " ";
 
 
     @InjectMocks
@@ -48,8 +46,8 @@ public class CommentServiceTests {
     @Mock
     private ModelMapper modelMapper;
 
-    private User user = new User("bmo", "bmo@gmail.com", "Password123!");
-    private User notAuthorUser = new User("remo", "remo@reader.com", "Password123!");
+    private User user = new User("bmo", "Password123!", "bmo@gmail.com");
+    private User notAuthorUser = new User("remo", "Password123!", "remo@reader.com");
     private Article article = new Article(user, "title", "coverUrl", "contents");
     private Comment comment = new Comment("commentContents", user, article);
     private CommentRequest commentRequest = new CommentRequest("commentContents");
@@ -77,6 +75,14 @@ public class CommentServiceTests {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
 
         assertThrows(NoUserException.class,
+                () -> commentService.save(commentRequest, USER_ID, ARTICLE_ID));
+    }
+
+    @Test
+    void 댓글작성_빈_내용_오류() {
+        CommentRequest commentRequest = new CommentRequest(BLANK);
+
+        assertThrows(EmptyCommentRequestException.class,
                 () -> commentService.save(commentRequest, USER_ID, ARTICLE_ID));
     }
 
@@ -167,7 +173,7 @@ public class CommentServiceTests {
                 () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
     }
 
-    private UserResponse 사용자_응답_만들기(Long 아이디){
+    private UserResponse 사용자_응답_만들기(Long 아이디) {
         UserResponse 사용자_응답 = new UserResponse();
         사용자_응답.setId(아이디);
         사용자_응답.setName(NAME);

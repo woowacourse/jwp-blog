@@ -17,12 +17,9 @@ public class WebConfig {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new AuthInterceptor())
-                        .addPathPatterns("/users")
-                        .addPathPatterns("/login")
                         .addPathPatterns("/mypage")
                         .addPathPatterns("/mypage/*")
                         .addPathPatterns("/mypage-edit")
-                        .addPathPatterns("/articles/*")
                         .addPathPatterns("/articles/*/edit")
                         .addPathPatterns("/articles/*/comments")
                         .addPathPatterns("/articles/*/comments/*")

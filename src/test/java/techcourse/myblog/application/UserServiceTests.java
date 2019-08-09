@@ -7,7 +7,6 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
@@ -41,14 +40,13 @@ public class UserServiceTests {
     @Mock
     private EncryptHelper encryptHelper;
 
-    private static final UserRequest USER_REQUEST_1 = new UserRequest("amo", "amo@woowahan.com", "PassWord123!");
-    private static final UserRequest USER_REQUEST_2 = new UserRequest("bmo", "bmo@woowahan.com", "PassWord123!");
-    private static final UserRequest USER_REQUEST_3 = new UserRequest("cmo", "cmo@woowahan.com", "PassWord123!");
+    private static final UserRequest USER_REQUEST_1 = new UserRequest("amo", "PassWord123!", "amo@woowahan.com");
+    private static final UserRequest USER_REQUEST_2 = new UserRequest("bmo", "PassWord123!", "bmo@woowahan.com");
     private static final LoginRequest LOGIN_REQUEST = new LoginRequest("amo@woowahan.com", "PassWord123!");
 
-    private static final User USER_1 = new User("amo", "amo@woowahan.com", "PassWord123!");
-    private static final User USER_2 = new User("bmo", "bmo@woowahan.com", "PassWord123!");
-    private static final User USER_3 = new User("cmo", "cmo@woowahan.com", "PassWord123!");
+    private static final User USER_1 = new User("amo", "PassWord123!", "amo@woowahan.com");
+    private static final User USER_2 = new User("bmo", "PassWord123!", "bmo@woowahan.com");
+    private static final User USER_3 = new User("cmo", "PassWord123!", "cmo@woowahan.com");
     private InOrder inOrder;
 
     @BeforeEach

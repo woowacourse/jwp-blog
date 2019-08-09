@@ -35,3 +35,17 @@
 ## 회원조회
 * GET /users 로 요청하여 회원목록페이지(user-list.html) 이동
 * DB에 저장된 회원 정보 노출
+
+---
+# Ajax를 사용하도록 기능 변경
+- [x] 댓글 기능
+- [x] MyPage put 요청
+- [ ] Login
+- [ ] 헤더의 로그인 정보
+- [ ] SignUp
+
+# Script를 이용한 자동 배포
+- [ ] 배포 성공
+
+# API docs
+- [ ] API docs 생성

@@ -4,7 +4,7 @@
 <head th:replace="/fragments/mypage-head :: mypageHead"></head>
 
 <body>
-<div th:if="${error} != null" class="alert alert-danger" th:text="${error.errorMessage}"></div>
+<div class="none alert alert-danger"></div>
 <div>
     <header id="header" class="header navbar bg-transparent no-border">
         <div class="header-container">
@@ -36,11 +36,10 @@
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
-                    <form th:action="@{'/users/' + ${session.user.id}}" method="post" th:object="${userEditRequest}">
-                        <input type="hidden" name="_method" value="put"/>
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
+                            <button type="button" class="btn btn-info float-right mrg-btm-0 relative
+                                    bottom-5">수정
                             </button>
                         </div>
                         <div class="card-block">
@@ -49,8 +48,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input th:value="${session.user.name}" type="text" name="name" class="form-control" required th:field="*{name}">
-                                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
+                                    <input th:value="${session.user.name}" type="text" name="name" class="form-control" required>
                                 </div>
                             </div>
                             <hr>
@@ -59,7 +57,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p th:text="${session.user.email}" class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                    <p th:text="${session.user.email}" class="mrg-top-10"></p>
                                 </div>
                             </div>
                             <hr>
@@ -117,7 +115,6 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -125,6 +122,36 @@
 </div>
 
 <th:block th:include="/fragments/main-js :: mainJs"/>
+<script th:inline="javascript">
+    const userId = /*[[${session.user.id}]]*/;
+</script>
+<script>
+    const nameInput = document.querySelector(".card-block input[name=name]");
+    document.querySelector(".card .card-heading.pdd-btm-5.border.bottom button").addEventListener("click", (event) => {
+        fetch("/users/" + userId,{
+            method: "PUT",
+            body: JSON.stringify({
+            name: nameInput.value,
+        }),
+            headers: {
+            "Content-Type": "application/json; charset=UTF-8"
+        }}
+        ).then(res => {
+            console.log(res)
+            if (res.status === 200) {
+                window.location.href = res.headers.get("Location");
+                return;
+            }
+            return res.json();
+        }).then(json => {
+            console.log(json);
+            const alertElm = document.querySelector('.alert.alert-danger');
+            alertElm.innerText = json.message;
+            alertElm.classList.remove('none');
+        });
+    })
 
+
+</script>
 </body>
 </html>
