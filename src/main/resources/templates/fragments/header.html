@@ -1,57 +1,57 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko" xmlns="http://www.w3.org/1999/xhtml">
-<th:block th:fragment="header">
-    <header class="header navbar bg-transparent no-border">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-
-                <th:block th:if="${session.user != null}">
-                    <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
-                        <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                            <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
-                            <div class="user-info text-white">
-                                <span class="name pdd-right-5" th:text="${session.user.name}">Brown</span>
-                                <i class="ti-angle-down font-size-10"></i>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="text-dark">
-                                <a href="/mypage">
-                                    <i class="ti-user pdd-right-10"></i>
-                                    <span class="text-dark">마이 페이지</span>
-                                </a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li class="text-dark">
-                                <a href="/logout">
-                                    <i class="ti-power-off pdd-right-10"></i>
-                                    <span class="text-dark">로그아웃</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </th:block>
-
-                <th:block th:unless="${session.user != null}">
-                    <li class="user-profile">
-                        <a href="/login">
-                            <div class="user-info login-btn pointer mrg-right-10">
-                                <span class="name pdd-right-5 text-white">Login</span>
-                            </div>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<header class="header navbar bg-transparent no-border" id="header" th:fragment="headerFragment">
+    <div class="header-container">
+        <ul class="nav-left mrg-left-0">
+            <li>
+                <a href="/">
+                    <div class="logo logo-dark d-none" id="logo-dark"
+                         style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                    <div class="logo logo-white" id="logo-white"
+                         style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav-right">
+            <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
+                <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown" href="/"
+                   th:if="${session.user != null}">
+                    <img alt="Brown"
+                         class="profile-img img-fluid"
+                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
+                    <div class="user-info text-white">
+                        <span class="name pdd-right-5" th:text="${session.user.userName}">Name</span>
+                    </div>
+                </a>
+                <a href="/login" th:unless="${session.user != null}">
+                    <div class="user-info login-btn pointer mrg-right-10">
+                        <span class="name pdd-right-5 text-white">Login</span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="text-dark">
+                        <a href="/users/mypage">
+                            <i class="ti-user pdd-right-10"></i>
+                            <span class="text-dark">마이 페이지</span>
                         </a>
                     </li>
-                </th:block>
-            </ul>
-        </div>
-    </header>
-
-</th:block>
+                    <li class="divider" role="separator"></li>
+                    <li class="text-dark">
+                        <a href="/users">
+                            <i class="ti-user pdd-right-10"></i>
+                            <span class="text-dark">유저 목록</span>
+                        </a>
+                    </li>
+                    <li class="divider" role="separator"></li>
+                    <li class="text-dark">
+                        <a href="/logout">
+                            <i class="ti-power-off pdd-right-10"></i>
+                            <span class="text-dark">로그아웃</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</header>
 </html>

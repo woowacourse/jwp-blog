@@ -1,87 +1,96 @@
 package techcourse.myblog.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.exception.NoPermissionArticleException;
-import techcourse.myblog.service.exception.NoRowException;
-import techcourse.myblog.web.dto.ArticleDto;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.controller.dto.ArticleDto;
+import techcourse.myblog.model.Article;
+import techcourse.myblog.model.User;
+import techcourse.myblog.repository.ArticleRepository;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import java.util.Optional;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleServiceTest {
-    private final ArticleService articleService;
-    private final UserService userService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.verify;
+import static techcourse.myblog.service.UserServiceTest.*;
 
-    private User author;
-    private Article beforeArticle;
+@ExtendWith(SpringExtension.class)
+class ArticleServiceTest {
+    static final Long TEST_ID = 1L;
+    static final String TITLE = "TITLE";
+    static final String COVER_URL = "COVER_URL";
+    static final String CONTENTS = "Contents";
 
-    @Autowired
-    public ArticleServiceTest(ArticleService articleService, UserService userService) {
-        this.articleService = articleService;
-        this.userService = userService;
-    }
+    @InjectMocks
+    ArticleService articleService;
+
+    @Mock
+    ArticleRepository articleRepository;
+
+    private Article testArticle;
+    private ArticleDto testArticleDto;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        author = userService.findByEmail("aiden@woowa.com");
-        beforeArticle = articleService.save(
-                new ArticleDto("Aiden jo",
-                        "https://i.pinimg.com/736x/78/28/39/7828390ef4efbe704e480440f3bd3875.jpg",
-                        "abc"),
-                author
-        );
+        user = new User(USER_NAME, EMAIL, PASSWORD);
+        testArticle = new Article(TITLE, COVER_URL, CONTENTS, user);
+        testArticleDto = new ArticleDto(TITLE, COVER_URL, CONTENTS, user.getEmail());
     }
 
     @Test
-    @Transactional
-    void 조회() {
-        assertThat(articleService.findById(beforeArticle.getId())).isEqualTo(beforeArticle);
+    @DisplayName("게시글을 저장한다.")
+    void saveArticle() {
+        articleService.save(testArticleDto, user);
+
+        verify(articleRepository, atLeast(1)).save(testArticle);
     }
 
     @Test
-    @Transactional
-    void 저장_조회_테스트() {
-        Article newArticle = articleService.save(
-                new ArticleDto("Aiden jo",
-                        "https://i.pinimg.com/736x/78/28/39/7828390ef4efbe704e480440f3bd3875.jpg",
-                        "abc"),
-                author
-        );
-        assertThat(articleService.findById(newArticle.getId())).isEqualTo(newArticle);
+    @DisplayName("게시글을 조회한다.")
+    void fetchArticle() {
+        given(articleRepository.findById(TEST_ID)).willReturn(Optional.of(testArticle));
+
+        assertThat(articleService.findById(TEST_ID)).isEqualTo(testArticle);
     }
 
     @Test
-    @Transactional
-    void 삭제_후_조회_테스트() {
-        articleService.delete(beforeArticle.getId(), author);
-        assertThatThrownBy(() -> articleService.findById(beforeArticle.getId()))
-                .isInstanceOf(NoRowException.class);
+    @DisplayName("게시글을 update한다")
+    void updateArticle() {
+        // Given
+        final String updatedTitle = "title2";
+        final String updatedCoverUrl = "coverUrl2";
+        final String updatedContents = "Contents2";
+
+        ArticleDto updatedArticleDto = new ArticleDto();
+
+        given(articleRepository.findById(TEST_ID)).willReturn(Optional.of(testArticle));
+
+        // When
+        updatedArticleDto.setId(TEST_ID);
+        updatedArticleDto.setTitle(updatedTitle);
+        updatedArticleDto.setCoverUrl(updatedCoverUrl);
+        updatedArticleDto.setContents(updatedContents);
+        Article updateArticle = articleService.update(updatedArticleDto, user);
+
+        // Then
+        verify(articleRepository, atLeast(1)).findById(TEST_ID);
+        assertThat(updateArticle.getTitle()).isEqualTo(updatedTitle);
+        assertThat(updateArticle.getCoverUrl()).isEqualTo(updatedCoverUrl);
+        assertThat(updateArticle.getContents()).isEqualTo(updatedContents);
     }
 
     @Test
-    void 수정_테스트() {
-        ArticleDto articleDto = new ArticleDto("whale kim",
-                "https://i.pinimg.com/736x/78/28/39/7828390ef4efbe704e480440f3bd3875.jpg",
-                "update contents");
-        Article updatedArticle = articleService.update(beforeArticle.getId(), articleDto, author);
-        assertThat(updatedArticle.getTitle()).isEqualTo(articleDto.getTitle());
-        assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleDto.getCoverUrl());
-        assertThat(updatedArticle.getContents()).isEqualTo(articleDto.getContents());
-    }
+    @DisplayName("article 삭제 테스트")
+    void deleteArticle() {
+        articleService.delete(TEST_ID);
 
-    @Test
-    void 존재_유무_확인() {
-        User user2 = userService.findByEmail("woowa@woowa.com");
-        Assertions.assertThatThrownBy(() -> {
-            articleService.exist(9L, user2);
-        }).isInstanceOf(NoPermissionArticleException.class);
+        verify(articleRepository, atLeast(1)).deleteById(TEST_ID);
     }
 }

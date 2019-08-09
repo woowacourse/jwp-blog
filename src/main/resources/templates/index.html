@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="fragments/head :: head"/>
+    <th:block th:replace="fragments/config :: configFragment"/>
+    <title>우아한테크코스 기술블로그</title>
+    <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
 <div>
-    <th:block th:include="fragments/header :: header"/>
+    <th:block th:replace="fragments/header :: headerFragment"/>
 
     <div class="about-cover card no-border mrg-btm-0">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Welcome</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
             </div>
         </div>
     </div>
@@ -23,59 +25,61 @@
                 <div class="tab-info center-tabs">
                     <ul class="nav nav-tabs no-border" role="tablist">
                         <li class="nav-item">
-                            <a href="#tab-centered-1" class="nav-link active" role="tab" data-toggle="tab">All</a>
+                            <a class="nav-link active" data-toggle="tab" href="#tab-centered-1" role="tab">All</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab-centered-2" class="nav-link" role="tab" data-toggle="tab">Java</a>
+                            <a class="nav-link" data-toggle="tab" href="#tab-centered-2" role="tab">Java</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
+                            <a class="nav-link" data-toggle="tab" href="#tab-centered-3" role="tab">Learning</a>
                         </li>
                     </ul>
-                    <div class="width-100 absolute left-0 border bottom"></div>
+                    <div class="width-100 fixed left-0 border bottom"></div>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
+                        <div class="tab-pane fade in active" id="tab-centered-1" role="tabpanel">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <th:block th:each="article : ${articles}">
-                                    <a th:href="@{'/articles/' + ${article.id}}" class="card article-container">
-                                        <div class="card-horizon">
-                                            <div class="image-container col-md-4">
-                                                <div class="background-holder has-content"
-                                                     th:style="'background-image:url('+ ${article.coverUrl}+')'"></div>
-                                            </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-md-8 ml-auto">
-                                                        <div class="pdd-vertical-30 pdd-horizon-25">
-                                                            <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">
-                                                                title</h2>
-                                                            <p th:text="${#strings.abbreviate(article.contents,30)}">
-                                                                contents</p>
-                                                            <ul class="list-style-none pdd-left-0">
-                                                                <li class="inline-block mrg-right-5">
-                                                                    <i class="ti-heart text-danger pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">0</span>
-                                                                </li>
-                                                                <li class="inline-block">
-                                                                    <i class="ti-comments text-primary pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">0</span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                <a class="card article-container" th:each="article : ${articles}"
+                                   th:href="@{'/articles/' + ${article.id}}">
+                                    <div class="card-horizon">
+                                        <div class="image-container col-md-4">
+                                            <div class="background-holder has-content"
+                                                 th:if="${article.coverUrl != null && !article.coverUrl.isEmpty()}"
+                                                 th:style="'background:url(' + @{${article.coverUrl}} + ');'"></div>
+                                            <div class="background-holder has-content"
+                                                 style="background-image: url('/images/pages/index/study.jpg')"
+                                                 th:unless="${article.coverUrl != null && !article.coverUrl.isEmpty()}"></div>
+                                        </div>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-md-8 ml-auto">
+                                                    <div class="pdd-vertical-30 pdd-horizon-25">
+                                                        <h2 class="mrg-btm-20 text-bold"
+                                                            th:text="${article.title}"></h2>
+                                                        <p th:text="${#strings.abbreviate(article.contents,100)}"></p>
+                                                        <ul class="list-style-none pdd-left-0">
+                                                            <li class="inline-block mrg-right-5">
+                                                                <i class="ti-heart text-danger pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">33</span>
+                                                            </li>
+                                                            <li class="inline-block">
+                                                                <i class="ti-comments text-primary pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">3</span>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
-                                </th:block>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
+                        <div class="tab-pane fade" id="tab-centered-2" role="tabpanel">
                             <div class="pdd-horizon-15 pdd-vertical-20">
 
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab-centered-3">
+                        <div class="tab-pane fade" id="tab-centered-3" role="tabpanel">
                             <div class="pdd-horizon-15 pdd-vertical-20">
                             </div>
                         </div>
@@ -85,19 +89,15 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="/articles"
-           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+        <a class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px"
+           href="/articles/writing">
             <i class="ti-plus"></i>
         </a>
 
     </div>
 </div>
-<th:block th:include="fragments/footer :: footer"/>
-<th:block th:include="fragments/footer :: footer-script"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="/js/index.js"></script>
+
+<th:block th:replace="fragments/footer :: footerFragment"/>
+<th:block th:replace="fragments/script :: scriptFragment"/>
 </body>
 </html>

@@ -1,19 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko" xmlns="http://www.w3.org/1999/xhtml">
-<th:block th:fragment="footer">
-    <footer class="content-footer">
-        <div class="footer">
-            <div class="copyright">
-                <img class="d-inline-block logo relative right-5" src="/images/logo/logo_full_dark.png">
-                <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.</p>
-            </div>
-            <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들 기술블로그</a>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<footer class="content-footer" th:fragment="footerFragment">
+    <div class="footer">
+        <div class="copyright">
+            <img class="d-inline-block logo relative right-5" src="images/logo/logo_full_dark.png">
+            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.
+            </p>
         </div>
-    </footer>
-</th:block>
-
-<th:block th:fragment="footer-script">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
-</th:block>
+        <a class="btn btn-default btn-rounded bg-transparent" href="https://woowabros.github.io/" target="_blank">우아한형제들
+            기술블로그</a>
+    </div>
+</footer>
 </html>

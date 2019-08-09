@@ -13,18 +13,30 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation "org.hibernate.validator:hibernate-validator"
-	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
+	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.3.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.h2database:h2'
-    implementation 'mysql:mysql-connector-java'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit'
-    }
+	implementation 'mysql:mysql-connector-java'
+	implementation "org.hibernate.validator:hibernate-validator"
+	implementation "org.apache.tomcat.embed:tomcat-embed-el"
+	implementation 'org.springframework.boot:spring-boot-devtools'
+    
+	testImplementation 'io.rest-assured:rest-assured:3.3.0'	
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'junit'
+	}
+
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
+	compileOnly 'org.projectlombok:lombok:1.18.8'
+	annotationProcessor 'org.projectlombok:lombok:1.18.8'	
 }

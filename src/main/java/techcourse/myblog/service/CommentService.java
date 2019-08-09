@@ -1,15 +1,13 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
+import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.controller.dto.RequestCommentDto;
+import techcourse.myblog.exception.CommentNotFoundException;
+import techcourse.myblog.model.Article;
+import techcourse.myblog.model.Comment;
+import techcourse.myblog.model.User;
 import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.service.exception.NoPermissionCommentException;
-import techcourse.myblog.service.exception.NoRowException;
-import techcourse.myblog.web.dto.CommentDto;
-
-import java.util.List;
 
 @Service
 public class CommentService {
@@ -19,35 +17,36 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    public Comment save(RequestCommentDto requestCommentDto) {
+        Article article = requestCommentDto.getArticle();
+        Comment comment = new Comment(requestCommentDto.getContents(), requestCommentDto.getUser(), article);
+        article.addComment(comment);
+
+        return commentRepository.save(comment);
+    }
+
     public Comment findById(Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(NoRowException::new);
+                .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
     }
 
-    public List<Comment> findByArticle(Article article) {
-        return commentRepository.findByArticle(article);
+    @Transactional
+    public Comment update(RequestCommentDto requestCommentDto, Long commentId) {
+        Comment oldComment = findById(commentId);
+        Comment updatedComment = new Comment(requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
+        return oldComment.update(updatedComment);
     }
 
-    public Comment save(CommentDto commentDto, User author, Article article) {
-        return commentRepository.save(commentDto.create(author, article));
-    }
-
-    public Comment update(Long commentId, CommentDto commentDto, User loginUser) {
-        exist(commentId, loginUser);
+    public void delete(Long commentId) {
         Comment comment = findById(commentId);
-        return commentRepository.save(comment.update(commentDto));
-    }
+        Article parentArticle = comment.getArticle();
 
-    public Long delete(Long commentId, User loginUser) {
-        exist(commentId, loginUser);
-        Long articleId = findById(commentId).getArticleId();
+        parentArticle.deleteComment(comment);
         commentRepository.deleteById(commentId);
-        return articleId;
     }
 
-    public void exist(Long commentId, User loginUser) throws NoPermissionCommentException {
-        if (!commentRepository.existsByIdAndAuthor(commentId, loginUser)) {
-            throw new NoPermissionCommentException("댓글에 대한 권한이 없습니다.");
-        }
+    public void checkOwner(Long commentId, User user) {
+        Comment comment = findById(commentId);
+        comment.checkOwner(user);
     }
 }

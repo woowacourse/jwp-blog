@@ -1,51 +1,56 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
+import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.controller.dto.ArticleDto;
+import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.model.Article;
+import techcourse.myblog.model.Comment;
+import techcourse.myblog.model.User;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.service.exception.NoPermissionArticleException;
-import techcourse.myblog.service.exception.NoRowException;
-import techcourse.myblog.web.dto.ArticleDto;
 
 import java.util.List;
 
 @Service
 public class ArticleService {
-
     private final ArticleRepository articleRepository;
 
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 
-    public List<Article> findAll() {
+    public Long save(ArticleDto articleDto, User author) {
+        Article newArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), author);
+        articleRepository.save(newArticle);
+        return newArticle.getId();
+    }
+
+    public Article findById(Long id) {
+        return articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
+    }
+
+    public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
 
-    public Article findById(Long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(NoRowException::new);
+    @Transactional
+    public Article update(ArticleDto articleDto, User author) {
+        Article oldArticle = findById(articleDto.getId());
+        Article updatedArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), author);
+        return oldArticle.update(updatedArticle);
     }
 
-    public Article save(ArticleDto articleDto, User user) {
-        return articleRepository.save(articleDto.create(user));
-    }
-
-    public Article update(Long articleId, ArticleDto articleDto, User loginUser) {
-        exist(articleId, loginUser);
-        Article selectedArticle = findById(articleId);
-        return articleRepository.save(selectedArticle.update(articleDto));
-    }
-
-    public void delete(Long articleId, User loginUser) {
-        exist(articleId, loginUser);
+    public void delete(Long articleId) {
         articleRepository.deleteById(articleId);
     }
 
-    public void exist(Long articleId, User author) {
-        if (!articleRepository.existsByIdAndAuthor(articleId, author)) {
-            throw new NoPermissionArticleException("게시글에 대한 권한이 없습니다.");
-        }
+    public List<Comment> findAllComment(Long articleId) {
+        Article foundArticle = findById(articleId);
+        return foundArticle.getSortedComments();
+    }
+
+    public void checkOwner(Long articleId, User user) {
+        Article foundArticle = findById(articleId);
+        foundArticle.checkOwner(user);
     }
 }

@@ -1,68 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="fragments/head :: head"/>
-    <th:block th:include="fragments/head :: articleHead"/>
-    <link rel="stylesheet" href="/css/article-edit.css">
+    <th:block th:replace="fragments/config :: configFragment"/>
+    <title>우아한 크루의 블로그</title>
 </head>
 <body>
-<div>
-    <th:block th:include="fragments/header :: header"/>
-    <form th:action="|/comment/${comment.id}|" name="comment" method="post"
-          accept-charset="utf-8">
-        <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
-                <div class="height-300px vertical-center pdd-horizon-50">
-                    <div class="width-80">
+<div class="app">
+    <th:block th:replace="fragments/logo :: logoFragment"/>
+    <div class="authentication">
+        <div class="sign-in-2">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                 style="background-image: url('/images/default/bg.jpg')">
+                <div class="row">
+                    <div class="col-md-10 col-sm-12 mx-auto">
+                        <div class="row">
+                            <div class="mx-auto full-height col-md-4">
+                                <div class="vertical-align full-height">
+                                    <div class="table-cell padding-20">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="pdd-horizon-30 pdd-vertical-30">
+                                                    <form method="post" th:action="'/comments/' + ${comment?.id}">
+                                                        <input name="_method" type="hidden" value="put"/>
+                                                        <input name="articleId" th:value="${comment?.author.id}"
+                                                               type="hidden">
+                                                        <div class="mrg-btm-30">
+                                                            <textarea class="text-center no-mrg-vertical mrg-btm-15 text-dark" name="contents"
+                                                                      th:text="${comment?.contents}">
+                                                                여기에 댓글이 나와요</textarea>
+                                                        </div>
+                                                        <div class="mrg-top-20 text-right">
+                                                            <button class="btn btn-tumblr" type="submit">수정하기</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
-            <div class="row">
-                <div class="col-lg-1 col-md-1"></div>
-                <div class="col-lg-10 col-md-10 col-sm-10">
-                    <input id="comment-contents" name="contents" type="hidden">
-                    <div id="editSection" th:text="${comment?.contents}"></div>
-                </div>
-                <div class="col-lg-1 col-md-1">
-                    <div class="btn-group btn-group-vertical">
-                        <button id="save-btn" type="submit" class="btn btn-default">
-                            <i class="ti-save"></i>
-                        </button>
-                        <button id="delete-btn" class="btn btn-default" onclick="deleteClick()">
-                            <i class="ti-close"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <input id="method-input" type="hidden" name="_method" value="put">
-    </form>
+    </div>
 </div>
-<th:block th:include="fragments/footer :: footer"/>
-<th:block th:include="fragments/footer :: footer-script"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="/js/index.js"></script>
-<script type="text/javascript">
-    const editor = new tui.Editor({
-        el: document.querySelector('#editSection'),
-        initialEditType: 'markdown',
-        previewStyle: 'vertical',
-        events: {
-            change: function () {
-                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
-            }
-        },
-        height: 'calc(100vh - 360px)'
-    });
 
-    var deleteClick = function () {
-        document.getElementById('method-input').setAttribute('value', 'delete');
-    };
-</script>
+<th:block th:replace="fragments/script :: scriptFragment"/>
 </body>
 </html>

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="fragments/head :: head"/>
+    <title>우아한 크루의 블로그</title>
+    <th:block th:replace="fragments/config :: configFragment"/>
 </head>
 <body>
 <div class="app">
-    <th:block th:include="fragments/header :: header"/>
+    <th:block th:replace="fragments/header :: headerFragment"/>
     <div class="authentication">
         <div class="sign-in-2">
-            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/images/default/bg.jpg')">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                 style="background-image: url('/images/default/bg.jpg')">
                 <div class="row">
                     <div class="col-md-10 col-sm-12 mx-auto">
                         <div class="row">
@@ -20,12 +22,14 @@
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
                                                         <h4 class="text-center no-mrg-vertical mrg-btm-15 text-dark"
-                                                            th:text="${errorMessage}">
+                                                            th:text="${error}">
                                                             Wrong access</h4>
                                                     </div>
-                                                    <div class="mrg-top-20 text-right">
-                                                        <a href="/" class="btn btn-tumblr">홈으로</a>
-                                                    </div>
+                                                    <form action="/" method="get">
+                                                        <div class="mrg-top-20 text-right">
+                                                            <button class="btn btn-tumblr" type="submit">홈으로</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -39,12 +43,6 @@
         </div>
     </div>
 </div>
-<th:block th:include="fragments/footer :: footer"/>
-<th:block th:include="fragments/footer :: footer-script"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="/js/index.js"></script>
+<th:block th:replace="fragments/script :: scriptFragment"/>
 </body>
 </html>

@@ -1,48 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="fragments/head :: head"/>
-    <th:block th:include="fragments/head :: articleHead"/>
-    <link rel="stylesheet" href="/css/article-edit.css">
+    <th:block th:replace="fragments/config :: configFragment"/>
+    <title>우아한테크코스 기술블로그</title>
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/article-edit.css" rel="stylesheet">
+    <th:block th:replace="fragments/article-config :: articleConfigFragment"/>
 </head>
 <body>
 <div>
-    <th:block th:include="fragments/header :: header"/>
-    <form th:action="${article}?  '/articles/' + ${article.id} : '/articles'" name="article" method="post"
-          accept-charset="utf-8">
+    <th:block th:replace="fragments/header :: headerFragment"/>
+
+    <form accept-charset="utf-8" method="post" name="article"
+          th:action="${article}? '/articles/' + ${article.id} : '/articles'">
+        <input name="_method" th:if="${article}" type="hidden" value="put"/>
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" th:style="'background-image:url('+ ${article?.coverUrl}+')'">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="hidden" name="_method" th:value="PUT" th:if="${article}">
-                        <th:block th:if="${article != null}">
-                            <input type="hidden" name="id" th:value="${article.id}">
-                        </th:block>
-                        <input type="text" name="title"
-                               th:value="${article?.title}"
-                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl"
-                               th:value="${article?.coverUrl}"
-                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input autocomplete="off" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom" name="title"
+                               placeholder="제목을 입력해주세요"
+                               th:value="${article?.title}" type="text">
+                        <input autocomplete="off" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20" name="coverUrl"
+                               placeholder="배경 url을 입력해주세요"
+                               th:value="${article?.coverUrl}" type="text">
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input id="article-contents" name="contents" type="hidden">
-                    <div id="editSection" th:text="${article?.contents}"></div>
+                    <div id="editSection"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
-                        <button id="save-btn" type="submit" class="btn btn-default">
+                        <button class="btn btn-default" id="save-btn" type="submit">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/" class="btn btn-default">
+                        <button class="btn btn-default" id="remove-btn" th:if="${article}" type="submit">
+                            <i class="ti-trash"></i>
+                        </button>
+                        <a class="btn btn-default" href="/">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -51,13 +53,14 @@
         </div>
     </form>
 </div>
-<th:block th:include="fragments/footer :: footer"/>
-<th:block th:include="fragments/footer :: footer-script"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+
+<th:block th:replace="fragments/script :: scriptFragment"/>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="/js/index.js"></script>
-<script type="text/javascript">
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    const initValue = [[ ${article?.contents}]];
+    /* ]]> */
+
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -67,8 +70,15 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)'
+        height: 'calc(100vh - 360px)',
+        initialValue: initValue
     });
+
+    document.getElementById('remove-btn').addEventListener('click', function () {
+        document.querySelector('input[name="_method"]').value = 'delete';
+        document.querySelector('form[name="article"]').submit();
+    });
+
 </script>
 </body>
 </html>

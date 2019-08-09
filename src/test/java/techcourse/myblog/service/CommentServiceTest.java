@@ -1,81 +1,101 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.exception.NoPermissionCommentException;
-import techcourse.myblog.service.exception.NoRowException;
-import techcourse.myblog.web.dto.ArticleDto;
-import techcourse.myblog.web.dto.CommentDto;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.controller.dto.RequestCommentDto;
+import techcourse.myblog.model.Article;
+import techcourse.myblog.model.Comment;
+import techcourse.myblog.model.User;
+import techcourse.myblog.repository.CommentRepository;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.verify;
+import static techcourse.myblog.service.ArticleServiceTest.*;
+import static techcourse.myblog.service.UserServiceTest.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension.class)
 class CommentServiceTest {
-    private final UserService userService;
-    private final ArticleService articleService;
-    private final CommentService commentService;
+    private static final Long TEST_COMMENT_ID = 1l;
+    private static final Long TEST_ARTICLE_ID = 2l;
+    private static final String COMMENTS_CONTENTS = "comment_contents";
 
-    private User author;
+    @InjectMocks
+    private CommentService commentService;
+
+    @Mock
+    private CommentRepository commentRepository;
+
+    private User user;
     private Article article;
-    private Comment beforeComment;
-
-    @Autowired
-    public CommentServiceTest(UserService userService, ArticleService articleService, CommentService commentService) {
-        this.userService = userService;
-        this.articleService = articleService;
-        this.commentService = commentService;
-    }
+    private Comment comment;
 
     @BeforeEach
     void setUp() {
-        author = userService.findByEmail("aiden@woowa.com");
-        article = articleService.save(new ArticleDto("gogo", "coverUrl", "contents"), author);
-        CommentDto commentDto = new CommentDto("brand new comment");
-        beforeComment = commentService.save(commentDto, author, article);
+        user = new User(USER_NAME, EMAIL, PASSWORD);
+        article = new Article(TITLE, COVER_URL, CONTENTS, user);
+        comment = new Comment(COMMENTS_CONTENTS, user, article);
     }
 
     @Test
-    @Transactional
-    void 저장_조회_테스트() {
-        Comment comment = commentService.save(new CommentDto("contents"), author, article);
-        assertThat(commentService.findById(comment.getId())).isEqualTo(comment);
+    @DisplayName("comment를 저장한다.")
+    void saveComment() {
+        RequestCommentDto requestCommentDto = new RequestCommentDto();
+        requestCommentDto.setContents(COMMENTS_CONTENTS);
+        requestCommentDto.setUser(user);
+        requestCommentDto.setArticle(article);
+
+        commentService.save(requestCommentDto);
+
+        verify(commentRepository, atLeast(1))
+                .save(comment);
     }
 
     @Test
-    void 수정_테스트() {
-        CommentDto newCommentDto = new CommentDto("update");
-        Comment newComment = commentService.update(beforeComment.getId(), newCommentDto, author);
-        assertThat(newComment.getContents()).isEqualTo("update");
+    @DisplayName("Comment를 조회한다.")
+    void findById() {
+        given(commentRepository.findById(TEST_COMMENT_ID))
+                .willReturn(Optional.of(comment));
+
+        assertThat(commentService.findById(TEST_COMMENT_ID)).isEqualTo(comment);
     }
 
     @Test
-    void 코멘트_목록_테스트() {
-        CommentDto commentDto = new CommentDto("brand new comment");
-        commentService.save(commentDto, author, article);
-        assertThat(commentService.findByArticle(article).size()).isEqualTo(2);
+    @DisplayName("comment를 업데이트 한다.")
+    void updateComment() {
+        // Given
+        final String updatedContents = "updated contents";
+
+        given(commentRepository.findById(TEST_COMMENT_ID))
+                .willReturn(Optional.of(comment));
+
+        // When
+        RequestCommentDto requestCommentDto = new RequestCommentDto();
+        requestCommentDto.setArticleId(TEST_ARTICLE_ID);
+        requestCommentDto.setContents(updatedContents);
+        Comment updatedComment = commentService.update(requestCommentDto, TEST_COMMENT_ID);
+
+        // Then
+        assertThat(updatedComment.getContents()).isEqualTo(updatedContents);
     }
 
     @Test
-    void 삭제_테스트() {
-        Long beforeCommentId = beforeComment.getId();
-        commentService.delete(beforeCommentId, author);
-        assertThatThrownBy(() -> {
-            commentService.findById(beforeCommentId);
-        }).isInstanceOf(NoRowException.class);
-    }
+    @DisplayName("comment를 삭제한다.")
+    void deleteComment() {
+        article.addComment(comment);
+        given(commentRepository.findById(TEST_COMMENT_ID))
+                .willReturn(Optional.of(comment));
 
-    @Test
-    void 존재_유무_확인() {
-        User user2 = userService.findByEmail("woowa@woowa.com");
-        assertThatThrownBy(() -> {
-            commentService.exist(19L, user2);
-        }).isInstanceOf(NoPermissionCommentException.class);
+        commentService.delete(TEST_COMMENT_ID);
+        verify(commentRepository, atLeast(1)).deleteById(TEST_COMMENT_ID);
+        assertThat(article.getComments()).doesNotContain(comment);
     }
 }
