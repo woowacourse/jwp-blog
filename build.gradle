@@ -19,7 +19,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'io.rest-assured:json-path:4.0.0'
 	implementation 'io.rest-assured:xml-path:4.0.0'
 	
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
@@ -28,6 +27,7 @@ dependencies {
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'io.rest-assured:rest-assured:4.0.0'
+	testImplementation 'io.rest-assured:json-path:4.0.0'
 	testImplementation 'io.rest-assured:json-schema-validator:4.0.0'
 	
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
