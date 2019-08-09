@@ -5,32 +5,22 @@ import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 @Component
 public class LoginChecker {
     public static final String LOGGED_IN_USER = "loggedInUser";
 
     public boolean isLoggedInSameId(HttpSession session, Long id) {
-        UserSessionDto loggedInUser = getLoggedInUser(session);
+        UserSessionDto loggedInUser = getLoggedInUser(session).orElseThrow(NotLoggedInException::new);
         return loggedInUser.getId().equals(id);
     }
 
     public boolean isLoggedIn(HttpSession session) {
-        try {
-            getLoggedInUser(session);
-            return true;
-        } catch (NotLoggedInException e) {
-            return false;
-        }
+        return getLoggedInUser(session).isPresent();
     }
 
-    @NotNull
-    public UserSessionDto getLoggedInUser(HttpSession session) {
-        UserSessionDto user = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
-        if (user == null) {
-            throw new NotLoggedInException();
-        }
-        return user;
+    private Optional<UserSessionDto> getLoggedInUser(HttpSession session) {
+        return Optional.ofNullable((UserSessionDto) session.getAttribute(LOGGED_IN_USER));
     }
 }

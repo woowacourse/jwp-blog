@@ -4,10 +4,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.exception.UserArgumentException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
-import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.service.dto.UserRequestDto;
-import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.dto.*;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
@@ -20,6 +17,7 @@ import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUP
 import static techcourse.myblog.domain.exception.UserArgumentException.PASSWORD_CONFIRM_FAIL_MESSAGE;
 
 @Service
+@Transactional
 public class UserService {
     private UserRepository userRepository;
 
@@ -35,7 +33,7 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(NotFoundUserException::new);
     }
-    
+
     User findByUserSession(UserSessionDto userSessionDto) {
         return findById(userSessionDto.getId());
     }
@@ -50,18 +48,18 @@ public class UserService {
         return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    public User save(UserRequestDto userRequestDto) {
+    public User save(UserRequestSignUpDto userRequestSignUpDto) {
         try {
-            validate(userRequestDto);
-            return userRepository.save(userRequestDto.toEntity());
+            validate(userRequestSignUpDto);
+            return userRepository.save(userRequestSignUpDto.toEntity());
         } catch (UserArgumentException e) {
             throw new SignUpException(e.getMessage());
         }
     }
 
-    private void validate(UserRequestDto userRequestDto) {
-        checkDuplicatedEmail(userRequestDto.getEmail());
-        checkPasswordConfirm(userRequestDto);
+    private void validate(UserRequestSignUpDto userRequestSignUpDto) {
+        checkDuplicatedEmail(userRequestSignUpDto.getEmail());
+        checkPasswordConfirm(userRequestSignUpDto);
     }
 
     private void checkDuplicatedEmail(String email) {
@@ -70,17 +68,17 @@ public class UserService {
         }
     }
 
-    private void checkPasswordConfirm(UserRequestDto userRequestDto) {
-        if (!userRequestDto.confirmPassword()) {
+    private void checkPasswordConfirm(UserRequestSignUpDto userRequestSignUpDto) {
+        if (!userRequestSignUpDto.confirmPassword()) {
             throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
         }
     }
 
-    @Transactional
-    public void update(Long userId, UserRequestDto userRequestDto) {
+    public User update(Long userId, UserRequestUpdateDto userRequestUpdateDto) {
         try {
             User user = findById(userId);
-            user.updateName(userRequestDto.getName());
+            user.update(userRequestUpdateDto.toEntity());
+            return user;
         } catch (NotFoundUserException | UserArgumentException e) {
             throw new UserUpdateException(e.getMessage());
         }

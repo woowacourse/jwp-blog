@@ -1,19 +1,18 @@
 package techcourse.myblog.domain.user;
 
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.BaseTimeEntity;
 import techcourse.myblog.domain.exception.UserArgumentException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static techcourse.myblog.domain.exception.UserArgumentException.*;
 
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
     private static final int MIN_NAME_LENGTH = 2;
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MIN_PASSWORD_LENGTH = 8;
@@ -26,6 +25,7 @@ public class User {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
 
     @Id
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -42,12 +42,6 @@ public class User {
     @Length(min = MIN_PASSWORD_LENGTH)
     @javax.validation.constraints.Pattern(regexp = PASSWORD_REGEX)
     private String password;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Article> articles;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
 
     protected User() {
     }
@@ -104,11 +98,11 @@ public class User {
         return pattern.matcher(input).find();
     }
 
-    public boolean matchId(Long userId) {
-        return this.id.equals(userId);
+    public void update(User other) {
+        updateName(other.name);
     }
 
-    public void updateName(String name) {
+    private void updateName(String name) {
         checkValidName(name);
         this.name = name;
     }
@@ -127,5 +121,18 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 }

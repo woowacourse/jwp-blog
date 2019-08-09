@@ -1,9 +1,10 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.exception.UserArgumentException;
-import techcourse.myblog.domain.user.User;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UserTest {
@@ -69,5 +70,15 @@ public class UserTest {
     public void 비밀번호에_한글이_있는_경우() {
         assertThatThrownBy(() -> new User(VALID_NAME, VALID_EMAIL, "가password!1"))
                 .isInstanceOf(UserArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("유저 이름 수정 테스트")
+    public void update() {
+        User user = new User(VALID_NAME, VALID_EMAIL, VALID_PASSWORD);
+        User other = new User("update", VALID_EMAIL, VALID_PASSWORD);
+        user.update(other);
+
+        assertThat(user.getName()).isEqualTo("update");
     }
 }

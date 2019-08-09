@@ -81,30 +81,28 @@
                                 <span th:text="${comment.authorName}" href="" class="text-bold inline-block">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${comment.subOfDays} + ' days ago'"></span>
                             </span>
                                 <p th:text="${comment.comment}" class="width-80"></p>
                             </div>
                             <th:block th:if="${comment.authorId == session.loggedInUser?.id}">
                                 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
                                         data-target="#myModal"
-                                        th:onclick="'changeCommentEditAction(' + ${article.id} + ', ' + ${comment.id} + ')'">
+                                        th:value="${comment.id}">
                                     <i class="ti-pencil"></i>
                                 </button>
-                                <button id="delete-btn" class="btn" th:value="${comment.id}">
-                                    <i class="ti-trash"></i>
+                                <button class="btn delete-comment" th:value="${comment.id}">
+                                    🗑️
                                 </button>
                             </th:block>
                         </li>
                     </ul>
                     <div class="add-comment">
-                        <form action="/comment" method="post">
-                            <input id="comment-contents" name="comment" type="hidden">
-                            <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
-                            <button id="save-btn" type="submit" class="btn btn-default">
-                                <i class="ti-save"></i>
-                            </button>
-                        </form>
+                        <input id="comment-contents" name="comment" type="hidden">
+                        <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
+                        <button id="save-btn" type="button" class="btn btn-default">
+                            <i class="ti-save"></i>
+                        </button>
                         <div id="editSection"></div>
                     </div>
                 </div>
@@ -120,32 +118,57 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">댓글 수정</h4>
             </div>
-            <form id="comment-edit-form" action="/articles/1/comment/1" method="post">
-                <input type="hidden" name="_method" value="put"/>
-                <div class="modal-body">
-                    <input id="comment-edit-contents" name="comment" type="hidden">
-                    <div id="commentEditSection"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-                    <button type="submit" class="btn btn-primary">수정</button>
-                </div>
-            </form>
+            <div class="modal-body">
+                <input type="hidden" id="comment-update-url" value=""/>
+                <input id="comment-edit-contents" name="comment" type="hidden">
+                <div id="commentEditSection"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="comment-update-button" class="btn btn-primary">수정</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
         </div>
     </div>
 </div>
 
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script src="/js/comment.js"></script>
 <script th:inline="javascript">
-    const initValue = [[${article.contents}]]
+
+    const commentHTML = `<li class="comment-item border bottom mrg-btm-30">
+                            <img class="thumb-img img-circle"
+                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                            <div class="info">
+                                <span href="" class="text-bold inline-block">{{commentAuthorName}}</span>
+                                <span class="sub-title inline-block pull-right">
+                                    <i class="ti-timer pdd-right-5"></i>
+                                    <span>{{subOfDays}} days ago</span>
+                            </span>
+                                <p class="width-80">{{comment}}</p>
+                            </div>
+                                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                        data-target="#myModal"
+                                        value="{{commentId}}">
+                                    <i class="ti-pencil"></i>
+                                </button>
+                                <button class="btn delete-comment" value="{{commentId}}">
+                                    🗑️
+                                </button>
+                        </li>`;
+
+    const commentTemplate = Handlebars.compile(commentHTML);
+
+    const initValue = [[${article.contents}]];
+
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
         initialValue: initValue
-    })
+    });
+
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -157,6 +180,7 @@
         },
         height: '200px'
     });
+
     const editComment = new tui.Editor({
         el: document.querySelector('#commentEditSection'),
         initialEditType: 'markdown',
@@ -164,15 +188,72 @@
         placeholder: '수정할 내용을 입력해 주세요.',
         events: {
             change: function () {
-                console.log("cg")
                 document.getElementById('comment-edit-contents').setAttribute('value', editComment.getMarkdown())
             }
         },
         height: '200px'
     });
-    function changeCommentEditAction(articleId, commentId) {
-        const action = "/articles/" + articleId + "/comment/" + commentId
-        document.getElementById('comment-edit-form').setAttribute('action', action)
-    }
+
+    document.getElementById("save-btn").addEventListener("click", function (e) {
+        const articleId = [[${article.id}]];
+        const obj = {
+            method: 'POST',
+            body: JSON.stringify({
+                articleId: articleId,
+                comment: document.getElementById("comment-contents").value
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        };
+
+        fetch('/comments', obj)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                document.getElementById("comment-list")
+                    .insertAdjacentHTML("beforeend"
+                        , commentTemplate({
+                            "commentId": json.id
+                            , "comment": json.comment
+                            , "commentAuthorName": json.authorName
+                            , "subOfDays": json.subOfDays
+                        }))
+            })
+    });
+
+    const handleUpdate = function (e) {
+        const url = document.getElementById("comment-update-url").value;
+        const obj = {
+            method: 'PUT',
+            body: JSON.stringify({
+                comment: document.getElementById("comment-edit-contents").value
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        };
+
+        fetch(url, obj)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                const modal = document.getElementById("myModal");
+
+                modal.classList.remove("show");
+                const items = document.getElementsByClassName("btn delete-comment");
+
+                for (const i in items) {
+                    if (items[i].value == json.id) {
+                        items[i].parentNode.querySelector("p").innerText = json.comment;
+                        return;
+                    }
+                }
+            })
+    };
+
+    document.getElementById("comment-update-button").addEventListener("click", handleUpdate);
 </script>
 </html>

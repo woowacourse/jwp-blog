@@ -9,12 +9,14 @@ import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
+import techcourse.myblog.service.util.DayCalculator;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CommentService {
     private CommentRepository commentRepository;
     private UserService userService;
@@ -31,13 +33,11 @@ public class CommentService {
                 .orElseThrow(NotFoundCommentException::new);
     }
 
-    @Transactional
     public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
         Article article = articleService.findById(articleId);
         return commentRepository.findAllByArticle(article)
                 .stream()
-                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
-                        comment.getAuthorName(), comment.getComment()))
+                .map(this::toCommentResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -48,27 +48,24 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    @Transactional
-    public void update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
+    public Comment update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = findById(commentId);
-        if (matchUserId(userSessionDto, comment)) {
-            comment.updateComment(commentRequestDto.getComment());
-        }
+        User author = userService.findByUserSession(userSessionDto);
+        comment.updateComment(commentRequestDto.toEntity(author));
+        return comment;
     }
 
-    @Transactional
     public void delete(UserSessionDto userSessionDto, Long commentId) {
         Comment comment = findById(commentId);
-        if (matchUserId(userSessionDto, comment)) {
+        User author = userService.findByUserSession(userSessionDto);
+        if (comment.matchAuthor(author)) {
             commentRepository.deleteById(commentId);
         }
     }
 
-    private boolean matchUserId(UserSessionDto userSessionDto, Comment comment) {
-        return comment.matchAuthorId(userSessionDto.getId());
-    }
-
-    private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
-        return new CommentResponseDto(commentId, authorId, userName, comment);
+    public CommentResponseDto toCommentResponseDto(Comment comment) {
+        int day = comment.subtractionOfDays(new DayCalculator());
+        return new CommentResponseDto(comment.getId(), comment.getAuthorId(),
+                comment.getAuthorName(), comment.getComment(), day);
     }
 }

@@ -4,13 +4,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserRequestSignUpDto;
+import techcourse.myblog.service.dto.UserRequestUpdateDto;
 import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
     private UserService userService;
     private LoginChecker loginChecker;
@@ -20,7 +22,7 @@ public class UserController {
         this.loginChecker = loginChecker;
     }
 
-    @GetMapping("/users/sign-up")
+    @GetMapping("/sign-up")
     public String showRegisterPage(HttpSession session) {
         if (loginChecker.isLoggedIn(session)) {
             return "redirect:/";
@@ -28,30 +30,30 @@ public class UserController {
         return "sign-up";
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public String showUserList(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
-    @PostMapping("/users")
-    public String createUser(UserRequestDto userRequestDto) {
-        userService.save(userRequestDto);
+    @PostMapping
+    public String createUser(UserRequestSignUpDto userRequestSignUpDto) {
+        userService.save(userRequestSignUpDto);
         return "redirect:/login";
     }
 
-    @PutMapping("/users/{id}")
-    public String editUserName(@PathVariable Long id, UserRequestDto userRequestDto, HttpSession session) {
+    @PutMapping("/{id}")
+    public String editUserName(@PathVariable Long id, UserRequestUpdateDto userRequestUpdateDto, HttpSession session,
+                               UserSessionDto userSessionDto) {
         if (loginChecker.isLoggedInSameId(session, id)) {
-            userService.update(id, userRequestDto);
-            UserSessionDto userSessionDto = loginChecker.getLoggedInUser(session);
-            userSessionDto.setName(userRequestDto.getName());
+            userService.update(id, userRequestUpdateDto);
+            userSessionDto.setName(userRequestUpdateDto.getName());
             session.setAttribute(LoginChecker.LOGGED_IN_USER, userSessionDto);
         }
         return "redirect:/mypage/" + id;
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Long id, HttpSession session) {
         if (loginChecker.isLoggedInSameId(session, id)) {
             userService.delete(id);

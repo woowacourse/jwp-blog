@@ -1,16 +1,18 @@
 package techcourse.myblog.domain.article;
 
-import techcourse.myblog.domain.comment.Comment;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.domain.BaseTimeEntity;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-public class Article {
+public class Article extends BaseTimeEntity {
     private static final int CONTENTS_LENGTH = 1000;
 
     @Id
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,14 +23,13 @@ public class Article {
     private String coverUrl;
 
     @Column(nullable = false, length = CONTENTS_LENGTH)
+    @Lob
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "FK_article_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
 
     protected Article() {
     }
@@ -41,13 +42,15 @@ public class Article {
     }
 
     public void updateArticle(Article article) {
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
+        if (matchAuthor(article.author)) {
+            this.title = article.title;
+            this.coverUrl = article.coverUrl;
+            this.contents = article.contents;
+        }
     }
 
-    public boolean matchUserId(Long userId) {
-        return this.author.matchId(userId);
+    public boolean matchAuthor(User author) {
+        return this.author.equals(author);
     }
 
     public Long getId() {

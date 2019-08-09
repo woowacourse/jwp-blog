@@ -27,17 +27,10 @@ public class LogInController {
         }
         return "login";
     }
-//
-//    @PostMapping("/login")
-//    public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
-//        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-//        session.setAttribute(LoginChecker.LOGGED_IN_USER, userPublicInfoDto);
-//        return "redirect:/";
-//    }
 
     @PostMapping("/login")
     public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
-        UserSessionDto userSession = logInService.logIn1(logInInfoDto);
+        UserSessionDto userSession = logInService.logIn(logInInfoDto);
         session.setAttribute(LoginChecker.LOGGED_IN_USER, userSession);
         return "redirect:/";
     }

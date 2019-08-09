@@ -13,37 +13,36 @@ import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.UserAuthorizationException;
 import techcourse.myblog.web.util.LoginChecker;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private ArticleService articleService;
     private UserService userService;
     private CommentService commentService;
     private LoginChecker loginChecker;
 
-    public ArticleController(ArticleService articleService, UserService userService, CommentService commentService
-            , LoginChecker loginChecker) {
+    public ArticleController(ArticleService articleService, UserService userService, CommentService commentService,
+                             LoginChecker loginChecker) {
         this.articleService = articleService;
         this.userService = userService;
         this.commentService = commentService;
         this.loginChecker = loginChecker;
     }
 
-    @GetMapping("/articles")
+    @GetMapping
     public String showArticles(Model model) {
         model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
-    @GetMapping("/articles/new")
-    public String showCreatePage(HttpSession session) {
-        loginChecker.getLoggedInUser(session);
+    @GetMapping("/new")
+    public String showCreatePage(UserSessionDto userSessionDto) {
         return "article-edit";
     }
 
-    @GetMapping("/articles/{id}")
+    @GetMapping("/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
         ArticleDto articleDto = articleService.findArticleDtoById(id);
         model.addAttribute("article", articleDto);
@@ -56,10 +55,9 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable("id") Long articleId, Model model, HttpSession session) {
+    @GetMapping("/{id}/edit")
+    public String showEditPage(@PathVariable("id") Long articleId, Model model, UserSessionDto userSession) {
         try {
-            UserSessionDto userSession = loginChecker.getLoggedInUser(session);
             ArticleDto articleDto = articleService.authorize(userSession, articleId);
             model.addAttribute("article", articleDto);
             return "article-edit";
@@ -68,21 +66,22 @@ public class ArticleController {
         }
     }
 
-    @PostMapping("/articles")
-    public String createArticle(ArticleDto articleDto, HttpSession session) {
-        ArticleDto savedArticleDto = articleService.save(loginChecker.getLoggedInUser(session), articleDto);
+    @PostMapping
+    public String createArticle(ArticleDto articleDto, UserSessionDto userSession) {
+        ArticleDto savedArticleDto = articleService.save(userSession, articleDto);
         return "redirect:/articles/" + savedArticleDto.getId();
     }
 
-    @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto, HttpSession session) {
-        articleService.update(articleId, loginChecker.getLoggedInUser(session), articleDto);
+    @PutMapping("/{articleId}")
+    public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto,
+                              UserSessionDto userSession) {
+        articleService.update(articleId, userSession, articleDto);
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable("id") long articleId, HttpSession session) {
-        articleService.delete(articleId, loginChecker.getLoggedInUser(session));
+    @DeleteMapping("/{id}")
+    public String deleteArticle(@PathVariable("id") long articleId, UserSessionDto userSession) {
+        articleService.delete(articleId, userSession);
         return "redirect:/";
     }
 }

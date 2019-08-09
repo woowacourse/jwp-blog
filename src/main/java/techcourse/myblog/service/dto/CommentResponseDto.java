@@ -5,12 +5,18 @@ public class CommentResponseDto {
     private Long authorId;
     private String authorName;
     private String comment;
+    private Integer subOfDays;
 
-    public CommentResponseDto(Long id, Long authorId, String authorName, String comment) {
+    private CommentResponseDto() {
+
+    }
+
+    public CommentResponseDto(Long id, Long authorId, String authorName, String comment, Integer subOfDays) {
         this.id = id;
         this.authorId = authorId;
         this.authorName = authorName;
         this.comment = comment;
+        this.subOfDays = subOfDays;
     }
 
     public Long getId() {
@@ -27,5 +33,9 @@ public class CommentResponseDto {
 
     public String getComment() {
         return comment;
+    }
+
+    public Integer getSubOfDays() {
+        return subOfDays;
     }
 }

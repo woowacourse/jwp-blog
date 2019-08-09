@@ -41,8 +41,4 @@ public class ArticleDto {
     public Article toEntity(User author) {
         return new Article(title, coverUrl, contents, author);
     }
-
-    public Article toEntity() {
-        return new Article(title, coverUrl, contents, null);
-    }
 }

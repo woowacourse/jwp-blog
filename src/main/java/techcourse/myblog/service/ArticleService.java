@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ArticleService {
     private ArticleRepository articleRepository;
     private UserService userService;
@@ -43,25 +44,25 @@ public class ArticleService {
         return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
     }
 
-    @Transactional
-    public void update(long articleId, UserSessionDto userSession, ArticleDto articleDto) {
+    public Article update(long articleId, UserSessionDto userSession, ArticleDto articleDto) {
         Article article = findById(articleId);
-        if (article.matchUserId(userSession.getId())) {
-            article.updateArticle(articleDto.toEntity());
-        }
+        User author = userService.findByUserSession(userSession);
+        article.updateArticle(articleDto.toEntity(author));
+        return article;
     }
 
-    @Transactional
     public void delete(Long articleId, UserSessionDto userSession) {
         Article article = findById(articleId);
-        if (article.matchUserId(userSession.getId())) {
+        User author = userService.findByUserSession(userSession);
+        if (article.matchAuthor(author)) {
             articleRepository.deleteById(articleId);
         }
     }
 
     public ArticleDto authorize(UserSessionDto userSession, Long articleId) {
-        final Article article = findById(articleId);
-        if (article.matchUserId(userSession.getId())) {
+        Article article = findById(articleId);
+        User author = userService.findByUserSession(userSession);
+        if (article.matchAuthor(author)) {
             return toArticleDto(article);
         }
         throw new UserAuthorizationException();

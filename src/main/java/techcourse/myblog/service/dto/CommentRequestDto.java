@@ -8,6 +8,9 @@ public class CommentRequestDto {
     private Long articleId;
     private String comment;
 
+    private CommentRequestDto() {
+    }
+
     public CommentRequestDto(Long articleId, String comment) {
         this.articleId = articleId;
         this.comment = comment;
@@ -17,8 +20,20 @@ public class CommentRequestDto {
         return comment;
     }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Long getArticleId() {
         return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
+    public Comment toEntity(User author) {
+        return new Comment(comment, author, null);
     }
 
     public Comment toEntity(User author, Article article) {
