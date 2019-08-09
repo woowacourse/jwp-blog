@@ -1,5 +1,6 @@
 package techcourse.myblog.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,6 +49,7 @@ public class CommentDto {
         private Long id;
         private String contents;
         private String name;
+        @JsonFormat(pattern = "yyyy-mm-dd HH:mm")
         private LocalDateTime modifiedDate;
 
         Response(Comment comment) {
