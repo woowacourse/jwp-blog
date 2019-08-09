@@ -3,6 +3,8 @@ version: "3"
 services:
   blog:
     image: laterality/jwp-blog:latest
+    depends_on: 
+      - db
     ports: 
       - 8080:8080
     volumes: 
@@ -22,8 +24,6 @@ services:
   jenkins:
     image: laterality/jenkins:latest
     container_name: jenkins
-    ports: 
-      - 8000:8080
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock
       - ./jenkins_home:/var/jenkins_home
