@@ -10,4 +10,4 @@ wget -O - https://raw.githubusercontent.com/Laterality/jwp-blog/step4/scripts/ng
 sudo docker-compose up -d
 
 # Show jenkins initial password
-echo Jenkins initial password: $(sudo docker-compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword)
+echo Jenkins initial password: $(sudo docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword)

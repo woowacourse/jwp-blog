@@ -31,6 +31,8 @@ services:
   nginx:
     image: nginx
     container_name: web
+    links:
+      - jenkins
     ports:
       - 80:80
     volumes:
