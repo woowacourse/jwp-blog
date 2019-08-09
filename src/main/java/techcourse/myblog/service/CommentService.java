@@ -80,6 +80,7 @@ public class CommentService {
         return comment.getArticle().getId();
     }
 
+    @Transactional
     public ResponseEntity<List<CommentResponseDto>> updateAndMakeResponseWithCommentsOf(long commentId, CommentRequestDto commentRequestDto, User user) {
         long articleId = getArticleIdOf(commentId);
         validateCommenter(commentId, user);
@@ -87,6 +88,7 @@ public class CommentService {
         return makeResponseWithCommentsOf(articleId);
     }
 
+    @Transactional
     public ResponseEntity<List<CommentResponseDto>> deleteAndMakeResponseWithCommentsOf(long commentId, User user) {
         long articleId = getArticleIdOf(commentId);
         validateCommenter(commentId, user);
