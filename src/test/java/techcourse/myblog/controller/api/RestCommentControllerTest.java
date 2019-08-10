@@ -26,15 +26,6 @@ class RestCommentControllerTest {
     int localServerPort;
 
     @Test
-    void 비동기_댓글_조회() {
-        webTestClient.get().uri("/api/articles/" + SAMPLE_ARTICLE_ID + "/comments")
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBodyList(CommentResponseDto.class);
-    }
-
-    @Test
     void 비동기_댓글_생성() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(SAMPLE_ARTICLE_ID, "comment");
 
