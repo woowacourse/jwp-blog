@@ -34,7 +34,7 @@ dependencies {
 
     testRuntimeOnly 'com.h2database:h2'
 
-    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
 ext {
