@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class EmailConstraintValidator implements ConstraintValidator<EmailConstraint, String> {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public EmailConstraintValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
