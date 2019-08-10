@@ -13,10 +13,11 @@ public class Article extends DateTimeBaseEntity {
     @Column(nullable = false, length = 300)
     private String title;
 
-    @Column(nullable = false, length = 300)
+    @Column(length = 300)
     private String coverUrl;
 
     @Lob
+    @Column(nullable = false)
     private String contents;
 
     @ManyToOne
