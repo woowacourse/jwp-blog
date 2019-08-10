@@ -45,4 +45,13 @@ public class ArticleRequest {
     public void setContents(String contents) {
         this.contents = contents;
     }
+
+    @Override
+    public String toString() {
+        return "ArticleRequest{" +
+                "title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
+    }
 }

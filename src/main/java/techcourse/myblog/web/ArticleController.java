@@ -79,7 +79,11 @@ public class ArticleController {
     public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest, HttpSession httpSession, Model model) {
         log.debug("begin");
 
-        Article article = articleService.editArticle(articleRequest, articleId, (User) httpSession.getAttribute("user"));
+        User user = (User)httpSession.getAttribute("user");
+
+        log.debug("user: {}", user);
+
+        Article article = articleService.editArticle(articleRequest, articleId, user);
         model.addAttribute("article", article);
         return "redirect:/articles/" + articleId;
     }

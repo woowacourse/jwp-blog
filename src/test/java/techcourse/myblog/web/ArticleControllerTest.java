@@ -41,7 +41,7 @@ public class ArticleControllerTest {
         String title = "titleTest";
         String coverUrl = "coverUrlTest";
         String contents = "contentsTest";
-        String cookie = getCookie("test@gmail.com");
+        // String cookie = getCookie("test@gmail.com");
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -155,13 +155,18 @@ public class ArticleControllerTest {
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
-                .isFound();
+                .isOk();
     }
 
     @Test
     void 내가쓴글_수정_시도() {
         webTestClient.put().uri("/articles/1")
                 .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", "updated title")
+                        .with("coverUrl", "updated coverUrl")
+                        .with("contents", "updated contents"))
                 .exchange()
                 .expectStatus()
                 .isFound();

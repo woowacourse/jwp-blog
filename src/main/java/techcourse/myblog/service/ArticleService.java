@@ -1,5 +1,7 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,6 +16,8 @@ import javax.transaction.Transactional;
 
 @Service
 public class ArticleService {
+    private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
+
     private ArticleRepository articleRepository;
 
     public ArticleService(ArticleRepository articleRepository) {
@@ -44,7 +48,12 @@ public class ArticleService {
 
     @Transactional
     public Article editArticle(ArticleRequest articleRequest, long articleId, User user) {
+        log.debug("begin");
+
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        log.debug("article: {}", article);
+        log.debug("articleRequest: {}", articleRequest);
+
         article.updateArticle(articleRequest.toArticle(), user);
         return article;
     }

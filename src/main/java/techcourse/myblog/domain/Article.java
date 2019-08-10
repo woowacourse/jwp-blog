@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(value = {AuditingEntityListener.class})
 public class Article {
+    private static final Logger log = LoggerFactory.getLogger(Article.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -75,6 +79,7 @@ public class Article {
 
     public void checkAuthor(User user) {
         if (!this.author.equals(user)) {
+            log.warn("author: {}, user: {}", this.author, user);
             throw new InvalidAuthorException("작성자가 일치하지 않습니다.");
         }
     }
