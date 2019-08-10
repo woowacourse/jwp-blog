@@ -151,13 +151,17 @@ class ArticleControllerTest {
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
-                .isFound();
+                .isOk();
     }
 
     @Test
     void 내가쓴글_수정_시도() {
         webTestClient.put().uri("/articles/1")
                 .header("Cookie", cookie)
+                .body(BodyInserters
+                        .fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
                 .exchange()
                 .expectStatus()
                 .isFound();

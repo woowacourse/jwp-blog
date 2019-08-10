@@ -31,7 +31,7 @@ public class UserService {
 
     private User createUser(UserRequest userRequest) {
         try {
-            return new User(userRequest.getName(), userRequest.getEmail(), encryptHelper.encrypt(userRequest.getPassword()));
+            return new User(userRequest.getName(), userRequest.getEmail(), userRequest.getPassword());
         } catch (IllegalArgumentException e) {
             throw new SignUpException(e.getMessage());
         }
