@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
@@ -25,28 +25,27 @@ class CommentControllerTests extends ControllerTestTemplate {
     private CommentRepository commentRepository;
 
     private String savedArticleUrl;
-    private CommentDto commentDto;
+    private CommentRequestDto commentRequestDto;
 
     @BeforeEach
     public void setup() {
         super.setup();
         savedArticleUrl = getRedirectUrl(loginAndRequestWithDataWriter(POST, "/articles/write", parseArticle(ARTICLE_FEATURE)));
-        commentDto = COMMENT_DTO;
+        commentRequestDto = COMMENT_DTO;
     }
 
     @Test
     void 로그아웃_상태_댓글작성_리다이렉트() {
-        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, savedArticleUrl + "/comment", parser(commentDto)));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, savedArticleUrl + "/comment", parser(commentRequestDto)));
         assertEquals("/login", redirectUrl);
     }
 
     @Test
     void 로그인_상태_댓글작성_성공() {
         loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserDto)
-                .jsonPath("$.contents").isEqualTo("contents")
-                .jsonPath("$.writer.id").isEqualTo(savedUser.getId())
-                .jsonPath("$.writer.name").isEqualTo(savedUser.getName())
-                .jsonPath("$.writer.email").isEqualTo(savedUser.getEmail());
+                .jsonPath("$.contents").isEqualTo(COMMENT_DTO.getContents())
+                .jsonPath("$.userId").isEqualTo(savedUser.getId())
+                .jsonPath("$.userName").isEqualTo(savedUser.getName());
     }
 
     @Test
@@ -106,9 +105,9 @@ class CommentControllerTests extends ControllerTestTemplate {
         return "/articles/" + comment.getArticle().getId() + "/comment/" + comment.getId();
     }
 
-    private MultiValueMap<String, String> parser(CommentDto commentDto) {
+    private MultiValueMap<String, String> parser(CommentRequestDto commentRequestDto) {
         MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("contents", commentDto.getContents());
+        multiValueMap.add("contents", commentRequestDto.getContents());
         return multiValueMap;
     }
 }

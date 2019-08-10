@@ -95,7 +95,7 @@
                                 <input name="_method" type="hidden" value="PUT" />
                                 <input class="edit" th:id="'comment-' + ${comment.id}"name="contents" th:value="${comment.contents}">
                                 <button type="button" th:value="${comment.id}" class="btn btn-default comment-modify-button comment-modify">
-                                    <i class="ti-save "></i>
+                                    <i class="ti-save"></i>
                                 </button>
                                 <button type="button" class="btn btn-default comment-modify">
                                     <i class="ti-close comment-modify"></i>
@@ -125,8 +125,8 @@
             <i class ="ti-pencil text-dark font-size-16 pdd-horizon-5 comment-modify"></i>
         </button>
         <div class="form">
-            <button type="button" class="btn btn-icon pointer comment-remove-button" value="{{id}}">
-                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5 comment-remove-button" value="{{id}}"></i>
+            <button type="button" class="btn btn-icon pointer comment-remove-button" value="{{commentId}}">
+                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5 comment-remove-button" value="{{commentId}}"></i>
             </button>
         </div>
     </div>
@@ -135,17 +135,17 @@
     <li class="comment-item border bottom mrg-btm-30">
         <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
         <div class="info view">
-            <span class="text-bold inline-block">{{writer.name}}</span>
+            <span class="text-bold inline-block">{{userName}}</span>
             <span class="sub-title inline-block pull-right">
                 <i class="ti-timer pdd-right-5"></i>
                 <span>{{updateTimeAt}}</span>
                     {{buttons}}
             </span>
-            <p id="comment-{{id}}-contents" class="width-80">{{contents}}</p>
+            <p id="comment-{{commentId}}-contents" class="width-80">{{contents}}</p>
         </div>
         <div class="edit edit-form">
-            <input class="edit" id="comment-{{id}}" name="contents" value="{{contents}}">
-            <button type="button" class="btn btn-default comment-modify-button comment-modify" value="{{id}}">
+            <input class="edit" id="comment-{{commentId}}" name="contents" value="{{contents}}">
+            <button type="button" class="btn btn-default comment-modify-button comment-modify" value="{{commentId}}">
                 <i class="ti-save"></i>
             </button>
             <button type="button" class="btn btn-default comment-modify">
@@ -295,7 +295,7 @@
 
                 let compiledCommentTemplate = compile(comment, commentTemplate);
 
-                if (comment.writer.id === sessionUser.id) {
+                if (comment.userId === sessionUser.id) {
                     compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join(compile(comment, buttonsTemplate));
                 } else {
                     compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join('');

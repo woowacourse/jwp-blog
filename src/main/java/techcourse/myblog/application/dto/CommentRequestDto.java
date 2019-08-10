@@ -8,13 +8,13 @@ import techcourse.myblog.domain.user.User;
 import javax.validation.constraints.NotBlank;
 
 @Getter
-public class CommentDto {
+public class CommentRequestDto {
     @NotBlank
     private String contents;
 
-    private CommentDto() {}
+    private CommentRequestDto() {}
 
-    public CommentDto(String contents) {
+    public CommentRequestDto(String contents) {
         this.contents = contents;
     }
 
@@ -24,7 +24,7 @@ public class CommentDto {
 
     @Override
     public String toString() {
-        return "CommentDto{" +
+        return "CommentRequestDto{" +
                 "contents=" + contents +
                 '}';
     }

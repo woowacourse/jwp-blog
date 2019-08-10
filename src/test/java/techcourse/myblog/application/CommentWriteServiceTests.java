@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
@@ -41,12 +41,12 @@ public class CommentWriteServiceTests {
     @Test
     void 댓글_수정() {
         Comment comment = COMMENT_DTO.toComment(reader, article);
-        CommentDto updateCommentDto = UPDATE_COMMENT_DTO;
+        CommentRequestDto updateCommentRequestDto = UPDATE_COMMENT_DTO;
 
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
-        assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentDto.toComment(reader, article)));
-        compareComment(commentRepository.findById(id).get(), updateCommentDto.toComment(reader, article));
+        assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentRequestDto.toComment(reader, article)));
+        compareComment(commentRepository.findById(id).get(), updateCommentRequestDto.toComment(reader, article));
     }
 
     void compareComment(Comment comment1, Comment comment2) {

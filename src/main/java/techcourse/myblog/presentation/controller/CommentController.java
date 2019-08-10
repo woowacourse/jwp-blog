@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.CommentReadService;
 import techcourse.myblog.application.CommentWriteService;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
+import techcourse.myblog.application.dto.CommentResponseDto;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.presentation.support.LoginUser;
@@ -30,21 +31,21 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
-        log.debug("comment save request data : -> {}, {}", articleId, commentDto);
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long articleId, @RequestBody CommentRequestDto commentRequestDto, LoginUser loginUser) {
+        log.debug("comment save request data : -> {}, {}", articleId, commentRequestDto);
         Article article = articleReadService.findById(articleId);
-        Comment comment = commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
-        log.debug("comment save response data : -> {}", comment);
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        CommentResponseDto commentResponseDto = commentWriteService.save(commentRequestDto.toComment(loginUser.getUser(), article));
+        log.debug("comment save response data : -> {}", commentResponseDto);
+        return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
-        log.debug("comment update request data : -> {}, {}", articleId, commentDto);
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentRequestDto commentRequestDto, LoginUser loginUser) {
+        log.debug("comment update request data : -> {}, {}", articleId, commentRequestDto);
         Article article = articleReadService.findById(articleId);
-        Comment comment = commentWriteService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
-        log.debug("comment update response data : -> {}", comment);
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        CommentResponseDto commentResponseDto = commentWriteService.modify(commentId, commentRequestDto.toComment(loginUser.getUser(), article));
+        log.debug("comment update response data : -> {}", commentResponseDto);
+        return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
