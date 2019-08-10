@@ -55,8 +55,10 @@ public class UserService {
     public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();
         List<UserResponse> userResponses = users.stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
-                .collect(Collectors.toList());
+                .map(user -> modelMapper
+                        .map(user, UserResponse.class))
+                .collect(Collectors.toList())
+                ;
 
         return Collections.unmodifiableList(userResponses);
     }
@@ -75,10 +77,14 @@ public class UserService {
         }
     }
 
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
+    }
+
     @Transactional
     public UserResponse editUserName(Long userId, String name) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
+        User user = findUserById(userId);
         changeName(name, user);
         return modelMapper.map(user, UserResponse.class);
     }
