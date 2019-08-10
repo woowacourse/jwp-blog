@@ -1,16 +1,57 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
-    <link rel="stylesheet" href="/css/article-edit.css">
+    <th:block th:include="fragments/head"></th:block>
+    <th:block th:include="fragments/article-head"></th:block>
+
     <link rel="stylesheet" href="/css/article.css">
 </head>
 <body>
+<div type="hidden" id="session-email" th:text="${sessionEmail}"></div>
 <div>
-    <div th:replace="fragments/main/header :: header"></div>
+    <header id="header" class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div id="logo-dark" class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div id="logo-white" class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                    <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
+                        <img class="profile-img img-fluid"
+                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                        <div class="user-info text-white">
+                            <span class="name pdd-right-5">Brown</span>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="text-dark">
+                            <a href="mypage.html">
+                                <i class="ti-user pdd-right-10"></i>
+                                <span class="text-dark">마이 페이지</span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="text-dark">
+                            <a href="/logout">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">로그아웃</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </header>
+
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg"
-             th:style="'background-image: url(' + ${article.coverUrl} + '), url(\'/images/pages/index/study.jpg\');'">
+        <div class="cover-img overlay-dark bg" th:style="'background:url(' + ${article.coverUrl} + ');'">
             <div class="padding-30">
                 <h1 class="text-center cover-title" th:text="${article.title}"></h1>
             </div>
@@ -20,18 +61,23 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:if="${session.user != null && session.user.getId() == article.author.id}"
-                   th:href="@{/articles/{id}/edit(id=${article.id})}" class="float-right pointer btn btn-icon">
-                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                </a>
-                <form th:if="${session.user != null && session.user.getId() == article.author.id}"
-                      th:action="@{/articles/{id}(id=${article.id})}" name="article" method="post"
-                      accept-charset="utf-8">
+                <div class="float-right">
+                    <a th:href="|/articles/${article.id}/edit|" class="pointer btn btn-icon">
+                        <button type="submit" class="pointer btn btn-icon">
+                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                        </button>
+                    </a>
+                </div>
+                <form class="float-right" th:action="'/articles/' + ${article.id}" method="post">
                     <input type="hidden" name="_method" value="delete"/>
-                    <button id="delete-btn" type="submit" class="float-right pointer btn btn-icon">
-                        <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
-                    </button>
+                    <a class="pointer btn btn-icon">
+                        <button type="submit" class="pointer btn btn-icon">
+                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                        </button>
+                    </a>
                 </form>
+                </a>
+                <div id="articleId" style="display: none" th:text="${article.id}"></div>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
@@ -41,9 +87,7 @@
                              src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
-                        <span class="font-size-16 text-bold pdd-btm-5"
-                              th:text="${article.author.name}">Brown</span><span class="font-size-12 text-gray"
-                                                                                 th:text="${article.author.email}"> / gracefulBrown@woowahan.com</span>
+                        <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
                         <p class="font-size-13 text-dimgray lh-1-3">
                             백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
                             Woowahantechcourse Organizer / Coach / Husband
@@ -66,63 +110,88 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
+                    <span class="font-size-16 text-info">2</span>
                 </div>
-                <div class="comment">
-                    <form action="/comment/" th:method="delete">
-                        <ul class="list-unstyled list-info">
-                            <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
-                                <input type="hidden" name="id" th:value="${comment.id}"/>
-                                <input type="hidden" name="contents" th:value="${comment.contents}"/>
-                                <input type="hidden" name="articleId" th:value="${article.id}"/>
+                <div id="comments" class="comment">
+                    <div>
+                        <ul id="comment-div" class="list-unstyled list-info">
+                            <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img class="thumb-img img-circle"
-                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                                     src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                                 <div class="info">
-                                    <span href="" th:text="${comment.user.name}"
-                                          class="text-bold inline-block">Jun</span>
-                                    <button th:if="${session.user != null && session.user.id == article.author.id}"
-                                            id="comment-edit-btn" type="submit"
-                                            class="float-right pointer btn btn-icon">
-                                        <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
-                                    </button>
-                                    <a th:href="@{/comment/{id}/edit(id=${comment.id})}"
-                                       th:if="${session.user != null && session.user.id == article.author.id}"
-                                       id="comment-delete-btn" type="submit" class="float-right pointer btn btn-icon">
-                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                    </a>
-                                    <p class="width-80" th:text="${comment.contents}"></p>
+                                    <input type="text" th:id="'content-input'+ ${comment.id}" style="display:none"/>
+                                    <span href="" class="text-bold inline-block"
+                                          th:text="${comment.authorName}">Jun</span>
+                                    <span class="sub-title inline-block pull-right">
+                                        <i class="ti-timer pdd-right-5"></i>
+                                        <span>6 min ago</span>
+                                    </span>
+
+                                    <div th:if="${comment.getAuthor() == true}">
+                                        <button type="button" class="float-right pointer btn btn-icon"
+                                                th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
+                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+
+                                        <button type="submit" class="float-right pointer btn btn-icon">
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+                                    </div>
+                                    <p th:id="'commentContents-'+${comment.id}" class="width-80"
+                                       th:text="${comment.contents}">브라운 멋져</p>
                                 </div>
                             </li>
+
                         </ul>
-                    </form>
-                    <div class="add-comment">
-                        <input id="comment-contents" name="contents" type="hidden">
-                        <input name="articleId" type="hidden" th:value="${article.id}">
-                        <div id="editSection"></div>
                     </div>
-                    <button th:if="${session.user != null}" id="comment-btn"
-                            class="float-right pointer btn btn-icon">
-                        Comment
-                    </button>
+                    <div class="add-comment">
+                        <div id="editSection"></div>
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <a id="disc" class="float-right pointer btn btn-icon">
+                            <button id="save-btn" class="btn btn-default">
+                                <i class="ti-save"></i>
+                            </button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    const initValue = /*[[${article.contents}]]*/ 'default';
-
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="commentModifyForm" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Title</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="_method" value="PUT"/>
+                    <input type="text" id="modalInput" name="contents"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<th:block th:include="fragments/body"></th:block>
+<script type="text/javascript" th:inline="javascript">
+    /* <![CDATA[ */
+    const initValue = /*[[${article.contents}]]*/
+    /*]]>*/
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
         initialValue: initValue
     })
-
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -134,7 +203,8 @@
         },
         height: '200px'
     });
-    /*]]>*/
 </script>
+<script src="/js/article.js"></script>
+<script src="/js/commentTemplate.js"></script>
 </body>
 </html>

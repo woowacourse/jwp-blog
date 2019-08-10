@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
+    <th:block th:include="fragments/head"></th:block>
+
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/customize.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 <div class="app">
@@ -36,47 +40,45 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form method="post" action="/accounts/user" th:object="${userDto}"
-                                                          id="signForm">
+                                                    <form id="user-form" method="post" action="/users">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" class="form-control" th:field="*{name}">
-                                                            <span th:if="${#fields.hasErrors('name')}"
-                                                                  th:errors="*{name}" style="color: red"></span>
+                                                            <input id="name" type="text" name="name"
+                                                                   class="form-control" required
+                                                                   pattern="^([A-Za-z가-힣]{2,10})$" autocomplete="off">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control"
-                                                                   th:field="*{email}">
-                                                            <span th:if="${#fields.hasErrors('email')}"
-                                                                  th:errors="*{email}" style="color: red"></span>
+                                                            <input type="email" name="email" required
+                                                                   class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
                                                             <input id="password" type="password" name="password"
                                                                    class="form-control"
-                                                                   placeholder="Password" th:field="*{password}">
-                                                            <span th:if="${#fields.hasErrors('password')}"
-                                                                  th:errors="*{password}" style="color: red"></span>
+                                                                   pattern="^([a-zA-Z0-9!@#$%^&*]{8,})$" required
+                                                                   placeholder="Password" autocomplete="off">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input id="confirmPassword" type="password"
+                                                            <input id="password-check" type="password"
                                                                    class="form-control"
-                                                                   placeholder="Password">
+                                                                   pattern="^([a-zA-Z0-9!@#$%^&*]{8,})$" required
+                                                                   placeholder="Password" autocomplete="off">
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit"
+                                                            <button id="form-submit-button" type="submit"
+                                                                    onclick="return submitForm()"
                                                                     class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                 가입하기
                                                             </button>
                                                         </div>
+
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
-                                                        <a href="login.html"
-                                                           class="text-info pointer mrg-left-5">로그인</a>
+                                                        <a href="/login" class="text-info pointer mrg-left-5">로그인</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -92,22 +94,21 @@
     </div>
 </div>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
-<script>
-    const password = document.querySelector("#password")
-    const confirmPassword = document.querySelector("#confirmPassword");
 
-    password.onchange = checkPassword;
-    confirmPassword.onkeyup = checkPassword;
+<th:block th:include="fragments/body"></th:block>
+<script type="text/javascript">
+    function submitForm() {
+        var password = document.querySelector("#password").value;
+        var passwordCheck = document.querySelector("#password-check").value;
 
-    function checkPassword() {
-        if (password.value !== confirmPassword.value) {
-            confirmPassword.setCustomValidity("비밀번호가 일치하지 않습니다.");
-        } else {
-            confirmPassword.setCustomValidity("");
+        if (password !== passwordCheck) {
+            alert("잘못된 비밀번호입니다");
+            return false;
         }
+
+        document.querySelector("#user-form").submit();
     }
+
 </script>
 </body>
 </html>

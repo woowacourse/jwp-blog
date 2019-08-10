@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
->
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
+    <th:block th:include="fragments/head"></th:block>
+
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/customize.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 <div class="app">
@@ -37,10 +40,7 @@
                                                         <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
                                                             로그인</h2>
                                                     </div>
-                                                    <div th:if="${error}" th:text="${error}" style="color: red">
-                                                        Unable to login. Check your username and password.
-                                                    </div>
-                                                    <form method="post" th:action="@{/login}">
+                                                    <form action="/login" method="post">
                                                         <div class="form-group">
                                                             <input name="email" type="email" class="form-control"
                                                                    placeholder="Id">
@@ -57,15 +57,12 @@
                                                             <a href="">Forgot Password?</a>
                                                         </div>
                                                         <div class="mrg-top-20 text-right">
-                                                            <button type="submit" class="btn btn-tumblr">
-                                                                로그인
-                                                            </button>
+                                                            <button type="submit" class="btn btn-tumblr">로그인</button>
                                                         </div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>아직 회원이 아니신가요?</span>
-                                                        <a href="/accounts/signup"
-                                                           class="text-info pointer mrg-left-5">회원가입</a>
+                                                        <a href="/signup" class="text-info pointer mrg-left-5">회원가입</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -81,7 +78,7 @@
     </div>
 </div>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
+
+<th:block th:include="fragments/body"></th:block>
 </body>
 </html>

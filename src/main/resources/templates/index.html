@@ -1,18 +1,44 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
+    <th:block th:include="fragments/head"></th:block>
+
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/customize.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/index.css">
 </head>
-</html>
 <body>
 <div>
-    <div th:replace="fragments/main/header :: header"></div>
+    <header id="header" class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <li class="user-profile">
+                    <a th:href="${email} ? '/mypage' : '/login'">
+                        <div class="user-info login-btn pointer mrg-right-10">
+                            <span th:text="${email} ? ${email} : 'Login'" class="name pdd-right-5 text-white"></span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
     <div class="about-cover card no-border mrg-btm-0">
-        <div class="cover-img overlay-dark bg"
-             style="background-image: url('/images/pages/index/bg.jpg')"></div>
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">BLOG</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
             </div>
         </div>
     </div>
@@ -33,16 +59,18 @@
                             <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
                         </li>
                     </ul>
-                    <div class="width-100 fixed left-0 border bottom"></div>
+                    <div class="width-100 absolute left-0 border bottom"></div>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
-                            <div th:each="article : ${articles}">
+                        <div th:unless="${#lists.size(articles)}">아직은 글이 존재하지 않습니다.</div>
+                        <div th:each="article : ${articles}">
+                            <div role="tabpanel" class="tab-pane fade in active"
+                                 th:id="'tab-centered-' + ${article.id}">
                                 <div class="pdd-horizon-15 pdd-vertical-20">
-                                    <a th:href="@{/articles/{id}(id=${article.id})}" class="card article-container">
+                                    <a th:href="'articles/' + ${article.id}" class="card article-container">
                                         <div class="card-horizon">
                                             <div class="image-container col-md-4">
                                                 <div class="background-holder has-content"
-                                                     th:style="'background-image: url(' + ${article.coverUrl} + '), url(\'/images/pages/index/study.jpg\');'"></div>
+                                                     th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
                                             </div>
                                             <div class="container-fluid">
                                                 <div class="row">
@@ -71,28 +99,17 @@
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
-                        <div class="pdd-horizon-15 pdd-vertical-20">
-
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="tab-centered-3">
-                        <div class="pdd-horizon-15 pdd-vertical-20">
-                        </div>
-                    </div>
                 </div>
             </div>
+            <div class="col-lg-3"></div>
         </div>
-        <div class="col-lg-3"></div>
+
+        <a href="writing"
+           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+            <i class="ti-plus"></i>
+        </a>
+
     </div>
-    <div th:text="${session.user != null}"></div>
-
-    <a th:if="${session.user != null}" href="/articles/writing"
-       class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
-        <i class="ti-plus"></i>
-    </a>
-
-</div>
 </div>
 
 <footer class="content-footer">
@@ -106,23 +123,9 @@
             기술블로그</a>
     </div>
 </footer>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js">
-</script>
-<script>
-    const xhr = new XMLHttpRequest()
-    const message = JSON.stringify({"name": "brown"})
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
-            console.log("보내기성공")
-        }
-    }
-
-    xhr.open('POST', 'http://localhost:8080/robby')
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-    xhr.send(message)
-</script>
+<th:block th:include="fragments/body"></th:block>
 </body>
 </html>

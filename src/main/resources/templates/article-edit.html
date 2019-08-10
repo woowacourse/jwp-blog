@@ -1,39 +1,85 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
+    <th:block th:include="fragments/head"></th:block>
+    <th:block th:include="fragments/article-head"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/article-edit.css">
-    <link rel="stylesheet" href="/css/article.css">
 </head>
 <body>
 <div>
-    <div th:replace="fragments/main/header :: header"></div>
-    <form th:action="${article != null ? '/articles/' + article.id : '/articles' }"
-          th:method="${article != null ? 'put' : 'post'}"
-          accept-charset="utf-8">
-        <!--                <input type="hidden" name="_method" value="put"/>-->
-        <input type="hidden" name="id" th:if="${article}" th:value="${article.id}"/>
+    <div class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                    <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
+                        <img class="profile-img img-fluid"
+                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                        <div class="user-info text-white">
+                            <span class="name pdd-right-5">Brown</span>
+                            <i class="ti-angle-down font-size-10"></i>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="text-dark">
+                            <a href="mypage.html">
+                                <i class="ti-user pdd-right-10"></i>
+                                <span class="text-dark">마이 페이지</span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="text-dark">
+                            <a href="/">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">로그아웃</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="input-section">
+
+    </div>
+</div>
+
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<th:block th:include="fragments/body"></th:block>
+
+<script id="input-template" type="tv-template">
+    <form name="article" method="post" accept-charset="utf-8" action="/articles{path}">
+        {putTag}
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg"
-                 style="background-image: url('/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title"
+                        <input type="text" value="{title}" name="title"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               th:value="${article?.title}" placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl"
+                               placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input type="text" value="{coverUrl}" name="coverUrl"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               th:value="${article?.coverUrl}" placeholder="배경 url을 입력해주세요" autocomplete="off">
+                               placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input id="article-contents" name="contents" type="hidden">
+                    <input name="id" type="hidden" value="{id}">
                     <div id="editSection"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
@@ -49,12 +95,33 @@
             </div>
         </div>
     </form>
-</div>
+</script>
+<script th:if="${method} == 'put'">
+    /* <![CDATA[ */
+    id = /*[[${article.id}]]*/;
+    path = "/" + id;
+    putTag = "<input type=\"hidden\" name=\"_method\" value=\"put\"/>";
+    title = /*[[${article.title}]]*/;
+    coverUrl = /*[[${article.coverUrl}]]*/;
+    contents = /*[[${article.contents}]]*/;
+    /*]]>*/
+</script>
+<script type="text/javascript" th:inline="javascript">
+    let putTag = "";
+    let path = "";
+    let id = "0";
+    let title = "";
+    let coverUrl = "";
+    let contents = "";
+    console.log("tt");
+    let inputTemplate = document.querySelector("#input-template").innerText;
+    document.querySelector("#input-section").innerHTML += inputTemplate
+        .replace("{path}", path)
+        .replace("{id}", id)
+        .replace("{putTag}", putTag)
+        .replace("{title}", title)
+        .replace("{coverUrl}", coverUrl);
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
-<script th:inline="javascript">
-    var initValue = "";
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -65,13 +132,10 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)',
-        initialValue: initValue
+        height: 'calc(100vh - 360px)'
     });
 
-    if ([[${article}]]) {
-        editor.setValue([[${article?.contents}]]);
-    }
+    editor.setMarkdown(contents)
 </script>
 </body>
 </html>
