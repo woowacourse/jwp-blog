@@ -18,15 +18,14 @@ import java.util.Objects;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommentControllerTest {
+public class CommentApiControllerTest {
     private static int FLAG_NO = 1;
-    private User user;
 
     @Autowired
     private WebTestClient webTestClient;
 
     private String cookie;
-
+    private User user;
     private Long articleId;
     private Long commentId;
     private String commentContents;
@@ -35,6 +34,15 @@ public class CommentControllerTest {
     void setUp() {
         // 회원가입
         user = new User("Jason", FLAG_NO++ + "jason@woowahan.com", "Jason12!@");
+        signUp();
+        commentContents = "test Contents";
+
+        cookie = getCookie(user.getEmail());
+        articleId = creatArticleAndReturnArticleId(cookie);
+        commentId = creatArticleAndReturnCommentId();
+    }
+
+    private void signUp() {
         webTestClient.post().uri("/users")
                 .body(fromFormData("name", user.getName())
                         .with("email", user.getEmail())
@@ -43,12 +51,6 @@ public class CommentControllerTest {
                 .exchange()
                 .expectStatus()
                 .isFound();
-        commentContents = "test Contents";
-
-        cookie = getCookie(user.getEmail());
-
-        articleId = creatArticleAndReturnArticleId(cookie);
-        commentId = creatArticleAndReturnCommentId();
     }
 
     private Long creatArticleAndReturnArticleId(String cookie) {
@@ -57,7 +59,7 @@ public class CommentControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", "titleTest")
-                        .with("coverUrl", "coverUrlTest")
+                        .with("coverUrl", "http://coverUrlTest.com/image")
                         .with("contents", "contentsTest"))
                 .header("Cookie", cookie)
                 .exchange()
@@ -92,11 +94,10 @@ public class CommentControllerTest {
     void 댓글작성자_댓글수정() {
         CommentRequest commentRequest = new CommentRequest(articleId, "미스타꼬");
 
-        webTestClient.put().uri("/api/comments/" + commentId)
+        webTestClient.put().uri("/api/comments/{commentId}", commentId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .header("Cookie", cookie)
-                // TODO: 2019-08-04 아래꺼 안 써도 잘 됨
-//                .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -108,7 +109,9 @@ public class CommentControllerTest {
     void 댓글수정_작성자가_아닐_때_Index로_이동() {
         CommentRequest commentRequest = new CommentRequest(articleId, "updated comment");
 
-        webTestClient.put().uri("/api/comments/" + commentId)
+        webTestClient.put().uri("/api/comments/{commentId}", commentId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus().isFound()
@@ -117,7 +120,7 @@ public class CommentControllerTest {
 
     @Test
     void 댓글작성자_댓글삭제() {
-        webTestClient.delete().uri("/api/comments/" + commentId)
+        webTestClient.delete().uri("/api/comments/{commentId}", commentId)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
