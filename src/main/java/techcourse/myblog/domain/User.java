@@ -1,76 +1,51 @@
 package techcourse.myblog.domain;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import techcourse.myblog.exception.NameToUpdateNotFoundException;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
-@Entity(name = "BlogUser")
-@EntityListeners(AuditingEntityListener.class)
+@Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false, length = 10)
     private String name;
-
-    @Column(nullable = false)
     private String password;
-
-    @CreatedDate
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    @Column(name = "last_modified_date", updatable = true)
-    private LocalDateTime lastModifiedDate;
+    private String email;
 
     private User() {
     }
 
-    public User(final String email, final String name, final String password) {
-        this.email = Objects.requireNonNull(email);
-        this.name = Objects.requireNonNull(name);
-        this.password = Objects.requireNonNull(password);
+    public User(String name, String password, String email) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public boolean matchId(Long id) {
-        return this.id.equals(id);
-    }
-
-    public boolean matchPassword(String password) {
-        return this.password.equals(password);
-    }
-
-    public void update(final String name) {
-        if (Objects.isNull(name)) {
-            throw new NameToUpdateNotFoundException("수정할 이름이 존재하지 않습니다.");
-        }
-        this.name = name;
+    public boolean matchId(Long userId) {
+        return id.equals(userId);
     }
 
     @Override

@@ -1,72 +1,48 @@
 package techcourse.myblog.domain;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
-
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String title;
-
-    @Column(nullable = false)
-    private String coverUrl;
-
-    @Lob
-    @Column(nullable = false)
-    private String contents;
-
     @ManyToOne
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @JoinColumn(name = "user_id", nullable = false) // target entity의 column 이름이 name
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
-
-    @CreatedDate
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    @Column(name = "last_modified_date", updatable = true)
-    private LocalDateTime lastModifiedDate;
+    private String title;
+    private String coverUrl;
+    @Lob
+    private String contents;
 
     private Article() {
     }
 
-    public Article(final String title, final String coverUrl, final String contents, User author) {
-        this.title = Objects.requireNonNull(title);
-        this.coverUrl = Objects.requireNonNull(coverUrl);
-        this.contents = Objects.requireNonNull(contents);
-        this.author = Objects.requireNonNull(author);
+    public Article(User author, String title, String coverUrl, String contents) {
+        this.author = author;
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
     }
 
-    public void update(final Article article) {
-        if (Objects.isNull(article)) {
-            throw new ArticleToUpdateNotFoundException("업데이트 해야할 게시글이 없습니다.");
-        }
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
-        this.author = article.getAuthor();
+    public void updateArticle(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public User getAuthor() {
+        return author;
     }
 
     public String getTitle() {
@@ -81,16 +57,8 @@ public class Article {
         return contents;
     }
 
-    public User getAuthor() {
-        return author;
-    }
-
-    public List<Comment> getComments() {
-        return Collections.unmodifiableList(comments);
-    }
-
-    public boolean matchAuthor(Long userId) {
-        return author.matchId(userId);
+    public boolean matchAuthorId(Long userId) {
+        return this.author.matchId(userId);
     }
 
     @Override

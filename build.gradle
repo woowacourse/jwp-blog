@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.6.RELEASE'
-    id 'java'
+	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -10,23 +10,25 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.apache.commons:commons-lang3:3.0'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'mysql:mysql-connector-java'
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit'
-    }
-    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testImplementation 'org.mockito:mockito-junit-jupiter:2.23.4'
+	compileOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.h2database:h2'
+	implementation 'mysql:mysql-connector-java:8.0.16'
 
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+
+	implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.2"
+	testImplementation ('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'junit'
+	}
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }

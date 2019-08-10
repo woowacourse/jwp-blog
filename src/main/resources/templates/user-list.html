@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-    <th:block th:include="includes/head"></th:block>
-    <link rel="stylesheet" href="css/index.css">
-</head>
+
+<head th:replace="fragments/main-head.html :: mainHead"></head>
+
 <body>
 <div>
-    <header th:replace="includes/header :: header"></header>
+    <header id="header" class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <th:block th:include="includes/logout-nav"/>
+            </ul>
+        </div>
+    </header>
+
     <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
             </div>
         </div>
@@ -21,15 +35,13 @@
                     <div class="card-heading border bottom">
                         <h4 class="card-title">User List</h4>
                     </div>
-                    <div class="card-body" th:each="user : ${users}">
+                    <div class="card-body">
                         <ul class="list-unstyled list-info">
-                            <li>
+                            <li th:each="user : ${users}">
                                 <div class="pdd-vertical-10">
-                                    <img class="thumb-img img-circle"
-                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
+                                    <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
                                     <div class="info">
-                                        <a href="" class="title no-pdd-vertical text-semibold inline-block lh-1"
-                                           th:text="${user.name}">Brown</a>
+                                        <a th:text="${user.name}" th:href="${session.user.email == user.email} ? '/mypage' : ''" class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
                                         <span class="sub-title">
                                             <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
                                         </span>
@@ -44,7 +56,9 @@
     </div>
 </div>
 
-<footer th:replace="includes/footer :: footer"></footer>
-<th:block th:include="includes/scripts"></th:block>
+<footer th:replace="fragments/common-footer.html :: commonFooter"></footer>
+
+<th:block th:include="fragments/main-js :: mainJs"/>
+
 </body>
 </html>

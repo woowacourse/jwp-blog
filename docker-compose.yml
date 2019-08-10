@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  blog:
+    image: laterality/jwp-blog:latest
+    container_name: blog
+    depends_on: 
+      - db
+    ports: 
+      - 8080:8080
+    volumes: 
+      - ./log:/var/log/app
+    networks:
+      - blog-net
+  db:
+    image: mysql:8.0.16
+    container_name: my-db
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=myblog
+    networks:
+      - blog-net
+  jenkins:
+    image: laterality/jenkins:latest
+    container_name: jenkins
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins_home:/var/jenkins_home
+    environment: 
+      - JENKINS_USER=ubuntu
+      - "JENKINS_OPTS=--prefix=/jenkins"
+    user: root
+    networks:
+      - blog-net
+  nginx:
+    image: nginx
+    container_name: web
+    links:
+      - jenkins
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/log:/var/log/nginx
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - blog-net
+
+networks:
+  blog-net:

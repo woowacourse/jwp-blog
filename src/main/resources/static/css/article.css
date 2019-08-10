@@ -5,7 +5,7 @@
     align-items: center;
 }
 
-.tui-editor-contents p {
+.tui-editor-contents p{
     font-size: 14px;
 }
 
@@ -39,13 +39,4 @@
 
 .divider {
     width: 100%;
-}
-
-.btn-update-comment {
-    background: transparent;
-    border: 0;
-}
-
-.btn-delete-article {
-    background: transparent;
 }

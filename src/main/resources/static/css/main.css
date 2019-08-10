@@ -44,11 +44,13 @@
 .lg-text {
     display: block;
 }
-
 .sm-text {
     display: none;
 }
 
+ .none{
+     display:none;
+ }
 @media only screen and (min-width: 480px) {
     .mobile-menu-btn {
         display: none;
@@ -71,7 +73,6 @@
     .lg-text {
         display: none !important;
     }
-
     .sm-text {
         display: block !important;
     }
