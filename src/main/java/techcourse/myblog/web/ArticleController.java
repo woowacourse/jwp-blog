@@ -2,34 +2,29 @@ package techcourse.myblog.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequest;
-import techcourse.myblog.service.dto.CommentsResponse;
 import techcourse.myblog.support.validator.UserSession;
 
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private ArticleService articleService;
-    private CommentService commentService;
 
-    public ArticleController(ArticleService articleService, CommentService commentService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.commentService = commentService;
     }
 
-    @GetMapping("/articles/edit")
+    @GetMapping("/edit")
     public String formArticle(Model model) {
         log.debug("begin");
 
@@ -37,7 +32,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping
     public String saveArticle(@Valid ArticleRequest articleRequest, Model model, @UserSession User sessionUser) {
         log.debug("begin");
 
@@ -48,7 +43,7 @@ public class ArticleController {
         return "redirect:/articles/" + article.getId();
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String showArticlePage(@PathVariable("articleId") long articleId, Model model) {
         log.debug("begin");
 
@@ -56,16 +51,7 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/api/articles/{articleId}")
-    @ResponseBody
-    public ResponseEntity<Article> selectArticle(@PathVariable("articleId") long articleId) {
-        log.debug("begin");
-
-        return new ResponseEntity<>(articleService.findById(articleId), HttpStatus.OK);
-    }
-
-
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model, @UserSession User sessionUser) {
         log.debug("begin");
 
@@ -74,7 +60,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest,
                               @UserSession User sessionUser, Model model) {
         log.debug("begin");
@@ -84,7 +70,7 @@ public class ArticleController {
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable("articleId") long articleId, @UserSession User sessionUser) {
         log.debug("begin");
 
@@ -92,12 +78,5 @@ public class ArticleController {
         log.info("articleId: {}", articleId);
 
         return "redirect:/";
-    }
-
-    @GetMapping("/api/articles/{articleId}/comments")
-    public ResponseEntity<CommentsResponse> getComment(@PathVariable("articleId") long articleId) {
-        log.debug("begin");
-
-        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 }
