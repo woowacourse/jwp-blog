@@ -24,7 +24,8 @@ public class UserController {
     private final UserWriteService userWriteService;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    public UserController(UserReadService userReadService, UserWriteService userWriteService) {
+    public UserController(UserReadService userReadService,
+                          UserWriteService userWriteService) {
         this.userReadService = userReadService;
         this.userWriteService = userWriteService;
     }

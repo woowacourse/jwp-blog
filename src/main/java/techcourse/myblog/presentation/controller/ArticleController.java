@@ -36,7 +36,8 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(LoginUser loginUser, ArticleFeature articleFeature) {
+    public RedirectView createArticle(LoginUser loginUser,
+                                      ArticleFeature articleFeature) {
         log.debug("article save request data : -> {}", articleFeature);
         Article savedArticle = articleWriteService.save(articleFeature.toArticle(loginUser.getUser()));
         log.debug("article save response data : -> {}", savedArticle);
@@ -44,7 +45,8 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable Long articleId, Model model) {
+    public String showArticle(Model model,
+                              @PathVariable Long articleId) {
         log.debug("article read request data : -> {}", articleId);
         Article article = articleReadService.findById(articleId);
         log.debug("article read response data : -> {}", article);
@@ -53,7 +55,9 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String editArticleForm(LoginUser loginUser, @PathVariable Long articleId, Model model) {
+    public String editArticleForm(Model model,
+                                  LoginUser loginUser,
+                                  @PathVariable Long articleId) {
         log.debug("article edit read request data : -> {}", articleId);
         Article article = articleReadService.findById(articleId);
         article.validateAuthor(loginUser.getUser());
@@ -63,14 +67,17 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, ArticleFeature articleFeature) {
+    public RedirectView editArticle(LoginUser loginUser,
+                                    @PathVariable Long articleId,
+                                    ArticleFeature articleFeature) {
         log.debug("article modify request data : -> {}, {}", articleId, articleFeature);
         articleWriteService.update(articleId, articleFeature, loginUser.getUser());
         return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/{articleId}")
-    public RedirectView deleteArticle(LoginUser loginUser, @PathVariable Long articleId) {
+    public RedirectView deleteArticle(LoginUser loginUser,
+                                      @PathVariable Long articleId) {
         log.debug("article delete request data : -> {}", articleId);
         articleReadService.findById(articleId).validateAuthor(loginUser.getUser());
         articleWriteService.removeById(articleId);

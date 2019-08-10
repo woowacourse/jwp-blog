@@ -19,14 +19,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/articles/{articleId}/comment")
 public class CommentController {
-    private static final String DELETE_SUCCESS_MESSAGE = "삭제가 완료되었습니다.";
     private static final Logger log = LoggerFactory.getLogger(CommentController.class);
+    private static final String DELETE_SUCCESS_MESSAGE = "삭제가 완료되었습니다.";
 
     private final CommentReadService commentReadService;
     private final CommentWriteService commentWriteService;
     private final ArticleReadService articleReadService;
 
-    public CommentController(CommentReadService commentReadService, CommentWriteService commentWriteService, ArticleReadService articleReadService) {
+    public CommentController(CommentReadService commentReadService,
+                             CommentWriteService commentWriteService,
+                             ArticleReadService articleReadService) {
         this.commentReadService = commentReadService;
         this.commentWriteService = commentWriteService;
         this.articleReadService = articleReadService;
@@ -39,7 +41,9 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long articleId, @RequestBody CommentRequestDto commentRequestDto, LoginUser loginUser) {
+    public ResponseEntity<CommentResponseDto> createComment(LoginUser loginUser,
+                                                            @PathVariable Long articleId,
+                                                            @RequestBody CommentRequestDto commentRequestDto) {
         log.debug("comment save request data : -> {}, {}", articleId, commentRequestDto);
         Article article = articleReadService.findById(articleId);
         CommentResponseDto commentResponseDto = commentWriteService.save(commentRequestDto.toComment(loginUser.getUser(), article));
@@ -48,7 +52,10 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentRequestDto commentRequestDto, LoginUser loginUser) {
+    public ResponseEntity<CommentResponseDto> updateComment(LoginUser loginUser,
+                                                            @PathVariable Long commentId,
+                                                            @PathVariable Long articleId,
+                                                            @RequestBody CommentRequestDto commentRequestDto) {
         log.debug("comment update request data : -> {}, {}", articleId, commentRequestDto);
         Article article = articleReadService.findById(articleId);
         CommentResponseDto commentResponseDto = commentWriteService.modify(commentId, commentRequestDto.toComment(loginUser.getUser(), article));
@@ -57,7 +64,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<String> removeComment(@PathVariable Long commentId, LoginUser loginUser) {
+    public ResponseEntity<String> removeComment(LoginUser loginUser,
+                                                @PathVariable Long commentId) {
         log.debug("comment remove request data : -> {}", commentId);
         commentReadService.findById(commentId).validateAuthor(loginUser.getUser());
         commentWriteService.deleteById(commentId);
