@@ -5,6 +5,7 @@ import techcourse.myblog.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 public class AuthInterceptor implements HandlerInterceptor {
     @Override
@@ -13,9 +14,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        User userSession = (User) request.getSession().getAttribute("user");
+        Optional<User> userSession = Optional.ofNullable((User) request.getSession().getAttribute("user"));
 
-        if (userSession == null) {
+        if (!userSession.isPresent()) {
             response.sendRedirect("/login");
             return false;
         }
