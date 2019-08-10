@@ -12,7 +12,7 @@ import techcourse.myblog.application.dto.UserResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/articles/{articleId}")
+@RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
 
     private static final Logger log = LoggerFactory.getLogger(CommentController.class);
@@ -23,7 +23,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/comments")
+    @PostMapping("")
     @ResponseBody
     public CommentResponse save(@PathVariable("articleId") Long articleId,
                                        @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
@@ -33,7 +33,7 @@ public class CommentController {
         return commentService.save(commentRequest, articleId, user.getId());
     }
 
-    @PutMapping("/comments/{commentId}")
+    @PutMapping("/{commentId}")
     @ResponseBody
     public CommentResponse modify(@PathVariable("commentId") Long commentId,
                                   @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
@@ -41,7 +41,7 @@ public class CommentController {
         return commentService.updateComment(commentId, userResponse, commentRequest);
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{commentId}")
     @ResponseBody
     public void remove(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
