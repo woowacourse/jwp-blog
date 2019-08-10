@@ -1,52 +1,34 @@
 package techcourse.myblog.web;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.service.dto.CommentRequest;
+import techcourse.myblog.service.dto.UserSession;
+import techcourse.myblog.service.dto.request.CommentRequest;
+import techcourse.myblog.service.dto.response.CommentResponse;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/comment")
 public class CommentController {
     private CommentService commentService;
-    private ArticleService articleService;
 
-    public CommentController(CommentService commentService, ArticleService articleService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.articleService = articleService;
     }
 
     @PostMapping
-    public String saveComment(@Valid CommentRequest commentRequest, User user) {
-        Article article = articleService.findById(commentRequest.getArticleId());
-        commentService.save(commentRequest, article, user);
-        return "redirect:/articles/" + commentRequest.getArticleId();
-    }
-
-    @GetMapping("/{commentId}")
-    public String editCommentPage(@PathVariable("commentId") Long commentId, Model model, User user) {
-        model.addAttribute("comment",
-                commentService.findComment(user, commentId));
-        return "mycomment-edit";
-    }
-
-    @PutMapping("/{commentId}")
-    public String editComment(@Valid CommentRequest commentRequest, @PathVariable("commentId") Long commentId, User user) {
-        commentService.update(commentRequest, user, commentId);
-        return "redirect:/articles/" + commentRequest.getArticleId();
+    public ResponseEntity<List<CommentResponse>> saveComment(@RequestBody CommentRequest commentRequest, UserSession userSession) {
+        List<CommentResponse> commentResponses = commentService.saveAndGet(commentRequest, userSession);
+        return new ResponseEntity<>(commentResponses, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable("commentId") Long commentId, User user) {
-        commentService.deleteById(commentId, user);
-        return "redirect:/";
+    public ResponseEntity<List<CommentResponse>> deleteComment(@PathVariable("commentId") Long commentId, UserSession userSession) {
+        List<CommentResponse> commentResponses = commentService.deleteAndGet(commentId, userSession);
+        return new ResponseEntity<>(commentResponses, HttpStatus.OK);
     }
 }
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head th:replace="/fragments/article-edit-head :: articleEditHead">
+<head th:replace="fragments/article-edit-head :: articleEditHead">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
+                <th:block th:include="${session.user == null} ? 'includes/login-nav' : 'includes/logout-nav'"/>
             </ul>
         </div>
     </div>
@@ -50,7 +50,7 @@
     </form>
 </div>
 
-<th:block th:include="/fragments/article-js :: articleJs"/>
+<th:block th:include="fragments/article-js :: articleJs"/>
 
 <script type="text/javascript">
     const editor = new tui.Editor({

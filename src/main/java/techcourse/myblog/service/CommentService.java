@@ -2,12 +2,10 @@ package techcourse.myblog.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentRepository;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.CommentRequest;
-import techcourse.myblog.service.dto.CommentResponse;
+import techcourse.myblog.domain.*;
+import techcourse.myblog.service.dto.UserSession;
+import techcourse.myblog.service.dto.request.CommentRequest;
+import techcourse.myblog.service.dto.response.CommentResponse;
 import techcourse.myblog.service.exception.InvalidAuthorException;
 import techcourse.myblog.service.exception.NoCommentException;
 
@@ -17,39 +15,52 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
+    private ArticleService articleService;
+    private UserService userService;
     private CommentRepository commentRepository;
     private ModelMapper commentMapper;
 
-    public CommentService(CommentRepository commentRepository, ModelMapper commentMapper) {
+    public CommentService(ArticleService articleService, UserService userService, CommentRepository commentRepository, ModelMapper commentMapper) {
+        this.articleService = articleService;
+        this.userService = userService;
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
     }
 
-    public void save(CommentRequest commentRequest, Article article, User user) {
-        Comment comment = new Comment(commentRequest.getContents(), article, user);
+    public List<CommentResponse> saveAndGet(CommentRequest commentRequest, UserSession userSession) {
+        Article article = articleService.findById(commentRequest.getArticleId());
+        Comment comment = new Comment(commentRequest.getContents(), article, findUser(userSession));
         commentRepository.save(comment);
+        return findByArticle(article);
     }
 
-    public List<CommentResponse> findByArticle(Article article) {
+    private List<CommentResponse> findByArticle(Article article) {
         return commentRepository.findByArticle(article).stream()
                 .map(comment -> commentMapper.map(comment, CommentResponse.class))
                 .collect(Collectors.toList());
     }
 
+    public List<CommentResponse> find(Long articleId) {
+        return commentRepository.findByArticleId(articleId).stream()
+                .map(comment -> commentMapper.map(comment, CommentResponse.class))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
-    public Comment update(CommentRequest commentRequest, User user, Long commentId) {
-        Comment comment = findComment(user, commentId);
-        return comment.updateContents(commentRequest.getContents());
+    public void update(CommentRequest commentRequest, UserSession userSession, Long commentId) {
+        Comment comment = findComment(findUser(userSession), commentId);
+        comment.updateContents(commentRequest.getContents());
     }
 
-    public void deleteById(Long commentId, User user) {
-        checkAuthor(user, commentId);
+    public List<CommentResponse> deleteAndGet(Long commentId, UserSession userSession) {
+        Article article = findComment(findUser(userSession), commentId).getArticle();
         commentRepository.deleteById(commentId);
+        return findByArticle(article);
     }
 
-    public Comment findComment(User user, Long commentId) {
+    private Comment findComment(User user, Long commentId) {
         Comment comment = findById(commentId);
-        if (comment.isCommentor(user)) {
+        if (!comment.isCommentor(user)) {
             throw new InvalidAuthorException("작성자가 아닙니다");
         }
         return comment;
@@ -60,10 +71,12 @@ public class CommentService {
                 .orElseThrow(() -> new NoCommentException("댓글이 존재하지 않습니다"));
     }
 
-    private void checkAuthor(User user, Long commentId) {
-        Comment comment = findById(commentId);
-        if (comment.isCommentor(user)) {
-            throw new InvalidAuthorException("작성자가 아닙니다");
-        }
+    public CommentResponse find(UserSession userSession, Long commentId) {
+        User user = findUser(userSession);
+        return commentMapper.map(findComment(user, commentId), CommentResponse.class);
+    }
+
+    private User findUser(UserSession userSession) {
+        return userService.findById(userSession.getId());
     }
 }

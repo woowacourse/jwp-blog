@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head th:replace="/fragments/article-head :: articleHead">
+<head th:replace="fragments/article-head :: articleHead">
 
 </head>
 <body>
@@ -16,7 +16,7 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
+                <th:block th:include="${session.user == null} ? 'includes/login-nav' : 'includes/logout-nav'"/>
             </ul>
         </div>
     </header>
@@ -74,47 +74,29 @@
                 <div class="width-100 border bottom mrg-btm-2
                 0 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
+                    <span class="font-size-16 text-info" id="comment-size">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block" th:text="${comment.commenter.name}">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span class="elapsed-time" th:text="${comment.elapsedTime}">6</span>
-                                </span>
-                                <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
-                                <th:block th:if="${comment.commenter.id == session.user?.id}">
-                                    <a th:href="@{'/comment/' + ${comment.id}}">수정</a>
-                                    <form th:action="@{'/comment/' + ${comment.id}}" method="post">
-                                        <input type="hidden" name="_method" value="delete"/>
-                                        <button type="submit" class="warning">삭제</button>
-                                    </form>
-                                </th:block>
-                            </div>
-                        </li>
+                    <ul class="list-unstyled list-info" id="comment-section">
+
                     </ul>
                     <th:block th:if="${session.user != null}">
                         <div class="add-comment">
                             <div id="editSection"></div>
                         </div>
-                        <form action="/comment", method="post">
-                            <button id="comment-submit" type="submit" class="button">댓글달기</button>
+                            <button id="comment-submit" type="button" class="button">댓글달기AJAX</button>
                             <input id="comment-contents" name="contents" type="hidden"/>
-                            <input name="articleId" type="hidden" th:value="${article.id}"/>
-                        </form>
+                            <input id="article-id" name="articleId" type="hidden" th:value="${article.id}"/>
                     </th:block>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<th:block th:include="/fragments/article-js :: articleJs"/>
-
+<script th:inline="javascript">
+    let articleId = [[${article.id}]];
+</script>
+<th:block th:include="fragments/article-js :: articleJs"/>
 <script>
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -135,8 +117,86 @@
         height: '200px'
     });
 
+    function drawComment(res) {
+        let node = document.getElementById('comment-section');
+        while (node.firstChild) {
+            node.removeChild(node.firstChild);
+        }
+
+        document.getElementById('comment-size').innerText = res.length;
+
+        res.forEach(function (element) {
+            console.log(element);
+            node.insertAdjacentHTML('beforeend',
+                template({
+                    "contents": element.contents,
+                    "commentId": element.id,
+                    "commenter": element.commenter.name
+                }))
+        });
+    }
+
+    fetch('/articles/' + articleId + "/comment", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        }
+    }).then(function(response) {
+        return response.json();
+    }).then(function(res) {
+        drawComment(res);
+    });
+
+    const template = (comment) => {
+        return `<li class="comment-item border bottom mrg-btm-30">
+                    <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                    <div class="info">
+                        <span href="" class="text-bold inline-block">${comment.commenter}</span>
+                        <span class="sub-title inline-block pull-right">
+                            <i class="ti-timer pdd-right-5"></i>
+                            <span class="elapsed-time">${comment.elapsedTime}</span>
+                        </span>
+                        <p class="width-80">${comment.contents}</p>
+                        <a href="/comment/${comment.commentId}">수정</a>
+                        <button type="submit" class="warning" data-comment-id="${comment.commentId}">삭제</button>
+                    </div>
+                </li>`
+    };
+
+    document.getElementById("comment-section").addEventListener('click', function(event) {
+        if (event.target.classList.contains('warning')) {
+            fetch('/comment/' + event.target.dataset.commentId, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                }
+            }).then(function(response) {
+                return response.json();
+            }).then(function(res) {
+                drawComment(res)
+            });
+        }
+    });
+
     document.getElementById("comment-submit").addEventListener('click', function() {
-        document.getElementById("comment-contents").value =  editor.el.value;
+        let contents = document.getElementById("comment-contents").value;
+        let articleId = document.getElementById("article-id").value;
+
+        let requestDto = {
+            contents: contents, articleId: articleId
+        };
+
+        fetch('/comment', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify(requestDto)
+        }).then(function(response) {
+            return response.json();
+        }).then(function(res) {
+            drawComment(res);
+        });
     });
 
     const convertTime = function(elapsedtime) {
@@ -144,7 +204,7 @@
         return hours > 24 ? hours / 24 + "일전" : hours + "시간 전";
     };
 
-    window.addEventListener("load", function(){
+    window.addEventListener("load", function() {
         let span = document.getElementsByClassName("elapsed-time");
         Array.from(span).forEach(function(s) {
             s.textContent = convertTime(s.textContent);
