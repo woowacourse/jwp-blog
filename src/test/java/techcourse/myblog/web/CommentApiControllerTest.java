@@ -18,7 +18,7 @@ import java.util.Objects;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommentApiControllerTest {
+class CommentApiControllerTest {
     private static int FLAG_NO = 1;
 
     @Autowired
@@ -123,7 +123,7 @@ public class CommentApiControllerTest {
         webTestClient.delete().uri("/api/comments/{commentId}", commentId)
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isNoContent();
     }
 
     @Test
