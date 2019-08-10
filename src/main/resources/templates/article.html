@@ -96,7 +96,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">댓글 수정</h4>
             </div>
-            <form id="comment-edit-form" action="/comments/1" name="comment-edit" method="post">
+            <form id="comment-edit-form" action="" name="comment-edit" method="post">
                 <input type="hidden" name="_method" value="put"/>
                 <div class="modal-body">
                     <input id="comment-edit-contents" name="comment" type="hidden">
@@ -152,7 +152,7 @@
     });
 
     function changeCommentEditAction(articleId, commentId) {
-        const action = "/comments/" + commentId
+        const action = "/api/comments/" + commentId
         document.getElementById('comment-edit-form').setAttribute('action', action)
     }
 
@@ -181,7 +181,7 @@
     const commentItemTemplate = Handlebars.compile(commentTemplate);
 
     const readAllComment = function() {
-        fetch('/comments/' + articleId)
+        fetch('/api/articles/' + articleId +  '/comments')
             .then(res => {
                 if (!res.ok) {
                     throw new Error();
@@ -216,7 +216,7 @@
           method: 'POST'
         }
 
-        fetch('/comments', obj)
+        fetch('/api/comments', obj)
             .then(res => {
                 if (!res.ok) {
                     throw new Error();
@@ -267,7 +267,7 @@
           method: 'DELETE'
         }
 
-        fetch('/comments/' + commentId, obj)
+        fetch('/api/comments/' + commentId, obj)
             .then(res => {
                 if (!res.ok) {
                     throw new Error();
