@@ -18,9 +18,9 @@ REPOSITORY=/home/ubuntu/app/git
 
 cd $REPOSITORY/jwp-blog/
 
-echo "> Git Pull"
+echo "> Git Pull yk1028 branch"
 
-git pull
+git pull origin yk1028
 
 echo "> 프로젝트 Build 시작"
 
