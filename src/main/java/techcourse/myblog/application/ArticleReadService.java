@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.exception.NotFoundArticleException;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.user.User;
 
 import java.util.Collections;
 import java.util.List;

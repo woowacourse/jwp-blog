@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.domain.article.ArticleFeature;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
 
@@ -30,9 +31,12 @@ import static techcourse.myblog.utils.UserTestObjects.SIGN_UP_USER_DTO;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient(timeout = "100000")
 public class ControllerTestTemplate {
     protected static final String MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE = "댓글 작성자가 아닙니다.";
+    protected static final String MISMATCH_ARTICLE_AUTHOR_EXCEPTION_MESSAGE = "게시글 작성자가 아닙니다.";
     protected static final String DELETE_SUCCESS_MESSAGE = "삭제가 완료되었습니다.";
+    protected static final String NOT_FOUND_ARTICLE_EXCEPTION_MESSAGE = "존재하지 않는 게시글입니다.";
     private static final String JSESSIONID = "JSESSIONID";
     private static final String LOGIN_URL = "/login";
 
@@ -70,6 +74,10 @@ public class ControllerTestTemplate {
 
     protected StatusAssertions loginAndRequestWithData(HttpMethod method, String path, MultiValueMap<String, String> data, UserDto userDto) {
         return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userDto)));
+    }
+
+    protected BodyContentSpec loginAndRequestWithData(HttpMethod method, String path, HttpStatus httpStatus, MultiValueMap<String, String> data, UserDto userDto) {
+        return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userDto)), httpStatus);
     }
 
     protected BodyContentSpec loginAndRequest(HttpMethod method, String path, HttpStatus httpStatus, UserDto userDto) {
@@ -154,11 +162,11 @@ public class ControllerTestTemplate {
     }
 
 
-    protected MultiValueMap<String, String> parseArticle(ArticleDto articleDto) {
+    protected MultiValueMap<String, String> parseArticle(ArticleFeature articleFeature) {
         MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("title", articleDto.getTitle());
-        multiValueMap.add("coverUrl", articleDto.getCoverUrl());
-        multiValueMap.add("contents", articleDto.getContents());
+        multiValueMap.add("title", articleFeature.getTitle());
+        multiValueMap.add("coverUrl", articleFeature.getCoverUrl());
+        multiValueMap.add("contents", articleFeature.getContents());
         return multiValueMap;
     }
 }

@@ -18,6 +18,8 @@ import javax.persistence.Lob;
 @Embeddable
 public class ArticleFeature {
     private static final int TITLE_LENGTH = 50;
+    private final static String TITLE_CONSTRAINT_MESSAGE = "제목은 비어있을 수 없습니다.";
+    private final static String CONTENTS_CONSTRAINT_MESSAGE = "내용은 비어있을 수 없습니다.";
 
     @Column(nullable = false, length = TITLE_LENGTH)
     private String title;
@@ -31,16 +33,16 @@ public class ArticleFeature {
     private String contents;
 
     public ArticleFeature(String title, String coverUrl, String contents) {
-        validateEmpty(title, "제목은 비어있을 수 없습니다.");
-        validateEmpty(contents, "내용은 비어있을 수 없습니다.");
+        validateEmpty(title, TITLE_CONSTRAINT_MESSAGE);
+        validateEmpty(contents, CONTENTS_CONSTRAINT_MESSAGE);
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    private void validateEmpty(String title, String s) {
-        if (StringUtils.isEmpty(title)) {
-            throw new IllegalContentsException(s);
+    private void validateEmpty(String field, String message) {
+        if (field == null || field.equals("")) {
+            throw new IllegalContentsException(message);
         }
     }
 

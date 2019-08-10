@@ -1,4 +1,3 @@
-/*
 package techcourse.myblog.application;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,27 +15,27 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
+import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_FEATURE;
 import static techcourse.myblog.utils.CommentTestObjects.COMMENT_DTO;
 import static techcourse.myblog.utils.CommentTestObjects.UPDATE_COMMENT_DTO;
 import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
-public class CommentWrtieServiceTests {
+public class CommentWriteServiceTests {
     @Mock
     protected CommentRepository commentRepository;
-    protected CommentReadService commentReadService;
-    protected CommentWriteService commentWriteService;
+    private CommentReadService commentReadService;
+    private CommentWriteService commentWriteService;
     private User reader;
     private Article article;
     private Long id = 2L;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.initMocks(this);
         commentReadService = new CommentReadService(commentRepository);
         commentWriteService = new CommentWriteService(commentRepository, commentReadService);
         reader = READER_DTO.toUser();
-        article = ARTICLE_DTO.toArticle(reader);
+        article = ARTICLE_FEATURE.toArticle(reader);
     }
 
     @Test
@@ -51,9 +50,8 @@ public class CommentWrtieServiceTests {
     }
 
     void compareComment(Comment comment1, Comment comment2) {
-        assertEquals(comment1.getArticleFeature(), comment2.getArticleFeature());
+        assertEquals(comment1.getContents(), comment2.getContents());
         assertEquals(comment1.getArticle(), comment2.getArticle());
         assertEquals(comment1.getWriter(), comment2.getWriter());
     }
 }
-*/

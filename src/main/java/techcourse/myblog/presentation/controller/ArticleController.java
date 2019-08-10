@@ -61,6 +61,7 @@ public class ArticleController {
     public String editArticleForm(LoginUser loginUser, @PathVariable Long articleId, Model model) {
         log.debug("article edit read request data : -> {}", articleId);
         Article article = articleReadService.findById(articleId);
+        article.validateAuthor(loginUser.getUser());
         log.debug("article edit read response data : -> {}", article);
         model.addAttribute("article", article);
         return "article-edit";

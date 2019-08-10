@@ -4,10 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.comment.Comment;
@@ -17,7 +15,7 @@ import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.*;
-import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
+import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_FEATURE;
 import static techcourse.myblog.utils.CommentTestObjects.COMMENT_DTO;
 import static techcourse.myblog.utils.CommentTestObjects.UPDATE_COMMENT_DTO;
 import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
@@ -32,7 +30,7 @@ class CommentControllerTests extends ControllerTestTemplate {
     @BeforeEach
     public void setup() {
         super.setup();
-        savedArticleUrl = getRedirectUrl(loginAndRequestWithDataWriter(POST, "/articles/write", parseArticle(ARTICLE_DTO)));
+        savedArticleUrl = getRedirectUrl(loginAndRequestWithDataWriter(POST, "/articles/write", parseArticle(ARTICLE_FEATURE)));
         commentDto = COMMENT_DTO;
     }
 
