@@ -91,14 +91,6 @@ public class Comment {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id);
-    }
-
-    @Override
     public String toString() {
         return "Comment{" +
                 "id=" + id +
@@ -111,7 +103,15 @@ public class Comment {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(id, contents, createdDate, modifiedDate, commenter, article);
+        return Objects.hash(id);
     }
 }
