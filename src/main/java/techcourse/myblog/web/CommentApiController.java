@@ -42,8 +42,8 @@ public class CommentApiController {
                                                @UserSession User sessionUser) {
         log.debug("begin");
 
-        Comment updatedComment = commentService.update(commentRequest, sessionUser, commentId);
-        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
+        commentService.update(commentRequest, sessionUser, commentId);
+        return new ResponseEntity<>(commentService.findById(commentId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")

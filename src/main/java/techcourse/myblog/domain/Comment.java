@@ -70,9 +70,8 @@ public class Comment extends DateTimeBaseEntity {
         return article;
     }
 
-    public Comment updateContents(String contents) {
+    public void updateContents(String contents) {
         this.contents = contents;
-        return this;
     }
 
     @Override

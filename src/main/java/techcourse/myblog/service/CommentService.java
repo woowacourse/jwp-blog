@@ -7,6 +7,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.CommentRequest;
 import techcourse.myblog.service.dto.CommentResponse;
 import techcourse.myblog.service.dto.CommentsResponse;
+import techcourse.myblog.service.dto.UserResponse;
 import techcourse.myblog.service.exception.NoCommentException;
 
 import javax.transaction.Transactional;
@@ -28,19 +29,26 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    public Comment findById(long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new NoCommentException("존재하지 않는 댓글입니다."));
+    }
+
+
     public CommentsResponse findByArticleId(Long articleId) {
         return new CommentsResponse(commentRepository.findByArticleId(articleId).stream()
                 .map(comment -> new CommentResponse(comment.getId(),
                         comment.getContents(),
                         comment.getCreatedDate(),
-                        comment.getCommenter()))
+                        new UserResponse(comment.getCommenter().getName(),
+                                comment.getCommenter().getEmail())))
                 .collect(Collectors.toList()));
     }
 
     @Transactional
-    public Comment update(CommentRequest commentRequest, User user, Long commentId) {
+    public void update(CommentRequest commentRequest, User user, Long commentId) {
         Comment comment = findByIdWithUser(user, commentId);
-        return comment.updateContents(commentRequest.getContents());
+        comment.updateContents(commentRequest.getContents());
     }
 
     private Comment findByIdWithUser(User user, Long commentId) {
