@@ -42,15 +42,17 @@ public class UserControllerExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCommentException.class)
-    public RedirectView handleCommentException(InvalidCommentException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleCommentException(InvalidCommentException e,
+                                               RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }
 
     @ExceptionHandler(BindException.class)
-    public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleBindError(BindException e,
+                                        RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("userDto", new UserDto("", "", ""));
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRequestDto", e.getBindingResult());
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDto", e.getBindingResult());
         return new RedirectView(e.getObjectName());
     }
 }
