@@ -13,6 +13,7 @@ import techcourse.myblog.domain.repository.ArticleRepository;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -27,10 +28,6 @@ public class ArticleService {
         this.articleAssembler = articleAssembler;
     }
 
-    public List<Article> findAll() {
-        return Collections.unmodifiableList(articleRepository.findAll());
-    }
-
     public Long save(ArticleDto articleDto, UserResponse userResponse) {
         User author = userService.findById(userResponse.getId());
 
@@ -39,12 +36,28 @@ public class ArticleService {
         return savedArticle.getId();
     }
 
+    public ArticleDto find(Long articleId, UserResponse userResponse) {
+        return articleAssembler.convertToDto(findByUser(articleId, userResponse));
+    }
+
+    public ArticleDto find(Long articleId) {
+        return articleAssembler.convertToDto(findById(articleId));
+    }
+
+    public List<ArticleDto> findAll() {
+        List<ArticleDto> articles = articleRepository.findAll().stream()
+                .map(articleAssembler::convertToDto)
+                .collect(Collectors.toList())
+                ;
+        return Collections.unmodifiableList(articles);
+    }
+
     public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }
 
-    public Article findByUser(Long articleId, UserResponse userResponse) {
+    private Article findByUser(Long articleId, UserResponse userResponse) {
         Article article = findById(articleId);
         User author = userService.findById(userResponse.getId());
 

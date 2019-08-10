@@ -52,9 +52,8 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String show(@PathVariable("articleId") long articleId, Model model) {
-        Article article = articleService.findById(articleId);
-        List<Comment> comments = commentService.findAllByArticle(article);
-        model.addAttribute(ARTICLE_INFO, article);
+        List<Comment> comments = commentService.findAllByArticle(articleId);
+        model.addAttribute(ARTICLE_INFO, articleService.find(articleId));
         model.addAttribute(COMMENTS_INFO, comments);
 
         return "article";
@@ -63,8 +62,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String modifyForm(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        Article article = articleService.findByUser(articleId, userResponse);
-        model.addAttribute(ARTICLE_INFO, article);
+        model.addAttribute(ARTICLE_INFO, articleService.find(articleId, userResponse));
 
         return "article-edit";
     }

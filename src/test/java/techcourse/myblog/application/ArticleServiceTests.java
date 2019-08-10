@@ -96,7 +96,7 @@ public class ArticleServiceTests {
         given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
 
         assertThrows(NotSameAuthorException.class, () ->
-                articleService.findByUser(ARTICLE_ID, notAuthorResponse)
+                articleService.find(ARTICLE_ID, notAuthorResponse)
         );
     }
 
@@ -105,7 +105,7 @@ public class ArticleServiceTests {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
         given(userService.findById(USER_ID)).willReturn(user);
 
-        articleService.findByUser(ARTICLE_ID, userResponse);
+        articleService.find(ARTICLE_ID, userResponse);
 
         verify(articleRepository).findById(ARTICLE_ID);
     }

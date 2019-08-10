@@ -12,4 +12,9 @@ public class ArticleAssembler {
         return new Article(author, articleDto.getTitle(), articleDto.getCoverUrl(),
                 articleDto.getContents());
     }
+
+    public ArticleDto convertToDto(Article article) {
+        return new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(),
+                article.getContents());
+    }
 }
