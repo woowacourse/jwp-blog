@@ -1,7 +1,7 @@
 package techcourse.myblog.application;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import techcourse.myblog.application.assembler.ArticleAssembler;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.NoArticleException;
@@ -17,14 +17,14 @@ import java.util.List;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final ArticleAssembler articleAssembler;
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     public ArticleService(ArticleRepository articleRepository, UserService userService,
-                          ModelMapper modelMapper) {
+                          ArticleAssembler articleAssembler) {
         this.userService = userService;
         this.articleRepository = articleRepository;
-        this.modelMapper = modelMapper;
+        this.articleAssembler = articleAssembler;
     }
 
     public List<Article> findAll() {
@@ -34,8 +34,7 @@ public class ArticleService {
     public Long save(ArticleDto articleDto, UserResponse userResponse) {
         User author = userService.findById(userResponse.getId());
 
-        Article article = modelMapper.map(articleDto, Article.class);
-        article.setAuthor(author);
+        Article article = articleAssembler.convertToArticle(articleDto, author);
         Article savedArticle = articleRepository.save(article);
         return savedArticle.getId();
     }
@@ -47,9 +46,9 @@ public class ArticleService {
 
     public Article findByUser(Long articleId, UserResponse userResponse) {
         Article article = findById(articleId);
-        User user = modelMapper.map(userResponse, User.class);
+        User author = userService.findById(userResponse.getId());
 
-        if (!article.isSameAuthor(user)) {
+        if (!article.isSameAuthor(author)) {
             throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");
         }
 
@@ -58,14 +57,10 @@ public class ArticleService {
 
     @Transactional
     public ArticleDto modify(ArticleDto articleDto, Long articleId, UserResponse userResponse) {
-        Article article = findById(articleId);
+        Article article = findByUser(articleId, userResponse);
         User author = userService.findById(userResponse.getId());
 
-        if (!article.isSameAuthor(author)) {
-            throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");
-        }
-
-        article.updateArticle(modelMapper.map(articleDto, Article.class));
+        article.updateArticle(articleAssembler.convertToArticle(articleDto, author));
         articleDto.setId(articleId);
         return articleDto;
     }
