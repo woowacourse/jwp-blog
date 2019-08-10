@@ -37,7 +37,8 @@ public class UserService {
                 .name(userRequestDto.getName())
                 .password(userRequestDto.getPassword())
                 .build();
-        return userRepository.save(user).getEmail();
+        User saved = userRepository.save(user);
+        return saved.getEmail();
     }
 
     @Transactional(readOnly = true)

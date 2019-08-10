@@ -7,6 +7,9 @@ public class CommentDto {
     private String contents;
     private UserResponseDto author;
 
+    public CommentDto() {
+    }
+
     public CommentDto(Long id, String contents, UserResponseDto author) {
         this.id = id;
         this.contents = contents;

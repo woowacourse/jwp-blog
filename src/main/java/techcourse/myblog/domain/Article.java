@@ -16,6 +16,8 @@ public class Article {
 
     private String title;
     private String coverUrl;
+
+    @Lob
     private String contents;
 
     @ManyToOne

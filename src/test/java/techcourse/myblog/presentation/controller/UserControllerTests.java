@@ -33,6 +33,8 @@ public class UserControllerTests extends ControllerTests {
                 .exchange()
                 .expectStatus().isFound();
         countUser();
+        String sessionId = logInAndGetSessionId(EMAIL + "a", PASSWORD + "a");
+        deleteUser(sessionId);
     }
 
     @Test
@@ -48,9 +50,10 @@ public class UserControllerTests extends ControllerTests {
 
     @Test
     void 로그아웃_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
         webTestClient.get()
                 .uri("/logout")
-                .header("Cookie", logInAndGetSessionId(EMAIL, PASSWORD))
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectStatus()
                 .isFound();
@@ -58,9 +61,10 @@ public class UserControllerTests extends ControllerTests {
 
     @Test
     void myPage_조회_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
         webTestClient.get()
                 .uri("/mypage")
-                .header("Cookie", logInAndGetSessionId(EMAIL, PASSWORD))
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -68,9 +72,10 @@ public class UserControllerTests extends ControllerTests {
 
     @Test
     void myPage_수정_페이지_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
         webTestClient.get()
                 .uri("/mypage/edit")
-                .header("Cookie", logInAndGetSessionId(EMAIL, PASSWORD))
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -78,28 +83,32 @@ public class UserControllerTests extends ControllerTests {
 
     @Test
     void myPage_수정_테스트() {
+        registerUser(NAME + "a", EMAIL + "a", PASSWORD + "a");
+        String sessionId = logInAndGetSessionId(EMAIL + "a", PASSWORD + "a");
         webTestClient.put()
                 .uri("/mypage/edit")
-                .body(fromFormData("email", "zino@gmail.com")
-                        .with("password", "zino123!@#")
-                        .with("name", "zinozino"))
-                .header("Cookie", logInAndGetSessionId(EMAIL, PASSWORD))
+                .body(fromFormData("email", EMAIL + "a")
+                        .with("password", PASSWORD + "123")
+                        .with("name", NAME + NAME))
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "http://localhost:"+portNo+"/mypage/edit");
+                .expectHeader().valueMatches("location", "http://localhost:" + portNo + "/mypage");
+        deleteUser(sessionId);
     }
 
     @Test
     void myPage_수정_에러_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
         webTestClient.put()
                 .uri("/mypage/edit")
                 .body(fromFormData("email", "zino@gmail.com")
                         .with("password", "zi")
                         .with("name", "zinozino"))
-                .header("Cookie", logInAndGetSessionId(EMAIL, PASSWORD))
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", "http://localhost:"+portNo+"/");
+                .expectHeader().valueMatches("location", "http://localhost:" + portNo + "/");
     }
 
     @AfterEach

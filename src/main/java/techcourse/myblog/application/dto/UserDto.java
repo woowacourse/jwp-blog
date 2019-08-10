@@ -25,7 +25,7 @@ public abstract class UserDto {
     }
 
     Boolean match(User user) {
-        return email.equals(user.getEmail()) && name.equals(user.getName());
+        return email.equals(user.getEmail());
     }
 
     public String getEmail() {

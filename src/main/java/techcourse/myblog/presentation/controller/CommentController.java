@@ -1,20 +1,17 @@
 package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.presentation.response.StandardResponse;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
+@RestController
 public class CommentController {
     private CommentService commentService;
 
@@ -24,23 +21,22 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView addComment(CommentDto commentDto, @PathVariable Long articleId, HttpSession session) {
-        commentService.save(commentDto, articleId, (User) session.getAttribute("user"));
-        RedirectView redirectView = new RedirectView("/articles/" + articleId);
-        return redirectView;
+    public ResponseEntity<StandardResponse> addComment(@RequestBody CommentDto commentDto, @PathVariable Long articleId, HttpSession session) {
+        CommentDto saved = commentService.save(commentDto, articleId, (User) session.getAttribute("user"));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(StandardResponse.success("comment is created successfully.", saved));
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, HttpSession session) {
+    public ResponseEntity<StandardResponse> deleteComment(@PathVariable Long commentId, HttpSession session) {
         commentService.delete(commentId, (User) session.getAttribute("user"));
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/" + articleId));
-        return modelAndView;
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(StandardResponse.success("comment is deleted successfully", null));
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession session) {
-        commentService.modify(commentId, commentDto, (User) session.getAttribute("user"));
-        return new RedirectView("/articles/" + articleId);
+    public ResponseEntity<StandardResponse> updateComment(@RequestBody CommentDto commentDto, @PathVariable("commentId") Long commentId, HttpSession session) {
+        CommentDto updated = commentService.modify(commentId, commentDto, (User) session.getAttribute("user"));
+        return ResponseEntity.ok(StandardResponse.success("comment is updated successfully", updated));
     }
 }

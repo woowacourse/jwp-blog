@@ -31,7 +31,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void save(CommentDto commentDto, Long articleId, User user) {
+    public CommentDto save(CommentDto commentDto, Long articleId, User user) {
         Article article = articleService.findArticleById(articleId);
 
         Comment comment = new Comment.CommentBuilder()
@@ -39,8 +39,9 @@ public class CommentService {
                 .author(user)
                 .contents(commentDto.getContents())
                 .build();
+        Comment saved = commentRepository.save(comment);
 
-        commentRepository.save(comment);
+        return commentAssembler.convertEntityToDto(saved);
     }
 
     private Comment findCommentById(Long commentId) {
@@ -63,17 +64,19 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(long commentId, User user) {
+    public Boolean delete(long commentId, User user) {
         Comment comment = findCommentById(commentId);
-        if (comment.isNotAuthor(user)){
+        if (comment.isNotAuthor(user)) {
             throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
         }
         commentRepository.deleteById(commentId);
+        return true;
     }
 
     @Transactional
-    public void modify(Long commentId, CommentDto commentDto, User user) {
+    public CommentDto modify(Long commentId, CommentDto commentDto, User user) {
         Comment comment = findCommentById(commentId);
         comment.modify(commentDto, user);
+        return commentAssembler.convertEntityToDto(comment);
     }
 }

@@ -50,7 +50,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public RedirectView logout(HttpSession httpSession) {
-        httpSession.removeAttribute("user");
+        httpSession.setAttribute("user", null);
 
         return new RedirectView("/");
     }
@@ -88,14 +88,12 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public RedirectView deleteUser(HttpSession httpSession, UserRequestDto user) {
+    public RedirectView deleteUser(HttpSession httpSession) {
         RedirectView redirectView = new RedirectView("/");
         User userFromSession = (User) httpSession.getAttribute("user");
 
-        if (user.match(userFromSession)) {
-            userService.removeByUser(userFromSession);
-            httpSession.removeAttribute("user");
-        }
+        userService.removeByUser(userFromSession);
+        httpSession.removeAttribute("user");
 
         return redirectView;
     }
