@@ -27,6 +27,6 @@ public class EmailConstraintValidator implements ConstraintValidator<EmailConstr
         context.buildConstraintViolationWithTemplate("이메일 중복입니다")
                 .addConstraintViolation();
 
-        return !userRepository.existsByEmail(value);
+        return !userRepository.findByEmail(value).isPresent();
     }
 }
