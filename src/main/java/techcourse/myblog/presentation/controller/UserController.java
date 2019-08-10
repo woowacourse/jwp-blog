@@ -32,8 +32,8 @@ public class UserController {
 
     @GetMapping("/signup")
     public String createSignupForm(Model model) {
-        if (!model.containsAttribute("userDto")) {
-            model.addAttribute("userDto", new UserDto("", "", ""));
+        if (!model.containsAttribute("signUpUserDto")) {
+            model.addAttribute("signUpUserDto", new UserDto("", "", ""));
         }
         return "signup";
     }
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@ModelAttribute("/signup") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
+    public RedirectView createUser(@ModelAttribute("signUpUserDto") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
         log.debug("user save request data : -> {}", userDto);
         User savedUser = userWriteService.save(userDto.toUser());
         log.debug("user save response data : -> {}", savedUser);
@@ -54,8 +54,8 @@ public class UserController {
 
     @GetMapping("/login")
     public String createLoginForm(Model model) {
-        if (!model.containsAttribute("userDto")) {
-            model.addAttribute("userDto", new UserDto("", "", ""));
+        if (!model.containsAttribute("loginUserDto")) {
+            model.addAttribute("loginUserDto", new UserDto("", "", ""));
         }
 
         return "login";
@@ -63,7 +63,7 @@ public class UserController {
 
     @PostMapping("/login")
     public RedirectView login(HttpSession session,
-                              @ModelAttribute("/login") @Validated(Default.class) UserDto userDto) {
+                              @ModelAttribute("loginUserDto") @Validated(Default.class) UserDto userDto) {
         log.debug("user login request data : -> {}", userDto);
         User loginUser = userReadService.findByEmailAndPassword(userDto);
         log.debug("user login response data : -> {}", loginUser);

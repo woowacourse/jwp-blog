@@ -33,7 +33,7 @@
                                                     <div class="mrg-btm-30">
                                                         <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">로그인</h2>
                                                     </div>
-                                                    <form action="/login" method="post" th:object="${userDto}">
+                                                    <form action="/login" method="post" th:object="${loginUserDto}">
                                                         <div class="form-group">
                                                             <input type="email" class="form-control" placeholder="Id" required th:field="*{email}">
                                                             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>

@@ -26,15 +26,15 @@ public class MypageController {
     
     @GetMapping("/edit")
     public String createMyPageForm(Model model) {
-        if (!model.containsAttribute("userDto")) {
-            model.addAttribute("userDto", new UserDto("", "", ""));
+        if (!model.containsAttribute("editUserDto")) {
+            model.addAttribute("editUserDto", new UserDto("", "", ""));
         }
         return "mypage-edit";
     }
     
     @PutMapping
     public RedirectView editUser(LoginUser loginUser,
-                                 @ModelAttribute("/mypage/edit") @Validated(UserInfo.class) UserDto userDto) {
+                                 @ModelAttribute("editUserDto") @Validated(UserInfo.class) UserDto userDto) {
         userWriteService.update(loginUser.getUser(), userDto.toUser());
         
         return new RedirectView("/mypage");

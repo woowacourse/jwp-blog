@@ -39,7 +39,7 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form action="/users" method="post" th:object="${userDto}">
+                                                    <form action="/users" method="post" th:object="${signUpUserDto}">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
                                                             <input id="name" type="text" name="name" class="form-control" required th:field="*{name}"/>

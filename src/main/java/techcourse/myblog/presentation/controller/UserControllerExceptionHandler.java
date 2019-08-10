@@ -7,12 +7,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.exception.*;
-import techcourse.myblog.domain.article.exception.MismatchArticleAuthorException;
 import techcourse.myblog.domain.comment.exception.InvalidCommentException;
-import techcourse.myblog.domain.comment.exception.MismatchCommentAuthorException;
 import techcourse.myblog.domain.exception.MismatchException;
+import techcourse.myblog.presentation.support.RedirectUrl;
 import techcourse.myblog.presentation.support.exception.CustomException;
 
 @ControllerAdvice
@@ -51,8 +49,8 @@ public class UserControllerExceptionHandler {
     @ExceptionHandler(BindException.class)
     public RedirectView handleBindError(BindException e,
                                         RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("userDto", new UserDto("", "", ""));
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDto", e.getBindingResult());
-        return new RedirectView(e.getObjectName());
+        redirectAttributes.addFlashAttribute(e.getObjectName(), e.getTarget());
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult." + e.getObjectName(), e.getBindingResult());
+        return new RedirectView(RedirectUrl.convert(e.getObjectName()).getUrl());
     }
 }
