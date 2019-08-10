@@ -71,7 +71,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String modify(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto,
-                              HttpSession httpSession, Model model) {
+                         HttpSession httpSession, Model model) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
         ArticleDto updatedArticle = articleService.modify(articleDto, articleId, userResponse);

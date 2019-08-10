@@ -26,7 +26,7 @@ public class CommentController {
     @PostMapping("")
     @ResponseBody
     public CommentResponse save(@PathVariable("articleId") Long articleId,
-                                       @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
+                                @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         log.info(commentRequest.getContents());
 
         UserResponse user = (UserResponse) httpSession.getAttribute("user");

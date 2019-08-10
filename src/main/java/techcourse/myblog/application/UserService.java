@@ -43,7 +43,7 @@ public class UserService {
     }
 
     private void checkDuplicatedEmail(UserRequest userRequest) {
-        if(userRepository.existsByEmail(userRequest.getEmail())) {
+        if (userRepository.existsByEmail(userRequest.getEmail())) {
             throw new DuplicatedEmailException("중복된 이메일입니다!");
         }
     }
@@ -57,8 +57,7 @@ public class UserService {
         List<UserResponse> userResponses = users.stream()
                 .map(user -> modelMapper
                         .map(user, UserResponse.class))
-                .collect(Collectors.toList())
-                ;
+                .collect(Collectors.toList());
 
         return Collections.unmodifiableList(userResponses);
     }
