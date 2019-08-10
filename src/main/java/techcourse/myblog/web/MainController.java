@@ -1,18 +1,18 @@
 package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.service.article.ArticleService;
-import techcourse.myblog.service.dto.article.ArticleResponse;
-import techcourse.myblog.service.dto.user.UserResponse;
+import techcourse.myblog.article.dto.ArticleResponse;
+import techcourse.myblog.article.service.ArticleService;
+import techcourse.myblog.user.dto.UserResponse;
+import techcourse.myblog.web.argumentResolver.AccessUserInfo;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Objects;
-
-import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
 
 @Controller
 public class MainController {
@@ -24,10 +24,10 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String showMain(Model model, final HttpSession session) {
-        List<ArticleResponse> articleDtos = articleService.findAll();
-        model.addAttribute("articleDtos", articleDtos);
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+    public String showMain(@PageableDefault(size = 2) Pageable pageable, Model model, final AccessUserInfo accessUserInfo) {
+        Page<ArticleResponse> articles = articleService.findAll(pageable);
+        model.addAttribute("articles", articles);
+        UserResponse user = accessUserInfo.getUser();
         if (!Objects.isNull(user)) {
             model.addAttribute("user", user);
         }

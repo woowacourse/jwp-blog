@@ -87,8 +87,9 @@
                     <div class="width-100 fixed left-0 border bottom"></div>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
-                            <div class="pdd-horizon-15 pdd-vertical-20" th:each="articleDto : ${articleDtos}">
-                                <a href="article.html" th:href="@{/articles/{id}(id=${articleDto.id})}"
+
+                            <div class="pdd-horizon-15 pdd-vertical-20" th:each="article : ${articles.content}">
+                                <a href="article.html" th:href="@{/articles/{id}(id=${article.id})}"
                                    class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
@@ -99,9 +100,9 @@
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 class="mrg-btm-20 text-bold" th:text="${articleDto.title}">
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">
                                                             -</h2>
-                                                        <p th:text="${articleDto.contents}">-</p>
+                                                        <p th:text="${article.contents}">-</p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
@@ -119,6 +120,14 @@
                                     </div>
                                 </a>
                             </div>
+                            <ul class="pager">
+                                <li class="btn btn-icon">
+                                    <a th:href="@{/(page=${articles.number - 1})}">previous page &larr;</a>
+                                </li>
+                                <li class="btn btn-icon">
+                                    <a th:href="@{/(page=${articles.number + 1})}">next page &rarr;</a>
+                                </li>
+                            </ul>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
                             <div class="pdd-horizon-15 pdd-vertical-20">
