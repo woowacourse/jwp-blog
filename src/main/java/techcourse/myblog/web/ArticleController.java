@@ -74,8 +74,8 @@ public class ArticleController {
                               HttpSession httpSession, Model model) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
-        articleService.editArticle(articleDto, articleId, userResponse);
-        model.addAttribute(ARTICLE_INFO, articleDto);
+        ArticleDto updatedArticle = articleService.editArticle(articleDto, articleId, userResponse);
+        model.addAttribute(ARTICLE_INFO, updatedArticle);
 
         return "article";
     }
