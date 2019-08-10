@@ -18,7 +18,7 @@ import javax.validation.Valid;
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;

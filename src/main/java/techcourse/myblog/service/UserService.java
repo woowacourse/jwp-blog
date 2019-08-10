@@ -16,8 +16,8 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private EncryptHelper encryptHelper;
+    private final UserRepository userRepository;
+    private final EncryptHelper encryptHelper;
 
     public UserService(UserRepository userRepository, EncryptHelper encryptHelper) {
         this.userRepository = userRepository;

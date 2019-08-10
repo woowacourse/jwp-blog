@@ -18,8 +18,8 @@ import techcourse.myblog.service.dto.CommentsResponse;
 public class ArticleApiController {
     private static final Logger log = LoggerFactory.getLogger(ArticleApiController.class);
 
-    private ArticleService articleService;
-    private CommentService commentService;
+    private final ArticleService articleService;
+    private final CommentService commentService;
 
     public ArticleApiController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
