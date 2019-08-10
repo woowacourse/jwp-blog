@@ -4,7 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.service.dto.UserRequestDto;
 
 public class LoginTemplate extends SignUpTemplate {
     private static final Logger log = LoggerFactory.getLogger(LoginTemplate.class);
@@ -70,30 +71,34 @@ public class LoginTemplate extends SignUpTemplate {
     }
 
     private String getCookie() {
-        String cookie = webTestClient
-                .post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", EMAIL)
-                        .with("password", PASSWORD))
+        UserRequestDto userRequestDto = new UserRequestDto(NAME, PASSWORD, EMAIL);
+
+        String cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(userRequestDto), UserRequestDto.class)
                 .exchange()
                 .returnResult(String.class)
                 .getResponseHeaders()
                 .getFirst("Set-Cookie");
         log.debug("cookie : {}", cookie);
+
         return cookie;
     }
 
     private String getCookie(String email, String password) {
-        String cookie = webTestClient
-                .post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
+        UserRequestDto userRequestDto = new UserRequestDto(NAME, password, email);
+
+        String cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(userRequestDto), UserRequestDto.class)
                 .exchange()
                 .returnResult(String.class)
                 .getResponseHeaders()
                 .getFirst("Set-Cookie");
         log.debug("cookie : {}", cookie);
+
         return cookie;
     }
 }

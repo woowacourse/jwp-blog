@@ -14,6 +14,7 @@
 <div>
     <th:block th:include="/common/navbar"></th:block>
     <th:block th:include="/common/article_cover"></th:block>
+    <input id="articleId" type="hidden" th:value="${article.id}">
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
@@ -57,6 +58,7 @@
 </div>
 
 <th:block th:include="common/js"></th:block>
+<script src="/js/comment.js"></script>
 <script th:inline="javascript">
     window.onload = function () {
         const size = document.getElementsByName('edit-contents').length;
@@ -86,63 +88,6 @@
         },
         height: '200px'
     });
-
-    function editComment(commentId) {
-        document.getElementById('comment-div-' + commentId).style.display = 'none';
-        document.getElementById('edit-a-' + commentId).style.display = 'none';
-        document.getElementById('delete-a-' + commentId).style.display = 'none';
-
-        document.getElementById('edit-section-' + commentId).style.display = 'block';
-        document.getElementById('update-a-' + commentId).style.display = 'block';
-        document.getElementById('cancel-a-' + commentId).style.display = 'block';
-    }
-
-    function cancelComment(commentId) {
-        document.getElementById('comment-div-' + commentId).style.display = 'block';
-        document.getElementById('edit-a-' + commentId).style.display = 'block';
-        document.getElementById('delete-a-' + commentId).style.display = 'block';
-
-        document.getElementById('edit-section-' + commentId).style.display = 'none';
-        document.getElementById('update-a-' + commentId).style.display = 'none';
-        document.getElementById('cancel-a-' + commentId).style.display = 'none';
-    }
-
-    function deleteComment(articleId, commentId) {
-        const deleteForm = document.createElement('form');
-        deleteForm.setAttribute("method", "Post");
-        deleteForm.setAttribute("action", "/comment/" + articleId + "/" + commentId);
-
-        const hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "_method");
-        hiddenField.setAttribute("value", "delete");
-        deleteForm.appendChild(hiddenField);
-
-        document.body.appendChild(deleteForm);
-        deleteForm.submit();
-    }
-
-    function updateComment(articleId, commentId) {
-        const updateForm = document.createElement('form');
-        updateForm.setAttribute("method", "Post");
-        updateForm.setAttribute("action", "/comment/" + articleId + "/" + commentId);
-
-        const hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "_method");
-        hiddenField.setAttribute("value", "put");
-        updateForm.appendChild(hiddenField);
-
-        const commentContent = document.createElement("input");
-        const content = document.getElementById('edit-section-' + commentId).value;
-        commentContent.setAttribute("type", "text");
-        commentContent.setAttribute("name", "contents");
-        commentContent.setAttribute("value", content);
-        updateForm.appendChild(commentContent);
-
-        document.body.appendChild(updateForm);
-        updateForm.submit();
-    }
 </script>
 </body>
 </html>
