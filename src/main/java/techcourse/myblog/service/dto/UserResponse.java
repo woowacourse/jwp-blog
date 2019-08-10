@@ -1,5 +1,7 @@
 package techcourse.myblog.service.dto;
 
+import techcourse.myblog.domain.User;
+
 public class UserResponse {
     private String name;
     private String email;
@@ -7,6 +9,10 @@ public class UserResponse {
     public UserResponse(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public static UserResponse from(User user) {
+        return new UserResponse(user.getName(), user.getEmail());
     }
 
     public String getName() {

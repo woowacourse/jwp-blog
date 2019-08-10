@@ -7,6 +7,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.CommentRequest;
 import techcourse.myblog.service.dto.CommentResponse;
 import techcourse.myblog.service.dto.CommentsResponse;
+import techcourse.myblog.service.dto.UserResponse;
 import techcourse.myblog.service.exception.NoCommentException;
 
 import javax.transaction.Transactional;
@@ -33,7 +34,7 @@ public class CommentService {
                 .map(comment -> new CommentResponse(comment.getId(),
                         comment.getContents(),
                         comment.getCreatedDate(),
-                        comment.getCommenter()))
+                        UserResponse.from(comment.getCommenter())))
                 .collect(Collectors.toList()));
     }
 
