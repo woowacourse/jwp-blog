@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

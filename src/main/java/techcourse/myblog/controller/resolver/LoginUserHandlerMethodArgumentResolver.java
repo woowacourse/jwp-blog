@@ -1,12 +1,12 @@
-package techcourse.myblog.web.resolver;
+package techcourse.myblog.controller.resolver;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import techcourse.myblog.controller.resolver.exception.NotLoggedInException;
 import techcourse.myblog.service.dto.LoginUserDto;
-import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

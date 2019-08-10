@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller.web;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
