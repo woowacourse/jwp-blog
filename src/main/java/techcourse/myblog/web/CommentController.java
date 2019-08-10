@@ -8,8 +8,8 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequest;
+import techcourse.myblog.web.argumentResolver.SessionUser;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -24,29 +24,29 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> saveComment(@RequestBody @Valid CommentRequest commentRequest, HttpSession httpSession) {
+    public ResponseEntity<Comment> saveComment(@RequestBody @Valid CommentRequest commentRequest, @SessionUser User user) {
         log.debug("begin");
 
-        Comment comment = commentService.save(commentRequest, (User) httpSession.getAttribute("user"));
+        Comment comment = commentService.save(commentRequest, user);
         log.info("comment: {}", comment);
 
         return ResponseEntity.ok(comment);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<Comment> editComment(@RequestBody @Valid CommentRequest commentRequest, @PathVariable("commentId") Long commentId, HttpSession httpSession) {
+    public ResponseEntity<Comment> editComment(@RequestBody @Valid CommentRequest commentRequest, @PathVariable("commentId") Long commentId, @SessionUser User user) {
         log.debug("begin");
 
-        Comment updatedComment = commentService.update(commentRequest, (User) httpSession.getAttribute("user"), commentId);
+        Comment updatedComment = commentService.update(commentRequest, user, commentId);
         return ResponseEntity.ok(updatedComment);
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId, @SessionUser User user) {
         log.debug("begin");
 
         // TODO: 2019-08-03 HttpSession -> ArgumentResolver
-        commentService.deleteById(commentId, (User) httpSession.getAttribute("user"));
+        commentService.deleteById(commentId, user);
         log.info("commentId: {}", commentId);
 
         return ResponseEntity.noContent()

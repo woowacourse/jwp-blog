@@ -2,17 +2,23 @@ package techcourse.myblog.support.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import techcourse.myblog.web.argumentResolver.SessionUserArgumentResolver;
 import techcourse.myblog.web.interceptor.AuthInterceptor;
+
+import java.util.List;
 
 @EnableJpaAuditing
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final AuthInterceptor authInterceptor;
+    private final SessionUserArgumentResolver sessionUserArgumentResolver;
 
-    public WebConfig(AuthInterceptor authInterceptor) {
+    public WebConfig(AuthInterceptor authInterceptor, SessionUserArgumentResolver sessionUserArgumentResolver) {
         this.authInterceptor = authInterceptor;
+        this.sessionUserArgumentResolver = sessionUserArgumentResolver;
     }
 
     @Override
@@ -23,5 +29,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/mypage")
                 .addPathPatterns("/mypage/*")
                 .addPathPatterns("/articles");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(sessionUserArgumentResolver);
     }
 }

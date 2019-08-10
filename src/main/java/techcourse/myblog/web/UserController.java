@@ -11,8 +11,10 @@ import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserEditRequest;
 import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
+import techcourse.myblog.web.argumentResolver.SessionUser;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -66,10 +68,10 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPageForm(Model model, HttpServletRequest request) {
+    public String myPageForm(Model model, @SessionUser User user) {
         log.debug("begin");
 
-        model.addAttribute(USER, request.getSession().getAttribute(USER));
+        model.addAttribute(USER, user);
         return "mypage";
     }
 
@@ -79,11 +81,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public String login(UserLoginRequest userLoginRequest, HttpSession session) {
         log.debug("begin");
 
         User user = userService.findUserByEmail(userLoginRequest);
-        request.getSession().setAttribute(USER, user);
+        session.setAttribute(USER, user);
         return "redirect:/";
     }
 
@@ -96,25 +98,25 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public String editUser(@PathVariable("userId") Long userId, HttpServletRequest request, @Valid UserEditRequest userEditRequest, BindingResult bindingResult) {
+    public String editUser(@PathVariable("userId") Long userId, HttpSession session, @Valid UserEditRequest userEditRequest, BindingResult bindingResult) {
         log.debug("begin");
 
         if (bindingResult.hasErrors()) {
             return "mypage-edit";
         }
         User user = userService.editUserName(userId, userEditRequest.getName());
-        request.getSession().setAttribute(USER, user);
+        session.setAttribute(USER, user);
         return "redirect:/";
     }
 
     @DeleteMapping("/users/{userId}")
-    public String deleteUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
+    public String deleteUser(@PathVariable("userId") Long userId, HttpSession session) {
         log.debug("begin");
 
         userService.deleteById(userId);
         log.info("userId: {} ", userId);
 
-        request.getSession().removeAttribute(USER);
+        session.removeAttribute(USER);
         return "redirect:/";
     }
 }
