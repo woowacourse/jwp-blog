@@ -1,7 +1,7 @@
 package techcourse.myblog.application;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import techcourse.myblog.application.assembler.UserAssembler;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
 import techcourse.myblog.application.dto.UserResponse;
@@ -23,12 +23,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EncryptHelper encryptHelper;
-    private final ModelMapper modelMapper;
+    private final UserAssembler userAssembler;
 
-    public UserService(UserRepository userRepository, EncryptHelper encryptHelper, ModelMapper modelMapper) {
+    public UserService(UserRepository userRepository, EncryptHelper encryptHelper,
+                       UserAssembler userAssembler) {
         this.userRepository = userRepository;
         this.encryptHelper = encryptHelper;
-        this.modelMapper = modelMapper;
+        this.userAssembler = userAssembler;
     }
 
     public void save(UserRequest userRequest) {
@@ -39,7 +40,7 @@ public class UserService {
     private User createUser(UserRequest userRequest) {
         userRequest.setPassword(encryptPassword(userRequest));
         checkDuplicatedEmail(userRequest);
-        return modelMapper.map(userRequest, User.class);
+        return userAssembler.convertToUser(userRequest);
     }
 
     private void checkDuplicatedEmail(UserRequest userRequest) {
@@ -55,8 +56,8 @@ public class UserService {
     public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();
         List<UserResponse> userResponses = users.stream()
-                .map(user -> modelMapper
-                        .map(user, UserResponse.class))
+                .map(user -> userAssembler
+                        .convertToUserResponse(user))
                 .collect(Collectors.toList());
 
         return Collections.unmodifiableList(userResponses);
@@ -67,7 +68,7 @@ public class UserService {
                 .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
         checkPassword(loginRequest, user);
-        return modelMapper.map(user, UserResponse.class);
+        return userAssembler.convertToUserResponse(user);
     }
 
     private void checkPassword(LoginRequest loginRequest, User user) {
@@ -85,7 +86,7 @@ public class UserService {
     public UserResponse modify(Long userId, String name) {
         User user = findById(userId);
         changeName(name, user);
-        return modelMapper.map(user, UserResponse.class);
+        return userAssembler.convertToUserResponse(user);
     }
 
     private void changeName(String name, User user) {
