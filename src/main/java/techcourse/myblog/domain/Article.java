@@ -1,16 +1,11 @@
 package techcourse.myblog.domain;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.service.exception.InvalidAuthorException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@EntityListeners(value = {AuditingEntityListener.class})
-public class Article {
+public class Article extends DateTimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,12 +18,6 @@ public class Article {
 
     @Lob
     private String contents;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_article_user"))
@@ -90,8 +79,8 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
-                ", createdDate=" + createdDate +
-                ", modifiedDate=" + modifiedDate +
+                ", createdDate=" + getCreatedDate() +
+                ", modifiedDate=" + getModifiedDate() +
                 ", author=" + author +
                 '}';
     }
