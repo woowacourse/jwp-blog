@@ -23,14 +23,11 @@ public class ArticleController {
 
     private final ArticleReadService articleReadService;
     private final ArticleWriteService articleWriteService;
-    private final CommentReadService commentReadService;
 
     public ArticleController(ArticleReadService articleReadService,
-                             ArticleWriteService articleWriteService,
-                             CommentReadService commentReadService) {
+                             ArticleWriteService articleWriteService) {
         this.articleReadService = articleReadService;
         this.articleWriteService = articleWriteService;
-        this.commentReadService = commentReadService;
     }
 
     @GetMapping("/writing")
@@ -50,10 +47,8 @@ public class ArticleController {
     public String showArticle(@PathVariable Long articleId, Model model) {
         log.debug("article read request data : -> {}", articleId);
         Article article = articleReadService.findById(articleId);
-        List<Comment> comments = commentReadService.findByArticleId(articleId);
-        log.debug("article read response data : -> {}, {}", article, comments);
+        log.debug("article read response data : -> {}", article);
         model.addAttribute("article", article);
-        model.addAttribute("comments", comments);
         return "article";
     }
 

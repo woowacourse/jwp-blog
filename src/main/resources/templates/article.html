@@ -66,44 +66,10 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
+                    <span class="font-size-16 text-info" id="comment-size"></span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info" id="comment-list">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">
-                            <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info view">
-                                <span class="text-bold inline-block" th:text="${comment.writer.name}"></span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span th:text="${comment.updateTimeAt}"></span>
-                                    <div th:if="${comment.writer.equals(session.user)}" class = "comment-btn">
-                                        <button class="btn btn-icon pointer comment-modify" type="button">
-                                            <i class ="ti-pencil text-dark font-size-16 pdd-horizon-5 comment-modify"></i>
-                                        </button>
-                                        <div class="form">
-                                            <button type="button" th:value="${comment.id}" class="btn btn-icon pointer comment-remove-button">
-                                                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5 comment-remove-button" th:value="${comment.id}"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </span>
-                                <p class="width-80" th:id="'comment-' + ${comment.id} + '-contents'" th:text="${comment.contents}"></p>
-                            </div>
-                            <form  method="post" th:action="${article.id} + '/comment/'+ ${comment.id}" class="edit edit-form">
-                                <input name="_method" type="hidden" value="PUT" />
-                                <input class="edit" th:id="'comment-' + ${comment.id}"name="contents" th:value="${comment.contents}">
-                                <button type="button" th:value="${comment.id}" class="btn btn-default comment-modify-button comment-modify">
-                                    <i class="ti-save"></i>
-                                </button>
-                                <button type="button" class="btn btn-default comment-modify">
-                                    <i class="ti-close comment-modify"></i>
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-
+                    <ul class="list-unstyled list-info" id="comment-list"></ul>
                     <form th:method="post" th:action="${article.id} + '/comment'">
                         <div class="add-comment">
                             <input type="hidden" name="contents" id="article-comment">
@@ -164,7 +130,8 @@
         viewer: true,
         height: '100%',
         initialValue: initValue
-    })
+    });
+
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -181,6 +148,12 @@
 
         const CommentController = function() {
             const commentService = new CommentService();
+
+            const readCommnet = function () {
+                onload = () => {
+                    commentService.read();
+                }
+            }
 
             const saveComment = function () {
                 const commentAddButton = document.querySelector('#save-comment-button');
@@ -199,6 +172,7 @@
             };
 
             const init = function() {
+                readCommnet();
                 saveComment();
                 updateComment();
                 removeComment();
@@ -211,10 +185,31 @@
 
         const CommentService = function() {
             const articleId = [[${article.id}]];
-            const sessionUser = [[${session.user}]];
+            const userId = [[${session.user.id}]];
+            const requestUrl = `/articles/${articleId}/comment`;
+
+            const read = (event) => {
+                fetch(requestUrl, {
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    },
+                    method: 'GET'
+                }).then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    }
+                    throw response;
+                }).then(json => {
+                    for (let value of json) {
+                        appendComment(value)
+                    }
+                }).catch(error => {
+                    error.json().then(json => alert(json.message));
+                })
+            };
 
             const save = (event) => {
-                fetch('/articles/' + articleId + '/comment', {
+                fetch(requestUrl, {
                     headers: {
                         'Content-type': 'application/json; charset=UTF-8'
                     },
@@ -239,7 +234,7 @@
                 const commentId = event.target.value;
                 const inputComment = document.querySelector('#comment-' + commentId);
 
-                fetch('/articles/' + articleId + '/comment/' + commentId, {
+                fetch(`${requestUrl}/${commentId}`, {
                     headers: {
                         'Content-type': 'application/json; charset=UTF-8'
                     },
@@ -253,7 +248,7 @@
                     }
                     throw response;
                 }).then(json => {
-                    const commentContents = document.querySelector('#comment-'+commentId+'-contents');
+                    const commentContents = document.querySelector('#comment-' + commentId + '-contents');
                     commentContents.innerText = json.contents;
                 }).catch(error => {
                     error.json().then(json => alert(json.message));
@@ -266,7 +261,7 @@
                 }
                 const commentId = event.target.value;
 
-                fetch('/articles/' + articleId + '/comment/' + commentId, {
+                fetch(`${requestUrl}/${commentId}`, {
                     method: 'DELETE'
                 }).then(response => {
                     if (response.status === 200) {
@@ -295,7 +290,7 @@
 
                 let compiledCommentTemplate = compile(comment, commentTemplate);
 
-                if (comment.userId === sessionUser.id) {
+                if (comment.userId === userId) {
                     compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join(compile(comment, buttonsTemplate));
                 } else {
                     compiledCommentTemplate = compiledCommentTemplate.split('{{buttons}}').join('');
@@ -328,6 +323,7 @@
             };
 
             return {
+                read: read,
                 save: save,
                 modifyToggle: modifyToggle,
                 modify: modify,

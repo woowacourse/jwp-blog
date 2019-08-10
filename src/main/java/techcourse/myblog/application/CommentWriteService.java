@@ -6,6 +6,8 @@ import techcourse.myblog.application.dto.CommentResponseDto;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
 
+import static techcourse.myblog.application.CommentAssembler.buildCommentResponseDto;
+
 @Service
 @Transactional
 public class CommentWriteService {
@@ -27,16 +29,5 @@ public class CommentWriteService {
 
     public void deleteById(Long id) {
         commentRepository.deleteById(id);
-    }
-
-    private CommentResponseDto buildCommentResponseDto(Comment comment) {
-        return CommentResponseDto
-                .builder()
-                .commentId(comment.getId())
-                .contents(comment.getContents())
-                .userId(comment.getWriter().getId())
-                .userName(comment.getWriter().getName())
-                .updateTimeAt(comment.getUpdateTimeAt())
-                .build();
     }
 }
