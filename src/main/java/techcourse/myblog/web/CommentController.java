@@ -25,7 +25,7 @@ public class CommentController {
 
     @PostMapping("/comments")
     @ResponseBody
-    public CommentResponse saveComment(@PathVariable("articleId") Long articleId,
+    public CommentResponse save(@PathVariable("articleId") Long articleId,
                                        @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         log.info(commentRequest.getContents());
 
@@ -33,18 +33,18 @@ public class CommentController {
         return commentService.save(commentRequest, articleId, user.getId());
     }
 
-    @DeleteMapping("/comments/{commentId}")
-    @ResponseBody
-    public void deleteComment(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
-        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        commentService.deleteComment(commentId, userResponse);
-    }
-
     @PutMapping("/comments/{commentId}")
     @ResponseBody
-    public CommentResponse updateComment(@PathVariable("commentId") Long commentId,
-                                         @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
+    public CommentResponse modify(@PathVariable("commentId") Long commentId,
+                                  @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         return commentService.updateComment(commentId, userResponse, commentRequest);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @ResponseBody
+    public void remove(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+        commentService.deleteComment(commentId, userResponse);
     }
 }

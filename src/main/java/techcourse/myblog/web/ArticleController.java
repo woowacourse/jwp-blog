@@ -29,21 +29,21 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String indexForm(Model model) {
         model.addAttribute(ARTICLES_INFO, articleService.findAll());
 
         return "index";
     }
 
     @GetMapping("/writing")
-    public String formArticle(Model model) {
+    public String saveForm(Model model) {
         model.addAttribute(ARTICLE_INFO, null);
 
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String saveArticle(@Valid ArticleDto articleDto, HttpSession httpSession) {
+    public String save(@Valid ArticleDto articleDto, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         Long articleId = articleService.post(articleDto, userResponse);
 
@@ -51,7 +51,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
+    public String show(@PathVariable("articleId") long articleId, Model model) {
         Article article = articleService.findArticleById(articleId);
         List<Comment> comments = commentService.findCommentsByArticle(article);
         model.addAttribute(ARTICLE_INFO, article);
@@ -61,7 +61,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
+    public String modifyForm(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         Article article = articleService.findArticleWrittenByUser(articleId, userResponse);
         model.addAttribute(ARTICLE_INFO, article);
@@ -70,7 +70,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto,
+    public String modify(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto,
                               HttpSession httpSession, Model model) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
@@ -81,7 +81,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
+    public String remove(@PathVariable("articleId") long articleId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
         articleService.deleteById(articleId, userResponse);

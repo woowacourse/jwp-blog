@@ -25,17 +25,17 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String createLoginForm(LoginRequest loginRequest) {
+    public String loginForm(LoginRequest loginRequest) {
         return "login";
     }
 
     @GetMapping("/signup")
-    public String createSignForm(UserRequest userRequest) {
+    public String signUpForm(UserRequest userRequest) {
         return "signup";
     }
 
     @PostMapping("/users")
-    public String saveUser(@Valid UserRequest userRequest, BindingResult bindingResult) {
+    public String save(@Valid UserRequest userRequest, BindingResult bindingResult) {
         // 회원 가입 입력 형식 유효성 검사
         if (bindingResult.hasErrors()) {
             return "signup";
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String showUsers(Model model) {
+    public String list(Model model) {
         model.addAttribute(USERS_INFO, userService.findAll());
 
         return "user-list";
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public String editUser(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest,
+    public String modify(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest,
                            BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "mypage-edit";
@@ -95,7 +95,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{userId}")
-    public String deleteUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
+    public String remove(@PathVariable("userId") Long userId, HttpServletRequest request) {
         userService.deleteById(userId);
         request.getSession().invalidate();
 
