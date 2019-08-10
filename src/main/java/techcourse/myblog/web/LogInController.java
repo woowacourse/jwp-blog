@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import techcourse.myblog.service.LogInService;
 import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.LoginUserDto;

@@ -25,7 +25,7 @@ class RestCommentControllerTest {
 
     @Test
     void 비동기_댓글_조회() {
-        webTestClient.get().uri("/api/comments/" + SAMPLE_ARTICLE_ID)
+        webTestClient.get().uri("/api/articles/" + SAMPLE_ARTICLE_ID + "/comments")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)

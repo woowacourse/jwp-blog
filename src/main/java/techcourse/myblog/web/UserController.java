@@ -11,6 +11,7 @@ import techcourse.myblog.service.dto.LoginUserDto;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
     private static final String LOGGED_IN_USER = "loggedInUser";
 
@@ -20,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users/sign-up")
+    @GetMapping("/sign-up")
     public String showRegisterPage(HttpSession httpSession) {
         if (isLoggedIn(httpSession)) {
             return "redirect:/";
@@ -28,19 +29,19 @@ public class UserController {
         return "sign-up";
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public String showUserList(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public String createUser(UserDto userDto) {
         userService.save(userDto);
         return "redirect:/login";
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto,
                                LoginUserDto user, HttpSession httpSession) {
         userService.update(userPublicInfoDto, id, user.getId());
@@ -49,7 +50,7 @@ public class UserController {
         return "redirect:/mypage/" + id;
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Long id, LoginUserDto user, HttpSession httpSession) {
         userService.delete(id, user.getId());
         httpSession.removeAttribute(LOGGED_IN_USER);
