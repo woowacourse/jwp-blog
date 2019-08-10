@@ -1,26 +1,27 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.article.Contents;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.assembler.ArticleAssembler;
-import techcourse.myblog.service.assembler.CommentAssembler;
-import techcourse.myblog.service.dto.ResponseCommentDto;
 import techcourse.myblog.service.exception.NotFoundObjectException;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, CommentRepository commentRepository) {
         this.articleRepository = articleRepository;
+        this.commentRepository = commentRepository;
     }
 
     public Article createArticle(Contents contents, User author) {
@@ -45,33 +46,24 @@ public class ArticleService {
     public void deleteArticle(Long articleId, User user) {
         Article article = findArticle(articleId);
         article.checkCorrespondingAuthor(user);
+        deleteCommentsByArticleId(articleId);
         articleRepository.deleteById(articleId);
-    }
-
-    public List<Comment> findAllComments(Article article) {
-        return article.getComments();
-    }
-
-    public List<ResponseCommentDto> findAllComments(Long articleId) {
-        List<ResponseCommentDto> commentDtos = new ArrayList<>();
-        List<Comment> comments = articleRepository.findById(articleId)
-                .orElseThrow(NotFoundObjectException::new).getComments();
-
-        for(Comment comment : comments) {
-            commentDtos.add(CommentAssembler.toResponseDto(comment));
-        }
-
-        return commentDtos;
-    }
-
-    @Transactional
-    public Article addComment(Long articleId, Comment comment) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
-        article.addComment(comment);
-        return article;
     }
 
     public void checkAvailableUpdateUser(Article article, User user) {
         article.checkCorrespondingAuthor(user);
+    }
+
+    public Article findById(Long id) {
+        return articleRepository.findById(id).orElseThrow(NotFoundObjectException::new);
+    }
+
+    private void deleteCommentsByArticleId(Long articleId) {
+        List<Comment> comments = commentRepository.findByArticleArticleId(articleId)
+                .orElseThrow(NotFoundObjectException::new);
+
+        for(Comment comment : comments) {
+            commentRepository.delete(comment);
+        }
     }
 }

@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.Contents;
+import techcourse.myblog.domain.user.LoginUser;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,10 +17,12 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private ArticleService articleService;
+    private final ArticleService articleService;
+    private final CommentService commentService;
 
-    ArticleController(ArticleService articleService) {
+    ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/new")
@@ -37,13 +41,12 @@ public class ArticleController {
     public String showArticle(@PathVariable Long articleId, Model model) {
         Article article = articleService.findArticle(articleId);
         model.addAttribute("article", article);
-        model.addAttribute("comments", articleService.findAllComments(article));
+        model.addAttribute("comments", commentService.findAllComments(articleId));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
-    public String showUpdateArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
+    public String showUpdateArticle(@PathVariable Long articleId, Model model,@LoginUser User user) {
         Article article = articleService.findArticle(articleId);
         articleService.checkAvailableUpdateUser(article, user);
         model.addAttribute("article", article);
@@ -51,15 +54,13 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, Contents contents, Model model, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
+    public String updateArticle(@PathVariable Long articleId, Contents contents, @LoginUser User user) {
         articleService.updateArticle(articleId, contents, user);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
+    public String deleteArticle(@PathVariable Long articleId, @LoginUser User user) {
         articleService.deleteArticle(articleId, user);
         return "redirect:/";
     }

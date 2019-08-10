@@ -5,12 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.domain.BaseEntity;
 import techcourse.myblog.domain.InvalidAuthorException;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -28,11 +25,6 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comments"))
-    @OrderBy("id ASC")
-    private List<Comment> comments = new ArrayList<>();
-
     @Builder
     public Article(Contents contents, User author) {
         this.contents = contents;
@@ -48,14 +40,6 @@ public class Article extends BaseEntity {
         if (!this.author.equals(user)) {
             throw new InvalidAuthorException();
         }
-    }
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
-    }
-
-    public int getCountOfComment() {
-        return comments.size();
     }
 
 }

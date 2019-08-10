@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.domain.BaseEntity;
 import techcourse.myblog.domain.InvalidAuthorException;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
@@ -25,10 +26,15 @@ public class Comment extends BaseEntity {
     @Lob
     private String contents;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
+    private Article article;
+
     @Builder
-    public Comment(User author, String contents) {
+    public Comment(User author, String contents, Article article) {
         this.author = author;
         this.contents = contents;
+        this.article = article;
     }
 
     private void checkCorrespondingAuthor(User user) {
@@ -37,8 +43,8 @@ public class Comment extends BaseEntity {
         }
     }
 
-    public void update(Comment updateComment, User user) {
-        checkCorrespondingAuthor(user);
+    public void update(Comment updateComment) {
+        checkCorrespondingAuthor(updateComment.author);
         this.contents = updateComment.contents;
     }
 
