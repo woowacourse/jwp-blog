@@ -22,19 +22,19 @@ public class RestCommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/comments/{id}")
+    @GetMapping("/api/comments/{id}")
     public List<CommentResponseDto> readComments(@PathVariable("id") Long id) {
         return commentService.findCommentsByArticleId(id);
     }
 
-    @PostMapping("/comments")
+    @PostMapping("/api/comments")
     @ResponseStatus(value = HttpStatus.OK)
     public void createComment(@RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
         Long userId = getLoggedInUser(httpServletRequest).getId();
         commentService.save(userId, commentRequestDto);
     }
 
-    @PutMapping("/comments/{commentId}")
+    @PutMapping("/api/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateComment(@PathVariable("commentId") Long commentId,
                              @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
@@ -43,7 +43,7 @@ public class RestCommentController {
         commentService.update(userId, commentId, commentRequestDto);
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/api/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
         Long userId = getLoggedInUser(httpServletRequest).getId();

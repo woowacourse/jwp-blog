@@ -25,7 +25,7 @@ class RestCommentControllerTest {
 
     @Test
     void 비동기_댓글_조회() {
-        webTestClient.get().uri("/comments/" + SAMPLE_ARTICLE_ID)
+        webTestClient.get().uri("/api/comments/" + SAMPLE_ARTICLE_ID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -36,7 +36,7 @@ class RestCommentControllerTest {
     void 비동기_댓글_생성() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "comment");
 
-        webTestClient.post().uri("/comments")
+        webTestClient.post().uri("/api/comments")
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -49,7 +49,7 @@ class RestCommentControllerTest {
     void 비동기_댓글_생성_비로그인() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "comment");
 
-        webTestClient.post().uri("/comments")
+        webTestClient.post().uri("/api/comments")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentRequestDto), CommentRequestDto.class)
@@ -63,7 +63,7 @@ class RestCommentControllerTest {
     void 비동기_댓글_수정() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "edit comment");
 
-        webTestClient.put().uri("/comments/" + SAMPLE_COMMENT_ID)
+        webTestClient.put().uri("/api/comments/" + SAMPLE_COMMENT_ID)
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -76,7 +76,7 @@ class RestCommentControllerTest {
     void 비동기_댓글_수정_다른_유저() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "edit comment");
 
-        webTestClient.put().uri("/comments/" + SAMPLE_COMMENT_ID)
+        webTestClient.put().uri("/api/comments/" + SAMPLE_COMMENT_ID)
                 .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -87,7 +87,7 @@ class RestCommentControllerTest {
 
     @Test
     void 비동기_댓글_삭제_비로그인() {
-        webTestClient.delete().uri("/comments/" + SAMPLE_DELETE_COMMENT_ID)
+        webTestClient.delete().uri("/api/comments/" + SAMPLE_DELETE_COMMENT_ID)
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader()
@@ -96,7 +96,7 @@ class RestCommentControllerTest {
 
     @Test
     void 비동기_댓글_삭제() {
-        webTestClient.delete().uri("/comments/" + SAMPLE_DELETE_COMMENT_ID)
+        webTestClient.delete().uri("/api/comments/" + SAMPLE_DELETE_COMMENT_ID)
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk();
@@ -104,7 +104,7 @@ class RestCommentControllerTest {
 
     @Test
     void 비동기_댓글_삭제_다른_유저() {
-        webTestClient.delete().uri("/comments/" + SAMPLE_DELETE_COMMENT_ID)
+        webTestClient.delete().uri("/api/comments/" + SAMPLE_DELETE_COMMENT_ID)
                 .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .exchange()
                 .expectStatus().is5xxServerError();
