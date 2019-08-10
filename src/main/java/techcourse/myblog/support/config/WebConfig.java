@@ -6,6 +6,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.web.argumentResolver.SessionUserArgumentResolver;
+import techcourse.myblog.web.interceptor.AlreadyLoggedInInterceptor;
 import techcourse.myblog.web.interceptor.AuthInterceptor;
 
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final AuthInterceptor authInterceptor;
+    private final AlreadyLoggedInInterceptor alreadyLoggedInInterceptor;
     private final SessionUserArgumentResolver sessionUserArgumentResolver;
 
-    public WebConfig(AuthInterceptor authInterceptor, SessionUserArgumentResolver sessionUserArgumentResolver) {
+    public WebConfig(AuthInterceptor authInterceptor, AlreadyLoggedInInterceptor alreadyLoggedInInterceptor, SessionUserArgumentResolver sessionUserArgumentResolver) {
         this.authInterceptor = authInterceptor;
+        this.alreadyLoggedInInterceptor = alreadyLoggedInInterceptor;
         this.sessionUserArgumentResolver = sessionUserArgumentResolver;
     }
 
@@ -29,6 +32,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/mypage")
                 .addPathPatterns("/mypage/*")
                 .addPathPatterns("/articles");
+
+        registry.addInterceptor(alreadyLoggedInInterceptor)
+                .addPathPatterns("/login");
     }
 
     @Override

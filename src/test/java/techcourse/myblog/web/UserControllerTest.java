@@ -164,6 +164,16 @@ public class UserControllerTest {
                 .expectStatus().isOk();
     }
 
+    @Test
+    void 로그인_요청후_로그인시도_인덱스로_리다이렉트() {
+        String cookie = getCookie();
+
+        webTestClient.get().uri("/login")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isFound();
+    }
+
     private String getCookie() {
         return webTestClient.post().uri("/login")
                 .body(fromFormData("email", "test@gmail.com")

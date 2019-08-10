@@ -30,13 +30,10 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String createLoginForm(HttpServletRequest request, UserLoginRequest userLoginRequest) {
+    public String createLoginForm(@SessionUser User user, UserLoginRequest userLoginRequest) {
         log.debug("begin");
 
-        if (request.getSession().getAttribute(USER) == null) {
-            return "login";
-        }
-        return "redirect:/";
+        return "login";
     }
 
     @GetMapping("/signup")
