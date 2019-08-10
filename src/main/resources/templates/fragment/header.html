@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ko">
+<header th:fragment="header" id="header" class="header navbar bg-transparent no-border">
+    <div class="header-container">
+        <ul class="nav-left mrg-left-0">
+            <li>
+                <a href="/">
+                    <div id="logo-dark" class="logo logo-dark d-none"
+                         style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                    <div id="logo-white" class="logo logo-white"
+                         style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav-right">
+            <li th:if="${session.user == null}" class="user-profile">
+                <a th:href="@{/login}">
+                    <div class="user-info login-btn pointer mrg-right-10">
+                        <span class="name pdd-right-5 text-white" th:text="Login"></span>
+                    </div>
+                </a>
+            </li>
+            <li th:unless="${session.user == null}" id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
+                    <img class="profile-img img-fluid"
+                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                    <div class="user-info text-white">
+                        <span class="name pdd-right-5" th:if="${session.user}" th:text="${session.user.name}"></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="text-dark">
+                        <a th:href="@{/mypage/{userId}(userId = ${session.user.id})}">
+                            <i class="ti-user pdd-right-10"></i>
+                            <span class="text-dark">마이 페이지</span>
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li class="text-dark">
+                        <a href="/logout">
+                            <i class="ti-power-off pdd-right-10"></i>
+                            <span class="text-dark">로그아웃</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</header>
+</html>

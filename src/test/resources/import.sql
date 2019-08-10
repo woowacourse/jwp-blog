@@ -1,5 +1,0 @@
-INSERT INTO user (email, name, password) VALUES('default@default.com' , 'default', 'abcdEFGH123!@#')
-INSERT INTO user (email, name, password) VALUES('default2@default.com' , 'default2', 'abcdEFGH123!@#')
-INSERT INTO article (contents, cover_url, title, author_id) VALUES ('2나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 "선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?"였다.', 'https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo2.jpeg', '목적의식 있는 연습을 통한 효과적인 학습2','1')
-INSERT INTO comment (contents, article_id, user_id) VALUES ('contents123', '1', '1')
-INSERT INTO comment (contents, article_id, user_id) VALUES ('test contents', '1', '1')
