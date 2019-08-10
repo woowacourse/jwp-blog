@@ -31,7 +31,7 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public void saveUser(UserRequest userRequest) {
+    public void save(UserRequest userRequest) {
         User user = createUser(userRequest);
         userRepository.save(user);
     }
@@ -63,7 +63,7 @@ public class UserService {
         return Collections.unmodifiableList(userResponses);
     }
 
-    public UserResponse checkLogin(LoginRequest loginRequest) {
+    public UserResponse login(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
@@ -77,14 +77,14 @@ public class UserService {
         }
     }
 
-    public User findUserById(Long userId) {
+    public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
     }
 
     @Transactional
-    public UserResponse editUserName(Long userId, String name) {
-        User user = findUserById(userId);
+    public UserResponse modify(Long userId, String name) {
+        User user = findById(userId);
         changeName(name, user);
         return modelMapper.map(user, UserResponse.class);
     }
@@ -97,7 +97,7 @@ public class UserService {
         }
     }
 
-    public void deleteById(Long userId) {
+    public void remove(Long userId) {
         userRepository.deleteById(userId);
     }
 }

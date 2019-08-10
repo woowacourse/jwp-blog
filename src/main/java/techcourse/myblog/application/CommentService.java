@@ -33,8 +33,8 @@ public class CommentService {
     }
 
     public CommentResponse save(CommentRequest commentRequest, Long articleId, Long userId) {
-        User author = userService.findUserById(userId);
-        Article article = articleService.findArticleById(articleId);
+        User author = userService.findById(userId);
+        Article article = articleService.findById(articleId);
 
         Comment comment = new Comment(commentRequest.getContents(), author, article);
         commentRepository.save(comment);
@@ -44,30 +44,19 @@ public class CommentService {
         return commentResponse;
     }
 
-    public List<Comment> findCommentsByArticle(Article article) {
+    public List<Comment> findAllByArticle(Article article) {
         return Collections.unmodifiableList(commentRepository.findAllByArticle(article));
     }
 
-    public Comment findCommentById(Long commentId) {
+    public Comment findById(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("존재하지 않는 댓글입니다."));
     }
 
-    public void deleteComment(Long commentId, UserResponse userResponse) {
-        Comment comment = findCommentById(commentId);
-        User author = userService.findUserById(userResponse.getId());
-
-        if (!comment.isSameAuthor(author)) {
-            throw new NotSameAuthorException("해당 작성자만 댓글을 삭제할 수 있습니다.");
-        }
-
-        commentRepository.deleteById(commentId);
-    }
-
     @Transactional
-    public CommentResponse updateComment(Long commentId, UserResponse userResponse, CommentRequest commentRequest) {
-        Comment comment = findCommentById(commentId);
-        User author = userService.findUserById(userResponse.getId());
+    public CommentResponse modify(Long commentId, UserResponse userResponse, CommentRequest commentRequest) {
+        Comment comment = findById(commentId);
+        User author = userService.findById(userResponse.getId());
         Comment updatedComment = modelMapper.map(commentRequest, Comment.class);
 
         try {
@@ -79,5 +68,16 @@ public class CommentService {
         CommentResponse commentResponse = modelMapper.map(updatedComment, CommentResponse.class);
         commentResponse.setAuthor(modelMapper.map(author, UserResponse.class));
         return commentResponse;
+    }
+
+    public void remove(Long commentId, UserResponse userResponse) {
+        Comment comment = findById(commentId);
+        User author = userService.findById(userResponse.getId());
+
+        if (!comment.isSameAuthor(author)) {
+            throw new NotSameAuthorException("해당 작성자만 댓글을 삭제할 수 있습니다.");
+        }
+
+        commentRepository.deleteById(commentId);
     }
 }

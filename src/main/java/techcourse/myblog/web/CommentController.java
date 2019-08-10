@@ -38,13 +38,13 @@ public class CommentController {
     public CommentResponse modify(@PathVariable("commentId") Long commentId,
                                   @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        return commentService.updateComment(commentId, userResponse, commentRequest);
+        return commentService.modify(commentId, userResponse, commentRequest);
     }
 
     @DeleteMapping("/{commentId}")
     @ResponseBody
     public void remove(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        commentService.deleteComment(commentId, userResponse);
+        commentService.remove(commentId, userResponse);
     }
 }

@@ -31,8 +31,8 @@ public class ArticleService {
         return Collections.unmodifiableList(articleRepository.findAll());
     }
 
-    public Long post(ArticleDto articleDto, UserResponse userResponse) {
-        User author = userService.findUserById(userResponse.getId());
+    public Long save(ArticleDto articleDto, UserResponse userResponse) {
+        User author = userService.findById(userResponse.getId());
 
         Article article = modelMapper.map(articleDto, Article.class);
         article.setAuthor(author);
@@ -40,13 +40,13 @@ public class ArticleService {
         return savedArticle.getId();
     }
 
-    public Article findArticleById(Long articleId) {
+    public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }
 
-    public Article findArticleWrittenByUser(Long articleId, UserResponse userResponse) {
-        Article article = findArticleById(articleId);
+    public Article findByUser(Long articleId, UserResponse userResponse) {
+        Article article = findById(articleId);
         User user = modelMapper.map(userResponse, User.class);
 
         if (!article.isSameAuthor(user)) {
@@ -57,9 +57,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleDto editArticle(ArticleDto articleDto, Long articleId, UserResponse userResponse) {
-        Article article = findArticleById(articleId);
-        User author = userService.findUserById(userResponse.getId());
+    public ArticleDto modify(ArticleDto articleDto, Long articleId, UserResponse userResponse) {
+        Article article = findById(articleId);
+        User author = userService.findById(userResponse.getId());
 
         if (!article.isSameAuthor(author)) {
             throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");
@@ -70,14 +70,14 @@ public class ArticleService {
         return articleDto;
     }
 
-    public void deleteById(Long articleId, UserResponse userResponse) {
+    public void remove(Long articleId, UserResponse userResponse) {
         checkAuthenticatedAuthor(articleId, userResponse);
         articleRepository.deleteById(articleId);
     }
 
     private void checkAuthenticatedAuthor(Long articleId, UserResponse userResponse) {
-        Article article = findArticleById(articleId);
-        User author = userService.findUserById(userResponse.getId());
+        Article article = findById(articleId);
+        User author = userService.findById(userResponse.getId());
 
         if (!article.isSameAuthor(author)) {
             throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");

@@ -41,7 +41,7 @@ public class UserController {
             return "signup";
         }
 
-        userService.saveUser(userRequest);
+        userService.save(userRequest);
 
         return "redirect:/login";
     }
@@ -71,7 +71,7 @@ public class UserController {
             return "login";
         }
 
-        httpSession.setAttribute(USER_INFO, userService.checkLogin(loginRequest));
+        httpSession.setAttribute(USER_INFO, userService.login(loginRequest));
 
         return "redirect:/";
     }
@@ -89,14 +89,14 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "mypage-edit";
         }
-        request.getSession().setAttribute(USER_INFO, userService.editUserName(userId, userEditRequest.getName()));
+        request.getSession().setAttribute(USER_INFO, userService.modify(userId, userEditRequest.getName()));
 
         return "redirect:/";
     }
 
     @DeleteMapping("/users/{userId}")
     public String remove(@PathVariable("userId") Long userId, HttpServletRequest request) {
-        userService.deleteById(userId);
+        userService.remove(userId);
         request.getSession().invalidate();
 
         return "redirect:/";

@@ -45,15 +45,15 @@ public class ArticleController {
     @PostMapping("/articles")
     public String save(@Valid ArticleDto articleDto, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        Long articleId = articleService.post(articleDto, userResponse);
+        Long articleId = articleService.save(articleDto, userResponse);
 
         return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/articles/{articleId}")
     public String show(@PathVariable("articleId") long articleId, Model model) {
-        Article article = articleService.findArticleById(articleId);
-        List<Comment> comments = commentService.findCommentsByArticle(article);
+        Article article = articleService.findById(articleId);
+        List<Comment> comments = commentService.findAllByArticle(article);
         model.addAttribute(ARTICLE_INFO, article);
         model.addAttribute(COMMENTS_INFO, comments);
 
@@ -63,7 +63,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String modifyForm(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        Article article = articleService.findArticleWrittenByUser(articleId, userResponse);
+        Article article = articleService.findByUser(articleId, userResponse);
         model.addAttribute(ARTICLE_INFO, article);
 
         return "article-edit";
@@ -74,7 +74,7 @@ public class ArticleController {
                               HttpSession httpSession, Model model) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
-        ArticleDto updatedArticle = articleService.editArticle(articleDto, articleId, userResponse);
+        ArticleDto updatedArticle = articleService.modify(articleDto, articleId, userResponse);
         model.addAttribute(ARTICLE_INFO, updatedArticle);
 
         return "article";
@@ -84,7 +84,7 @@ public class ArticleController {
     public String remove(@PathVariable("articleId") long articleId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
-        articleService.deleteById(articleId, userResponse);
+        articleService.remove(articleId, userResponse);
 
         return "redirect:/";
     }

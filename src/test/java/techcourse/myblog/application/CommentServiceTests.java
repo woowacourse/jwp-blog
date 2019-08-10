@@ -88,21 +88,21 @@ public class CommentServiceTests {
     @Test
     void 해당_게시글의_전체_댓글조회_성공() {
         given(commentRepository.findAllByArticle(article)).willReturn(Arrays.asList(comment));
-        commentService.findCommentsByArticle(article);
+        commentService.findAllByArticle(article);
         verify(commentRepository).findAllByArticle(article);
     }
 
     @Test
     void 댓글조회_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.of(comment));
-        commentService.findCommentById(COMMENT_ID);
+        commentService.findById(COMMENT_ID);
         verify(commentRepository).findById(COMMENT_ID);
     }
 
     @Test
     void 댓글조회_실패() {
         assertThrows(CommentNotFoundException.class,
-                () -> commentService.findCommentById(COMMENT_ID));
+                () -> commentService.findById(COMMENT_ID));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class CommentServiceTests {
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
-        commentService.deleteComment(COMMENT_ID, userResponse);
+        commentService.remove(COMMENT_ID, userResponse);
         verify(commentRepository).deleteById(COMMENT_ID);
     }
 
@@ -123,7 +123,7 @@ public class CommentServiceTests {
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NoUserException.class,
-                () -> commentService.deleteComment(COMMENT_ID, userResponse));
+                () -> commentService.remove(COMMENT_ID, userResponse));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class CommentServiceTests {
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class,
-                () -> commentService.deleteComment(COMMENT_ID, userResponse));
+                () -> commentService.remove(COMMENT_ID, userResponse));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class CommentServiceTests {
 
         UserResponse userResponse = 사용자_응답_만들기(USER_ID);
 
-        assertDoesNotThrow(() -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+        assertDoesNotThrow(() -> commentService.modify(COMMENT_ID, userResponse, commentRequest));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class CommentServiceTests {
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NoUserException.class,
-                () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+                () -> commentService.modify(COMMENT_ID, userResponse, commentRequest));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class CommentServiceTests {
         UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class,
-                () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+                () -> commentService.modify(COMMENT_ID, userResponse, commentRequest));
     }
 
     private UserResponse 사용자_응답_만들기(Long 아이디) {
