@@ -120,7 +120,7 @@ public class CommentControllerTest {
         webTestClient.delete().uri("/api/comments/" + commentId)
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isNoContent();
     }
 
     @Test

@@ -2,7 +2,6 @@ package techcourse.myblog.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Comment;
@@ -17,7 +16,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/comments")
 public class CommentController {
     private static final Logger log = LoggerFactory.getLogger(CommentController.class);
-    
+
     private CommentService commentService;
 
     public CommentController(CommentService commentService) {
@@ -31,7 +30,7 @@ public class CommentController {
         Comment comment = commentService.save(commentRequest, (User) httpSession.getAttribute("user"));
         log.info("comment: {}", comment);
 
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        return ResponseEntity.ok(comment);
     }
 
     @PutMapping("/{commentId}")
@@ -39,7 +38,7 @@ public class CommentController {
         log.debug("begin");
 
         Comment updatedComment = commentService.update(commentRequest, (User) httpSession.getAttribute("user"), commentId);
-        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
+        return ResponseEntity.ok(updatedComment);
     }
 
     @DeleteMapping("/{commentId}")
@@ -50,6 +49,7 @@ public class CommentController {
         commentService.deleteById(commentId, (User) httpSession.getAttribute("user"));
         log.info("commentId: {}", commentId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.noContent()
+                .build();
     }
 }

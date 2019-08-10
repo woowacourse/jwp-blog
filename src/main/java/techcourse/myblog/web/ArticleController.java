@@ -62,7 +62,7 @@ public class ArticleController {
     public ResponseEntity<Article> selectArticle(@PathVariable("articleId") long articleId) {
         log.debug("begin");
 
-        return new ResponseEntity<>(articleService.findById(articleId), HttpStatus.OK);
+        return ResponseEntity.ok(articleService.findById(articleId));
     }
 
 
@@ -102,6 +102,6 @@ public class ArticleController {
     public ResponseEntity<CommentsResponse> getComment(@PathVariable("articleId") long articleId) {
         log.debug("begin");
 
-        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
+        return ResponseEntity.ok(commentService.findByArticleId(articleId));
     }
 }
