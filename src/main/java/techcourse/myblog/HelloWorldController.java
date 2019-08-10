@@ -1,19 +1,22 @@
 package techcourse.myblog;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@RestController
+@Controller
 public class HelloWorldController {
     @GetMapping("/helloworld")
-    public String temp(String blogName) {
+    @ResponseBody
+    public String blogNameByGet(String blogName) {
         return blogName;
     }
 
     @PostMapping("/helloworld")
-    public String asd(@RequestBody String blogName) {
+    @ResponseBody
+    public String blogNameByPost(@RequestBody String blogName) {
         return blogName;
     }
 }

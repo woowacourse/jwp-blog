@@ -1,45 +1,28 @@
 package techcourse.myblog.domain;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import techcourse.myblog.domain.exception.InvalidUserException;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
+import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class UserTest {
-    Validator validator = Validation.byDefaultProvider().configure().buildValidatorFactory().getValidator();
-
-    @Test
-    void 올바른_User_생성_테스트() {
-        String email = "aa@naver.com";
-        String name = "zino";
-        String password = "password";
-        assertDoesNotThrow(() -> new User(email, name, password));
+class UserTest {
+    static Stream<Arguments> invalidParameters() {
+        return Stream.of(
+                Arguments.of("wrong!name", "e@mail.com", "p!ssw0rD", "wrong name"),
+                Arguments.of("name", "wrong", "p!ssw00Rd", "wrong email"),
+                Arguments.of("name", "e@mail.com", "잘못된패스워드", "wrong password")
+        );
     }
 
-    @Test
-    void 올바르지_않은_email_User_생성() {
-        String email = "aa";
-        String name = "zino";
-        String password = "password";
-
-        assertThat(validator.validate(new User(email, name, password)).isEmpty()).isFalse();
+    @ParameterizedTest(name = "{index}: {3}")
+    @MethodSource("invalidParameters")
+    void User_생성_테스트(String name, String email, String password, String field) {
+        assertThrows(InvalidUserException.class, () ->
+                new User(name, email, password)
+        );
     }
-    @Test
-    void 올바르지_않은_name_User_생성() {
-        String email = "aa@naver.com";
-        String name = "z";
-        String password = "password";
-
-        assertThat(validator.validate(new User(email, name, password)).isEmpty()).isFalse();    }
-
-    @Test
-    void 올바르지_않은_password_User_생성() {
-        String email = "aa";
-        String name = "zino";
-        String password = "pass";
-
-        assertThat(validator.validate(new User(email, name, password)).isEmpty()).isFalse();    }
 }

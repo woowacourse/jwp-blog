@@ -1,44 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
 <head>
-    <th:block th:include="fragments/head"></th:block>
-
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/customize.css">
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/index.css">
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
+    <link rel="stylesheet" href="/static/css/index.css">
 </head>
+
 <body>
 <div>
-    <header id="header" class="header navbar bg-transparent no-border">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-                <li class="user-profile">
-                    <a th:href="${email} ? '/mypage' : '/login'">
-                        <div class="user-info login-btn pointer mrg-right-10">
-                            <span th:text="${email} ? ${email} : 'Login'" class="name pdd-right-5 text-white"></span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </header>
-
+    <th:block th:include="includes/header :: header"></th:block>
     <div class="about-cover card no-border mrg-btm-0">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
-        <div class="welcome-text-container">
-            <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
-            </div>
-        </div>
+        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
+        <!--        <div class="welcome-text-container">-->
+        <!--            <div class="welcome-txt">-->
+        <!--                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>-->
+        <!--            </div>-->
+        <!--        </div>-->
     </div>
 
     <div class="container-fluid width-100 mrg-btm-30">
@@ -59,38 +37,38 @@
                     </ul>
                     <div class="width-100 absolute left-0 border bottom"></div>
                     <div class="tab-content">
-                        <div th:unless="${#lists.size(articles)}">아직은 글이 존재하지 않습니다.</div>
-                        <div th:each="article : ${articles}">
-                            <div role="tabpanel" class="tab-pane fade in active" th:id="'tab-centered-' + ${article.id}">
-                                <div class="pdd-horizon-15 pdd-vertical-20">
-                                    <a th:href="'articles/' + ${article.id}" class="card article-container">
-                                        <div class="card-horizon">
-                                            <div class="image-container col-md-4">
-                                                <div class="background-holder has-content" th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
-                                            </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-md-8 ml-auto">
-                                                        <div class="pdd-vertical-30 pdd-horizon-25">
-                                                            <h2 class="mrg-btm-20 text-bold" th:text="${article.title}"></h2>
-                                                            <p th:text="${article.contents}"></p>
-                                                            <ul class="list-style-none pdd-left-0">
-                                                                <li class="inline-block mrg-right-5">
-                                                                    <i class="ti-heart text-danger pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">33</span>
-                                                                </li>
-                                                                <li class="inline-block">
-                                                                    <i class="ti-comments text-primary pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">3</span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                        <div th:if="${articles}" th:each="article: ${articles}" role="tabpanel"
+                             class="tab-pane fade in active" id="tab-centered-1">
+                            <div class="pdd-horizon-15 pdd-vertical-20">
+                                <a th:href="'/articles/' + ${article.id}" class="card article-container">
+                                    <div class="card-horizon">
+                                        <div class="image-container col-md-4">
+                                            <div class="background-holder has-content"
+                                                 th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
+                                        </div>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-md-8 ml-auto">
+                                                    <div class="pdd-vertical-30 pdd-horizon-25">
+                                                        <h2 th:text="${article.title}" class="mrg-btm-20 text-bold">
+                                                            title</h2>
+                                                        <p th:text="${article.contents}">contents</p>
+                                                        <ul class="list-style-none pdd-left-0">
+                                                            <li class="inline-block mrg-right-5">
+                                                                <i class="ti-heart text-danger pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">33</span>
+                                                            </li>
+                                                            <li class="inline-block">
+                                                                <i class="ti-comments text-primary pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">3</span>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
-                                </div>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -99,25 +77,15 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="writing" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+        <a href="/articles/writing"
+           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
 
     </div>
 </div>
 
-<footer class="content-footer">
-    <div class="footer">
-        <div class="copyright">
-            <img class="d-inline-block logo relative right-5" src="/images/logo/logo_full_dark.png">
-            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.</p>
-        </div>
-        <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들 기술블로그</a>
-    </div>
-</footer>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-
-<th:block th:include="fragments/body"></th:block>
+<th:block th:include="includes/footer :: footer"></th:block>
+<th:block th:include="includes/js :: common_js"></th:block>
 </body>
 </html>

@@ -1,53 +1,54 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
 import lombok.Getter;
-import techcourse.myblog.application.service.exception.NotExistUserIdException;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.service.exception.MismatchAuthorException;
 
 import javax.persistence.*;
 
-@Getter
-@EqualsAndHashCode(of = "id")
 @Entity
-public class Article {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@ToString
+public class Article extends BaseEntity {
+    @Column(nullable = false, length = 50)
     private String title;
 
     @Column(nullable = false)
     private String coverUrl;
 
-    @Lob
     @Column(nullable = false)
+    @Lob
     private String contents;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User author;
 
-    private Article() {
-    }
-
-    public Article(String title, String coverUrl, String contents, User user) {
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
-        this.coverUrl = coverUrl;
         this.contents = contents;
-        this.user = user;
+        this.coverUrl = coverUrl;
+        this.author = author;
     }
 
-    public void modify(Article article, User user) {
-        if (!this.user.equals(user)) {
-            throw new NotExistUserIdException("작성자가 아닙니다.");
+    public Article update(Article article) {
+        matchAuthor(article.getAuthor());
+        title = article.getTitle();
+        coverUrl = article.getCoverUrl();
+        contents = article.getContents();
+
+        return this;
+    }
+
+    public void matchAuthor(User user) {
+        if (user == null || !user.equals(author)) {
+            throw new MismatchAuthorException();
         }
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
-    }
-
-    public boolean checkAuthor(String email) {
-        return user.checkEmail(email);
     }
 }
