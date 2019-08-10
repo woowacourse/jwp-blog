@@ -1,32 +1,28 @@
 package techcourse.myblog.interceptor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.domain.user.UserException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.servlet.http.HttpSession;
 
+@Slf4j
+@Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
-    private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
-
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (request.getSession().getAttribute("userName") == null) {
-            log.debug("Session.userName is null {}", request.getSession());
-            return sendRedirect(response);
-        }
-        return true;
-    }
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.info("login interceptor");
+        HttpSession session = request.getSession();
+        Object loginSession = session.getAttribute("user");
 
-    private boolean sendRedirect(HttpServletResponse response) {
-        try {
+        if (loginSession == null) {
+            log.info("fail to access request location by interceptor");
             response.sendRedirect("/login");
             return false;
-        } catch (IOException e) {
-            throw new UserException();
         }
+        log.info("success to access request location");
+        return true;
     }
 }

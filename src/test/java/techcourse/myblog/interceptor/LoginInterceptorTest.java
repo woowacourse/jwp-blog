@@ -1,53 +1,56 @@
 package techcourse.myblog.interceptor;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.web.AuthedWebTestClient;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
-class LoginInterceptorTest extends AuthedWebTestClient {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class LoginInterceptorTest {
+    private String cookie;
 
+    @Autowired
+    private WebTestClient webTestClient;
 
-    @Test
-    void 인터셉터_동작() {
-        webTestClient.get().uri("/writing")
+    @BeforeEach
+    void setUp() {
+        webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password1234!")
+                        .with("name", "name"))
+                .exchange();
+
+        cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password1234!"))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".+/login");
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 
     @Test
-    void 인터셉터_동작2() {
-        webTestClient.get().uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".+/login");
-    }
-
-
-    @Test
-    void 인터셉터_동작_제외_URL_index() {
-        webTestClient.get().uri("/")
+    void 로그인_상태일_시_글쓰기_페이지로_이동하는지_테스트() {
+        webTestClient.get().uri("/articles/new")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void 인터셉터_동작_제외2_URL_signup() {
-        webTestClient.get().uri("/signup")
+    void 로그인_상태가_아닐_시_글쓰기_페이지로_이동하는지_테스트() {
+        webTestClient.get().uri("/articles/new")
                 .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void 인터셉터_동작_제외3_URL_login() {
-        webTestClient.get().uri("/login")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void 인터셉터_우회_URL_users() {
-        get("/users")
-                .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isFound()
+                .expectHeader().valueMatches("location", ".*/login");
     }
 }

@@ -1,92 +1,99 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      lang="ko">
+<th:block layout:fragment="content">
+    <div>
+        <th:block th:replace="fragment/header :: header"></th:block>
+        <div class="about-cover card no-border mrg-btm-0">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
+            <div class="welcome-text-container">
+                <div class="welcome-txt">
+                    <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
+                </div>
+            </div>
+        </div>
 
-<head>
-    <title>우아한테크코스 기술블로그</title>
-    <th:block th:include="common/meta"></th:block>
-    <th:block th:include="common/css"></th:block>
-    <link href="/css/index.css" rel="stylesheet">
-</head>
-
-<body>
-<div>
-    <th:block th:include="/common/navbar"></th:block>
-    <th:block th:include="/common/main_cover"></th:block>
-    <div class="container-fluid width-100 mrg-btm-30">
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-6">
-                <div class="tab-info center-tabs">
-                    <ul class="nav nav-tabs no-border" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tab-centered-1" role="tab">All</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-centered-2" role="tab">Java</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-centered-3" role="tab">Learning</a>
-                        </li>
-                    </ul>
-                    <div class="width-100 absolute left-0 border bottom"></div>
-                    <div class="tab-content" th:each="article : ${articles}">
-                        <div class="tab-pane fade in active" id="tab-centered-1" role="tabpanel">
-                            <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a class="card article-container" th:href="'/articles/' + ${article.id}">
-                                    <div class="card-horizon">
-                                        <div class="image-container col-md-4">
-                                            <div class="background-holder has-content"
-                                                 th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
-                                        </div>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-md-8 ml-auto">
-                                                    <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">
-                                                        </h2>
-                                                        <p th:text="${article.contents}"></p>
-                                                        <ul class="list-style-none pdd-left-0">
-                                                            <li class="inline-block mrg-right-5">
-                                                                <i class="ti-heart text-danger pdd-right-5"></i>
-                                                                <span
-                                                                        class="text-gray font-size-14 relative">33</span>
-                                                            </li>
-                                                            <li class="inline-block">
-                                                                <i class="ti-comments text-primary pdd-right-5"></i>
-                                                                <span
-                                                                        class="text-gray font-size-14 relative">3</span>
-                                                            </li>
-                                                        </ul>
+        <div class="container-fluid width-100 mrg-btm-30">
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="tab-info center-tabs">
+                        <ul class="nav nav-tabs no-border" role="tablist">
+                            <li class="nav-item">
+                                <a href="#tab-centered-1" class="nav-link active" role="tab" data-toggle="tab">All</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#tab-centered-2" class="nav-link" role="tab" data-toggle="tab">Java</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
+                            </li>
+                        </ul>
+                        <div class="width-100 fixed left-0 border bottom"></div>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
+                                <div class="pdd-horizon-15 pdd-vertical-20" th:each="article : ${articles}">
+                                    <a th:href="@{/articles/{articleId}(articleId=${article.id})}"
+                                       class="card article-container">
+                                        <div class="card-horizon">
+                                            <div class="image-container col-md-4">
+                                                <div class="background-holder has-content"
+                                                     style="background-image: url('/images/pages/index/study.jpg')"></div>
+                                            </div>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-8 ml-auto">
+                                                        <div class="pdd-vertical-30 pdd-horizon-25">
+                                                            <h2 class="mrg-btm-20 text-bold"
+                                                                th:text="${article.title}"></h2>
+                                                            <p th:text="${article.contents}"></p>
+                                                            <ul class="list-style-none pdd-left-0">
+                                                                <li class="inline-block mrg-right-5">
+                                                                    <i class="ti-heart text-danger pdd-right-5"></i>
+                                                                    <span class="text-gray font-size-14 relative">33</span>
+                                                                </li>
+                                                                <li class="inline-block">
+                                                                    <i class="ti-comments text-primary pdd-right-5"></i>
+                                                                    <span class="text-gray font-size-14 relative">3</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab-centered-2" role="tabpanel">
-                            <div class="pdd-horizon-15 pdd-vertical-20">
+                            <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
+                                <div class="pdd-horizon-15 pdd-vertical-20">
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab-centered-3" role="tabpanel">
-                            <div class="pdd-horizon-15 pdd-vertical-20">
+                            <div role="tabpanel" class="tab-pane fade" id="tab-centered-3">
+                                <div class="pdd-horizon-15 pdd-vertical-20">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-3"></div>
             </div>
-            <div class="col-lg-3"></div>
-        </div>
-        <a class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px"
-           href="/writing">
-            <i class="ti-plus"></i>
-        </a>
-    </div>
-</div>
-<th:block th:include="common/footer"></th:block>
-<th:block th:include="common/js"></th:block>
-</body>
 
+            <a href="/articles/new"
+               class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+                <i class="ti-plus"></i>
+            </a>
+        </div>
+    </div>
+    <th:block th:replace="fragment/footer :: main-footer"></th:block>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[ ${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
+        }
+    </script>
+</th:block>
 </html>

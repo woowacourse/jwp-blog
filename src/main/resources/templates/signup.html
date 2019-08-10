@@ -1,71 +1,79 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      lang="ko">
 
-<head>
-    <title>우아한 크루의 블로그</title>
-    <th:block th:include="common/meta"></th:block>
-    <th:block th:include="common/css"></th:block>
-</head>
-
-<body>
-<div class="app">
-    <div class="header navbar bg-transparent no-border">
-        <div class="header-container pdd-right-15">
-            <th:block th:include="common/index_logo"></th:block>
+<th:block layout:fragment="content">
+    <div class="app">
+        <div class="header navbar bg-transparent no-border">
+            <div class="header-container pdd-right-15">
+                <ul class="nav-left mrg-left-0">
+                    <li>
+                        <a href="index.html">
+                            <div class="logo logo-dark d-none"
+                                 style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                            <div class="logo logo-white"
+                                 style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="authentication">
-        <div class="sign-in-2">
-            <div class="container-fluid no-pdd-horizon overlay-dark bg"
-                 style="background-image: url('images/default/bg.jpg')">
-                <div class="row">
-                    <div class="col-md-10 mr-auto ml-auto">
-                        <div class="row">
-                            <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
-                                <div class="vertical-align full-height">
-                                    <div class="table-cell">
-                                        <div class="card min-width-480px">
-                                            <div class="card-body">
-                                                <div class="pdd-horizon-30 pdd-vertical-30">
-                                                    <div class="mrg-btm-30">
-                                                        <h2
-                                                                class="text-center text-dark no-mrg-vertical mrg-btm-15">
-                                                            회원가입</h2>
-                                                    </div>
-                                                    <form action="/users" method="post" name="userinfo"
-                                                          onsubmit="validate(event)">
-                                                        <div class="form-group">
-                                                            <label class="text-normal text-dark">Username</label>
-                                                            <input class="form-control" name="name" type="text">
+        <div class="authentication">
+            <div class="sign-in-2">
+                <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                     style="background-image: url('/images/default/bg.jpg')">
+                    <div class="row">
+                        <div class="col-md-10 mr-auto ml-auto">
+                            <div class="row">
+                                <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
+                                    <div class="vertical-align full-height">
+                                        <div class="table-cell">
+                                            <div class="card min-width-480px">
+                                                <div class="card-body">
+                                                    <div class="pdd-horizon-30 pdd-vertical-30">
+                                                        <div class="mrg-btm-30">
+                                                            <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
+                                                                회원가입</h2>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label class="text-normal text-dark">Email
-                                                                Address</label>
-                                                            <input class="form-control" name="email" type="email">
+                                                        <form method="post" action="/users">
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark">Username</label>
+                                                                <input type="text" name="name" class="form-control"
+                                                                       required pattern="[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark">Email
+                                                                    Address</label>
+                                                                <input type="email" name="email" class="form-control">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark">Password</label>
+                                                                <input id="password" type="password" name="password"
+                                                                       class="form-control" placeholder="Password"
+                                                                       required
+                                                                       pattern=".*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark">Confirm
+                                                                    Password</label>
+                                                                <input id="confirm_password" type="password"
+                                                                       class="form-control"
+                                                                       placeholder="Password">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button type="submit"
+                                                                        class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                                    가입하기
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        <div class="text-dark">
+                                                            <span>이미 회원이신가요?</span>
+                                                            <a href="/login"
+                                                               class="text-info pointer mrg-left-5">로그인</a>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label class="text-normal text-dark">Password</label>
-                                                            <input class="form-control" id="first-password"
-                                                                   name="password" placeholder="Password"
-                                                                   type="password">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="text-normal text-dark">Confirm
-                                                                Password</label>
-                                                            <input class="form-control" id="second-password"
-                                                                   placeholder="Password" type="password">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <button
-                                                                    class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
-                                                                가입하기
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                    <div class="text-dark">
-                                                        <span>이미 회원이신가요?</span>
-                                                        <a class="text-info pointer mrg-left-5"
-                                                           href="login">로그인</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -79,10 +87,25 @@
             </div>
         </div>
     </div>
-</div>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
+        }
 
-<th:block th:include="common/js"></th:block>
-<script src="/js/signup.js"></script>
-</body>
+        const password = document.getElementById("password");
+        const confirm_password = document.getElementById("confirm_password");
 
+        function validatePassword() {
+            if (password.value != confirm_password.value) {
+                confirm_password.setCustomValidity("비밀번호가 일치하지 않습니다.");
+            } else {
+                confirm_password.setCustomValidity('');
+            }
+        }
+
+        password.onchange = validatePassword;
+        confirm_password.onkeyup = validatePassword;
+    </script>
+</th:block>
 </html>
