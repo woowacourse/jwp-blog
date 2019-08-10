@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.web.exception.NotLoggedInException;
+import techcourse.myblog.service.dto.LoginUserDto;
 
 import javax.servlet.http.HttpSession;
 
@@ -41,28 +41,19 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpSession httpSession) {
-        UserPublicInfoDto loggedInUserPublicInfoDto = getLoggedInUser(httpSession, id);
-        Long loggedInUserId = loggedInUserPublicInfoDto.getId();
-        userService.update(userPublicInfoDto, id, loggedInUserId);
-        userPublicInfoDto.setId(id);
-        httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto,
+                               LoginUserDto user, HttpSession httpSession) {
+        userService.update(userPublicInfoDto, id, user.getId());
+        user.setName(userPublicInfoDto.getName());
+        httpSession.setAttribute(LOGGED_IN_USER, user);
         return "redirect:/mypage/" + id;
     }
 
     @DeleteMapping("/users/{id}")
-    public String deleteUser(@PathVariable Long id, HttpSession httpSession) {
-        UserPublicInfoDto userPublicInfoDto = getLoggedInUser(httpSession, id);
-        userService.delete(id, userPublicInfoDto.getId());
+    public String deleteUser(@PathVariable Long id, LoginUserDto user, HttpSession httpSession) {
+        userService.delete(id, user.getId());
         httpSession.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
-    }
-
-    private UserPublicInfoDto getLoggedInUser(HttpSession httpSession, Long id) {
-        if (isLoggedIn(httpSession)) {
-            return (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        }
-        throw new NotLoggedInException();
     }
 
     private boolean isLoggedIn(HttpSession httpSession) {

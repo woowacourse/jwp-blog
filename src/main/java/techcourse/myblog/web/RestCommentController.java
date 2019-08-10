@@ -5,17 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.web.exception.NotLoggedInException;
+import techcourse.myblog.service.dto.LoginUserDto;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
 public class RestCommentController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
-
     private CommentService commentService;
 
     public RestCommentController(CommentService commentService) {
@@ -29,33 +24,20 @@ public class RestCommentController {
 
     @PostMapping("/api/comments")
     @ResponseStatus(value = HttpStatus.OK)
-    public void createComment(@RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
-        commentService.save(userId, commentRequestDto);
+    public void createComment(@RequestBody CommentRequestDto commentRequestDto, LoginUserDto user) {
+        commentService.save(user.getId(), commentRequestDto);
     }
 
     @PutMapping("/api/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateComment(@PathVariable("commentId") Long commentId,
-                             @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
-
-        Long userId = getLoggedInUser(httpServletRequest).getId();
-        commentService.update(userId, commentId, commentRequestDto);
+                              @RequestBody CommentRequestDto commentRequestDto, LoginUserDto user) {
+        commentService.update(user.getId(), commentId, commentRequestDto);
     }
 
     @DeleteMapping("/api/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
-        commentService.delete(userId, commentId);
-    }
-
-    private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        if (user == null) {
-            throw new NotLoggedInException();
-        }
-        return user;
+    public void deleteComment(@PathVariable("commentId") Long commentId, LoginUserDto user) {
+        commentService.delete(user.getId(), commentId);
     }
 }

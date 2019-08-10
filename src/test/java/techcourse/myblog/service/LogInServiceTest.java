@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.LogInInfoDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.LogInException;
+import techcourse.myblog.service.dto.LoginUserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,9 +37,9 @@ class LogInServiceTest {
     void loginSuccess() {
         LogInInfoDto logInInfoDto = new LogInInfoDto("login1@woowa.com", VALID_PASSWORD);
 
-        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-        assertThat(userPublicInfoDto.getName()).isEqualTo("name");
-        assertThat(userPublicInfoDto.getEmail()).isEqualTo("login1@woowa.com");
+        LoginUserDto loginUserDto = logInService.logIn(logInInfoDto);
+        assertThat(loginUserDto.getName()).isEqualTo("name");
+        assertThat(loginUserDto.getEmail()).isEqualTo("login1@woowa.com");
     }
 
     @Test
