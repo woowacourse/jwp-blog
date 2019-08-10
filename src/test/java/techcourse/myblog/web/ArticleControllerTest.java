@@ -37,7 +37,6 @@ class ArticleControllerTest {
         String title = "titleTest";
         String coverUrl = "coverUrlTest";
         String contents = "contentsTest";
-        String cookie = getCookie("test@gmail.com");
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
