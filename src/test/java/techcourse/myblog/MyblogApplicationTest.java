@@ -1,9 +1,13 @@
 package techcourse.myblog;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.web.ControllerTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-public class MyblogApplicationTest extends ControllerTest {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+public class MyblogApplicationTest {
     @Test
     void contextLoads() {
     }
