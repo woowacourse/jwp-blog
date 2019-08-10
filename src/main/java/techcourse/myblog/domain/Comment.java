@@ -52,11 +52,11 @@ public class Comment {
         return this.author.equals(author);
     }
 
-    public void updateContents(Comment updatedComment, User author) {
+    public void updateContents(String updatedContents, User author) {
         if (!isSameAuthor(author)) {
             throw new IllegalArgumentException();
         }
-        this.contents = updatedComment.getContents();
+        this.contents = updatedContents;
     }
 
     public void setId(Long id) {

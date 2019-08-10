@@ -4,10 +4,19 @@ import java.time.LocalDateTime;
 
 public class CommentResponse {
     private Long id;
-    private String contents;
     private UserResponse author;
+    private String contents;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
+
+    public CommentResponse(Long id, UserResponse author, String contents,
+                           LocalDateTime createdTime, LocalDateTime updatedTime) {
+        this.id = id;
+        this.author = author;
+        this.contents = contents;
+        this.createdTime = createdTime;
+        this.updatedTime = updatedTime;
+    }
 
     public Long getId() {
         return id;

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.ArticleService;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.application.dto.CommentResponse;
 import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
@@ -52,7 +53,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String show(@PathVariable("articleId") long articleId, Model model) {
-        List<Comment> comments = commentService.findAllByArticle(articleId);
+        List<CommentResponse> comments = commentService.findAllByArticle(articleId);
         model.addAttribute(ARTICLE_INFO, articleService.find(articleId));
         model.addAttribute(COMMENTS_INFO, comments);
 
