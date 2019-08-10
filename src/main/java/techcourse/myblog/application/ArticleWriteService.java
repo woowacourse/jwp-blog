@@ -3,8 +3,8 @@ package techcourse.myblog.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.article.ArticleFeature;
+import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.user.User;
 
 @Service

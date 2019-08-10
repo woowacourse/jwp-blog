@@ -1,6 +1,5 @@
 package techcourse.myblog.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -8,13 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.ArticleWriteService;
-import techcourse.myblog.application.CommentReadService;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleFeature;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.presentation.support.LoginUser;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/articles")

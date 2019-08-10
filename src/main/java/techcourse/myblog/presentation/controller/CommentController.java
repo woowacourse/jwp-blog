@@ -11,7 +11,6 @@ import techcourse.myblog.application.CommentWriteService;
 import techcourse.myblog.application.dto.CommentRequestDto;
 import techcourse.myblog.application.dto.CommentResponseDto;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.presentation.support.LoginUser;
 
 import java.util.List;

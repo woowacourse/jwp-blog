@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.thymeleaf.util.StringUtils;
 import techcourse.myblog.domain.article.exception.IllegalContentsException;
 import techcourse.myblog.domain.user.User;
 
