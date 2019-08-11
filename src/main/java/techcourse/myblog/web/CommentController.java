@@ -2,6 +2,8 @@ package techcourse.myblog.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.CommentRequest;
@@ -23,24 +25,28 @@ public class CommentController {
     }
 
     @PostMapping("")
-    public CommentResponse save(@PathVariable("articleId") Long articleId,
-                                @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
+    public ResponseEntity<CommentResponse> save(@PathVariable("articleId") Long articleId,
+                                                @RequestBody CommentRequest commentRequest,
+                                                HttpSession httpSession) {
         log.info(commentRequest.getContents());
 
         UserResponse user = (UserResponse) httpSession.getAttribute("user");
-        return commentService.save(commentRequest, articleId, user.getId());
+        CommentResponse commentResponse = commentService.save(commentRequest, articleId, user.getId());
+        return new ResponseEntity<>(commentResponse, HttpStatus.OK);
     }
 
     @PutMapping("/{commentId}")
-    public CommentResponse modify(@PathVariable("commentId") Long commentId,
+    public ResponseEntity<CommentResponse> modify(@PathVariable("commentId") Long commentId,
                                   @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        return commentService.modify(commentId, userResponse, commentRequest);
+        CommentResponse commentResponse = commentService.modify(commentId, userResponse, commentRequest);
+        return new ResponseEntity<>(commentResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
-    public void remove(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
+    public ResponseEntity<Void> remove(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         commentService.remove(commentId, userResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
