@@ -41,12 +41,6 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = ARTICLE_FK_FILED_NAME, foreignKey = @ForeignKey(name = ARTICLE_FK_NAME))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
-    
-    @CreationTimestamp
-    private LocalDateTime createTimeAt;
-    
-    @UpdateTimestamp
-    private LocalDateTime updateTimeAt;
 
     public Comment(String contents, User writer, Article article) {
         validateContents(contents);

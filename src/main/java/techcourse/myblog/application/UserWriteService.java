@@ -2,6 +2,7 @@ package techcourse.myblog.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.exception.DuplicatedEmailException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
@@ -15,21 +16,21 @@ public class UserWriteService {
         this.userRepository = userRepository;
     }
 
-    public User save(User user) {
-        verifyDuplicateEmail(user);
-        return userRepository.save(user);
+    public User save(UserDto userDto) {
+        verifyDuplicateEmail(userDto);
+        return userRepository.save(userDto.toUser());
     }
 
-    private void verifyDuplicateEmail(User user) {
-        userRepository.findByEmail(user.getEmail())
+    private void verifyDuplicateEmail(UserDto userDto) {
+        userRepository.findByEmail(userDto.getEmail())
                 .ifPresent(x -> { throw new DuplicatedEmailException(); });
     }
 
-    public void update(User loginUser, User user) {
-        userRepository.findByEmail(loginUser.getEmail())
+    public void update(User user, UserDto userDto) {
+        userRepository.findByEmail(user.getEmail())
                 .ifPresent(existingUser -> {
-                    loginUser.modifyName(user);
-                    existingUser.modifyName(user);
+                    user.modifyName(userDto.toUser());
+                    existingUser.modifyName(userDto.toUser());
                 });
     }
 

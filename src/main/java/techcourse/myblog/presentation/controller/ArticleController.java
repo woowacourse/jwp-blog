@@ -35,7 +35,7 @@ public class ArticleController {
     public RedirectView createArticle(LoginUser loginUser,
                                       ArticleFeature articleFeature) {
         log.debug("article save request data : -> {}", articleFeature);
-        Article savedArticle = articleWriteService.save(articleFeature.toArticle(loginUser.getUser()));
+        Article savedArticle = articleWriteService.save(articleFeature, loginUser.getUser());
         log.debug("article save response data : -> {}", savedArticle);
         return new RedirectView("/articles/" + savedArticle.getId());
     }

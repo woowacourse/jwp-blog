@@ -18,8 +18,8 @@ public class ArticleWriteService {
         this.articleReadService = articleReadService;
     }
 
-    public Article save(Article article) {
-        return articleRepository.save(article);
+    public Article save(ArticleFeature articleFeature, User user) {
+        return articleRepository.save(articleFeature.toArticle(user));
     }
 
     public void removeById(Long articleId) {

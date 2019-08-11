@@ -35,7 +35,7 @@ public class MypageController {
     @PutMapping
     public RedirectView editUser(LoginUser loginUser,
                                  @ModelAttribute("editUserDto") @Validated(UserInfo.class) UserDto userDto) {
-        userWriteService.update(loginUser.getUser(), userDto.toUser());
+        userWriteService.update(loginUser.getUser(), userDto);
         
         return new RedirectView("/mypage");
     }

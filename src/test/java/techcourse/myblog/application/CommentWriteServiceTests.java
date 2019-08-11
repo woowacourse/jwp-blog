@@ -45,7 +45,7 @@ public class CommentWriteServiceTests {
 
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
-        assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentRequestDto.toComment(reader, article)));
+        assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentRequestDto, reader, article));
         compareComment(commentRepository.findById(id).get(), updateCommentRequestDto.toComment(reader, article));
     }
 

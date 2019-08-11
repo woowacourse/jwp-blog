@@ -2,9 +2,11 @@ package techcourse.myblog.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.dto.CommentRequestDto;
 import techcourse.myblog.application.dto.CommentResponseDto;
-import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.user.User;
 
 import static techcourse.myblog.application.CommentAssembler.buildCommentResponseDto;
 
@@ -19,12 +21,12 @@ public class CommentWriteService {
         this.commentReadService = commentReadService;
     }
 
-    public CommentResponseDto save(Comment comment) {
-        return buildCommentResponseDto(commentRepository.save(comment));
+    public CommentResponseDto save(CommentRequestDto commentRequestDto, User user, Article article) {
+        return buildCommentResponseDto(commentRepository.save(commentRequestDto.toComment(user, article)));
     }
 
-    public CommentResponseDto modify(Long commentId, Comment comment) {
-        return buildCommentResponseDto(commentReadService.findById(commentId).update(comment));
+    public CommentResponseDto modify(Long commentId, CommentRequestDto commentRequestDto, User user, Article article) {
+        return buildCommentResponseDto(commentReadService.findById(commentId).update(commentRequestDto.toComment(user, article)));
     }
 
     public void deleteById(Long id) {

@@ -19,8 +19,8 @@ public class UserReadService {
         this.userRepository = userRepository;
     }
 
-    public User findByEmailAndPassword(UserDto user) {
-        return userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())
+    public User findByEmailAndPassword(UserDto userDto) {
+        return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
                 .orElseThrow(LoginFailedException::new);
     }
 
