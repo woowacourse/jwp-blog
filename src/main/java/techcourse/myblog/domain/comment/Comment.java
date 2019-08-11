@@ -1,10 +1,10 @@
 package techcourse.myblog.domain.comment;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
+import techcourse.myblog.domain.BaseEntity;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.exception.InvalidCommentException;
 import techcourse.myblog.domain.comment.exception.MismatchCommentAuthorException;
@@ -18,14 +18,13 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@EqualsAndHashCode(of = "id")
 @DynamicUpdate
-public class Comment {
-    public static final String USER_FK_FIELD_NAME = "writer";
-    public static final String USER_FK_NAME = "fk_comment_to_user";
-    public static final String ARTICLE_FK_FILED_NAME = "article";
-    public static final String ARTICLE_FK_NAME = "fk_comment_to_article";
-    
+public class Comment extends BaseEntity {
+    private static final String USER_FK_FIELD_NAME = "writer";
+    private static final String USER_FK_NAME = "fk_comment_to_user";
+    private static final String ARTICLE_FK_FILED_NAME = "article";
+    private static final String ARTICLE_FK_NAME = "fk_comment_to_article";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

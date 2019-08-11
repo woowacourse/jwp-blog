@@ -1,28 +1,24 @@
 package techcourse.myblog.domain.user;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import techcourse.myblog.domain.BaseEntity;
 import techcourse.myblog.domain.article.exception.IllegalUserException;
 import techcourse.myblog.domain.user.validation.UserPattern;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.util.regex.Pattern;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@EqualsAndHashCode(of = {"id"})
 @DynamicUpdate
-public class User {
+public class User extends BaseEntity {
     public static final int NAME_LENGTH = 20;
     public static final int EMAIL_LENGTH = 25;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(nullable = false, length = NAME_LENGTH)
     private String name;
