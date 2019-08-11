@@ -70,41 +70,17 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span th:text="${#lists.size(comments)}" class="font-size-16 text-info"></span>
+                    <span id="comment-size" class="font-size-16 text-info"></span>
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
-                        <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info">
-                                <span th:text="${comment.authorName}" href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                            </span>
-                                <p th:text="${comment.comment}" class="width-80"></p>
-                            </div>
-                            <th:block th:if="${comment.authorId == session.loggedInUser?.id}">
-                                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
-                                        data-target="#myModal"
-                                        th:onclick="'changeCommentEditAction(' + ${article.id} + ', ' + ${comment.id} + ')'">
-                                    <i class="ti-pencil"></i>
-                                </button>
-                                <button id="delete-btn" class="btn" th:value="${comment.id}">
-                                    <i class="ti-trash"></i>
-                                </button>
-                            </th:block>
-                        </li>
                     </ul>
                     <div class="add-comment">
-                        <form action="/comment" method="post">
-                            <input id="comment-contents" name="comment" type="hidden">
-                            <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
-                            <button id="save-btn" type="submit" class="btn btn-default">
-                                <i class="ti-save"></i>
-                            </button>
-                        </form>
+                        <input id="comment-contents" name="comment" type="hidden">
+                        <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
+                        <button id="save-btn" class="btn btn-default" onclick="createNewComment()">
+                            <i class="ti-save"></i>
+                        </button>
                         <div id="editSection"></div>
                     </div>
                 </div>
@@ -120,7 +96,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">댓글 수정</h4>
             </div>
-            <form id="comment-edit-form" action="/articles/1/comment/1" method="post">
+            <form id="comment-edit-form" action="" name="comment-edit" method="post">
                 <input type="hidden" name="_method" value="put"/>
                 <div class="modal-body">
                     <input id="comment-edit-contents" name="comment" type="hidden">
@@ -128,7 +104,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-                    <button type="submit" class="btn btn-primary">수정</button>
+                    <button type="submit" class="btn btn-primary" onclick="updateComment()" data-dismiss="modal">수정</button>
                 </div>
             </form>
         </div>
@@ -137,9 +113,13 @@
 
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="/js/comment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+</html>
 <script th:inline="javascript">
     const initValue = [[${article.contents}]]
+    const articleId = [[${article.id}]]
+
+
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
@@ -163,10 +143,8 @@
         el: document.querySelector('#commentEditSection'),
         initialEditType: 'markdown',
         previewStyle: 'horizontal',
-        placeholder: '수정할 내용을 입력해 주세요.',
         events: {
             change: function () {
-                console.log("cg")
                 document.getElementById('comment-edit-contents').setAttribute('value', editComment.getMarkdown())
             }
         },
@@ -174,9 +152,130 @@
     });
 
     function changeCommentEditAction(articleId, commentId) {
-        const action = "/articles/" + articleId + "/comment/" + commentId
+        const action = "/api/comments/" + commentId
         document.getElementById('comment-edit-form').setAttribute('action', action)
     }
 
+    const commentTemplate = '<li class="comment-item border bottom mrg-btm-30">'
+            + '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">'
+            + '<div class="info">'
+                + '<span href="" class="text-bold inline-block">{{authorName}}</span>'
+                + '<span class="sub-title inline-block pull-right">'
+                   + '<i class="ti-timer pdd-right-5"></i>'
+                   + '<span>6 min ago</span>'
+                + '</span>'
+            + '<p class="width-80">{{comment}}</p>'
+            + '</div>'
+            + '<div data-author ="{{authorId}}">'
+                + '<button type="button" class="btn btn-primary btn-lg" data-toggle="modal"'
+                        + 'data-target="#myModal"'
+                        + 'onclick="changeCommentEditAction(' + articleId + ', {{id}})">'
+                + '<i class="ti-pencil"></i>'
+                + '</button>'
+            + '<button id="delete-btn" class="btn" onclick="deleteComment({{id}})">'
+                + '<i class="ti-trash"></i>'
+            + '</button>'
+            + '<div>'
+        + '</li>'
+
+    const commentItemTemplate = Handlebars.compile(commentTemplate);
+
+    const readAllComment = function() {
+        fetch('/api/articles/' + articleId +  '/comments')
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
+                }
+                return res.json();
+            })
+            .then(json => {
+                var commentList = document.getElementById("comment-list");
+                while ( commentList.hasChildNodes() ) {
+                    commentList.removeChild( commentList.firstChild );
+                }
+                json.forEach(e => {
+                    document.getElementById('comment-list').insertAdjacentHTML('beforeend', commentItemTemplate(e))
+                });
+            })
+            .catch(err => alert('댓글 조회 실패'));
+    }
+
+    readAllComment();
+
+    const createNewComment = function() {
+        var comment = document.getElementById("comment-contents")
+
+        const obj = {
+          body: JSON.stringify({
+            comment: comment.value,
+            articleId: articleId
+          }),
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          method: 'POST'
+        }
+
+        fetch('/api/comments', obj)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
+                }
+                readAllComment();
+                editor.setValue('')
+                document.getElementById('comment-contents').setAttribute('value', "")
+            })
+            .catch(err => {
+                alert('댓글 생성 실패')
+                editor.setValue('')
+                document.getElementById('comment-contents').setAttribute('value', "")
+            });
+    }
+
+     const updateComment = function() {
+        var editComment = document.getElementById("comment-edit-contents");
+
+        const obj = {
+          body: JSON.stringify({
+            comment: editComment.value
+          }),
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          method: 'PUT'
+        }
+
+        const action = document.getElementById('comment-edit-form').getAttribute('action')
+
+        fetch(action, obj)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
+                }
+                readAllComment();
+            })
+            .catch(err => {
+                alert('댓글 수정 실패')
+            });
+    }
+
+    const deleteComment = function(commentId) {
+        const obj = {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          method: 'DELETE'
+        }
+
+        fetch('/api/comments/' + commentId, obj)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
+                }
+                readAllComment();
+            })
+            .catch(err => {
+                alert('댓글 삭제 실패')
+            });
+    }
 </script>
-</html>

@@ -1,4 +1,4 @@
-package techcourse.myblog.web.advice;
+package techcourse.myblog.controller.web.advice;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.*;
-import techcourse.myblog.web.exception.NotLoggedInException;
+import techcourse.myblog.controller.resolver.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = "techcourse.myblog.controller.web")
 public class ControllerExceptionAdvice {
     @ExceptionHandler({NotFoundUserException.class, UserDeleteException.class,
             NotFoundArticleException.class, NotFoundUserException.class})

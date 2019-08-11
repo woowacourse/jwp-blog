@@ -1,13 +1,12 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.service.LogInService;
 import techcourse.myblog.service.dto.LogInInfoDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.LoginUserDto;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -21,8 +20,7 @@ public class LogInController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
+    public String showLoginPage(HttpSession httpSession) {
         if (httpSession.getAttribute(LOGGED_IN_USER) != null) {
             return "redirect:/";
         }
@@ -30,16 +28,14 @@ public class LogInController {
     }
 
     @PostMapping("/login")
-    public String logIn(LogInInfoDto logInInfoDto, HttpServletRequest httpServletRequest) {
-        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-        HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+    public String logIn(LogInInfoDto logInInfoDto, HttpSession httpSession) {
+        LoginUserDto loginUserDto = logInService.logIn(logInInfoDto);
+        httpSession.setAttribute(LOGGED_IN_USER, loginUserDto);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
+    public String logout(HttpSession httpSession) {
         httpSession.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
     }
