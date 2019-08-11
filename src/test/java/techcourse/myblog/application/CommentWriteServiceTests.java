@@ -34,19 +34,19 @@ public class CommentWriteServiceTests {
         MockitoAnnotations.initMocks(this);
         commentReadService = new CommentReadService(commentRepository);
         commentWriteService = new CommentWriteService(commentRepository, commentReadService);
-        reader = READER_DTO.toUser();
+        reader = UserAssembler.toEntity(READER_DTO);
         article = ARTICLE_FEATURE.toArticle(reader);
     }
 
     @Test
     void 댓글_수정() {
-        Comment comment = COMMENT_DTO.toComment(reader, article);
+        Comment comment = CommentAssembler.toEntity(COMMENT_DTO, reader, article);
         CommentRequestDto updateCommentRequestDto = UPDATE_COMMENT_DTO;
 
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
         assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentRequestDto, reader, article));
-        compareComment(commentRepository.findById(id).get(), updateCommentRequestDto.toComment(reader, article));
+        compareComment(commentRepository.findById(id).get(), CommentAssembler.toEntity(updateCommentRequestDto, reader, article));
     }
 
     void compareComment(Comment comment1, Comment comment2) {

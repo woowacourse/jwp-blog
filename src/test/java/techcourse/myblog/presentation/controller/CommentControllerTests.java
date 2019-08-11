@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import techcourse.myblog.application.UserAssembler;
 import techcourse.myblog.application.dto.CommentRequestDto;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
@@ -42,7 +43,7 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_상태_댓글작성_성공() {
-        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserDto)
+        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserRequestDto)
                 .jsonPath("$.contents").isEqualTo(COMMENT_DTO.getContents())
                 .jsonPath("$.userId").isEqualTo(savedUser.getId())
                 .jsonPath("$.userName").isEqualTo(savedUser.getName());
@@ -57,7 +58,7 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자_로그인_상태_댓글삭제_성공() {
-        loginAndRequestWithMonoData(DELETE, getCommentUrl(), HttpStatus.OK, COMMENT_DTO, savedUserDto)
+        loginAndRequestWithMonoData(DELETE, getCommentUrl(), HttpStatus.OK, COMMENT_DTO, savedUserRequestDto)
                 .consumeWith(response -> {
                     String result = new String(response.getResponseBody());
                     assertTrue(result.contains(DELETE_SUCCESS_MESSAGE));
@@ -66,8 +67,8 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글삭제_실패() {
-        UserDto other = READER_DTO;
-        userRepository.save(other.toUser());
+        UserRequestDto other = READER_DTO;
+        userRepository.save(UserAssembler.toEntity(other));
 
         loginAndRequestWithMonoData(DELETE, getCommentUrl(), HttpStatus.FORBIDDEN, COMMENT_DTO, other)
                 .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE);
@@ -83,14 +84,14 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자_로그인_상태_댓글수정_성공() {
-        loginAndRequestWithMonoData(PUT, getCommentUrl(), HttpStatus.OK, UPDATE_COMMENT_DTO, savedUserDto)
+        loginAndRequestWithMonoData(PUT, getCommentUrl(), HttpStatus.OK, UPDATE_COMMENT_DTO, savedUserRequestDto)
                 .jsonPath("$.contents").isEqualTo("new-contents");
     }
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글수정_실패() {
-        UserDto other = READER_DTO;
-        userRepository.save(other.toUser());
+        UserRequestDto other = READER_DTO;
+        userRepository.save(UserAssembler.toEntity(other));
 
         loginAndRequestWithMonoData(PUT, getCommentUrl(), HttpStatus.FORBIDDEN, UPDATE_COMMENT_DTO, other)
                 .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE);
@@ -98,7 +99,7 @@ class CommentControllerTests extends ControllerTestTemplate {
     }
 
     private String getCommentUrl() {
-        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserDto);
+        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserRequestDto);
 
         Comment comment = commentRepository.findAll().get(0);
 

@@ -22,11 +22,11 @@ public class CommentWriteService {
     }
 
     public CommentResponseDto save(CommentRequestDto commentRequestDto, User user, Article article) {
-        return buildCommentResponseDto(commentRepository.save(commentRequestDto.toComment(user, article)));
+        return buildCommentResponseDto(commentRepository.save(CommentAssembler.toEntity(commentRequestDto, user, article)));
     }
 
     public CommentResponseDto modify(Long commentId, CommentRequestDto commentRequestDto, User user, Article article) {
-        return buildCommentResponseDto(commentReadService.findById(commentId).update(commentRequestDto.toComment(user, article)));
+        return buildCommentResponseDto(commentReadService.findById(commentId).update(CommentAssembler.toEntity(commentRequestDto, user, article)));
     }
 
     public void deleteById(Long id) {
