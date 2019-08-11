@@ -10,13 +10,13 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 public class TestUtil {
     public static void signUp(WebTestClient webTestClient, String email, String name, String password) {
         webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
+                .body(BodyInserters.fromFormData("userName", name)
                         .with("email", email)
                         .with("password", password))
                 .exchange();
     }
     public static String getCookie(WebTestClient webTestClient, String email, String password){
-        return  webTestClient.post().uri("login")
+        return  webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("email", email)
                         .with("password", password))
@@ -41,7 +41,4 @@ public class TestUtil {
                 .getResponseHeaders()
                 .getLocation().getPath();
     }
-
-
-
 }

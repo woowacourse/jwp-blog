@@ -53,7 +53,7 @@ public class CommentController {
                                                   @LoginUser User user) {
         commentService.delete(commentId, articleId, user);
         ResponseMessage responseMessage = new ResponseMessage(RESPONSE_SUCCESS, null);
-        return new ResponseEntity<>(responseMessage, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @Transactional

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
@@ -11,8 +13,10 @@ import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 import static techcourse.myblog.TestUtil.getCookie;
 import static techcourse.myblog.TestUtil.signUp;
@@ -78,11 +82,11 @@ class ArticleControllerTest {
         void 게시글_조회() {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
-
             webTestClient.get().uri("articles/" + foundArticle.getId())
                     .header("cookie", cookie)
                     .exchange()
                     .expectStatus().isOk();
+            assertTrue(getArticleBody(foundArticle.getId()).contains(CONTENTS));
         }
 
         @Test
@@ -93,9 +97,9 @@ class ArticleControllerTest {
                     .body(fromFormData("title", TITLE_2)
                             .with("contents", CONTENTS)
                             .with("coverUrl", COVER_URL))
-                    .exchange();
-
-            assertThat(articleRepository.findAll().size()).isEqualTo(2);
+                    .exchange()
+                    .expectStatus()
+                    .is3xxRedirection();
         }
 
         @Test
@@ -110,9 +114,8 @@ class ArticleControllerTest {
                             .with("contents", CONTENTS)
                             .with("coverUrl", COVER_URL))
                     .exchange();
+            assertTrue(getArticleBody(foundArticle.getId()).contains(TITLE_2));
 
-            foundArticle = articleRepository.findById(foundArticle.getId()).get();
-            assertThat(foundArticle.getTitle()).isEqualTo(TITLE_2);
         }
 
         @Test
@@ -251,6 +254,17 @@ class ArticleControllerTest {
 
             assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isTrue();
         }
+    }
+
+    private String getArticleBody(long articleId){
+        EntityExchangeResult<byte[]>  result = webTestClient.get().uri("articles/" + articleId)
+                .header("cookie", cookie)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .returnResult();
+        return new String(Objects.requireNonNull(result.getResponseBody()));
     }
 
 }

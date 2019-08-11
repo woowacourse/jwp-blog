@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Article;
@@ -15,8 +16,9 @@ import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.service.dto.CommentDto;
 
 import java.util.List;
+import java.util.Objects;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static techcourse.myblog.TestUtil.*;
 import static techcourse.myblog.controller.CommentController.RESPONSE_FAIL;
 import static techcourse.myblog.controller.CommentController.RESPONSE_SUCCESS;
@@ -116,6 +118,7 @@ class CommentControllerTest {
     class common {
         @Test
         void 댓글_0개_가져오기() {
+            commentReopsitory.deleteAll();
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
@@ -126,11 +129,12 @@ class CommentControllerTest {
                     .isOk()
                     .expectBody()
                     .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS)
-                    .jsonPath("$.data", hasSize(0));
+                    .jsonPath("$.data.length()").isEqualTo(0);
         }
 
         @Test
         void 댓글_1개_가져오기() {
+            commentReopsitory.deleteAll();
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
@@ -142,11 +146,12 @@ class CommentControllerTest {
                     .isOk()
                     .expectBody()
                     .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS)
-                    .jsonPath("$.data", hasSize(1));
+                    .jsonPath("$.data.length()").isEqualTo(1);
         }
 
         @Test
         void 댓글_2개_가져오기() {
+            commentReopsitory.deleteAll();
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
@@ -159,7 +164,7 @@ class CommentControllerTest {
                     .isOk()
                     .expectBody()
                     .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS)
-                    .jsonPath("$.data", hasSize(2));
+                    .jsonPath("$.data.length()").isEqualTo(2);
         }
     }
 
@@ -244,71 +249,40 @@ class CommentControllerTest {
         void 댓글_생성() {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
-            String uri = "/articles/" + foundArticle.getId() + "/comments";
-            saveComment(COMMENT_CONTENTS_1, uri, cookie)
-                    .expectStatus()
-                    .isBadRequest();
-        }
-
-        @Test
-        void 댓글_생성_ajax() {
-            List<Article> foundArticles = articleRepository.findAll();
-            Article foundArticle = foundArticles.get(0);
             String baseUri = "/articles/" + foundArticle.getId() + "/comments";
             saveComment(COMMENT_CONTENTS_1, baseUri, cookie)
                     .expectStatus()
-                    .isBadRequest()
+                    .isCreated()
                     .expectBody()
-                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
-                    .jsonPath("$.data").isEqualTo(cookie);
+                    .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS)
+                    .jsonPath("$.data.contents").isEqualTo(COMMENT_CONTENTS_1);
         }
 
         @Test
         void 댓글_수정() {
-            Article foundArticle = articleRepository.findAll().get(0);
-            Comment foundComment = commentReopsitory.findAll().get(0);
-            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            editComment(COMMENT_CONTENTS_2, uri, cookie).expectStatus().isBadRequest();
-        }
-
-        @Test
-        void 댓글_수정_ajax() {
             List<Article> foundArticles = articleRepository.findAll();
             Comment foundComment = commentReopsitory.findAll().get(0);
 
             Article foundArticle = foundArticles.get(0);
             String baseUri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            String contents = "comment";
-            editComment(contents, baseUri, cookie)
+            editComment(COMMENT_CONTENTS_2, baseUri, cookie)
                     .expectStatus()
-                    .isBadRequest()
+                    .isOk()
                     .expectBody()
-                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
-                    .jsonPath("$.data").isEqualTo(cookie);
+                    .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS);
         }
 
         @Test
         void 댓글_삭제() {
-            Article foundArticle = articleRepository.findAll().get(0);
-            Comment foundComment = commentReopsitory.findAll().get(0);
-            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            deleteComment(uri, cookie)
-                    .expectStatus()
-                    .isBadRequest();
-        }
-
-        @Test
-        void 댓글_삭제_ajax() {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
             deleteComment(uri, cookie)
                     .expectStatus()
-                    .isBadRequest()
+                    .isOk()
                     .expectBody()
-                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
-                    .jsonPath("$.data").isEqualTo(cookie);
+                    .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS);
         }
     }
 
