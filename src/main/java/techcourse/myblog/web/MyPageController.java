@@ -13,8 +13,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class MyPageController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
-
     private UserService userService;
 
     public MyPageController(UserService userService) {
@@ -29,21 +27,16 @@ public class MyPageController {
 
     @GetMapping("/mypage/{id}/edit")
     public String showMyPageEdit(@PathVariable("id") long id, Model model,
-                                 HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+                                 @LoggedUser UserPublicInfoDto userPublicInfoDto,
+                                 RedirectAttributes redirectAttributes) {
         String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
         if (errorMessage != null) {
             model.addAttribute("errorMessage", errorMessage);
         }
-        if (isLoggedInUserMYPage(httpServletRequest, id)) {
+        if (userPublicInfoDto != null) {
             model.addAttribute("user", userService.findUserPublicInfoById(id));
             return "mypage-edit";
         }
         return "redirect:/mypage/" + id;
-    }
-
-    private boolean isLoggedInUserMYPage(HttpServletRequest httpServletRequest, Long id) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        return (loggedInUser != null) && (id.equals(loggedInUser.getId()));
     }
 }

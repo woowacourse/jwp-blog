@@ -5,5 +5,5 @@ INSERT INTO user(email, name, password) VALUES ('mismatch@test.test', 'mismatch'
 
 INSERT INTO article(id, title, cover_url, contents, author_id) VALUES (1, 'title', 'cover url', 'contents', 1);
 
--- INSERT INTO comment(comment, author_id, article_id) VALUES ('test comment', 1, 1);
--- INSERT INTO comment(comment, author_id, article_id) VALUES ('delete comment', 1, 1);
+INSERT INTO comment(comment, author_id, article) VALUES ('test comment', 1, 1);
+INSERT INTO comment(comment, author_id, article) VALUES ('delete comment', 1, 1);

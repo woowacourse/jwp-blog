@@ -3,7 +3,7 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleVo;
+import techcourse.myblog.domain.article.ArticleUserInput;
 import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 
@@ -16,12 +16,12 @@ import static techcourse.myblog.Utils.TestConstants.MISMATCH_USER_ID;
 
 public class ArticleTests {
     private User user;
-    private ArticleVo articleVo;
+    private ArticleUserInput articleVo;
 
     @BeforeEach
     void setUp() {
         user = mock(User.class);
-        articleVo = new ArticleVo("title", "url", "contents");
+        articleVo = new ArticleUserInput("title", "url", "contents");
 
         when(user.getId()).thenReturn(BASE_USER_ID);
         when(user.matchId(BASE_USER_ID)).thenReturn(true);
@@ -37,7 +37,7 @@ public class ArticleTests {
 
     @Test
     void 자신이_작성한_게시글_수정() {
-        ArticleVo newArticleVo = new ArticleVo("new Title", "new CoverUrl", "new Contents");
+        ArticleUserInput newArticleVo = new ArticleUserInput("new Title", "new CoverUrl", "new Contents");
         Article article = new Article(user, articleVo);
 
         article.updateArticle(newArticleVo, BASE_USER_ID);
@@ -49,7 +49,7 @@ public class ArticleTests {
 
     @Test
     void 자신이_작성한_게시글이_아니면_수정되지_않는다() {
-        ArticleVo newArticleVo = new ArticleVo("new Title", "new CoverUrl", "new Contents");
+        ArticleUserInput newArticleVo = new ArticleUserInput("new Title", "new CoverUrl", "new Contents");
         Article article = new Article(user, articleVo);
 
         assertThatThrownBy(() -> article.updateArticle(newArticleVo, MISMATCH_USER_ID))

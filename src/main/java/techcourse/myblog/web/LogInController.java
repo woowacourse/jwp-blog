@@ -10,10 +10,10 @@ import techcourse.myblog.service.dto.UserPublicInfoDto;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static techcourse.myblog.web.UserController.LOGGED_IN_USER;
+
 @Controller
 public class LogInController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
-
     private LogInService logInService;
 
     public LogInController(LogInService logInService) {

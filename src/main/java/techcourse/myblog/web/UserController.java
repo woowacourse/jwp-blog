@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
+    public static final String LOGGED_IN_USER = "loggedInUser";
 
     private UserService userService;
 
@@ -21,8 +21,8 @@ public class UserController {
     }
 
     @GetMapping("/users/sign-up")
-    public String showRegisterPage(HttpSession httpSession) {
-        if (isLoggedIn(httpSession)) {
+    public String showRegisterPage(HttpSession session) {
+        if (session.getAttribute(LOGGED_IN_USER) != null) {
             return "redirect:/";
         }
         return "sign-up";
@@ -41,8 +41,10 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpSession httpSession) {
-        UserPublicInfoDto loggedInUserPublicInfoDto = getLoggedInUser(httpSession, id);
+    public String editUserName(@PathVariable Long id,
+                               UserPublicInfoDto userPublicInfoDto,
+                               @LoggedUser UserPublicInfoDto loggedInUserPublicInfoDto,
+                               HttpSession httpSession) {
         Long loggedInUserId = loggedInUserPublicInfoDto.getId();
         userService.update(userPublicInfoDto, id, loggedInUserId);
         userPublicInfoDto.setId(id);
@@ -51,21 +53,10 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public String deleteUser(@PathVariable Long id, HttpSession httpSession) {
-        UserPublicInfoDto userPublicInfoDto = getLoggedInUser(httpSession, id);
+    public String deleteUser(@PathVariable Long id, @LoggedUser UserPublicInfoDto userPublicInfoDto, HttpSession httpSession) {
         userService.delete(id, userPublicInfoDto.getId());
         httpSession.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
     }
 
-    private UserPublicInfoDto getLoggedInUser(HttpSession httpSession, Long id) {
-        if (isLoggedIn(httpSession)) {
-            return (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        }
-        throw new NotLoggedInException();
-    }
-
-    private boolean isLoggedIn(HttpSession httpSession) {
-        return httpSession.getAttribute(LOGGED_IN_USER) != null;
-    }
 }

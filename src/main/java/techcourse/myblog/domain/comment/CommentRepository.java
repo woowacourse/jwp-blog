@@ -10,5 +10,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByArticle(Article article);
 
-    int countByArticle_Id(long articleId);
+    int countByArticle_Id(Long articleId);
 }

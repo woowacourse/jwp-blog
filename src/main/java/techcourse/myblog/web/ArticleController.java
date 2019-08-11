@@ -17,8 +17,6 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
-
     private ArticleService articleService;
     private UserService userService;
     private CommentService commentService;
@@ -36,8 +34,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/new")
-    public String showCreatePage(HttpServletRequest httpServletRequest) {
-        getLoggedInUser(httpServletRequest);
+    public String showCreatePage(@LoggedUser UserPublicInfoDto userPublicInfoDto) {
         return "article-edit";
     }
 
@@ -52,9 +49,10 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
+    public String showEditPage(@PathVariable("id") Long id, Model model,
+                               @LoggedUser UserPublicInfoDto userPublicInfoDto) {
         ArticleDto articleDto = articleService.findArticleDtoById(id);
-        if (getLoggedInUser(httpServletRequest).getId().equals(articleDto.getUserId())) {
+        if (userPublicInfoDto.getId().equals(articleDto.getUserId())) {
             model.addAttribute("article", articleDto);
             return "article-edit";
         }
@@ -62,29 +60,24 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
-        ArticleDto savedArticleDto = articleService.save(getLoggedInUser(httpServletRequest).getId(), articleDto);
+    public String createArticle(ArticleDto articleDto,
+                                @LoggedUser UserPublicInfoDto userPublicInfoDto) {
+        ArticleDto savedArticleDto = articleService.save(userPublicInfoDto.getId(), articleDto);
         return "redirect:/articles/" + savedArticleDto.getId();
     }
 
     @PutMapping("/articles/{id}")
-    public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpServletRequest httpServletRequest) {
-        articleService.update(id, getLoggedInUser(httpServletRequest).getId(), articleDto);
+    public String editArticle(@PathVariable("id") long id,
+                              ArticleDto articleDto,
+                              @LoggedUser UserPublicInfoDto userPublicInfoDto) {
+        articleService.update(id, userPublicInfoDto.getId(), articleDto);
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
-        articleService.delete(id, getLoggedInUser(httpServletRequest).getId());
+    public String deleteArticle(@PathVariable("id") long id,
+                                @LoggedUser UserPublicInfoDto userPublicInfoDto) {
+        articleService.delete(id, userPublicInfoDto.getId());
         return "redirect:/";
-    }
-
-    private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        if (user == null) {
-            throw new NotLoggedInException();
-        }
-        return user;
     }
 }
