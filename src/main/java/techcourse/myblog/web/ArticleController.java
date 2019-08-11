@@ -74,7 +74,7 @@ public class ArticleController {
         ArticleDto updatedArticle = articleService.modify(articleDto, articleId, userResponse);
         model.addAttribute(ARTICLE_INFO, updatedArticle);
 
-        return "article";
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
