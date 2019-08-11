@@ -35,19 +35,19 @@
                         <div th:if="${articles}" th:each="article: ${articles}" role="tabpanel"
                              class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a th:href="'/articles/' + ${article.id}" class="card article-container">
+                                <a th:href="'/articles/' + ${article.articleId}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"
-                                                 th:style="'background:url(' + ${article.articleFeature.coverUrl} + ');'"></div>
+                                                 th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 th:text="${article.articleFeature.title}" class="mrg-btm-20 text-bold">
+                                                        <h2 th:text="${article.title}" class="mrg-btm-20 text-bold">
                                                             title</h2>
-                                                        <p th:text="${article.articleFeature.contents}">contents</p>
+                                                        <p th:text="${article.contents}">contents</p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>

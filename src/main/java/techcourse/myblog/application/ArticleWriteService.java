@@ -2,6 +2,8 @@ package techcourse.myblog.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.dto.ArticleResponseDto;
+import techcourse.myblog.application.exception.NotFoundArticleException;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleFeature;
 import techcourse.myblog.domain.article.ArticleRepository;
@@ -18,8 +20,8 @@ public class ArticleWriteService {
         this.articleReadService = articleReadService;
     }
 
-    public Article save(ArticleFeature articleFeature, User user) {
-        return articleRepository.save(articleFeature.toArticle(user));
+    public ArticleResponseDto save(ArticleFeature articleFeature, User user) {
+        return ArticleAssembler.buildArticleResponseDto(articleRepository.save(articleFeature.toArticle(user)));
     }
 
     public void removeById(Long articleId) {
@@ -27,6 +29,8 @@ public class ArticleWriteService {
     }
 
     public void update(Long articleId, ArticleFeature articleFeature, User user) {
-        articleReadService.findById(articleId).update(articleFeature.toArticle(user));
+        articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new)
+                .update(articleFeature.toArticle(user));
     }
 }

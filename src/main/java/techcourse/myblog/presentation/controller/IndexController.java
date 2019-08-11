@@ -18,7 +18,6 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("articles", articleReadService.findAll());
-
         return "index";
     }
 }

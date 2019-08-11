@@ -38,9 +38,9 @@ public class Article extends BaseEntity {
         this.articleFeature = article.articleFeature;
     }
 
-    public void validateAuthor(User user) {
+    public Article validateAuthor(User user) {
         if (matchAuthor(user)) {
-            return;
+            return this;
         }
         throw new MismatchArticleAuthorException();
     }

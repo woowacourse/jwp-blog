@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.ArticleWriteService;
-import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.application.dto.ArticleResponseDto;
 import techcourse.myblog.domain.article.ArticleFeature;
 import techcourse.myblog.presentation.support.LoginUser;
 
@@ -35,18 +35,18 @@ public class ArticleController {
     public RedirectView createArticle(LoginUser loginUser,
                                       ArticleFeature articleFeature) {
         log.debug("article save request data : -> {}", articleFeature);
-        Article savedArticle = articleWriteService.save(articleFeature, loginUser.getUser());
+        ArticleResponseDto savedArticle = articleWriteService.save(articleFeature, loginUser.getUser());
         log.debug("article save response data : -> {}", savedArticle);
-        return new RedirectView("/articles/" + savedArticle.getId());
+        return new RedirectView("/articles/" + savedArticle.getArticleId());
     }
 
     @GetMapping("/{articleId}")
     public String showArticle(Model model,
                               @PathVariable Long articleId) {
         log.debug("article read request data : -> {}", articleId);
-        Article article = articleReadService.findById(articleId);
-        log.debug("article read response data : -> {}", article);
-        model.addAttribute("article", article);
+        ArticleResponseDto articleResponseDto = articleReadService.findById(articleId);
+        log.debug("article read response data : -> {}", articleResponseDto);
+        model.addAttribute("article", articleResponseDto);
         return "article";
     }
 
@@ -55,10 +55,9 @@ public class ArticleController {
                                   LoginUser loginUser,
                                   @PathVariable Long articleId) {
         log.debug("article edit read request data : -> {}", articleId);
-        Article article = articleReadService.findById(articleId);
-        article.validateAuthor(loginUser.getUser());
-        log.debug("article edit read response data : -> {}", article);
-        model.addAttribute("article", article);
+        ArticleResponseDto articleResponseDto = articleReadService.findByIdAndValidUser(articleId, loginUser.getUser());
+        log.debug("article edit read response data : -> {}", articleResponseDto);
+        model.addAttribute("article", articleResponseDto);
         return "article-edit";
     }
 
@@ -75,7 +74,7 @@ public class ArticleController {
     public RedirectView deleteArticle(LoginUser loginUser,
                                       @PathVariable Long articleId) {
         log.debug("article delete request data : -> {}", articleId);
-        articleReadService.findById(articleId).validateAuthor(loginUser.getUser());
+        articleReadService.findByIdAndValidUser(articleId, loginUser.getUser());
         articleWriteService.removeById(articleId);
         return new RedirectView("/");
     }

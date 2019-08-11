@@ -44,8 +44,7 @@ public class CommentController {
                                                             @PathVariable Long articleId,
                                                             @RequestBody CommentRequestDto commentRequestDto) {
         log.debug("comment save request data : -> {}, {}", articleId, commentRequestDto);
-        Article article = articleReadService.findById(articleId);
-        CommentResponseDto commentResponseDto = commentWriteService.save(commentRequestDto, loginUser.getUser(), article);
+        CommentResponseDto commentResponseDto = commentWriteService.save(commentRequestDto, loginUser.getUser(), articleId);
         log.debug("comment save response data : -> {}", commentResponseDto);
         return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
@@ -56,8 +55,7 @@ public class CommentController {
                                                             @PathVariable Long articleId,
                                                             @RequestBody CommentRequestDto commentRequestDto) {
         log.debug("comment update request data : -> {}, {}", articleId, commentRequestDto);
-        Article article = articleReadService.findById(articleId);
-        CommentResponseDto commentResponseDto = commentWriteService.modify(commentId, commentRequestDto, loginUser.getUser(), article);
+        CommentResponseDto commentResponseDto = commentWriteService.modify(commentId, commentRequestDto, loginUser.getUser(), articleId);
         log.debug("comment update response data : -> {}", commentResponseDto);
         return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
