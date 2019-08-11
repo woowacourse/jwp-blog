@@ -38,8 +38,8 @@ public class CommentControllerTest {
         webTestClient.post().uri("/users")
                 .body(fromFormData("name", user.getName())
                         .with("email", user.getEmail())
-                        .with("password", user.getPassword())
-                        .with("reconfirmPassword", user.getPassword()))
+                        .with("password", user.getEncryptedPassword())
+                        .with("reconfirmPassword", user.getEncryptedPassword()))
                 .exchange()
                 .expectStatus()
                 .isFound();
@@ -135,7 +135,7 @@ public class CommentControllerTest {
     private String getCookie(String email) {
         return webTestClient.post().uri("/login")
                 .body(fromFormData("email", email)
-                        .with("password", user.getPassword()))
+                        .with("password", user.getEncryptedPassword()))
                 .exchange()
                 .expectStatus()
                 .isFound()

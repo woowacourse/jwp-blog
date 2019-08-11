@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
 
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;

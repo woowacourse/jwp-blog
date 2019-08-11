@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.support.encryptor.EncryptHelper;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -31,16 +32,16 @@ public class User {
     @NotBlank
     @Column(nullable = false)
     @JsonIgnore
-    private String password;
+    private String encryptedPassword;
 
     private User() {
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String email, String encryptedPassword) {
         validateName(name);
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.encryptedPassword = encryptedPassword;
     }
 
     private void validateName(String name) {
@@ -75,8 +76,16 @@ public class User {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public boolean isCorrectPassword(String password, EncryptHelper encryptHelper) {
+        return encryptHelper.isMatch(password, encryptedPassword);
+    }
+
+    public boolean isWrongPassword(String password, EncryptHelper encryptHelper) {
+        return !isCorrectPassword(password, encryptHelper);
     }
 
     @Override

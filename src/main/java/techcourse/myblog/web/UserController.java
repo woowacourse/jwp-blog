@@ -7,13 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserEditRequest;
 import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.web.argumentResolver.SessionUser;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -23,10 +23,12 @@ public class UserController {
 
     private static final String USER = "user";
 
-    private UserService userService;
+    private final UserService userService;
+    private final LoginService loginService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, LoginService loginService) {
         this.userService = userService;
+        this.loginService = loginService;
     }
 
     @GetMapping("/login")
@@ -81,16 +83,17 @@ public class UserController {
     public String login(UserLoginRequest userLoginRequest, HttpSession session) {
         log.debug("begin");
 
-        User user = userService.findUserByEmail(userLoginRequest);
-        session.setAttribute(USER, user);
+        loginService.login(session, userLoginRequest);
+
         return "redirect:/";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
+    public String logout(HttpSession session) {
         log.debug("begin");
 
-        request.getSession().removeAttribute(USER);
+        loginService.logout(session);
+
         return "redirect:/";
     }
 
@@ -103,6 +106,7 @@ public class UserController {
         }
         User user = userService.editUserName(userId, userEditRequest.getName());
         session.setAttribute(USER, user);
+
         return "redirect:/";
     }
 
@@ -113,7 +117,7 @@ public class UserController {
         userService.deleteById(userId);
         log.info("userId: {} ", userId);
 
-        session.removeAttribute(USER);
+        loginService.logout(session);
         return "redirect:/";
     }
 }

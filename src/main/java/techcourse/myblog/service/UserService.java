@@ -3,7 +3,6 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
@@ -15,8 +14,8 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private EncryptHelper encryptHelper;
+    private final UserRepository userRepository;
+    private final EncryptHelper encryptHelper;
 
     public UserService(UserRepository userRepository, EncryptHelper encryptHelper) {
         this.userRepository = userRepository;
@@ -30,7 +29,8 @@ public class UserService {
 
     private User createUser(UserRequest userRequest) {
         try {
-            return new User(userRequest.getName(), userRequest.getEmail(), encryptHelper.encrypt(userRequest.getPassword()));
+            String encryptedPassword = encryptHelper.encrypt(userRequest.getPassword());
+            return new User(userRequest.getName(), userRequest.getEmail(), encryptedPassword);
         } catch (IllegalArgumentException e) {
             throw new SignUpException(e.getMessage());
         }
@@ -40,18 +40,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUserByEmail(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findByEmail(userLoginRequest.getEmail())
+    public User findUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginException("email 없음"));
 
-        checkPassword(userLoginRequest, user);
         return user;
-    }
-
-    private void checkPassword(UserLoginRequest userLoginRequest, User user) {
-        if (!encryptHelper.isMatch(userLoginRequest.getPassword(), user.getPassword())) {
-            throw new LoginException("비밀번호 틀림");
-        }
     }
 
     @Transactional

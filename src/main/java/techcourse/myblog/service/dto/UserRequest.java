@@ -1,5 +1,6 @@
 package techcourse.myblog.service.dto;
 
+import techcourse.myblog.domain.User;
 import techcourse.myblog.support.validator.EmailConstraint;
 import techcourse.myblog.support.validator.EqualFields;
 

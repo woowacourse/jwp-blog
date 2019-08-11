@@ -29,4 +29,12 @@ public class UserTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new User("@#$", "test@gmail.com", "PAssword!2"));
     }
+
+    @Test
+    void isCorrectPassword() {
+    }
+
+    @Test
+    void isWrongPassword() {
+    }
 }
