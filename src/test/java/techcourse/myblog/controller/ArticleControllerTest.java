@@ -14,6 +14,8 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+import static techcourse.myblog.TestUtil.getCookie;
+import static techcourse.myblog.TestUtil.signUp;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -26,13 +28,10 @@ class ArticleControllerTest {
     private static final String CONTENTS = "contents";
     private static final String COVER_URL = "COVER_URL";
     private static final String TITLE_2 = "title2";
-
-    private Article article;
-
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final WebTestClient webTestClient;
-
+    private Article article;
     private String cookie;
     private String anotherCookie;
 
@@ -47,34 +46,10 @@ class ArticleControllerTest {
 
     @BeforeAll
     void 회원가입_두_번_그리고_쿠키_발급() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("userName", USER_NAME_1)
-                        .with("email", EMAIL_1)
-                        .with("password", PASSWORD_1))
-                .exchange();
-
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("userName", USER_NAME_1)
-                        .with("email", EMAIL_2)
-                        .with("password", PASSWORD_1))
-                .exchange();
-
-        cookie = webTestClient.post().uri("login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("email", EMAIL_1)
-                        .with("password", PASSWORD_1))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        anotherCookie = webTestClient.post().uri("login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("email", EMAIL_2)
-                        .with("password", PASSWORD_1))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
+        signUp(webTestClient, EMAIL_1, USER_NAME_1, PASSWORD_1);
+        signUp(webTestClient, EMAIL_2, USER_NAME_1, PASSWORD_1);
+        cookie = getCookie(webTestClient, EMAIL_1, PASSWORD_1);
+        anotherCookie = getCookie(webTestClient, EMAIL_2, PASSWORD_1);
     }
 
     @BeforeEach
@@ -89,11 +64,16 @@ class ArticleControllerTest {
         articleRepository.deleteAll();
     }
 
+    @AfterAll
+    void over() {
+        articleRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @DisplayName("게시글 저자인 유저가 로그인 한 경우")
     class with_login_authorized_user {
-
         @Test
         void 게시글_조회() {
             List<Article> foundArticles = articleRepository.findAll();
@@ -143,7 +123,6 @@ class ArticleControllerTest {
             webTestClient.delete().uri("/articles/" + foundArticle.getId())
                     .header("cookie", cookie)
                     .exchange();
-
             assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isFalse();
         }
 
@@ -272,12 +251,6 @@ class ArticleControllerTest {
 
             assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isTrue();
         }
-    }
-
-    @AfterAll
-    void over() {
-        articleRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
 }

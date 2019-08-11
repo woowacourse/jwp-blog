@@ -38,6 +38,7 @@ public class LoginControllerTest {
                         .with("password", PASSWORD_1))
                 .exchange();
 
+
         cookie = webTestClient.post().uri("login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("email", EMAIL_1)

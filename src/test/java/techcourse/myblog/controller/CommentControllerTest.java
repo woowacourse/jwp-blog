@@ -16,8 +16,10 @@ import techcourse.myblog.service.dto.CommentDto;
 
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+import static org.hamcrest.Matchers.hasSize;
+import static techcourse.myblog.TestUtil.*;
+import static techcourse.myblog.controller.CommentController.RESPONSE_FAIL;
+import static techcourse.myblog.controller.CommentController.RESPONSE_SUCCESS;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -31,6 +33,8 @@ class CommentControllerTest {
     private static final String CONTENTS_1 = "contents";
     private static final String COVER_URL = "COVER_URL";
     private static final String CONTENTS_2 = "contents2";
+    private static final String COMMENT_CONTENTS_1 = "comment_contents";
+    private static final String COMMENT_CONTENTS_2 = "comment_contents2";
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
@@ -40,6 +44,7 @@ class CommentControllerTest {
     private String cookie;
     private String anotherCookie;
     private Comment comment;
+    private CommentDto commentDto;
 
     @Autowired
     public CommentControllerTest(WebTestClient webTestClient, ArticleRepository articleRepository,
@@ -51,42 +56,12 @@ class CommentControllerTest {
     }
 
     @BeforeAll
-    void 회원가입_두_번_게시글_생성_한_번_그리고_쿠키_발급() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("userName", USER_NAME_1)
-                        .with("email", EMAIL_1)
-                        .with("password", PASSWORD_1))
-                .exchange();
-
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("userName", USER_NAME_1)
-                        .with("email", EMAIL_2)
-                        .with("password", PASSWORD_1))
-                .exchange();
-
-        cookie = webTestClient.post().uri("login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("email", EMAIL_1)
-                        .with("password", PASSWORD_1))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        anotherCookie = webTestClient.post().uri("login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("email", EMAIL_2)
-                        .with("password", PASSWORD_1))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        webTestClient.post().uri("/articles")
-                .header("cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("title", TITLE_1)
-                        .with("contents", CONTENTS_1)
-                        .with("coverUrl", COVER_URL))
-                .exchange();
+    void 테스트_계정_생성_테스트_게시물_생성() {
+        signUp(webTestClient, EMAIL_1, USER_NAME_1, PASSWORD_1);
+        signUp(webTestClient, EMAIL_2, USER_NAME_1, PASSWORD_1);
+        cookie = getCookie(webTestClient, EMAIL_1, PASSWORD_1);
+        anotherCookie = getCookie(webTestClient, EMAIL_2, PASSWORD_1);
+        createArticle(webTestClient, cookie, TITLE_1, CONTENTS_1, COVER_URL);
     }
 
     @BeforeEach
@@ -109,6 +84,85 @@ class CommentControllerTest {
         userRepository.deleteAll();
     }
 
+    private WebTestClient.ResponseSpec saveComment(String commentContents, String uri, String cookie) {
+        CommentDto commentDto = new CommentDto(commentContents);
+        return webTestClient.post()
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .header("Cookie", cookie)
+                .body(Mono.just(commentDto), CommentDto.class)
+                .exchange();
+    }
+
+    private WebTestClient.ResponseSpec editComment(String commentContents, String uri, String cookie) {
+        CommentDto commentDto = new CommentDto(commentContents);
+        return webTestClient.put()
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .header("Cookie", cookie)
+                .body(Mono.just(commentDto), CommentDto.class)
+                .exchange();
+    }
+
+    private WebTestClient.ResponseSpec deleteComment(String uri, String cookie) {
+        return webTestClient.delete()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .exchange();
+    }
+
+    @Nested
+    @DisplayName("공통 경우")
+    class common {
+        @Test
+        void 댓글_0개_가져오기() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String uri = "/articles/" + foundArticle.getId() + "/comments";
+            webTestClient.get()
+                    .uri(uri)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS)
+                    .jsonPath("$.data", hasSize(0));
+        }
+
+        @Test
+        void 댓글_1개_가져오기() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String uri = "/articles/" + foundArticle.getId() + "/comments";
+            saveComment(COMMENT_CONTENTS_1, uri, cookie);
+            webTestClient.get()
+                    .uri(uri)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS)
+                    .jsonPath("$.data", hasSize(1));
+        }
+
+        @Test
+        void 댓글_2개_가져오기() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String uri = "/articles/" + foundArticle.getId() + "/comments";
+            saveComment(COMMENT_CONTENTS_1, uri, cookie);
+            saveComment(COMMENT_CONTENTS_2, uri, cookie);
+            webTestClient.get()
+                    .uri(uri)
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_SUCCESS)
+                    .jsonPath("$.data", hasSize(2));
+        }
+    }
+
     @Nested
     @DisplayName("로그인하지 않은 경우")
     class without_login {
@@ -117,15 +171,20 @@ class CommentControllerTest {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
-            CommentDto commentDTO = new CommentDto(CONTENTS_1);
+            saveComment(COMMENT_CONTENTS_1, uri, null).expectStatus().isBadRequest();
+        }
 
-            webTestClient.post().uri(uri)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDto.class)
-                    .exchange().expectStatus().isBadRequest();
-
-            assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
+        @Test
+        void 댓글_생성_ajax() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String baseUri = "/articles/" + foundArticle.getId() + "/comments";
+            saveComment(COMMENT_CONTENTS_1, baseUri, null)
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
+                    .jsonPath("$.data").isEqualTo(null);
         }
 
         @Test
@@ -133,31 +192,48 @@ class CommentControllerTest {
             Article foundArticle = articleRepository.findAll().get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            CommentDto commentDTO = new CommentDto(CONTENTS_2);
+            editComment(COMMENT_CONTENTS_2, uri, null).expectStatus().isBadRequest();
+        }
 
-            webTestClient.put().uri(uri)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDto.class)
-                    .exchange().expectStatus().isBadRequest();
+        @Test
+        void 댓글_수정_ajax() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Comment foundComment = commentReopsitory.findAll().get(0);
 
-            foundComment = commentReopsitory.findById(foundComment.getId()).get();
-            assertThat(foundComment.getContents()).isEqualTo(CONTENTS_1);
+            Article foundArticle = foundArticles.get(0);
+            String baseUri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            String contents = "comment";
+            editComment(contents, baseUri, null)
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
+                    .jsonPath("$.data").isEqualTo(null);
         }
 
         @Test
         void 댓글_삭제() {
             Article foundArticle = articleRepository.findAll().get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
-
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-
-            webTestClient.delete().uri(uri)
-                    .exchange().expectStatus().isBadRequest();
-
-            assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
+            deleteComment(uri, null)
+                    .expectStatus()
+                    .isBadRequest();
         }
 
+        @Test
+        void 댓글_삭제_ajax() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            Comment foundComment = commentReopsitory.findAll().get(0);
+            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            deleteComment(uri, null)
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
+                    .jsonPath("$.data").isEqualTo(null);
+        }
     }
 
     @Nested
@@ -169,52 +245,70 @@ class CommentControllerTest {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
             String uri = "/articles/" + foundArticle.getId() + "/comments";
-            CommentDto commentDTO = new CommentDto("고고");
+            saveComment(COMMENT_CONTENTS_1, uri, cookie)
+                    .expectStatus()
+                    .isBadRequest();
+        }
 
-            webTestClient.post().uri(uri)
-                    .header("cookie", cookie)
-                    .header("referer", uri)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDto.class)
-                    .exchange().expectStatus().isOk();
-
-            assertThat(commentReopsitory.findAll().size()).isEqualTo(2);
+        @Test
+        void 댓글_생성_ajax() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String baseUri = "/articles/" + foundArticle.getId() + "/comments";
+            saveComment(COMMENT_CONTENTS_1, baseUri, cookie)
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
+                    .jsonPath("$.data").isEqualTo(cookie);
         }
 
         @Test
         void 댓글_수정() {
             Article foundArticle = articleRepository.findAll().get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
-
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-            CommentDto commentDTO = new CommentDto(CONTENTS_2);
+            editComment(COMMENT_CONTENTS_2, uri, cookie).expectStatus().isBadRequest();
+        }
 
-            webTestClient.put().uri(uri)
-                    .header("cookie", cookie)
-                    .header("referer", uri)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .body(Mono.just(commentDTO), CommentDto.class)
-                    .exchange().expectStatus().isOk();
+        @Test
+        void 댓글_수정_ajax() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Comment foundComment = commentReopsitory.findAll().get(0);
 
-            foundComment = commentReopsitory.findById(foundComment.getId()).get();
-            assertThat(foundComment.getContents()).isEqualTo(CONTENTS_2);
-
+            Article foundArticle = foundArticles.get(0);
+            String baseUri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            String contents = "comment";
+            editComment(contents, baseUri, cookie)
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
+                    .jsonPath("$.data").isEqualTo(cookie);
         }
 
         @Test
         void 댓글_삭제() {
             Article foundArticle = articleRepository.findAll().get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
-
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            deleteComment(uri, cookie)
+                    .expectStatus()
+                    .isBadRequest();
+        }
 
-            webTestClient.delete().uri(uri)
-                    .header("cookie", cookie)
-                    .exchange();
-
-            assertThat(commentReopsitory.findAll().size()).isEqualTo(0);
+        @Test
+        void 댓글_삭제_ajax() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            Comment foundComment = commentReopsitory.findAll().get(0);
+            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+            deleteComment(uri, cookie)
+                    .expectStatus()
+                    .isBadRequest()
+                    .expectBody()
+                    .jsonPath("$.message").isEqualTo(RESPONSE_FAIL)
+                    .jsonPath("$.data").isEqualTo(cookie);
         }
     }
 
@@ -235,26 +329,16 @@ class CommentControllerTest {
                     .accept(MediaType.APPLICATION_JSON)
                     .body(Mono.just(commentDTO), CommentDto.class)
                     .exchange().expectStatus().isBadRequest();
-
-            foundComment = commentReopsitory.findById(foundComment.getId()).get();
-            assertThat(foundComment.getContents()).isEqualTo(CONTENTS_1);
-
         }
 
         @Test
         void 댓글_삭제() {
             Article foundArticle = articleRepository.findAll().get(0);
             Comment foundComment = commentReopsitory.findAll().get(0);
-
             String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
-
             webTestClient.delete().uri(uri)
                     .header("cookie", anotherCookie)
                     .exchange().expectStatus().isBadRequest();
-
-            assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
-
         }
-
     }
 }
