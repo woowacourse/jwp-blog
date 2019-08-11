@@ -50,7 +50,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
-    private User() {
+    protected User() {
     }
 
     public User(String name, String email, String password) {

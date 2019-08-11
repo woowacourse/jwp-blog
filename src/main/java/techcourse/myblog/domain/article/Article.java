@@ -19,7 +19,7 @@ public class Article {
     @Embedded
     private ArticleUserInput articleUserInput;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
@@ -29,7 +29,7 @@ public class Article {
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
-    private Article() {
+    protected Article() {
     }
 
     public Article(User author, ArticleUserInput articleUserInput) {

@@ -38,7 +38,7 @@ public class Comment {
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
-    private Comment() {
+    protected Comment() {
     }
 
     public Comment(String comment, User author, Article article) {
