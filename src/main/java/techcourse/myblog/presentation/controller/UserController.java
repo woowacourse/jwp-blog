@@ -12,7 +12,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.UserReadService;
 import techcourse.myblog.application.UserWriteService;
 import techcourse.myblog.application.dto.UserRequestDto;
-import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.validation.UserInfo;
 

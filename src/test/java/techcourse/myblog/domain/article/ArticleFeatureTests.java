@@ -3,16 +3,10 @@ package techcourse.myblog.domain.article;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import techcourse.myblog.domain.article.ArticleFeature;
 import techcourse.myblog.domain.article.exception.IllegalContentsException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import java.util.Set;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ArticleFeatureTests {

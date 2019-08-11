@@ -2,14 +2,11 @@ package techcourse.myblog.application;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.application.common.UserCommonServiceTests;
-import techcourse.myblog.application.exception.DuplicatedEmailException;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static techcourse.myblog.utils.UserTestObjects.*;
+import static techcourse.myblog.utils.UserTestObjects.UPDATE_USER_DTO;
 
 public class UserWriteServiceTests extends UserCommonServiceTests {
     @Test

@@ -3,12 +3,12 @@ package techcourse.myblog.application.common;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import techcourse.myblog.application.UserAssembler;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.ArticleWriteService;
+import techcourse.myblog.application.UserAssembler;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_FEATURE;

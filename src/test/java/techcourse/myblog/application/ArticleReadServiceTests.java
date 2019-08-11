@@ -1,8 +1,8 @@
 package techcourse.myblog.application;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.application.common.ArticleCommonServiceTests;
+import techcourse.myblog.domain.article.Article;
 
 import java.util.Arrays;
 import java.util.Optional;

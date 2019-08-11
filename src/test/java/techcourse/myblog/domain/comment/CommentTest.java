@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.application.CommentAssembler;
 import techcourse.myblog.application.UserAssembler;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.comment.exception.InvalidCommentException;
+import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

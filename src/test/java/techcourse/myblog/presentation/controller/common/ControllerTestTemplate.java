@@ -22,7 +22,6 @@ import techcourse.myblog.application.UserAssembler;
 import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.domain.article.ArticleFeature;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
 
 import java.util.Objects;

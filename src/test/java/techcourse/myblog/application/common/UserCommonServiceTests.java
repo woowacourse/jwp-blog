@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import techcourse.myblog.application.UserAssembler;
+import techcourse.myblog.application.UserReadService;
+import techcourse.myblog.application.UserWriteService;
 import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
-import techcourse.myblog.application.UserReadService;
-import techcourse.myblog.application.UserWriteService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.utils.UserTestObjects.SIGN_UP_USER_DTO;
