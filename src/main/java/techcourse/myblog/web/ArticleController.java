@@ -8,8 +8,6 @@ import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.CommentResponse;
 import techcourse.myblog.application.dto.UserResponse;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;

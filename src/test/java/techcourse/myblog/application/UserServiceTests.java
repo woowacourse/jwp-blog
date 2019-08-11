@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
@@ -59,9 +58,7 @@ public class UserServiceTests {
         given(userAssembler.convertToUser(USER_REQUEST_1)).willReturn(USER_1);
         userService.save(USER_REQUEST_1);
 
-        USER_1.setId(USER1_ID);
         verify(userRepository).save(USER_1);
-        verify(userRepository, never()).save(USER_2);
     }
 
     @Test

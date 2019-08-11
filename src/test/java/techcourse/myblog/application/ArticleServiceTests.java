@@ -1,6 +1,5 @@
 package techcourse.myblog.application;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,18 +44,10 @@ public class ArticleServiceTests {
     private ArticleAssembler articleAssembler;
 
     private User user = new User("bmo", "bmo@gmail.com", "Password123!");
-    private User notAuthorUser = new User("remo", "remo@reader.com", "Password123!");
-    private UserResponse userResponse = createUserResponse(USER_ID);
-    private UserResponse notAuthorResponse = createUserResponse(NOT_AUTHOR_USER_ID);
+    private UserResponse userResponse = new UserResponse(USER_ID, NAME, EMAIL);
+    private UserResponse notAuthorResponse = new UserResponse(NOT_AUTHOR_USER_ID, NAME, EMAIL);
     private Article article = new Article(user, "title", "coverUrl", "contents");
     private ArticleDto articleDto = new ArticleDto(USER_ID, "title", "coverUrl", "contents");
-
-
-    @BeforeEach
-    void setUp() {
-        user.setId(USER_ID);
-        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
-    }
 
     @Test
     void 존재하지_않는_유저_게시글_생성_실패() {
@@ -93,7 +84,6 @@ public class ArticleServiceTests {
     @Test
     void 다른_사람이_작성한_게시글_조회_실패() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
 
         assertThrows(NotSameAuthorException.class, () ->
                 articleService.find(ARTICLE_ID, notAuthorResponse)
@@ -128,7 +118,6 @@ public class ArticleServiceTests {
     @Test
     void 다른_사람이_게시글_수정_실패() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
 
         assertThrows(NotSameAuthorException.class, () ->
                 articleService.modify(articleDto, ARTICLE_ID, notAuthorResponse));
@@ -161,7 +150,6 @@ public class ArticleServiceTests {
     @Test
     void 다른_사람이_게시글_삭제_실패() {
         given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userService.findById(NOT_AUTHOR_USER_ID)).willReturn(notAuthorUser);
 
         assertThrows(NotSameAuthorException.class, () ->
                 articleService.remove(ARTICLE_ID, notAuthorResponse));
@@ -173,14 +161,5 @@ public class ArticleServiceTests {
         given(userService.findById(USER_ID)).willReturn(user);
 
         assertDoesNotThrow(() -> articleService.remove(ARTICLE_ID, userResponse));
-    }
-
-    private UserResponse createUserResponse(Long userId) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(userId);
-        userResponse.setName(NAME);
-        userResponse.setEmail(EMAIL);
-
-        return userResponse;
     }
 }

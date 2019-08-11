@@ -47,8 +47,7 @@ public class ArticleService {
     public List<ArticleDto> findAll() {
         List<ArticleDto> articles = articleRepository.findAll().stream()
                 .map(articleAssembler::convertToDto)
-                .collect(Collectors.toList())
-                ;
+                .collect(Collectors.toList());
         return Collections.unmodifiableList(articles);
     }
 
