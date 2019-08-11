@@ -3,8 +3,7 @@ package techcourse.myblog.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
@@ -24,9 +23,10 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public Page<Article> findAll(int page) {
-        return articleRepository.findAll(
-                PageRequest.of(page - 1, 10, Sort.by("id").descending()));
+    public Page<Article> findAll(Pageable pageable) {
+        log.debug("begin");
+
+        return articleRepository.findAll(pageable);
     }
 
     public Article save(ArticleRequest articleRequest, User user) {
@@ -36,13 +36,14 @@ public class ArticleService {
 
     public Article findById(long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다"));
+                .orElseThrow(() -> new NoArticleException(NoArticleException.NO_ARTICLE_MSG));
     }
 
     public Article findByIdWithUser(long articleId, User user) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다"));
+                .orElseThrow(() -> new NoArticleException(NoArticleException.NO_ARTICLE_MSG));
         article.checkAuthor(user);
+
         return article;
     }
 
@@ -59,6 +60,8 @@ public class ArticleService {
     }
 
     public void deleteById(long articleId, User user) {
+        log.debug("begin");
+
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         article.checkAuthor(user);
         articleRepository.deleteById(articleId);

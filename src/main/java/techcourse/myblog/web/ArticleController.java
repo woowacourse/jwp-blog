@@ -12,9 +12,9 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequest;
 import techcourse.myblog.service.dto.CommentsResponse;
+import techcourse.myblog.service.exception.NoArticleException;
 import techcourse.myblog.web.argumentResolver.SessionUser;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -62,7 +62,12 @@ public class ArticleController {
     public ResponseEntity<Article> selectArticle(@PathVariable("articleId") long articleId) {
         log.debug("begin");
 
-        return ResponseEntity.ok(articleService.findById(articleId));
+        try {
+            return ResponseEntity.ok(articleService.findById(articleId));
+        } catch (NoArticleException ex) {
+            return ResponseEntity.noContent()
+                    .build();
+        }
     }
 
 

@@ -2,15 +2,12 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -54,6 +51,8 @@ public class ArticleControllerTest {
 
     }
 
+    // TODO: indexControllerTests 만들기
+    // (page 관련 테스트)
     @Test
     void index() {
         webTestClient.get().uri("/")
@@ -87,13 +86,20 @@ public class ArticleControllerTest {
 
     @Test
     void 게시글삭제() {
-        webTestClient.delete().uri("/articles/1")
+        String uriForSpecificArticle = "/articles/1";
+
+        webTestClient.delete().uri(uriForSpecificArticle)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectHeader()
                 .valueMatches("location", ".*/")
                 .expectStatus()
                 .is3xxRedirection();
+
+
+        String apiUri = "/api/articles/1";
+        readFrom(apiUri).expectStatus()
+                .isNoContent();
     }
 
     @Test
@@ -169,6 +175,12 @@ public class ArticleControllerTest {
                 .exchange()
                 .expectStatus()
                 .isFound();
+    }
+
+    private ResponseSpec readFrom(String uri) {
+        return webTestClient.get()
+                .uri(uri)
+                .exchange();
     }
 
     private String getCookie(String email) {
