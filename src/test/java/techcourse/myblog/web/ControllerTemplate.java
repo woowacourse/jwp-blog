@@ -63,21 +63,10 @@ public class ControllerTemplate {
                 ;
     }
 
-    public WebTestClient.ResponseSpec requestWriteComment(String cookie, String contents) {
-        return webTestClient.post()
-                .uri("/articles/1/comments")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("contents", contents))
-                .exchange()
-                ;
-    }
-
-    public WebTestClient.BodyContentSpec requestWriteCommentAjax(String cookie, String contents) {
+    public WebTestClient.BodyContentSpec requestWriteCommentAjax(String cookie, String contents, String articleId) {
         CommentRequest commentRequest = new CommentRequest(contents);
         return webTestClient.post()
-                .uri("/articles/1/comments")
+                .uri("/articles/" + articleId + "/comments")
                 .header("Cookie", cookie)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -91,6 +80,4 @@ public class ControllerTemplate {
                 .jsonPath("$.contents").isNotEmpty()
                 .jsonPath("$.contents").isEqualTo(contents);
     }
-
-
 }

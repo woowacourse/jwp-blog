@@ -2,13 +2,12 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 public class ArticleControllerTests extends ControllerTemplate {
 
@@ -26,12 +25,6 @@ public class ArticleControllerTests extends ControllerTemplate {
         // 로그인
         requestLogin(EMAIL, PASSWORD);
         cookie = getCookie(EMAIL, PASSWORD);
-
-        // 게시글 작성
-        requestWriteArticle(cookie, TITLE, COVER_URL, CONTENTS)
-                .expectStatus()
-                .isFound()
-        ;
     }
 
     @Test
@@ -54,8 +47,9 @@ public class ArticleControllerTests extends ControllerTemplate {
 
     @Test
     void 게시글조회() {
+        String newArticleId = writeArticleAndGetId();
         webTestClient.get()
-                .uri("/articles/" + "1")
+                .uri("/articles/" + newArticleId)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
@@ -72,8 +66,11 @@ public class ArticleControllerTests extends ControllerTemplate {
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
+        String newArticleId = writeArticleAndGetId();
+        newArticleId = String.format("%d", (Integer.parseInt(newArticleId) + 1));
+        System.out.println("#####-Id: " + newArticleId);
         webTestClient.get()
-                .uri("/articles/" + "2")
+                .uri("/articles/" + newArticleId)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
@@ -83,7 +80,8 @@ public class ArticleControllerTests extends ControllerTemplate {
 
     @Test
     void 게시글수정페이지() {
-        webTestClient.get().uri("/articles/1/edit")
+        String newArticleId = writeArticleAndGetId();
+        webTestClient.get().uri("/articles/" + newArticleId + "/edit")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
@@ -93,7 +91,8 @@ public class ArticleControllerTests extends ControllerTemplate {
 
     @Test
     void 게시글수정() {
-        webTestClient.put().uri("/articles/1")
+        String newArticleId = writeArticleAndGetId();
+        webTestClient.put().uri("/articles/" + newArticleId)
                 .header("Cookie", cookie)
                 .body(BodyInserters.fromFormData("title", "수정")
                         .with("coverUrl", "수정")
@@ -106,7 +105,8 @@ public class ArticleControllerTests extends ControllerTemplate {
 
     @Test
     void 게시글삭제() {
-        webTestClient.delete().uri("/articles/1")
+        String newArticleId = writeArticleAndGetId();
+        webTestClient.delete().uri("/articles/" + newArticleId)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectHeader()
@@ -116,15 +116,16 @@ public class ArticleControllerTests extends ControllerTemplate {
         ;
     }
 
-    @Test
-    void article_Duplicate_Fail() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters.fromFormData("title", TITLE)
-                        .with("coverUrl", "커버")
-                        .with("contents", "중복"))
-                .exchange()
+    public String writeArticleAndGetId() {
+        EntityExchangeResult<byte[]> result = requestWriteArticle(cookie, TITLE, COVER_URL, CONTENTS)
                 .expectStatus()
-                .is4xxClientError()
-        ;
+                .isFound()
+                .expectBody()
+                .returnResult();
+        return result.getResponseHeaders()
+                .getLocation()
+                .getPath()
+                .split("/")[2]
+                ;
     }
 }
