@@ -3,17 +3,16 @@ package techcourse.myblog.domain.comment;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.domain.BaseEntity;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.exception.InvalidCommentException;
 import techcourse.myblog.domain.comment.exception.MismatchCommentAuthorException;
 import techcourse.myblog.domain.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
