@@ -18,7 +18,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.UserAssembler;
+import techcourse.myblog.application.dto.UserRequestDto;
+import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.domain.article.ArticleFeature;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
@@ -46,13 +48,13 @@ public class ControllerTestTemplate {
     @Autowired
     protected UserRepository userRepository;
 
-    protected UserDto savedUserDto;
-    protected User savedUser;
+    protected UserRequestDto savedUserRequestDto;
+    protected UserResponseDto savedUser;
 
     @BeforeEach
     protected void setup() {
-        savedUserDto = SIGN_UP_USER_DTO;
-        savedUser = userRepository.save(savedUserDto.toUser());
+        savedUserRequestDto = SIGN_UP_USER_DTO;
+        savedUser = UserAssembler.buildUserResponseDto(userRepository.save(UserAssembler.toEntity(savedUserRequestDto)));
     }
 
     @AfterEach
@@ -68,36 +70,36 @@ public class ControllerTestTemplate {
         return httpRequest(makeRequestSpecWithData(method, uri, data));
     }
 
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path, UserDto userDto) {
-        return httpRequest(makeRequestSpec(method, path).cookie(JSESSIONID, getLoginSessionId(userDto)));
+    protected StatusAssertions loginAndRequest(HttpMethod method, String path, UserRequestDto userRequestDto) {
+        return httpRequest(makeRequestSpec(method, path).cookie(JSESSIONID, getLoginSessionId(userRequestDto)));
     }
 
-    protected StatusAssertions loginAndRequestWithData(HttpMethod method, String path, MultiValueMap<String, String> data, UserDto userDto) {
-        return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userDto)));
+    protected StatusAssertions loginAndRequestWithData(HttpMethod method, String path, MultiValueMap<String, String> data, UserRequestDto userRequestDto) {
+        return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userRequestDto)));
     }
 
-    protected BodyContentSpec loginAndRequestWithData(HttpMethod method, String path, HttpStatus httpStatus, MultiValueMap<String, String> data, UserDto userDto) {
-        return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userDto)), httpStatus);
+    protected BodyContentSpec loginAndRequestWithData(HttpMethod method, String path, HttpStatus httpStatus, MultiValueMap<String, String> data, UserRequestDto userRequestDto) {
+        return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userRequestDto)), httpStatus);
     }
 
-    protected BodyContentSpec loginAndRequest(HttpMethod method, String path, HttpStatus httpStatus, UserDto userDto) {
-        return httpRequest(makeRequestSpec(method, path).cookie(JSESSIONID, getLoginSessionId(userDto)), httpStatus);
+    protected BodyContentSpec loginAndRequest(HttpMethod method, String path, HttpStatus httpStatus, UserRequestDto userRequestDto) {
+        return httpRequest(makeRequestSpec(method, path).cookie(JSESSIONID, getLoginSessionId(userRequestDto)), httpStatus);
     }
 
-    protected BodyContentSpec loginAndRequestWithMonoData(HttpMethod method, String path, HttpStatus httpStatus, Object object, UserDto userDto) {
-        return httpRequest(makeRequestSpecWithData(method, path, object).cookie(JSESSIONID, getLoginSessionId(userDto)), httpStatus);
+    protected BodyContentSpec loginAndRequestWithMonoData(HttpMethod method, String path, HttpStatus httpStatus, Object object, UserRequestDto userRequestDto) {
+        return httpRequest(makeRequestSpecWithData(method, path, object).cookie(JSESSIONID, getLoginSessionId(userRequestDto)), httpStatus);
     }
 
     protected StatusAssertions loginAndRequestWriter(HttpMethod method, String path) {
-        return loginAndRequest(method, path, savedUserDto);
+        return loginAndRequest(method, path, savedUserRequestDto);
     }
     
     protected StatusAssertions loginAndRequestWithDataWriter(HttpMethod method, String path, MultiValueMap<String, String> data) {
-        return loginAndRequestWithData(method, path, data, savedUserDto);
+        return loginAndRequestWithData(method, path, data, savedUserRequestDto);
     }
     
-    protected String getLoginSessionId(UserDto userDto) {
-        return Objects.requireNonNull(httpRequestWithData(POST, LOGIN_URL, parseUser(userDto))
+    protected String getLoginSessionId(UserRequestDto userRequestDto) {
+        return Objects.requireNonNull(httpRequestWithData(POST, LOGIN_URL, parseUser(userRequestDto))
                 .isFound()
                 .returnResult(String.class)
                 .getResponseCookies()
@@ -153,11 +155,11 @@ public class ControllerTestTemplate {
                 .getLocation().getPath();
     }
 
-    protected MultiValueMap<String, String> parseUser(UserDto userDto) {
+    protected MultiValueMap<String, String> parseUser(UserRequestDto userRequestDto) {
         MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("email", userDto.getEmail());
-        multiValueMap.add("name", userDto.getName());
-        multiValueMap.add("password", userDto.getPassword());
+        multiValueMap.add("email", userRequestDto.getEmail());
+        multiValueMap.add("name", userRequestDto.getName());
+        multiValueMap.add("password", userRequestDto.getPassword());
         return multiValueMap;
     }
 

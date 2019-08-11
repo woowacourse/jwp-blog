@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.UserWriteService;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.domain.user.validation.UserInfo;
 import techcourse.myblog.presentation.support.LoginUser;
 
@@ -27,15 +27,15 @@ public class MypageController {
     @GetMapping("/edit")
     public String createMyPageForm(Model model) {
         if (!model.containsAttribute("editUserDto")) {
-            model.addAttribute("editUserDto", new UserDto("", "", ""));
+            model.addAttribute("editUserDto", new UserRequestDto("", "", ""));
         }
         return "mypage-edit";
     }
     
     @PutMapping
     public RedirectView editUser(LoginUser loginUser,
-                                 @ModelAttribute("editUserDto") @Validated(UserInfo.class) UserDto userDto) {
-        userWriteService.update(loginUser.getUser(), userDto);
+                                 @ModelAttribute("editUserDto") @Validated(UserInfo.class) UserRequestDto userRequestDto) {
+        userWriteService.update(loginUser.getUser(), userRequestDto);
         
         return new RedirectView("/mypage");
     }

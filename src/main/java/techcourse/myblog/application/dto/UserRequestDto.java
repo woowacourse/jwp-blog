@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
-public class UserDto {
+public class UserRequestDto {
     @NotBlank(message = UserPattern.NO_INPUT_MESSAGE, groups = {UserInfo.class})
     @Pattern(regexp = UserPattern.NAME,
             message = UserPattern.NAME_CONSTRAINT_MESSAGE,
@@ -26,19 +26,15 @@ public class UserDto {
             message = UserPattern.PASSWORD_CONSTRAINT_MESSAGE)
     private String password;
 
-    public UserDto(String name, String email, String password) {
+    public UserRequestDto(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public User toUser() {
-        return new User(name, email, password);
-    }
-
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "UserRequestDto{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 '}';

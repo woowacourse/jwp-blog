@@ -38,9 +38,9 @@ public class User extends BaseEntity {
         this.password = password;
     }
     
-    public void modifyName(User user) {
-        validateName(user.name);
-        this.name = user.name;
+    public void modifyName(String name) {
+        validateName(name);
+        this.name = name;
     }
     
     private void validateName(String name) {

@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.UserReadService;
 import techcourse.myblog.application.UserWriteService;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.dto.UserRequestDto;
+import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.validation.UserInfo;
 
@@ -33,7 +34,7 @@ public class UserController {
     @GetMapping("/signup")
     public String createSignupForm(Model model) {
         if (!model.containsAttribute("signUpUserDto")) {
-            model.addAttribute("signUpUserDto", new UserDto("", "", ""));
+            model.addAttribute("signUpUserDto", new UserRequestDto("", "", ""));
         }
         return "signup";
     }
@@ -45,17 +46,16 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@ModelAttribute("signUpUserDto") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
-        log.debug("user save request data : -> {}", userDto);
-        User savedUser = userWriteService.save(userDto);
-        log.debug("user save response data : -> {}", savedUser);
+    public RedirectView createUser(@ModelAttribute("signUpUserDto") @Validated({Default.class, UserInfo.class}) UserRequestDto userRequestDto) {
+        log.debug("user save request data : -> {}", userRequestDto);
+        log.debug("user save response data : -> {}", userWriteService.save(userRequestDto));
         return new RedirectView("/login");
     }
 
     @GetMapping("/login")
     public String createLoginForm(Model model) {
         if (!model.containsAttribute("loginUserDto")) {
-            model.addAttribute("loginUserDto", new UserDto("", "", ""));
+            model.addAttribute("loginUserDto", new UserRequestDto("", "", ""));
         }
 
         return "login";
@@ -63,9 +63,9 @@ public class UserController {
 
     @PostMapping("/login")
     public RedirectView login(HttpSession session,
-                              @ModelAttribute("loginUserDto") @Validated(Default.class) UserDto userDto) {
-        log.debug("user login request data : -> {}", userDto);
-        User loginUser = userReadService.findByEmailAndPassword(userDto);
+                              @ModelAttribute("loginUserDto") @Validated(Default.class) UserRequestDto userRequestDto) {
+        log.debug("user login request data : -> {}", userRequestDto);
+        User loginUser = userReadService.findByEmailAndPassword(userRequestDto);
         log.debug("user login response data : -> {}", loginUser);
         session.setAttribute("user", loginUser);
         return new RedirectView("/");

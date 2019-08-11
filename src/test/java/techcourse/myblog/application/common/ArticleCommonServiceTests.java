@@ -3,6 +3,7 @@ package techcourse.myblog.application.common;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import techcourse.myblog.application.UserAssembler;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.article.ArticleRepository;
@@ -28,7 +29,7 @@ public class ArticleCommonServiceTests {
         MockitoAnnotations.initMocks(this);
         articleReadService = new ArticleReadService(articleRepository);
         articleWriteService = new ArticleWriteService(articleRepository, articleReadService);
-        author = AUTHOR_DTO.toUser();
+        author = UserAssembler.toEntity(AUTHOR_DTO);
         article = ARTICLE_FEATURE.toArticle(author);
     }
 

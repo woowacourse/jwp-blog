@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserDtoTests {
+class UserRequestDtoTests {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @ParameterizedTest(name = "{index}")
     @MethodSource("invalidUserParameters")
     void User_생성_검증_테스트(String name, String email, String password, String msg) {
-        Set<ConstraintViolation<UserDto>> constraintViolations = validator.validate(new UserDto(name, email, password), UserInfo.class, Default.class);
+        Set<ConstraintViolation<UserRequestDto>> constraintViolations = validator.validate(new UserRequestDto(name, email, password), UserInfo.class, Default.class);
         assertThat(constraintViolations)
                 .extracting(ConstraintViolation::getMessage)
                 .containsOnly(msg);

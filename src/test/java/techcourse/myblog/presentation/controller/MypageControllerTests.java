@@ -34,32 +34,32 @@ public class MypageControllerTests extends ControllerTestTemplate {
     void 로그인_상태에서_정보수정_결과_확인() {
         loginAndRequestWithDataWriter(PUT, "/mypage", parseUser(UPDATE_USER_DTO)).isFound();
         
-        User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
+        User savedUser = userRepository.findByEmail(savedUserRequestDto.getEmail()).get();
 
         assertThat(savedUser.getName().equals(UPDATE_USER_DTO.getName())).isTrue();
-        assertThat(savedUser.getName().equals(savedUserDto.getName())).isFalse();
+        assertThat(savedUser.getName().equals(savedUserRequestDto.getName())).isFalse();
     }
     
     @Test
     void 로그아웃상태_정보수정_불가() {
         httpRequestWithData(PUT, "/mypage", parseUser(UPDATE_USER_DTO)).isFound();
         
-        User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
+        User savedUser = userRepository.findByEmail(savedUserRequestDto.getEmail()).get();
         assertThat(savedUser.getName().equals(UPDATE_USER_DTO.getName())).isFalse();
-        assertThat(savedUser.getName().equals(savedUserDto.getName())).isTrue();
+        assertThat(savedUser.getName().equals(savedUserRequestDto.getName())).isTrue();
     }
     
     @Test
     void 로그아웃상태_탈퇴시도_실패() {
         String redirectUrl = getRedirectUrl(httpRequest(DELETE, "/mypage"));
         assertEquals(redirectUrl, "/login");
-        assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
+        assertThat(userRepository.findByEmail(savedUserRequestDto.getEmail()).isPresent()).isTrue();
     }
     
     @Test
     void 로그인상태_자기자신_탈퇴시도_성공() {
         String redirectUrl = getRedirectUrl(loginAndRequestWriter(DELETE, "/mypage"));
         assertEquals(redirectUrl, "/logout");
-        assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isFalse();
+        assertThat(userRepository.findByEmail(savedUserRequestDto.getEmail()).isPresent()).isFalse();
     }
 }

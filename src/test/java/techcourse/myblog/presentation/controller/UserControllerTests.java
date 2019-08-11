@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import techcourse.myblog.application.dto.UserDto;
-import techcourse.myblog.domain.user.validation.UserPattern;
+import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
 
 import java.util.stream.Stream;
@@ -36,7 +35,7 @@ class UserControllerTests extends ControllerTestTemplate {
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidParameters")
     void 회원가입_유효성_에러_테스트(String name, String email, String password) {
-        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, "/users", parseUser(new UserDto(name, email, password))));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, "/users", parseUser(new UserRequestDto(name, email, password))));
 
         assertEquals("/signup", redirectUrl);
     }
@@ -67,13 +66,13 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_성공_시_메인_화면으로_리다이렉트() {
-        httpRequestWithData(POST, "/login", parseUser(savedUserDto)).isFound();
+        httpRequestWithData(POST, "/login", parseUser(savedUserRequestDto)).isFound();
     }
 
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidLoginParameters")
     void 로그인_유효성_에러_테스트(String name, String email, String password) {
-        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, "/login", parseUser(new UserDto(name, email, password))));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, "/login", parseUser(new UserRequestDto(name, email, password))));
 
         assertEquals("/login", redirectUrl);
     }

@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.UserAssembler;
+import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.domain.article.ArticleFeature;
 import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
 
@@ -86,7 +87,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        loginAndRequest(GET, "/articles/0", HttpStatus.NOT_FOUND, savedUserDto)
+        loginAndRequest(GET, "/articles/0", HttpStatus.NOT_FOUND, savedUserRequestDto)
                 .consumeWith(response -> {
                     String result = new String(response.getResponseBody());
                     assertTrue(result.contains(NOT_FOUND_ARTICLE_EXCEPTION_MESSAGE));
@@ -105,8 +106,8 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인상태_다른_유저_게시글_수정페이지_이동() {
-        UserDto other = READER_DTO;
-        userRepository.save(other.toUser());
+        UserRequestDto other = READER_DTO;
+        userRepository.save(UserAssembler.toEntity(other));
 
         loginAndRequest(GET, savedArticleUrl + "/edit", HttpStatus.FORBIDDEN, other)
                 .consumeWith(response -> {
@@ -135,8 +136,8 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인상태_다른_유저_게시글_수정_요청() {
-        UserDto other = READER_DTO;
-        userRepository.save(other.toUser());
+        UserRequestDto other = READER_DTO;
+        userRepository.save(UserAssembler.toEntity(other));
 
         loginAndRequestWithData(PUT, savedArticleUrl, HttpStatus.FORBIDDEN, parseArticle(UPDATE_ARTICLE_FEATURE), other)
                 .consumeWith(response -> {
@@ -159,7 +160,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         String redirectUrl = getRedirectUrl(loginAndRequestWriter(DELETE, savedArticleUrl));
         assertEquals(redirectUrl, "/");
 
-        loginAndRequest(GET, savedArticleUrl, HttpStatus.NOT_FOUND, savedUserDto)
+        loginAndRequest(GET, savedArticleUrl, HttpStatus.NOT_FOUND, savedUserRequestDto)
                 .consumeWith(response -> {
                     String result = new String(response.getResponseBody());
                     assertTrue(result.contains(NOT_FOUND_ARTICLE_EXCEPTION_MESSAGE));
@@ -168,8 +169,8 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인상태_다른_유저_게시글_삭제_요청() {
-        UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
-        userRepository.save(other.toUser());
+        UserRequestDto other = new UserRequestDto("ab", "1@1.com", "1234asdf!A");
+        userRepository.save(UserAssembler.toEntity(other));
 
         loginAndRequest(DELETE, savedArticleUrl, HttpStatus.FORBIDDEN, other)
                 .consumeWith(response -> {
