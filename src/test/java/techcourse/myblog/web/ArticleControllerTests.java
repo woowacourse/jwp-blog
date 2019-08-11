@@ -98,8 +98,10 @@ public class ArticleControllerTests extends ControllerTemplate {
                         .with("coverUrl", "수정")
                         .with("contents", "수정"))
                 .exchange()
+                .expectHeader()
+                .valueMatches("location", ".*/articles/" + newArticleId)
                 .expectStatus()
-                .isOk()
+                .isFound()
         ;
     }
 
