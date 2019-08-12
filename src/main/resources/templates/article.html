@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="/fragment/common-head"></th:block>
-    <link rel="stylesheet" href="../static/css/article.css">
-    <th:block th:include="/fragment/common-tui-editor"></th:block>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
 </head>
-<body>
 <div>
-    <th:block th:if="${userInfo == null}" th:include="/fragment/header"></th:block>
-    <th:block th:unless="${userInfo == null}" th:include="/fragment/login-header"></th:block>
+    <th:block th:if="${session.loggedInUser}">
+        <th:block th:replace="fragments/login-header :: loginHeaderFragment"></th:block>
+    </th:block>
+    <th:block th:unless="${session.loggedInUser}">
+        <th:block th:replace="fragments/logout-header :: logoutHeaderFragment"></th:block>
+    </th:block>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg"
-             th:style="'background-image: url('+ ((${article.coverUrl} != '')? ${article.coverUrl} : '../static/images/pages/index/study.jpg') + ');'">
+        <div th:style="'background:url(' + ${article.coverUrl} + ');'" class="cover-img overlay-dark bg">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
+                <h1 th:text="${article.title}" class="text-center cover-title"></h1>
             </div>
         </div>
     </div>
@@ -22,15 +32,11 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <form th:action="'/articles/' + ${article.id}" th:method="delete">
-                    <button type="submit" class="float-right pointer btn btn-icon">
-                        <i class="ti-close"></i>
-                    </button>
-                </form>
-                <a href="article-edit.html" th:href="@{/articles/{articleId}/edit(articleId=${article.id})}"
-                   class="float-right pointer btn btn-icon">
-                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                </a>
+                <th:block th:if="${articleUser?.id == session.loggedInUser?.id}">
+                    <a th:href="@{'/articles/' + ${article.id}} + '/edit'" class="float-right pointer btn btn-icon">
+                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                    </a>
+                </th:block>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
@@ -40,8 +46,8 @@
                              src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
-                        <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.userDto.name}">Brown</span>
-                        <span class="font-size-12 text-gray" th:text="${article.userDto.email}"> / gracefulBrown@woowahan.com</span>
+                        <span th:text=${articleUser?.name} class="font-size-16 text-bold pdd-btm-5">Brown</span><span
+                            th:text="${'/ ' + articleUser?.email}" class="font-size-12 text-gray"></span>
                         <p class="font-size-13 text-dimgray lh-1-3">
                             백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
                             Woowahantechcourse Organizer / Coach / Husband
@@ -64,45 +70,40 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
+<!--                    <span th:text="${#lists.size(comments)}" class="font-size-16 text-info"></span>-->
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
-
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment:${comments}">
-                            <form accept-charset="utf-8" method="post" name="comment-update"
-                                  th:action="@{/comments/{articleId}/{commentId} (articleId=${article.id},commentId=${comment.id})}">
-                                <input name="_method" type="hidden" value="DELETE">
-                                <img class="thumb-img img-circle"
-                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                                <div class="info view">
-                                    <span class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
-
-                                    <button type="submit"><i class="ti-close"></i></button>
-
-                                    <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                                </span>
-                                    <label class="width-80 label" th:text="${comment.contents}">3주라는 짧은 기간에 효과적으로 연습하도록
-                                        하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
-                                        보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을
-                                        느낄
-                                        수 있는 계기가 되었다.</label>
-                                </div>
-                                <div>
-                                    <input class="edit" name="contents">
-                                </div>
-                            </form>
-                        </li>
-
+<!--                        <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">-->
+<!--                            <img class="thumb-img img-circle"-->
+<!--                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">-->
+<!--                            <div class="info">-->
+<!--                                <span th:text="${comment.authorName}" href="" class="text-bold inline-block">Jun</span>-->
+<!--                                <span class="sub-title inline-block pull-right">-->
+<!--                                    <i class="ti-timer pdd-right-5"></i>-->
+<!--                                    <span>6 min ago</span>-->
+<!--                            </span>-->
+<!--                                <p th:text="${comment.comment}" class="width-80"></p>-->
+<!--                            </div>-->
+<!--                            <th:block th:if="${comment.authorId == session.loggedInUser?.id}">-->
+<!--                                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"-->
+<!--                                        data-target="#myModal"-->
+<!--                                        th:onclick="'changeCommentEditAction(' + ${article.id} + ', ' + ${comment.id} + ')'">-->
+<!--                                    <i class="ti-pencil"></i>-->
+<!--                                </button>-->
+<!--                                <button id="delete-btn" class="btn" th:value="${comment.id}">-->
+<!--                                    <i class="ti-trash"></i>-->
+<!--                                </button>-->
+<!--                            </th:block>-->
+<!--                        </li>-->
                     </ul>
                     <div class="add-comment">
-                        <form method="post" th:action="@{/comments/{articleId}(articleId = ${article.id})}">
-                            <div id="editSection"></div>
-                            <input id="comment-contents" name="contents" type="hidden">
-                            <button class="float-right pointer btn btn-icon" type="submit">작성</button>
-                        </form>
+                        <input id="comment-contents" name="comment" type="hidden">
+                        <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
+                        <button id="save-btn" class="btn btn-default" onclick="createNewComment()">
+                            <i class="ti-save"></i>
+                        </button>
+                        <div id="editSection"></div>
                     </div>
                 </div>
             </div>
@@ -110,26 +111,37 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-        integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">댓글 수정</h4>
+            </div>
+            <form id="comment-edit-form" action="/comments/1" name="comment-edit" method="post">
+                <input type="hidden" name="_method" value="put"/>
+                <div class="modal-body">
+                    <input id="comment-edit-contents" name="comment" type="hidden">
+                    <div id="commentEditSection"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                    <button type="submit" class="btn btn-primary" onclick="updateComment()" data-dismiss="modal">수정</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/script :: scriptFragment"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="../static/js/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+<script src="/js/comment.js"></script>
+</html>
 <script th:inline="javascript">
-    const initValue = [[${article.contents}]];
+    const initValue = [[${article.contents}]]
+    const articleId = [[${article.id}]]
 
-    const contents = [[ ${error}]];
-
-    if (contents != null) {
-        alert(contents);
-    }
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -150,67 +162,143 @@
         height: '200px'
     });
 
-    function submitUpdate(updatedElement) {
-        if (confirm('수정 하시겠습니까?')) {
-            updatedElement.querySelector("form[name=comment-update] input[name=_method]").setAttribute("value", "put");
-            updatedElement.querySelector("form[name=comment-update]").submit();
-        }
+    const editComment = new tui.Editor({
+        el: document.querySelector('#commentEditSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'horizontal',
+        events: {
+            change: function () {
+                document.getElementById('comment-edit-contents').setAttribute('value', editComment.getMarkdown())
+            }
+        },
+        height: '200px'
+    });
+
+    function changeCommentEditAction(articleId, commentId) {
+        const action = "/comments/" + commentId
+        document.getElementById('comment-edit-form').setAttribute('action', action)
     }
 
-    const TODOAPP = (function () {
-        const ENTER_KEY = 13;
-        const ESC_KEY = 27;
-        const TodoController = function () {
-            const todoService = new TodoService();
-            const commentList = document.getElementById('comment-list');
-            const canUpdateTodo = function () {
-                commentList.addEventListener('dblclick', function (event) {
-                    if (event.target.classList.contains('label')) {
-                        todoService.focus(event)
-                    }
-                })
-            };
-            const init = function () {
-                canUpdateTodo()
-            };
-            return {
-                init: init
-            }
-        };
+    const commentTemplate = '<li class="comment-item border bottom mrg-btm-30">'
+            + '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">'
+            + '<div class="info">'
+                + '<span href="" class="text-bold inline-block">{{authorName}}</span>'
+                + '<span class="sub-title inline-block pull-right">'
+                   + '<i class="ti-timer pdd-right-5"></i>'
+                   + '<span>6 min ago</span>'
+                + '</span>'
+            + '<p class="width-80">{{comment}}</p>'
+            + '</div>'
+            + '<div data-author ="{{authorId}}">'
+                + '<button type="button" class="btn btn-primary btn-lg" data-toggle="modal"'
+                        + 'data-target="#myModal"'
+                        + 'onclick="changeCommentEditAction(' + articleId + ', {{id}})">'
+                + '<i class="ti-pencil"></i>'
+                + '</button>'
+            + '<button id="delete-btn" class="btn" onclick="deleteComment({{id}})">'
+                + '<i class="ti-trash"></i>'
+            + '</button>'
+            + '<div>'
+        + '</li>'
 
-        const TodoService = function () {
-            const focus = function (event) {
-                const updatedElement = event.target.closest('li');
-                updatedElement.classList.toggle('editing');
-                updatedElement.addEventListener('keydown', update)
-            };
-            const update = function (event) {
-                const updatedElement = event.target.closest('li');
-                const inputValue = updatedElement.querySelector('input.edit').value;
+    const commentItemTemplate = Handlebars.compile(commentTemplate);
 
-                if (event.which === ESC_KEY) {
-                    updatedElement.classList.toggle('editing')
+    const readAllComment = function() {
+        fetch('/comments/' + articleId)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
                 }
-                if (event.which === ENTER_KEY && inputValue !== '') {
-                    updatedElement.querySelector('label').innerText = inputValue;
-                    updatedElement.classList.toggle('editing');
-                    submitUpdate(updatedElement);
+                return res.json();
+            })
+            .then(json => {
+                var commentList = document.getElementById("comment-list");
+                while ( commentList.hasChildNodes() ) {
+                    commentList.removeChild( commentList.firstChild );
                 }
-            };
-            return {
-                focus: focus
-            }
-        };
+                json.forEach(e => {
+                    document.getElementById('comment-list').insertAdjacentHTML('beforeend', commentItemTemplate(e))
+                });
+            })
+            .catch(err => alert('댓글 조회 실패'));
+    }
 
-        const init = function () {
-            const todoController = new TodoController();
-            todoController.init()
-        };
-        return {
-            init: init
-        };
-    })();
-    TODOAPP.init();
+    readAllComment();
+
+    const createNewComment = function() {
+        var comment = document.getElementById("comment-contents")
+
+        const obj = {
+          body: JSON.stringify({
+            comment: comment.value,
+            articleId: articleId
+          }),
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          method: 'POST'
+        }
+
+        fetch('/comments', obj)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
+                }
+                readAllComment();
+                editor.setValue('')
+                document.getElementById('comment-contents').setAttribute('value', "")
+            })
+            .catch(err => {
+                alert('댓글 생성 실패')
+                editor.setValue('')
+                document.getElementById('comment-contents').setAttribute('value', "")
+            });
+    }
+
+     const updateComment = function() {
+        var editComment = document.getElementById("comment-edit-contents");
+
+        const obj = {
+          body: JSON.stringify({
+            comment: editComment.value
+          }),
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          method: 'PUT'
+        }
+
+        const action = document.getElementById('comment-edit-form').getAttribute('action')
+
+        fetch(action, obj)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
+                }
+                readAllComment();
+            })
+            .catch(err => {
+                alert('댓글 수정 실패')
+            });
+    }
+
+    const deleteComment = function(commentId) {
+        const obj = {
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          method: 'DELETE'
+        }
+
+        fetch('/comments/' + commentId, obj)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error();
+                }
+                readAllComment();
+            })
+            .catch(err => {
+                alert('댓글 삭제 실패')
+            });
+    }
 </script>
-</body>
-</html>

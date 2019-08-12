@@ -1,11 +1,14 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.article.ArticleDto;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.comment.CommentDto;
 import techcourse.myblog.domain.comment.CommentRepository;
-import techcourse.myblog.domain.user.UserDto;
+import techcourse.myblog.domain.exception.UserMismatchException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -13,50 +16,56 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
-    private final CommentRepository commentRepository;
+    private CommentRepository commentRepository;
+    private UserService userService;
+    private ArticleService articleService;
 
-    private final ArticleService articleService;
-    private final UserService userService;
-
-    public CommentService(CommentRepository commentRepository, ArticleService articleService, UserService userService) {
+    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
         this.commentRepository = commentRepository;
-        this.articleService = articleService;
         this.userService = userService;
+        this.articleService = articleService;
     }
 
-    public void create(long articleId, CommentDto commentDto, UserDto userDto) {
-        ArticleDto articleDto = articleService.readById(articleId);
-        commentRepository.save(commentDto.toEntity(userDto, articleDto));
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElseThrow(NotFoundCommentException::new);
     }
 
-    @Transactional
-    public void update(long commentId, CommentDto commentDto, UserDto userDto) {
-        checkAuthor(commentId, userDto);
-        Comment comment = commentRepository.findById(commentId).get();
-        comment.update(commentDto.toEntity());
-    }
-
-    public void delete(long commentId, UserDto userDto) {
-        checkAuthor(commentId, userDto);
-        commentRepository.deleteById(commentId);
-    }
-
-    private void checkAuthor(long commentId, UserDto userDto) {
-        UserDto findUserDto = userService.findByUserEmail(userDto);
-        commentRepository.findById(commentId).ifPresent(comment -> {
-            if (!findUserDto.toEntity().checkAuthor(comment.getAuthor().getId())) {
-                throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
-            }
-        });
-    }
-
-    public List<CommentDto> findByArticleId(long articleId) {
-        return commentRepository.findByArticleId(articleId).stream()
-                .map(CommentDto::from)
+    public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
+        Article article = articleService.findById(articleId);
+        return commentRepository.findAllByArticle(article).stream()
+                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
+                        comment.getAuthorName(), comment.getComment()))
                 .collect(Collectors.toList());
     }
 
-    public void deleteByArticleId(long articleId) {
-        commentRepository.deleteByArticleId(articleId);
+    public Long findArticleId(long commentId) {
+        Comment comment = findById(commentId);
+        return comment.getArticleId();
+    }
+
+    public Comment save(Long userId, CommentRequestDto commentRequestDto) {
+        User user = userService.findById(userId);
+        Article article = articleService.findById(commentRequestDto.getArticleId());
+        Comment comment = commentRequestDto.toEntity(user, article);
+        return commentRepository.save(comment);
+    }
+
+    @Transactional
+    public Comment update(Long userId, Long commentId, CommentRequestDto commentRequestDto) {
+        Comment comment = findById(commentId);
+        comment.updateComment(commentRequestDto.getComment(), userId);
+        return comment;
+    }
+
+    public void delete(Long userId, Long commentId) {
+        Comment comment = findById(commentId);
+        if (!comment.matchAuthorId(userId)) {
+            throw new UserMismatchException();
+        }
+        commentRepository.deleteById(commentId);
+    }
+
+    private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
+        return new CommentResponseDto(commentId, authorId, userName, comment);
     }
 }

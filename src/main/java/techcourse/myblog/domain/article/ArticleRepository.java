@@ -1,9 +1,7 @@
 package techcourse.myblog.domain.article;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-public interface ArticleRepository extends CrudRepository<Article, Long> {
-    List<Article> findByCategoryId(long categoryId);
 }

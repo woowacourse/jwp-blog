@@ -1,28 +1,36 @@
 package techcourse.myblog.domain.comment;
 
-import lombok.Builder;
-import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import techcourse.myblog.domain.BaseTimeEntity;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-public class Comment extends BaseTimeEntity {
+public class Comment {
+    private static final int COMMENT_LENGTH = 100;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(nullable = false)
-    private String contents;
+    @Column(nullable = false, length = COMMENT_LENGTH)
+    private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,44 +38,43 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
-    public Comment() {
+    protected Comment() {
     }
 
-    @Builder
-    public Comment(long id, String contents, User author, Article article) {
-        this.id = id;
-        this.contents = contents;
+    public Comment(String comment, User author, Article article) {
+        this.comment = comment;
         this.author = author;
         this.article = article;
     }
 
-    public void update(Comment comment) {
-        this.contents = comment.getContents();
+    public boolean matchAuthorId(Long userId) {
+        return this.author.matchId(userId);
     }
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", contents='" + contents + '\'' +
-                ", author=" + author +
-                ", article=" + article +
-                '}';
+    public void updateComment(String comment, Long userId) {
+        if (!author.matchId(userId)) {
+            throw new UserMismatchException();
+        }
+        this.comment = comment;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return id == comment.id &&
-                Objects.equals(contents, comment.contents) &&
-                Objects.equals(author, comment.author) &&
-                Objects.equals(article, comment.article);
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, contents, author, article);
+    public String getComment() {
+        return comment;
+    }
+
+    public Long getAuthorId() {
+        return author.getId();
+    }
+
+    public String getAuthorName() {
+        return author.getName();
+    }
+
+    public Long getArticleId() {
+        return article.getId();
     }
 }

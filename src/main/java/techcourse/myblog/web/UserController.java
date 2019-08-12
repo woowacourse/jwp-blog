@@ -1,102 +1,62 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.domain.user.LoginDto;
-import techcourse.myblog.domain.user.SignUpDto;
-import techcourse.myblog.domain.user.UserDto;
-import techcourse.myblog.domain.user.UserInfoDto;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpSession;
 
-
 @Controller
 public class UserController {
-    public static final String LOGIN_SESSION = "login-user";
+    public static final String LOGGED_IN_USER = "loggedInUser";
 
-    private final UserService userService;
+    private UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/signup")
-    public String showSignUpPage() {
-        return "signup";
-    }
-
-    @PostMapping("/signup")
-    public String create(SignUpDto signUpDto) {
-        userService.create(signUpDto);
-        return "redirect:/login";
-    }
-
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String login(LoginDto loginDto, HttpSession session) {
-        UserDto findUserDto = userService.findByUserDto(loginDto);
-        session.setAttribute(LOGIN_SESSION, findUserDto);
-
-        return "redirect:/";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute(LOGIN_SESSION);
-
-        return "redirect:/";
+    @GetMapping("/users/sign-up")
+    public String showRegisterPage(HttpSession session) {
+        if (session.getAttribute(LOGGED_IN_USER) != null) {
+            return "redirect:/";
+        }
+        return "sign-up";
     }
 
     @GetMapping("/users")
-    public String showUserListPage(Model model) {
-        model.addAttribute("users", userService.readAll());
-
+    public String showUserList(Model model) {
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
-    @GetMapping("/users/mypage")
-    public String showMypage(HttpSession session, Model model) {
-        addUserInModel(session, model);
-
-        return "mypage";
+    @PostMapping("/users")
+    public String createUser(UserDto userDto) {
+        userService.save(userDto);
+        return "redirect:/login";
     }
 
-    @GetMapping("/users/mypage-edit")
-    public String showMypageEdit(HttpSession session, Model model) {
-        addUserInModel(session, model);
-
-        return "mypage-edit";
+    @PutMapping("/users/{id}")
+    public String editUserName(@PathVariable Long id,
+                               UserPublicInfoDto userPublicInfoDto,
+                               @LoggedUser UserPublicInfoDto loggedInUserPublicInfoDto,
+                               HttpSession httpSession) {
+        Long loggedInUserId = loggedInUserPublicInfoDto.getId();
+        userService.update(userPublicInfoDto, id, loggedInUserId);
+        userPublicInfoDto.setId(id);
+        httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+        return "redirect:/mypage/" + id;
     }
 
-    private void addUserInModel(HttpSession session, Model model) {
-        UserDto userDto = userService.findByUserEmail(getUserInfo(session));
-        model.addAttribute("userData", userDto);
+    @DeleteMapping("/users/{id}")
+    public String deleteUser(@PathVariable Long id, @LoggedUser UserPublicInfoDto userPublicInfoDto, HttpSession httpSession) {
+        userService.delete(id, userPublicInfoDto.getId());
+        httpSession.removeAttribute(LOGGED_IN_USER);
+        return "redirect:/";
     }
 
-    @PutMapping("/users/mypage-edit")
-    public String update(HttpSession session, UserInfoDto userInfoDto) {
-        userService.update(getUserInfo(session), userInfoDto);
-        return "redirect:/users/mypage";
-    }
-
-    @DeleteMapping("/users/mypage-edit")
-    public String delete(HttpSession session) {
-        userService.deleteById(getUserInfo(session));
-        return "redirect:/logout";
-    }
-
-    private UserDto getUserInfo(HttpSession session) {
-        return (UserDto) session.getAttribute(UserController.LOGIN_SESSION);
-    }
 }

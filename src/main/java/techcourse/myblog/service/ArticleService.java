@@ -1,74 +1,83 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleDto;
-import techcourse.myblog.domain.article.ArticleDtos;
 import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.user.UserDto;
+import techcourse.myblog.domain.exception.UserMismatchException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.exception.NotFoundArticleException;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
-    private final ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
+    private CommentCountService commentCountService;
+    private UserService userService;
 
-    private final UserService userService;
-
-    @Autowired
-    public ArticleService(ArticleRepository articleRepository, UserService userService) {
+    public ArticleService(ArticleRepository articleRepository, CommentCountService commentCountService, UserService userService) {
         this.articleRepository = articleRepository;
+        this.commentCountService = commentCountService;
         this.userService = userService;
     }
 
-    public long createArticle(ArticleDto articleDto, UserDto userDto) {
-        UserDto findUserDto = userService.findByUserEmail(userDto);
-        articleDto.setUserDto(findUserDto);
-        Article article = articleRepository.save(articleDto.toEntity());
-        return article.getId();
+    public List<ArticleDto> findAll() {
+        return articleRepository.findAll().stream()
+                .map(this::toArticleDto)
+                .collect(Collectors.toList());
     }
 
-    public ArticleDto readById(long articleId) {
-        Optional<Article> maybeArticle = articleRepository.findById(articleId);
-        return maybeArticle.map(ArticleDto::from)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 읽을 수 없습니다."));
+    public List<ArticleDto> findAllWithCommentCount() {
+        return articleRepository.findAll().stream()
+                .map(this::toArticleDtoWithCommentCount)
+                .collect(Collectors.toList());
+    }
+
+    public Article findById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(NotFoundArticleException::new);
+    }
+
+    public ArticleDto findArticleDtoById(Long id) {
+        return toArticleDto(findById(id));
+    }
+
+    public ArticleDto save(Long userId, ArticleDto articleDto) {
+        User author = userService.findById(userId);
+        return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
     }
 
     @Transactional
-    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto, UserDto userDto) {
-        Optional<Article> maybeArticle = articleRepository.findById(articleId);
-        checkAuthor(articleId, userDto);
-        if (maybeArticle.isPresent()) {
-            maybeArticle.get().update(articleDto.toEntity());
+    public void update(Long articleId, Long userId, ArticleDto articleDto) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
+        article.updateArticle(articleDto.toVo(), userId);
+    }
 
-            return readById(articleId);
+    public void delete(Long articleId, Long userId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
+        if (!article.matchUserId(userId)) {
+            throw new UserMismatchException();
         }
-        throw new IllegalArgumentException("업데이트 할 수 없습니다.");
-    }
-
-    @Transactional
-    public void deleteById(long articleId, UserDto userDto) {
-        checkAuthor(articleId, userDto);
         articleRepository.deleteById(articleId);
     }
 
-    public List<ArticleDto> readAll() {
-        return new ArticleDtos(articleRepository.findAll()).getArticleDtos();
+    private ArticleDto toArticleDto(Article article) {
+        return new ArticleDto(article.getId(),
+                article.getAuthorId(),
+                article.getTitle(),
+                article.getCoverUrl(),
+                article.getContents());
     }
 
-    public List<ArticleDto> readByCategoryId(long categoryId) {
-        return new ArticleDtos(articleRepository.findByCategoryId(categoryId)).getArticleDtos();
-    }
-
-    private void checkAuthor(long articleId, UserDto userDto) {
-        UserDto findUserDto = userService.findByUserEmail(userDto);
-        articleRepository.findById(articleId).ifPresent(article -> {
-            if (!findUserDto.toEntity().checkAuthor(article.getAuthor().getId())) {
-                throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
-            }
-        });
+    private ArticleDto toArticleDtoWithCommentCount(Article article) {
+        ArticleDto articleDto = toArticleDto(article);
+        int commentCount = commentCountService.countByArticleId(article.getId());
+        articleDto.setCommentCount(commentCount);
+        return articleDto;
     }
 }

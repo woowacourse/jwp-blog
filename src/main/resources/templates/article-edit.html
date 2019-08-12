@@ -1,51 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="/fragment/common-head"></th:block>
-
-    <link rel="stylesheet" href="/static/css/index.css">
-    <link rel="stylesheet" href="/static/css/article-edit.css">
-    <th:block th:include="/fragment/common-tui-editor"></th:block>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/article-edit.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
 </head>
-<body class="pace-done">
+<body>
 <div>
-    <th:block th:if="${userInfo == null}" th:include="/fragment/header"></th:block>
-    <th:block th:unless="${userInfo == null}" th:include="/fragment/login-header"></th:block>
-
-    <form th:action="(${article} == null) ? '/articles/new' : '/articles/' + ${article.id}" name="article"
-          th:method="${article} == null ? 'post' : 'put'" accept-charset="utf-8">
+    <header th:replace="fragments/login-header :: loginHeaderFragment"></header>
+    <form th:action="${article}? '/articles/' + ${article.id} : '/articles'" name="article" method="post"
+          accept-charset="utf-8">
+        <input th:if="${article}" type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg"
-                 style="background-image: url('/static/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title"
+                        <input th:value="${article}? ${article.title} : ''" type="text" name="title"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               th:value="((${article} != null)? ${article.title} : '')" placeholder="제목을 입력해주세요"
-                               autocomplete="off">
-                        <input type="text" name="coverUrl"
+                               placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input th:value="${article}? ${article.coverUrl} : ''" type="text" name="coverUrl"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               th:value="((${article} != null)? ${article.coverUrl} : '')" placeholder="배경 url을 입력해주세요"
-                               autocomplete="off">
+                               placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
-            <div class="dropdown inline-block">
-                <button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown">
-                    <span id="category-name">카테고리 선택</span>
-                    <input id="category-id" type="hidden" name="categoryId">
-                    <i class="ti-angle-down font-size-9"></i>
-                </button>
-                <ul class="dropdown-menu" id="categories">
-                    <li class="nav-item" th:each="category : ${categories}">
-                        <a th:data-categoryId="${category.categoryId}" th:text="${category.categoryName}"></a>
-                    </li>
-                </ul>
-            </div>
-
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
@@ -57,9 +46,16 @@
                         <button id="save-btn" type="submit" class="btn btn-default">
                             <i class="ti-save"></i>
                         </button>
-                        <a th:href="(${article} == null) ? '/' : '/articles/' + ${article.id}" class="btn btn-default">
-                            <i class="ti-close"></i>
-                        </a>
+                        <th:block th:if="${article}">
+                            <button id="delete-btn" type="submit" class="btn btn-default" onclick="deleteArticle()">
+                                <i class="ti-close"></i>
+                            </button>
+                        </th:block>
+                        <th:block th:unless="${article}">
+                            <a href="/" class="btn btn-default">
+                                <i class="ti-close"></i>
+                            </a>
+                        </th:block>
                     </div>
                 </div>
             </div>
@@ -67,39 +63,9 @@
     </form>
 </div>
 
-<!-- Modal START-->
-<div class="modal fade" id="default-modal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Modal Template</h4>
-            </div>
-            <div class="modal-body">
-
-            </div>
-            <div class="modal-footer no-border">
-                <div class="text-right">
-                    <button class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary btn-sm" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-        integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
-        crossorigin="anonymous"></script>
+<th:block th:replace="fragments/script :: scriptFragment"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="/static/js/index.js"></script>
-<script type="text/javascript">
-
-    const contents = "[[ ((${article} != null)? ${article.contents} : '') ]]";
-    const categoryId = "[[ ((${article} != null)? ${article.categoryId} : '') ]]";
-
+<script th:inline="javascript" type="text/javascript">
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -109,29 +75,15 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)',
-        initialValue: contents
+        height: 'calc(100vh - 360px)'
     });
 
-    function handleClick(event) {
-        const span = document.querySelector("#category-name");
-        const input = document.querySelector("#category-id");
-
-        span.innerHTML = event.target.innerHTML;
-        input.value = event.target.getAttribute("data-categoryid");
-        console.log(event.target.innerHTML);
-        console.log(event.target.getAttribute("data-categoryid"));
+    if ([[${article}]]) {
+        editor.setValue([[${article?.contents}]]);
     }
 
-    const list = document.querySelectorAll("#categories li");
-    list.forEach(category = > {category.addEventListener("click", handleClick)}
-    )
-    ;
-
-    const error = "[[ ${error} ]]";
-
-    if (error != "") {
-        alert(error);
+    function deleteArticle() {
+        document.getElementsByName("_method")[0].value = "delete";
     }
 
 </script>

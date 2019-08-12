@@ -1,71 +1,88 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.user.*;
+import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.domain.exception.UserMismatchException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.exception.NotFoundUserException;
+import techcourse.myblog.service.exception.SignUpException;
+import techcourse.myblog.service.exception.UserDeleteException;
+import techcourse.myblog.service.exception.UserUpdateException;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
+import static techcourse.myblog.domain.exception.UserArgumentException.PASSWORD_CONFIRM_FAIL_MESSAGE;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
-    private final SnsInfoService snsInfoService;
-
-    @Autowired
-    public UserService(UserRepository userRepository, SnsInfoService snsInfoService) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.snsInfoService = snsInfoService;
     }
 
-    public UserDto findByUserDto(UserDto userDto) {
-        Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.toEntity().getEmail(), userDto.toEntity().getPassword());
-        if (maybeUser.isPresent()) {
-            List<SnsInfo> snsInfos = snsInfoService.findByUserId(maybeUser.get().getId());
-            return UserInfoDto.fromWithSNS(maybeUser.get(), snsInfos);
-        }
-
-        throw new IllegalArgumentException("아이디, 비밀번호 확인!");
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
-    public UserDto findByUserEmail(UserDto userDto) {
-        Optional<User> maybeUser = userRepository.findByEmail(userDto.toEntity().getEmail());
-        return maybeUser.map(UserInfoDto::from)
-                .orElseThrow(() -> new IllegalArgumentException("없는 유저!"));
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(NotFoundUserException::new);
     }
 
-    public UserDto create(UserDto userDto) {
+    public UserPublicInfoDto findUserPublicInfoById(Long id) {
+        User user = findById(id);
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+    }
+
+    public User save(UserDto userDto) {
         try {
-            User user = userRepository.save(userDto.toEntity());
-            return UserInfoDto.from(user);
+            validate(userDto);
+            return userRepository.save(userDto.toEntity());
         } catch (Exception e) {
-            throw new IllegalArgumentException("회원 가입 오류!");
+            throw new SignUpException(e.getMessage());
         }
     }
 
-    public List<UserDto> readAll() {
-        List<UserDto> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> users.add(UserInfoDto.from(user)));
+    private void validate(UserDto userDto) {
+        checkDuplicatedEmail(userDto.getEmail());
+        checkPasswordConfirm(userDto);
+    }
 
-        return users;
+    private void checkDuplicatedEmail(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
+        }
+    }
+
+    private void checkPasswordConfirm(UserDto userDto) {
+        if (!userDto.confirmPassword()) {
+            throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
+        }
     }
 
     @Transactional
-    public UserDto update(UserDto userDto, UserInfoDto userInfoDto) {
-        Optional<User> maybeFindUser = userRepository.findById(userDto.toEntity().getId());
-        if (maybeFindUser.isPresent()) {
-            maybeFindUser.get().updateInfo(userInfoDto.toEntity());
-            snsInfoService.update(userInfoDto, maybeFindUser.get());
-            return findByUserDto(userInfoDto);
+    public void update(UserPublicInfoDto userPublicInfoDto, Long id, Long loggedInUserId) {
+        try {
+            User user = findById(id);
+            user.updateName(userPublicInfoDto.getName(), loggedInUserId);
+        } catch (Exception e) {
+            throw new UserUpdateException(e.getMessage());
         }
-        throw new IllegalArgumentException("업데이트 할 수 없습니다.");
     }
 
-    public void deleteById(UserDto userDto) {
-        long id = userDto.toEntity().getId();
-        userRepository.deleteById(id);
+    public void delete(Long id, Long loggedInUserId) {
+        try {
+            if (!id.equals(loggedInUserId)) {
+                throw new UserMismatchException();
+            }
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new UserDeleteException(e.getMessage());
+        }
     }
 }

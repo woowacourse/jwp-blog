@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="/fragment/common-head"></th:block>
-
-    <link rel="stylesheet" href="/static/css/index.css">
-    <link rel="stylesheet" href="/static/css/mypage.css">
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/mypage.css">
 </head>
 <body>
 <div>
-    <th:block th:if="${userInfo == null}" th:include="/fragment/header"></th:block>
-    <th:block th:unless="${userInfo == null}" th:include="/fragment/login-header"></th:block>
+    <header th:replace="fragments/login-header :: loginHeaderFragment"></header>
 
     <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
 
             </div>
@@ -23,22 +25,22 @@
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
-                    <form action="" th:method="put" name="user-info">
+                    <form th:action="${'/users/' + user?.id}" method="post">
+                        <input type="hidden" name="_method" value="put"/>
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <button type="button" onclick="submitDelete();"
-                                    class="btn btn-info float-right mrg-btm-0 relative bottom-5">탈퇴
-                            </button>
                             <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
                             </button>
                         </div>
                         <div class="card-block">
+                            <div th:text="${errorMessage}" class="alert alert-danger" role="alert">
+                            </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control" th:value="${userData.name}">
+                                    <input th:value="${user?.name}" name="name" type="text" class="form-control">
                                 </div>
                             </div>
                             <hr>
@@ -47,7 +49,8 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="${userData.email}">gracefulBrown@woowahan.com</p>
+                                    <p th:text="${session.loggedInUser?.email}" class="mrg-top-10"></p>
+                                    <input type="hidden" th:value="${user?.email}" name="email" class="form-control">
                                 </div>
                             </div>
                             <hr>
@@ -83,8 +86,8 @@
                                             <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                         </div>
                                         <div class="col-md-8 text-right">
-                                            <input type="email" name="snsGithubEmail" class="form-control"
-                                                   th:value="${userData.snsGithubEmail}">
+                                            <input type="text" class="form-control"
+                                                   value="https://www.github.com/profile">
                                         </div>
                                     </div>
                                     <hr>
@@ -98,8 +101,8 @@
                                             <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                         </div>
                                         <div class="col-md-8 text-right">
-                                            <input type="email" name="snsFacebookEmail" class="form-control"
-                                                   th:value="${userData.snsFacebookEmail}">
+                                            <input type="text" class="form-control"
+                                                   value="https://www.facebook.com/profile">
                                         </div>
                                     </div>
                                 </div>
@@ -112,32 +115,14 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-        integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="/static/js/index.js"></script>
-<script>
-    function submitDelete() {
-        if (confirm('탈퇴 하시겠습니까?')) {
-            document.querySelector("form[name=user-info] input[name=_method]").setAttribute("value", "delete");
-            document.querySelector("form[name=user-info]").submit();
-        }
-    }
-
-    const contents = "[[ ${error} ]]";
-
-    if (contents != "") {
-        alert(contents);
+<th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script th:inline="javascript">
+    if ([[${errorMessage}]]) {
+        $('.alert').alert()
+    } else {
+        $('.alert').alert('close')
     }
 
 </script>
-
 </body>
 </html>

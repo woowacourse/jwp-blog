@@ -1,81 +1,175 @@
 package techcourse.myblog.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import techcourse.myblog.domain.user.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.exception.NotFoundArticleException;
+import techcourse.myblog.service.exception.NotFoundCommentException;
+import techcourse.myblog.service.exception.SignUpException;
 
-import java.util.Arrays;
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static techcourse.myblog.Utils.TestConstants.VALID_PASSWORD;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class UserServiceTest {
+    @Autowired
+    UserService userService;
 
-@ExtendWith(SpringExtension.class)
-class UserServiceTest {
-    @Mock
-    private UserRepository userRepository;
+    @Autowired
+    ArticleService articleService;
 
-    @InjectMocks
-    private UserService userService;
-
-    @Mock
-    private SnsInfoService snsInfoService;
-
-    long userId = 1;
-    String email = "test321@test.com";
-    String password = "test";
-    String name = "test";
-
-    UserDto userDto = SignUpDto.builder().name(name)
-            .email(email).password(password).build();
-
-    UserInfoDto userInfoDto = UserInfoDto.builder().id(1).name(name)
-            .email(email).build();
+    @Autowired
+    CommentService commentService;
 
     @Test
-    void 유저_생성() {
-        when(userRepository.save(userDto.toEntity())).thenReturn(userInfoDto.toEntity());
-        assertThat(userService.create(userDto)).isEqualToComparingFieldByField(userInfoDto);
+    @DisplayName("이메일이 중복되는 경우에 예외를 던져준다.")
+    void checkEmailDuplication() {
+        UserDto userDto1 = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        UserDto userDto2 = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+
+        userService.save(userDto1);
+
+        assertThatThrownBy(() -> userService.save(userDto2))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    void 유저_조회() {
-        when(userRepository.findByEmailAndPassword(email, password)).thenReturn(Optional.of(userInfoDto.toEntity()));
-        assertThat(userService.findByUserDto(userDto)).isEqualToComparingFieldByField(userInfoDto);
+    @DisplayName("이름이 2자 미만인 경우에 예외를 던져준다.")
+    void underValidNameLength() {
+        UserDto userDto = new UserDto("a", "email1@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    void 유저_전체_조회() {
-        UserDto userDto1 = UserInfoDto.builder().name(name)
-                .email(email).build();
+    @DisplayName("이름이 10자 초과인 경우에 예외를 던져준다.")
+    void exceedValidNameLength() {
+        UserDto userDto = new UserDto("abcdefghijk", "email2@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
-        UserDto userDto2 = UserInfoDto.builder().name(name)
-                .email(email).build();
-
-        when(userRepository.findAll()).thenReturn(Arrays.asList(userDto1.toEntity(), userDto2.toEntity()));
-        assertThat(userService.readAll()).isEqualTo(Arrays.asList(userDto1, userDto2));
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    void 유저_업데이트() {
-        UserInfoDto userInfoDto = UserInfoDto.builder().id(10).name(name)
-                .email(email).build();
+    @DisplayName("이름이 숫자를 포함하는 경우에 예외를 던져준다.")
+    void includeNumberInName() {
+        UserDto userDto = new UserDto("abcde1", "email3@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
-        when(userRepository.findById(10L)).thenReturn(Optional.of(userInfoDto.toEntity()));
-        //doNothing().when(snsInfoService).deleteByUserId(userId);
-
-        userService.update(userDto, userInfoDto);
-        verify(userRepository, times(1)).findById(userId);
-        verify(snsInfoService, times(1)).findByUserId(userId);
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    void 유저_삭제() {
-        userService.deleteById(userInfoDto);
-        verify(userRepository, times(1)).deleteById(userId);
+    @DisplayName("이름이 특수문자를 포함하는 경우에 예외를 던져준다.")
+    void includeSpecialCharacterInName() {
+        UserDto userDto = new UserDto("abcde!@", "email4@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
     }
 
+    @Test
+    @DisplayName("password가 8자 미만인 경우 예외를 던져준다.")
+    void underValidPasswordLength() {
+        UserDto userDto = new UserDto("abcde", "email5@woowa.com",
+                "passwor", "passwor");
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 소문자가 포함되지 않으면 예외를 던져준다.")
+    void checkUndercaseInPassword() {
+        UserDto userDto = new UserDto("abcde", "email6@woowa.com",
+                "PASSWORD1!", "PASSWORD1!");
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 대문자가 포함되지 않으면 예외를 던져준다.")
+    void checkUppercaseInPassword() {
+        UserDto userDto = new UserDto("abcde", "email7@woowa.com",
+                "password1!", "password1!");
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 숫자가 포함되지 않으면 예외를 던져준다.")
+    void checkNumberInPassword() {
+        UserDto userDto = new UserDto("abcde", "email8@woowa.com",
+                "passWORD!", "passWORD!");
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 특수문자가 포함되지 않으면 예외를 던져준다.")
+    void checkSpecialCharacterInPassword() {
+        UserDto userDto = new UserDto("abcde", "email9@woowa.com",
+                "passWORD1", "passWORD1");
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 한글이 포함되면 예외를 던져준다.")
+    void checkPasswordDoesNotContainsKorean() {
+        UserDto userDto = new UserDto("abcde", "email10@woowa.com",
+                "passWORD가1!", "passWORD가1!");
+
+        assertThatThrownBy(() -> userService.save(userDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("User를 삭제했을 때 작성한 Article도 삭제된다")
+    void deleteUserWithCascadeArticles() {
+        UserDto userDto = new UserDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        User author = userService.save(userDto);
+        ArticleDto articleDto = new ArticleDto(null, author.getId(), "title",
+                "coverUrl", "contents");
+
+        ArticleDto article = articleService.save(author.getId(), articleDto);
+        userService.delete(author.getId(), author.getId());
+
+        assertThatThrownBy(() -> articleService.findArticleDtoById(article.getId()))
+                .isInstanceOf(NotFoundArticleException.class);
+    }
+
+    @Test
+    @DisplayName("User를 삭제했을 때 작성한 Comment도 삭제된다")
+    void deleteUserWithCascadeComments() {
+        UserDto userDto = new UserDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        User author = userService.save(userDto);
+
+        ArticleDto articleDto = new ArticleDto(null, author.getId(),
+                "title", "coverUrl", "contents");
+        ArticleDto article = articleService.save(author.getId(), articleDto);
+
+        CommentRequestDto commentRequestDto = new CommentRequestDto(article.getId(), "TEST Comment");
+        Comment comment = commentService.save(author.getId(), commentRequestDto);
+
+        userService.delete(author.getId(), author.getId());
+
+        assertThatThrownBy(() -> commentService.findById(comment.getId()))
+                .isInstanceOf(NotFoundCommentException.class);
+    }
 }

@@ -1,82 +1,71 @@
 package techcourse.myblog.domain.article;
 
-import lombok.Builder;
-import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
-    private String coverUrl;
-
-    @Column(nullable = false, length = 2000)
-    private String contents;
-
-    @Column(nullable = false)
-    private long categoryId;
+    @Embedded
+    private ArticleUserInput articleUserInput;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
-    public Article() {
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
+    protected Article() {
     }
 
-    @Builder
-    public Article(long id, String title, String coverUrl, String contents, long categoryId, User author) {
-        this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-        this.categoryId = categoryId;
+    public Article(User author, ArticleUserInput articleUserInput) {
         this.author = author;
+        this.articleUserInput = articleUserInput;
     }
 
-    public void update(Article article) {
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
-        this.categoryId = article.getCategoryId();
+    public void updateArticle(ArticleUserInput articleVo, Long userId) {
+        if (!author.matchId(userId)) {
+            throw new UserMismatchException();
+        }
+        this.articleUserInput = articleVo;
+
     }
 
-    public void setAuthor(User persistUser) {
+    public boolean matchUserId(Long userId) {
+        return this.author.matchId(userId);
     }
 
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                ", categoryId=" + categoryId +
-                '}';
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents, categoryId);
+    public Long getAuthorId() {
+        return author.getId();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                categoryId == article.categoryId &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
+    public String getTitle() {
+        return articleUserInput.getTitle();
+    }
+
+    public String getCoverUrl() {
+        return articleUserInput.getCoverUrl();
+    }
+
+    public String getContents() {
+        return articleUserInput.getContents();
     }
 }
