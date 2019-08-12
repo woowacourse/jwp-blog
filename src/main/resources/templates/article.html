@@ -2,21 +2,20 @@
 <html layout:decorator="layout/default"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
-
-
 <th:block layout:fragment="content">
     <div>
+        <input id="articleId" name="_method" type="hidden" th:value="${article.articleId}">
         <div class="about-cover card no-border ">
-            <div class="cover-img overlay-dark bg" th:if="${article.coverUrl!=''}"
-                 th:style="'background-image: url(' + ${article.coverUrl} + ');'">
+            <div class="cover-img overlay-dark bg" th:if="${article.contents.coverUrl!=''}"
+                 th:style="'background-image: url(' + ${article.contents.coverUrl} + ');'">
                 <div class="padding-30">
-                    <h1 class="text-center cover-title" th:text="${article.title}"></h1>
+                    <h1 class="text-center cover-title" th:text="${article.contents.title}"></h1>
                 </div>
             </div>
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/default/defaultImage.png')"
-                 th:unless="${article.coverUrl!=''}">
+                 th:unless="${article.contents.coverUrl!=''}">
                 <div class="padding-30">
-                    <h1 class="text-center cover-title" th:text="${article.title}"></h1>
+                    <h1 class="text-center cover-title" th:text="${article.contents.title}"></h1>
                 </div>
             </div>
         </div>
@@ -67,10 +66,10 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info" th:text="${article.countOfComment}"></span>
+                        <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
                     </div>
                     <div class="comment">
-                        <ul class="list-unstyled list-info">
+                        <ul id="comment-list" class="list-unstyled list-info">
                             <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img alt=""
                                      class="thumb-img img-circle"
@@ -88,11 +87,13 @@
                                         <form method="post" th:object="${comment}"
                                               th:action="@{/articles/{articleId}/comment/{commentId}(articleId=${article.articleId}, commentId=${comment.id})}">
                                             <input name="_method" type="hidden" value="put">
-                                            <input th:value="${comment.contents}" name="contents" class="text-area"
+                                            <input th:id="comment+${comment.id}+text" th:value="${comment.contents}"
+                                                   name="contents" class="text-area"
                                                    type="text"
                                                    style="border: 0; background-color: #fff; width: 80%; height: 100px; border-radius: 10px; margin-bottom: 10px">
-                                            <button class="btn btn-info float-right mrg-btm-0 relative bottom-5"
-                                                    type="submit">수정
+                                            <button th:onclick="|javascript:updateComment('${comment.id}')|"
+                                                    class="btn btn-info float-right mrg-btm-0 relative bottom-5"
+                                                    type="button">수정
                                             </button>
                                         </form>
                                     </div>
@@ -105,7 +106,8 @@
                                         <form method="post"
                                               th:action="@{/articles/{articleId}/comment/{commentId}(articleId=${article.articleId}, commentId=${comment.id})}">
                                             <input name="_method" type="hidden" value="delete">
-                                            <button class="pointer btn btn-icon" style="float: left;" type="submit">
+                                            <button class="pointer btn btn-icon" style="float: left;" type="button"
+                                                    th:onclick="|javascript:deleteComment(${comment.id})|">
                                                 <i class="ti-trash text-dark font-size-10 pdd-horizontal-5"></i>
                                             </button>
                                         </form>
@@ -119,7 +121,8 @@
                             <form th:action="@{/articles/{articleId}/comment(articleId=${article.articleId})}"
                                   method="post" style="margin-top: 20px;">
                                 <input id="comment-contents" name="contents" type="hidden">
-                                <input class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit"
+                                <input id="comment-create" class="btn btn-info float-right mrg-btm-0 relative bottom-5"
+                                       type="button"
                                        value="댓글 작성">
                             </form>
                         </div>
@@ -128,11 +131,11 @@
             </div>
         </div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+    <script type="text/javascript" src="/js/comment.js"></script>
     <script th:inline="javascript" type="text/javascript">
-        const initValue = [[ ${article.contents}]];
+        const initValue = [[ ${article.contents.contents}]];
         const viewer = tui.Editor.factory({
             el: document.querySelector('#viewerSection'),
             viewer: true,
@@ -151,12 +154,6 @@
             },
             height: '200px'
         });
-    </script>
-    <script>
-        function update(id) {
-            var x = document.getElementById("comment" + id);
-            x.style.display = "block";
-        }
     </script>
 </th:block>
 </html>

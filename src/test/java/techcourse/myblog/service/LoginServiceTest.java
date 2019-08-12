@@ -4,16 +4,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import techcourse.myblog.exception.LoginException;
+import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.AuthenticationDto;
-import techcourse.myblog.user.UserRepository;
+import techcourse.myblog.service.exception.LoginException;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user;
 
 @SpringBootTest
 public class LoginServiceTest {
