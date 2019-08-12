@@ -5,9 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.comment.dto.CommentCreateDto;
 import techcourse.myblog.util.UserUtilForTest;
 import techcourse.myblog.util.WebTest;
 
@@ -33,15 +36,26 @@ public class CommentControllerTest {
 
     @Test
     void 댓글_생성_테스트() {
-        WebTest.executePostTest(webTestClient, ARTICLE_PATH + "/comments", cookie,
-                NEW_COMMENT_BODY)
-                .expectStatus().isFound();
+        CommentCreateDto commentCreateDto = new CommentCreateDto();
+        commentCreateDto.setContents(COMMENT_CONTENTS);
+
+        webTestClient.post().uri(ARTICLE_PATH + "/comments")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentCreateDto), CommentCreateDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.contents").isNotEmpty()
+                .jsonPath("$.contents").isEqualTo(COMMENT_CONTENTS);
     }
 
     @Test
     void 댓글_수정_페이지_이동_테스트() {
-        WebTest.executeGetTest(webTestClient, "/comments/" + COMMENT_ID + "/edit", cookie)
-                .expectStatus().isOk();
+            WebTest.executeGetTest(webTestClient, "/comments/" + COMMENT_ID + "/edit", cookie)
+                    .expectStatus().isOk();
     }
 
     @Test

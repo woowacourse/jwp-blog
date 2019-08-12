@@ -1,0 +1,16 @@
+<configuration>
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>access.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>access.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%fullRequest%n%n%fullResponse</pattern>
+        </encoder>
+    </appender>
+
+    <appender-ref ref="FILE" />
+</configuration>

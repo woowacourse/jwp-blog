@@ -43,8 +43,8 @@
                                  src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                         </div>
                         <div class="col-md-10 col-sm-7">
-                            <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.author.name.name}"></span>
-                            <span class="font-size-12 text-gray" th:text="'/ ' + ${article.author.email.email}"></span>
+                            <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.author.name}"></span>
+                            <span class="font-size-12 text-gray" th:text="'/ ' + ${article.author.email}"></span>
                             <p class="font-size-13 text-dimgray lh-1-3">
                                 백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음
                             </p>
@@ -66,17 +66,17 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info" th:text="${#lists.size(comments)}"></span>
+                        <span id="comment-count" class="font-size-16 text-info" th:text="${#lists.size(comments)}"></span>
                     </div>
                     <div class="comment">
-                        <ul class="list-unstyled list-info">
+                        <ul id="comments" class="list-unstyled list-info">
                             <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                                 <div class="info">
                                     <a class="text-bold inline-block"
                                        th:href="@{/mypage/{userId}(userId=${comment.author.id})}"
-                                       th:text="${comment.author.name.name}"></a>
+                                       th:text="${comment.author.name}"></a>
                                     <form th:action="@{/articles/{articleId}/comments/{commentId}(articleId=${article.id},commentId=${comment.id})}"
                                           th:method="delete">
                                         <button class="inline-block sub-title pull-right"
@@ -84,25 +84,21 @@
                                             <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
                                     </form>
-                                    <!--                                    <form th:action="@{/comments/{commentId}/edit(commentId=${comment.id})}">-->
                                     <a class="inline-block sub-title pull-right"
                                        th:href="@{/comments/{commentId}/edit(commentId=${comment.id})}"
                                        th:if="${session.user.id == comment.author.id}">
-                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                     </a>
-                                    <!--                                    </form>-->
                                     <p class="width-80" th:text="${comment.contents}"></p>
                                 </div>
                             </li>
                         </ul>
                         <div class="add-comment">
-                            <form method="post" th:action="@{/articles/{articleId}/comments(articleId=${article.id})}">
-                                <input id="comment-contents" name="contents" type="hidden">
-                                <div id="editSection"></div>
-                                <button class="btn btn-default" id="save-btn" type="submit">
-                                    <i class="ti-save"></i>
-                                </button>
-                            </form>
+                            <input id="comment-contents" name="contents" type="hidden">
+                            <div id="editSection"></div>
+                            <button class="btn btn-default" id="save-btn" onclick="saveComment()">
+                                <i class="ti-save"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -111,13 +107,14 @@
     </div>
 </th:block>
 <th:block layout:fragment="custom-js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
     <script type="text/javascript" th:inline="javascript">
         const viewer = tui.Editor.factory({
             el: document.querySelector('#viewerSection'),
             viewer: true,
             height: '100%',
-            initialValue: [[ ${article.contents}]]
+            initialValue: [[ ${article.contents} ]]
         });
 
         const editor = new tui.Editor({
@@ -131,6 +128,63 @@
             },
             height: '200px'
         });
+
+        const commentTemplate =
+            "<li class=\"comment-item border bottom mrg-btm-30\">\n" +
+            "     <img class=\"thumb-img img-circle\"\n" +
+            "          src=\"https://avatars3.githubusercontent.com/u/50367798?v=4\" alt=\"\">\n" +
+            "     <div class=\"info\">\n" +
+            "          <a class=\"text-bold inline-block\"\n" +
+            "               href=\"/mypage/{{comment.author.id}}\">\n" +
+            "                    {{author.name}}</a>\n" +
+            "          <form action=\"/articles/{{comment.article.id}}/comments/{{comment.id}}\" method=\"post\">\n" +
+            "               <input type=\"hidden\" name=\"_method\" value=\"delete\">" +
+            "               <button class=\"inline-block sub-title pull-right\" type=\"submit\">\n" +
+            "                    <i class=\"ti-trash text-dark font-size-16 pdd-horizontal-5\"></i>\n" +
+            "               </button>\n" +
+            "          </form>\n" +
+            "          <a class=\"inline-block sub-title pull-right\"\n" +
+            "                    href=\"/comments/{{comment.id}}/edit\">\n" +
+            "               <i class=\"ti-pencil text-dark font-size-16 pdd-horizontal-5\"></i>\n" +
+            "          </a>\n" +
+            "          <p class=\"width-80\">{{contents}}</p>\n" +
+            "     </div>\n" +
+            "</li>";
+
+        function saveComment() {
+            console.log("saveComment 내부");
+            const body = {};
+            body.contents = document.getElementById('comment-contents').value;
+            const dataBody = JSON.stringify(body);
+
+            fetch('http://localhost:8080/articles/' + [[ ${article.id} ]] + '/comments', {
+                method: "POST",
+                body: dataBody,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+                .then(response => response.json())
+                .then(addComment)
+                .catch(addCommentError);
+        }
+
+        function addComment(json) {
+            const data = json;
+            const commentItemTemplate = Handlebars.compile(commentTemplate);
+            const comments = document.getElementById('comments');
+            comments.insertAdjacentHTML('beforeend', commentItemTemplate(data));
+            editor.setValue("");
+
+            const commentCount = document.getElementById('comment-count');
+            const beforeCount = Number(commentCount.innerText);
+            const afterCount = beforeCount + 1;
+            commentCount.innerText = afterCount;
+        }
+
+        function addCommentError(err) {
+            alert('오류가 발생했습니다. 다시 시도해주세요');
+        }
     </script>
 </th:block>
 </html>

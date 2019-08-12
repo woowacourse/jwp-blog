@@ -4,9 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.user.dto.UserCreateDto;
 import techcourse.myblog.util.UserUtilForTest;
 import techcourse.myblog.util.WebTest;
 
@@ -17,6 +21,9 @@ import static techcourse.myblog.user.UserDataForTest.*;
 public class UserControllerTests {
     private static final long USER_ID = 1;
     private static final long USER_DELETE_ID = 2;
+    private static final String UNFORMATTED_NAME_ERROR = "올바른 이름 형식이 아닙니다.";
+    private static final String UNFORMATTED_PASSWORD_ERROR = "올바른 비밀번호 형식이 아닙니다.";
+    private static final String UNFORMATTED_EMAIL_ERROR = "올바른 email 형식이 아닙니다.";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -36,57 +43,48 @@ public class UserControllerTests {
 
     @Test
     void 회원가입_테스트() {
-        WebTest.executePostTest(webTestClient, "/users", EMPTY_COOKIE,
-                NEW_USER_BODY)
-                .expectStatus().isFound();
+        UserCreateDto userCreateDto = new UserCreateDto(NEW_USER_EMAIL, NEW_USER_PASSWORD, NEW_USER_NAME);
+
+        executeSignUp(userCreateDto).isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.email").isNotEmpty()
+                .jsonPath("$.email").isEqualTo(NEW_USER_EMAIL)
+                .jsonPath("$.name").isNotEmpty()
+                .jsonPath("$.name").isEqualTo(NEW_USER_NAME);
     }
 
     @Test
     void 회원가입_요청_이메일_중복_실패_테스트() {
         String duplicatedEmail = "email@gmail.com";
+        String errorMessage = "[ " + duplicatedEmail + " ]은 중복된 이메일입니다.";
+        UserCreateDto userCreateDto = new UserCreateDto(duplicatedEmail, NEW_USER_PASSWORD, NEW_USER_NAME);
 
-        WebTest.executePostTest(webTestClient, "/users", EMPTY_COOKIE,
-                BodyInserters
-                        .fromFormData("email", duplicatedEmail)
-                        .with("password", USER_PASSWORD)
-                        .with("name", USER_NAME))
-                .expectStatus().isBadRequest();
+        signUpFail(userCreateDto, errorMessage);
     }
 
     @Test
     void 회원가입_요청_이름_형식_실패_테스트() {
         String wrongName = "";
+        UserCreateDto userCreateDto = new UserCreateDto(NEW_USER_EMAIL, NEW_USER_PASSWORD, wrongName);
 
-        WebTest.executePostTest(webTestClient, "/users", EMPTY_COOKIE,
-                BodyInserters
-                        .fromFormData("email", USER_EMAIL)
-                        .with("password", USER_PASSWORD)
-                        .with("name", wrongName))
-                .expectStatus().isBadRequest();
+        signUpFail(userCreateDto, UNFORMATTED_NAME_ERROR);
     }
 
     @Test
     void 회원가입_요청_패스워드_실패_테스트() {
         String wrongPassword = "password";
+        UserCreateDto userCreateDto = new UserCreateDto(NEW_USER_EMAIL, wrongPassword, NEW_USER_NAME);
 
-        WebTest.executePostTest(webTestClient, "/users", EMPTY_COOKIE,
-                BodyInserters
-                        .fromFormData("email", USER_EMAIL)
-                        .with("password", wrongPassword)
-                        .with("name", USER_NAME))
-                .expectStatus().isBadRequest();
+        signUpFail(userCreateDto, UNFORMATTED_PASSWORD_ERROR);
     }
 
     @Test
     void 회원가입_요청_이메일_형식_실패_테스트() {
         String wrongEmail = "email";
+        UserCreateDto userCreateDto = new UserCreateDto(wrongEmail, NEW_USER_PASSWORD, NEW_USER_NAME);
 
-        WebTest.executePostTest(webTestClient, "/users", EMPTY_COOKIE,
-                BodyInserters
-                        .fromFormData("email", wrongEmail)
-                        .with("password", USER_PASSWORD)
-                        .with("name", USER_NAME))
-                .expectStatus().isBadRequest();
+        signUpFail(userCreateDto, UNFORMATTED_EMAIL_ERROR);
     }
 
     @Test
@@ -141,5 +139,20 @@ public class UserControllerTests {
     void 회원_탈퇴_성공_테스트() {
         WebTest.executeDeleteTest(webTestClient, "/users/" + USER_DELETE_ID, cookie)
                 .expectStatus().isFound();
+    }
+
+    private StatusAssertions executeSignUp(UserCreateDto userCreateDto) {
+        return WebTest.executePostTestWithJson(webTestClient, "/users", EMPTY_COOKIE)
+                .body(Mono.just(userCreateDto), UserCreateDto.class)
+                .exchange()
+                .expectStatus();
+    }
+
+    private void signUpFail(UserCreateDto userCreateDto, String errorMessage) {
+        executeSignUp(userCreateDto).isBadRequest()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.errorMessage").isNotEmpty()
+                .jsonPath("$.errorMessage").isEqualTo(errorMessage);
     }
 }

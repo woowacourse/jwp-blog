@@ -21,7 +21,6 @@ class LoginInterceptorTest {
 
     @BeforeEach
     void setUp() {
-        UserUtilForTest.signUp(webTestClient);
         cookie = UserUtilForTest.loginAndGetCookie(webTestClient);
     }
 

@@ -1,17 +1,20 @@
 package techcourse.myblog.util;
 
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.user.UserDataForTest;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.user.dto.UserLoginDto;
+
+import static techcourse.myblog.user.UserDataForTest.*;
 
 public class UserUtilForTest {
 
-    public static void signUp(WebTestClient webTestClient) {
-        WebTest.executePostTest(webTestClient, "/users", UserDataForTest.EMPTY_COOKIE, UserDataForTest.NEW_USER_BODY);
-    }
-
     public static String loginAndGetCookie(WebTestClient webTestClient) {
-        return WebTest.executePostTest(webTestClient, "/login", UserDataForTest.EMPTY_COOKIE,
-                UserDataForTest.LOGIN_BODY)
+        UserLoginDto userLoginDto = new UserLoginDto(USER_EMAIL, USER_PASSWORD);
+
+        return WebTest.executePostTestWithJson(webTestClient, "/login", EMPTY_COOKIE)
+                .body(Mono.just(userLoginDto), UserLoginDto.class)
+                .exchange()
+                .expectStatus().isCreated()
                 .returnResult(String.class)
                 .getResponseHeaders()
                 .getFirst("Set-Cookie");

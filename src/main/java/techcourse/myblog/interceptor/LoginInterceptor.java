@@ -13,16 +13,17 @@ import javax.servlet.http.HttpSession;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("login interceptor");
+        log.debug("login interceptor request : {}", request.getRequestURI());
+        log.debug("login interceptor");
         HttpSession session = request.getSession();
         Object loginSession = session.getAttribute("user");
 
         if (loginSession == null) {
-            log.info("fail to access request location by interceptor");
+            log.debug("fail to access request location by interceptor");
             response.sendRedirect("/login");
             return false;
         }
-        log.info("success to access request location");
+        log.debug("success to access request location");
         return true;
     }
 }

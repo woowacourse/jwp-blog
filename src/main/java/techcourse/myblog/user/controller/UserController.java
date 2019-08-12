@@ -1,5 +1,7 @@
 package techcourse.myblog.user.controller;
 
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +17,7 @@ import techcourse.myblog.user.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -30,13 +33,15 @@ public class UserController {
         return "signup";
     }
 
+    @ResponseBody
     @PostMapping("/users")
-    public RedirectView createUser(@Valid UserCreateDto userDto, BindingResult bindingResult) {
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserCreateDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
-        userService.save(userDto);
-        return new RedirectView("/login");
+        UserResponseDto newUser = userService.save(userDto);
+        URI uri = ControllerLinkBuilder.linkTo(UserController.class).slash("login").toUri();
+        return ResponseEntity.created(uri).body(newUser);
     }
 
     @GetMapping("/users")

@@ -5,6 +5,8 @@ import org.springframework.http.client.reactive.ClientHttpRequest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserter;
 
+import static techcourse.myblog.user.UserDataForTest.EMPTY_COOKIE;
+
 public class WebTest {
 
     public static WebTestClient.ResponseSpec executeGetTest(
@@ -45,5 +47,14 @@ public class WebTest {
                 .uri(uri)
                 .header("Cookie", cookie)
                 .exchange();
+    }
+
+    public static WebTestClient.RequestBodySpec executePostTestWithJson(
+            WebTestClient webTestClient, String uri, String cookie) {
+
+        return webTestClient.post().uri( uri)
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8);
     }
 }

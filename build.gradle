@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    implementation 'org.springframework.hateoas:spring-hateoas:0.25.2.RELEASE'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
@@ -28,4 +29,5 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
+    runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }
