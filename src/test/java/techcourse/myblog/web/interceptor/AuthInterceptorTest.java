@@ -101,12 +101,9 @@ public class AuthInterceptorTest {
     private void login() {
         webTestClient = WebTestClient.bindToWebHandler(exchange ->
                 exchange.getSession()
-                        .doOnNext(webSession ->
-                                webSession.getAttributes().put("user",
-                                        new User("CODEMCD", "iloveCU@gmail.com", "PassWord!1")))
-                        .then()
-        )
-                .build()
-        ;
+                        .doOnNext(webSession -> webSession.getAttributes()
+                                .put("user", new User("CODEMCD",
+                                        "iloveCU@gmail.com", "PassWord!1")))
+                        .then()).build();
     }
 }

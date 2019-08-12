@@ -1,10 +1,11 @@
 package techcourse.myblog.application;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import techcourse.myblog.application.assembler.UserAssembler;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
 import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.application.exception.DuplicatedEmailException;
 import techcourse.myblog.application.exception.EditException;
 import techcourse.myblog.application.exception.LoginException;
 import techcourse.myblog.application.exception.NoUserException;
@@ -22,22 +23,30 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EncryptHelper encryptHelper;
-    private final ModelMapper modelMapper;
+    private final UserAssembler userAssembler;
 
-    public UserService(UserRepository userRepository, EncryptHelper encryptHelper, ModelMapper modelMapper) {
+    public UserService(UserRepository userRepository, EncryptHelper encryptHelper,
+                       UserAssembler userAssembler) {
         this.userRepository = userRepository;
         this.encryptHelper = encryptHelper;
-        this.modelMapper = modelMapper;
+        this.userAssembler = userAssembler;
     }
 
-    public void saveUser(UserRequest userRequest) {
+    public void save(UserRequest userRequest) {
         User user = createUser(userRequest);
         userRepository.save(user);
     }
 
     private User createUser(UserRequest userRequest) {
         userRequest.setPassword(encryptPassword(userRequest));
-        return modelMapper.map(userRequest, User.class);
+        checkDuplicatedEmail(userRequest);
+        return userAssembler.convertToUser(userRequest);
+    }
+
+    private void checkDuplicatedEmail(UserRequest userRequest) {
+        if (userRepository.existsByEmail(userRequest.getEmail())) {
+            throw new DuplicatedEmailException("중복된 이메일입니다!");
+        }
     }
 
     private String encryptPassword(UserRequest userRequest) {
@@ -47,18 +56,19 @@ public class UserService {
     public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();
         List<UserResponse> userResponses = users.stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
+                .map(user -> userAssembler
+                        .convertToUserResponse(user))
                 .collect(Collectors.toList());
 
         return Collections.unmodifiableList(userResponses);
     }
 
-    public UserResponse checkLogin(LoginRequest loginRequest) {
+    public UserResponse login(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
         checkPassword(loginRequest, user);
-        return modelMapper.map(user, UserResponse.class);
+        return userAssembler.convertToUserResponse(user);
     }
 
     private void checkPassword(LoginRequest loginRequest, User user) {
@@ -67,12 +77,16 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public UserResponse editUserName(Long userId, String name) {
-        User user = userRepository.findById(userId)
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
+    }
+
+    @Transactional
+    public UserResponse modify(Long userId, String name) {
+        User user = findById(userId);
         changeName(name, user);
-        return modelMapper.map(user, UserResponse.class);
+        return userAssembler.convertToUserResponse(user);
     }
 
     private void changeName(String name, User user) {
@@ -83,7 +97,7 @@ public class UserService {
         }
     }
 
-    public void deleteById(Long userId) {
+    public void remove(Long userId) {
         userRepository.deleteById(userId);
     }
 }

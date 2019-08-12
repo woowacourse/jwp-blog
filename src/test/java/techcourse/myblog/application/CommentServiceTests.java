@@ -4,9 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.application.assembler.CommentAssembler;
 import techcourse.myblog.application.dto.CommentRequest;
+import techcourse.myblog.application.dto.CommentResponse;
 import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.CommentNotFoundException;
 import techcourse.myblog.application.exception.NoArticleException;
@@ -15,9 +16,7 @@ import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.CommentRepository;
-import techcourse.myblog.domain.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -35,6 +34,7 @@ public class CommentServiceTests {
 
     private static final String NAME = "bmo";
     private static final String EMAIL = "bmo@gmail.com";
+    private static final String PASSWORD = "Password123!";
     private static final long NOT_AUTHOR_USER_ID = 2L;
 
 
@@ -42,27 +42,32 @@ public class CommentServiceTests {
     private CommentService commentService;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
     private CommentRepository commentRepository;
 
     @Mock
-    private ArticleRepository articleRepository;
+    private UserService userService;
 
     @Mock
-    private ModelMapper modelMapper;
+    private ArticleService articleService;
 
-    private User user = new User("bmo", "bmo@gmail.com", "Password123!");
-    private User notAuthorUser = new User("remo", "remo@reader.com", "Password123!");
+    @Mock
+    private CommentAssembler commentAssembler;
+
+    private User user = new User(NAME, EMAIL, PASSWORD);
+    private User notAuthorUser = new User("amo", "amo@reader.com", PASSWORD);
+    private UserResponse userResponse = new UserResponse(USER_ID, NAME, EMAIL);
+    private UserResponse notAuthorResponse = new UserResponse(NOT_AUTHOR_USER_ID, NAME, EMAIL);
     private Article article = new Article(user, "title", "coverUrl", "contents");
     private Comment comment = new Comment("commentContents", user, article);
+    private Comment comment2 = new Comment("commentContents2", user, article);
     private CommentRequest commentRequest = new CommentRequest("commentContents");
+    private CommentResponse commentResponse = new CommentResponse(comment.getId(), userResponse,
+            comment.getContents(), comment.getCreatedTime(), comment.getUpdatedTime());
 
     @Test
     void 댓글작성_성공() {
-        given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
+        given(articleService.findById(ARTICLE_ID)).willReturn(article);
 
         commentService.save(commentRequest, USER_ID, ARTICLE_ID);
 
@@ -71,7 +76,8 @@ public class CommentServiceTests {
 
     @Test
     void 댓글작성_존재하지_않는_게시글_오류() {
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
+        given(articleService.findById(ARTICLE_ID)).willThrow(NoArticleException.class);
 
         assertThrows(NoArticleException.class,
                 () -> commentService.save(commentRequest, USER_ID, ARTICLE_ID));
@@ -79,7 +85,8 @@ public class CommentServiceTests {
 
     @Test
     void 댓글작성_존재하지_않는_유저_오류() {
-        given(articleRepository.findById(ARTICLE_ID)).willReturn(Optional.ofNullable(article));
+        given(userService.findById(USER_ID)).willThrow(NoUserException.class);
+        given(articleService.findById(ARTICLE_ID)).willReturn(article);
 
         assertThrows(NoUserException.class,
                 () -> commentService.save(commentRequest, USER_ID, ARTICLE_ID));
@@ -87,97 +94,75 @@ public class CommentServiceTests {
 
     @Test
     void 해당_게시글의_전체_댓글조회_성공() {
-        given(commentRepository.findAllByArticle(article)).willReturn(Arrays.asList(comment));
-        commentService.findCommentsByArticle(article);
+        given(articleService.findById(ARTICLE_ID)).willReturn(article);
+        given(commentRepository.findAllByArticle(article))
+                .willReturn(Arrays.asList(comment, comment2));
+        commentService.findAllByArticle(ARTICLE_ID);
         verify(commentRepository).findAllByArticle(article);
     }
 
     @Test
     void 댓글조회_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.of(comment));
-        commentService.findCommentById(COMMENT_ID);
+        commentService.findById(COMMENT_ID);
         verify(commentRepository).findById(COMMENT_ID);
     }
 
     @Test
     void 댓글조회_실패() {
         assertThrows(CommentNotFoundException.class,
-                () -> commentService.findCommentById(COMMENT_ID));
+                () -> commentService.findById(COMMENT_ID));
     }
 
     @Test
     void 댓글삭제_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
+        given(userService.findById(USER_ID)).willReturn(user);
 
-        UserResponse userResponse = 사용자_응답_만들기(USER_ID);
-
-        commentService.deleteComment(COMMENT_ID, userResponse);
+        commentService.remove(COMMENT_ID, userResponse);
         verify(commentRepository).deleteById(COMMENT_ID);
     }
 
     @Test
     void 존재하지_않는_회원_댓글삭제_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-
-        UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
+        given(userService.findById(NOT_AUTHOR_USER_ID)).willThrow(NoUserException.class);
 
         assertThrows(NoUserException.class,
-                () -> commentService.deleteComment(COMMENT_ID, userResponse));
+                () -> commentService.remove(COMMENT_ID, notAuthorResponse));
     }
 
     @Test
     void 작성자가_아닌_회원이_댓글_삭제_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
-        given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
-
-        UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class,
-                () -> commentService.deleteComment(COMMENT_ID, userResponse));
+                () -> commentService.remove(COMMENT_ID, notAuthorResponse));
     }
 
     @Test
     void 댓글수정_성공() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        given(userRepository.findById(USER_ID)).willReturn(Optional.ofNullable(user));
-        given(modelMapper.map(commentRequest, Comment.class)).willReturn(comment);
+        given(userService.findById(USER_ID)).willReturn(user);
+        given(commentAssembler.convertToResponse(comment, user)).willReturn(commentResponse);
 
-        UserResponse userResponse = 사용자_응답_만들기(USER_ID);
-
-        assertDoesNotThrow(() -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+        assertDoesNotThrow(() -> commentService.modify(COMMENT_ID, userResponse, commentRequest));
     }
 
     @Test
     void 존재하지_않는_회원_댓글수정_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-
-        UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
+        given(userService.findById(NOT_AUTHOR_USER_ID)).willThrow(NoUserException.class);
 
         assertThrows(NoUserException.class,
-                () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
+                () -> commentService.modify(COMMENT_ID, notAuthorResponse, commentRequest));
     }
 
     @Test
     void 작성자가_아닌_회원이_댓글_수정_실패() {
         given(commentRepository.findById(COMMENT_ID)).willReturn(Optional.ofNullable(comment));
-        notAuthorUser.setId(NOT_AUTHOR_USER_ID);
-        given(userRepository.findById(NOT_AUTHOR_USER_ID)).willReturn(Optional.ofNullable(notAuthorUser));
-        given(modelMapper.map(commentRequest, Comment.class)).willReturn(comment);
-
-        UserResponse userResponse = 사용자_응답_만들기(NOT_AUTHOR_USER_ID);
 
         assertThrows(NotSameAuthorException.class,
-                () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
-    }
-
-    private UserResponse 사용자_응답_만들기(Long 아이디) {
-        UserResponse 사용자_응답 = new UserResponse();
-        사용자_응답.setId(아이디);
-        사용자_응답.setName(NAME);
-        사용자_응답.setEmail(EMAIL);
-
-        return 사용자_응답;
+                () -> commentService.modify(COMMENT_ID, notAuthorResponse, commentRequest));
     }
 }

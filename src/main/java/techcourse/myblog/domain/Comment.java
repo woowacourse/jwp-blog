@@ -52,55 +52,31 @@ public class Comment {
         return this.author.equals(author);
     }
 
-    public void updateContents(Comment updatedComment, User author) {
+    public void updateContents(String updatedContents, User author) {
         if (!isSameAuthor(author)) {
             throw new IllegalArgumentException();
         }
-        this.contents = updatedComment.getContents();
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.contents = updatedContents;
     }
 
     public String getContents() {
         return contents;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
     public User getAuthor() {
         return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
     }
 
     public Article getArticle() {
         return article;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
-    }
-
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
-    }
-
     public LocalDateTime getUpdatedTime() {
         return updatedTime;
-    }
-
-    public void setUpdatedTime(LocalDateTime updatedTime) {
-        this.updatedTime = updatedTime;
     }
 
     @Override

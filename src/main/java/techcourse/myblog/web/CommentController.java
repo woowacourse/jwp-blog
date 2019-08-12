@@ -1,18 +1,22 @@
 package techcourse.myblog.web;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.CommentRequest;
+import techcourse.myblog.application.dto.CommentResponse;
 import techcourse.myblog.application.dto.UserResponse;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
-@Controller
-@RequestMapping("/articles/{articleId}")
+@RestController
+@RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
+
+    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
 
     private final CommentService commentService;
 
@@ -20,32 +24,29 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/comments")
-    public String saveComment(@PathVariable("articleId") Long articleId, @Valid CommentRequest commentRequest,
-                              BindingResult bindingResult, HttpSession httpSession) {
-        if (!bindingResult.hasErrors()) {
-            UserResponse user = (UserResponse) httpSession.getAttribute("user");
-            commentService.save(commentRequest, articleId, user.getId());
-        }
+    @PostMapping("")
+    public ResponseEntity<CommentResponse> save(@PathVariable("articleId") Long articleId,
+                                                @RequestBody CommentRequest commentRequest,
+                                                HttpSession httpSession) {
+        log.info(commentRequest.getContents());
 
-        return "redirect:/articles/" + articleId;
+        UserResponse user = (UserResponse) httpSession.getAttribute("user");
+        CommentResponse commentResponse = commentService.save(commentRequest, articleId, user.getId());
+        return new ResponseEntity<>(commentResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/comments/{commentId}")
-    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                HttpSession httpSession) {
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentResponse> modify(@PathVariable("commentId") Long commentId,
+                                  @RequestBody CommentRequest commentRequest, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        commentService.deleteComment(commentId, userResponse);
-
-        return "redirect:/articles/" + articleId;
+        CommentResponse commentResponse = commentService.modify(commentId, userResponse, commentRequest);
+        return new ResponseEntity<>(commentResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/comments/{commentId}")
-    public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                CommentRequest commentRequest, HttpSession httpSession) {
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> remove(@PathVariable("commentId") Long commentId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-        commentService.updateComment(commentId, userResponse, commentRequest);
-
-        return "redirect:/articles/" + articleId;
+        commentService.remove(commentId, userResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

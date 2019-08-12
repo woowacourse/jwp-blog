@@ -76,7 +76,7 @@
                     <span class="font-size-16 text-info" th:text="${comments==null ? 0 : comments.size()}"></span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
+                    <ul class="list-unstyled list-info" id="comment-list">
                         <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
                             <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                             <div class="info">
@@ -108,15 +108,25 @@
                             </div>
                         </li>
                     </ul>
-                    <form th:if="${session.user}" id="commentForm" method="post" th:action="'/articles/' + ${article.id} + '/comments'">
-                        <input type="hidden" name="contents" id="commentContents"/>
-                        <div class="add-comment">
-                            <div id="editSection"></div>
-                            <button type="button" onclick="saveComment()" id="saveCommentBtn" class="float-right pointer btn btn-icon">
-                                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                            </button>
-                        </div>
-                    </form>
+<!--                    <form th:if="${session.user}" id="commentForm" method="post" th:action="'/articles/' + ${article.id} + '/comments'">-->
+<!--                        <input type="hidden" name="contents" id="commentContents"/>-->
+<!--                        <div class="add-comment">-->
+<!--                            <div id="editSection"></div>-->
+<!--                            <button type="button" onclick="saveComment()" id="saveCommentBtn" class="float-right pointer btn btn-icon">-->
+<!--                                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+
+                    <!--                    ajax fetch version-->
+                    <input type="hidden" name="contents" id="commentContents"/>
+                    <div class="add-comment">
+                        <div id="editSection"></div>
+                        <button type="button" id="saveCommentBtn" class="float-right pointer btn btn-icon">
+                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -124,8 +134,113 @@
 </div>
 
 <th:block th:include="/fragments/article-js :: articleJs"/>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script>
+    const commentCreateTemplate =
+        "<li class=\"comment-item border bottom mrg-btm-30\" id=\"comment-{{comment.id}}\">" +
+        "<img class=\"thumb-img img-circle\" src=\"https://avatars2.githubusercontent.com/u/3433096?v=4\" alt=\"\">" +
+        "<div class=\"info\">" +
+        "<span class=\"text-bold inline-block\">{{comment.author.name}}</span>" +
+        "<span class=\"sub-title inline-block pull-right\">" +
+        "<i class=\"ti-timer pdd-right-5\"></i>" +
+        "<span>{{comment.updatedTime}}</span>" +
+        "</span>" +
+        "<p class=\"width-80\" id=\"commentContents-{{comment.id}}\">{{comment.contents}}</p>" +
+        "{{>commentUpdateAndDeleteButton}}" +
+        "</div>" +
+        "</li>"
+
+    const commentUpdateAndDeleteTemplate =
+        "<div class=\"comment-button\" style = \"margin-bottom:90px\">" +
+        "<button class=\"btn btn-icon float-right pointer\" onclick=\"deleteComment({{comment.id}})\">" +
+        "<i class =\"ti-trash text-dark font-size-16 pdd-horizon-5\"></i>" +
+        "</button>" +
+        "<input class= \"none\" type=\"text\" id=\"inputUpdateContents-{{comment.id}}\" value=\"{{comment.contents}}\">" +
+        "<button id=\"showInputForm-{{comment.id}}\" onclick=\"showCommentInput({{comment.id}})\" class=\"float-right pointer btn btn-icon\">" +
+        "수정" +
+        "</button>" +
+        "<button id=\"updateButton-{{comment.id}}\" onclick=\"updateComment({{comment.id}})\" class=\"none float-right pointer btn btn-icon\">" +
+        "확인" +
+        "</button>" +
+        "</div>"
+
+    const commentItemTemplate = Handlebars.compile(commentCreateTemplate);
+
+    var articleId = [[${article.id}]]
+    var sessionUser = [[${session.user.id}]]
+
+    function createComment(commentContents) {
+        fetch('/articles/' + articleId + '/comments', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify(commentContents)
+        }).then(function(response) {
+            // console.log(response);
+            return response.json();
+        }).then(function(comment) {
+            console.log(comment);
+            if(sessionUser === comment.author.id) {
+                Handlebars.registerPartial("commentUpdateAndDeleteButton", commentUpdateAndDeleteTemplate)
+            }
+            document.getElementById('comment-list')
+                .insertAdjacentHTML('beforeend', commentItemTemplate({"comment":comment}))
+        })
+    }
+
+    function submitComment() {
+        var contents = editor.getMarkdown();
+        if (contents) {
+            createComment({
+                contents: contents
+            });
+        } else {
+            alert('내용을 입력하세요!');
+        }
+    }
+
+    var submitButton = document.querySelector('#saveCommentBtn');
+    submitButton.addEventListener('click', submitComment);
+
+    function updateComment(commentId) {
+        var updatedContents = document.querySelector('#inputUpdateContents-' + commentId).value;
+        if (updatedContents === "") {
+            alert('내용을 입력하세요');
+            return;
+        }
+        fetch('/articles/' + articleId + '/comments/' + commentId, {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({contents: updatedContents})
+        }).then(function(response) {
+            console.log(response);
+            return response.json();
+        }).then(function(comment) {
+            console.log(comment);
+            var currentContents = document.querySelector('#commentContents-' + commentId);
+            currentContents.innerHTML = "";
+            currentContents.insertAdjacentHTML('beforeend', comment.contents);
+            hideCommentInput(commentId);
+        })
+    }
+
+    function deleteComment(commentId) {
+        fetch('/articles/' + articleId + '/comments/' + commentId, {
+            method: 'delete'
+        }).then(function(response) {
+            if (response.ok) {
+                var currentComment = document.querySelector('#comment-' + commentId);
+                var parent = currentComment.parentNode;
+                parent.removeChild(currentComment)
+            } else {
+                alert("삭제 실패")
+            }
+        })
+    }
+
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
@@ -144,21 +259,11 @@
         height: '200px'
     });
 
-    function saveComment() {
-        var contents = editor.getMarkdown();
-        if (contents === "") {
-            alert('내용을 입력하세요!');
-            return;
-        }
-        document.getElementById("commentContents").value = contents;
-        document.getElementById("commentForm").submit();
-    }
-
     function showCommentInput(commentId){
-        let commentContents = document.querySelector("#commentContents" + commentId);
-        let showButton = document.querySelector("#show-button" + commentId);
-        let updateButton = document.querySelector("#update-button" + commentId);
-        let contentInput = document.querySelector("#content-input" + commentId);
+        let commentContents = document.querySelector("#commentContents-" + commentId);
+        let showButton = document.querySelector("#showInputForm-" + commentId);
+        let updateButton = document.querySelector("#updateButton-" + commentId);
+        let contentInput = document.querySelector("#inputUpdateContents-" + commentId);
 
         contentInput.classList.remove("none");
         showButton.classList.add("none");
@@ -166,16 +271,16 @@
         updateButton.classList.remove("none");
     }
 
-    function updateComment(commentId){
-        let commentUpdateForm = document.querySelector("#comment-update-form" + commentId);
-        let contentInput = document.querySelector("#content-input" + commentId);
+    function hideCommentInput(commentId){
+        let commentContents = document.querySelector("#commentContents-" + commentId);
+        let showButton = document.querySelector("#showInputForm-" + commentId);
+        let updateButton = document.querySelector("#updateButton-" + commentId);
+        let contentInput = document.querySelector("#inputUpdateContents-" + commentId);
 
-        if (contentInput.value === "") {
-            alert("내용을 입력하세요!")
-            return;
-        }
-
-        commentUpdateForm.submit();
+        contentInput.classList.add("none");
+        showButton.classList.remove("none");
+        commentContents.classList.remove("none");
+        updateButton.classList.add("none");
     }
 </script>
 </body>

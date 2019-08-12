@@ -27,6 +27,7 @@
                                 <div class="vertical-align full-height">
                                     <div class="table-cell">
                                         <div class="card min-width-480px">
+                                            <div th:if="${error} != null" class="alert alert-danger" th:text="${error.errorMessage}"></div>
                                             <div class="card-body">
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
