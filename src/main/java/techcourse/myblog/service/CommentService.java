@@ -44,7 +44,7 @@ public class CommentService {
 
     public List<ResponseCommentDto> findAllComments(Long articleId) {
         List<ResponseCommentDto> commentDtos = new ArrayList<>();
-        List<Comment> comments = commentRepository.findByArticleArticleId(articleId).orElse(new ArrayList<>());
+        List<Comment> comments = commentRepository.findAllByArticleArticleId(articleId);
 
         for(Comment comment : comments) {
             commentDtos.add(CommentAssembler.toResponseDto(comment));

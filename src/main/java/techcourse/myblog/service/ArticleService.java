@@ -59,8 +59,7 @@ public class ArticleService {
     }
 
     private void deleteCommentsByArticleId(Long articleId) {
-        List<Comment> comments = commentRepository.findByArticleArticleId(articleId)
-                .orElseThrow(NotFoundObjectException::new);
+        List<Comment> comments = commentRepository.findAllByArticleArticleId(articleId);
 
         for(Comment comment : comments) {
             commentRepository.delete(comment);

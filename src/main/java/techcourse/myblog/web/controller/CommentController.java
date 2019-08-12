@@ -46,7 +46,7 @@ public class CommentController {
                                                                   @PathVariable Long commentId, @LoginUser User user) {
         commentService.deleteComment(commentId, user);
 
-        return new ResponseEntity<>(commentService.findAllComments(articleId), HttpStatus.CREATED);
+        return new ResponseEntity<>(commentService.findAllComments(articleId), HttpStatus.NO_CONTENT);
     }
 
 }

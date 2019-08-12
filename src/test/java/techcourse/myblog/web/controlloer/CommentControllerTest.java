@@ -64,7 +64,7 @@ public class CommentControllerTest extends AbstractControllerTest {
         webTestClient.delete().uri("/articles/1/comment/2")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().isCreated()
+                .expectStatus().isNoContent()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .jsonPath("$..id").value(not("2"));
