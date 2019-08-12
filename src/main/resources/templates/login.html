@@ -11,8 +11,8 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                        <div class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -20,7 +20,7 @@
     </div>
     <div class="authentication">
         <div class="sign-in-2">
-            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/static/images/default/bg.jpg')">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/images/default/bg.jpg')">
                 <div class="row">
                     <div class="col-md-10 col-sm-12 mx-auto">
                         <div class="row">
@@ -33,7 +33,7 @@
                                                     <div class="mrg-btm-30">
                                                         <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">로그인</h2>
                                                     </div>
-                                                    <form action="/login" method="post" th:object="${userDto}">
+                                                    <form action="/login" method="post" th:object="${loginUserDto}">
                                                         <div class="form-group">
                                                             <input type="email" class="form-control" placeholder="Id" required th:field="*{email}">
                                                             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>

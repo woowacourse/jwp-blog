@@ -99,8 +99,28 @@
     
 ## 댓글 관련 기능
 
-- [ ] 댓글 보기 : 게시글 조회할 때 연관 댓글 함께 보여주기
+- [x] 댓글 보기 : 게시글 조회할 때 연관 댓글 함께 보여주기
 ### 댓글 작성
-- [ ] ``POST /comment/{articleId}``
-- [ ] ``PUT /comment/{commentId}/``
-- [ ] ``DELETE /comment/{commentId}/``
+- [x] ``POST /comment/{articleId}``
+- [x] ``PUT /comment/{commentId}/``
+- [x] ``DELETE /comment/{commentId}/``
+
+### 예외처리 나누기
+- [x] 서비스 / 도메인 영역 분리하여 예외처리 다르게 하기
+    - [x] LoginFailedException.class service / argument resolver
+    - [x] MismatchAuthorException comment/ article 분리 및 findByIdAnd*** 삭제   
+
+### 댓글 Ajax 구현
+- [x] ``POST /comment/{articleId}``
+    - [x] 해당 내용이 포함되었는지 테스트
+- [ ] ``PUT /comment/{articleId}``
+    - [ ] 수정 내용이 포함되었는지 테스트
+    - [ ] 작성자 일 경우 HttpStatus 200 확인
+    - [ ] 작성자가 아닐 경우 HttpStatus 403 확인
+- [ ] ``DELETE /comment/{articleId}``
+    - [ ] 작성자 일 경우 HttpStatus 200 확인 
+    - [ ] 작성자가 아닐 경우 HttpStatus 403 확인
+
+### 추가 Ajax 구현
+- [ ] ``POST /login`` 로그인 Ajax로 구현
+- [ ] ``POST /users`` 회원가입 Ajax로 구현

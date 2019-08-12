@@ -1,10 +1,10 @@
 package techcourse.myblog.utils;
 
-import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentRequestDto;
 
 public class CommentTestObjects {
-    public static final CommentDto COMMENT_DTO = new CommentDto("contents");
-    public static final CommentDto UPDATE_COMMENT_DTO = new CommentDto("new-contents");
-    public static final CommentDto BLANK_COMMENT_DTO = new CommentDto("");
-    public static final CommentDto NULL_COMMENT_DTO = new CommentDto(null);
+    public static final CommentRequestDto COMMENT_DTO = new CommentRequestDto("contents");
+    public static final CommentRequestDto UPDATE_COMMENT_DTO = new CommentRequestDto("new-contents");
+    public static final CommentRequestDto BLANK_COMMENT_DTO = new CommentRequestDto("");
+    public static final CommentRequestDto NULL_COMMENT_DTO = new CommentRequestDto(null);
 }

@@ -3,8 +3,8 @@
 <head>
     <th:block th:include="includes/meta :: common_meta"></th:block>
     <th:block th:include="includes/css :: common_css"></th:block>
-    <link rel="stylesheet" href="/static/css/index.css">
-    <link rel="stylesheet" href="/static/css/mypage.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/mypage.css">
 </head>
 <body>
 <div>
@@ -12,7 +12,7 @@
     <th:block th:include="includes/header :: header"></th:block>
 
     <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
 
             </div>
@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
-                    <form action="/mypage" method="post" th:object="${userDto}">
+                    <form action="/mypage" method="post" th:object="${editUserDto}">
                         <input type="hidden" name="_method" value="put"/>
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
@@ -48,7 +48,7 @@
                                     <p class="mrg-top-10 text-dark"> <b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="${user.email}">gracefulBrown@woowahan.com</p>
+                                    <p class="mrg-top-10" th:text="${session.user.email}">gracefulBrown@woowahan.com</p>
                                 </div>
                             </div>
                             <hr>
