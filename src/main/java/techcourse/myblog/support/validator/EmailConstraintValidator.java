@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class EmailConstraintValidator implements ConstraintValidator<EmailConstraint, String> {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public EmailConstraintValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -27,6 +27,6 @@ public class EmailConstraintValidator implements ConstraintValidator<EmailConstr
         context.buildConstraintViolationWithTemplate("이메일 중복입니다")
                 .addConstraintViolation();
 
-        return !userRepository.existsByEmail(value);
+        return !userRepository.findByEmail(value).isPresent();
     }
 }

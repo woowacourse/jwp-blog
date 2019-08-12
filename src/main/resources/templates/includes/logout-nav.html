@@ -3,7 +3,8 @@
 
 <li th:fragment="logout-nav" id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-        <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+        <img class="profile-img img-fluid" th:src="${session.user.image} ? 'data:image/png;base64,' + ${session.user.getImageEncodeBase64()} :
+                                            'https://m2bob-forum.net/wcf/images/avatars/3e/2720-3e546be0b0701e0cb670fa2f4fcb053d4f7e1ba5.jpg'" alt="Brown">
         <div class="user-info text-white">
             <span th:text="${session.user.name}" class="name pdd-right-5">Brown</span>
             <i class="ti-angle-down font-size-10"></i>

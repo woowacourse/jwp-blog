@@ -3,6 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.service.dto.UserEditRequest;
 import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.exception.EditException;
@@ -15,8 +16,8 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private EncryptHelper encryptHelper;
+    private final UserRepository userRepository;
+    private final EncryptHelper encryptHelper;
 
     public UserService(UserRepository userRepository, EncryptHelper encryptHelper) {
         this.userRepository = userRepository;
@@ -30,7 +31,7 @@ public class UserService {
 
     private User createUser(UserRequest userRequest) {
         try {
-            return new User(userRequest.getName(), userRequest.getEmail(), encryptHelper.encrypt(userRequest.getPassword()));
+            return new User(userRequest.getName(), userRequest.getEmail(), userRequest.getPassword());
         } catch (IllegalArgumentException e) {
             throw new SignUpException(e.getMessage());
         }
@@ -41,7 +42,7 @@ public class UserService {
     }
 
     public User findUserByEmail(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
+        User user = userRepository.findByEmail(userLoginRequest.getEmail())
                 .orElseThrow(() -> new LoginException("email 없음"));
 
         checkPassword(userLoginRequest, user);
@@ -55,18 +56,14 @@ public class UserService {
     }
 
     @Transactional
-    public User editUserName(Long userId, String name) {
+    public User editUserName(Long userId, UserEditRequest userEditRequest) {
         User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-        changeName(name, user);
-        return user;
-    }
-
-    private void changeName(String name, User user) {
         try {
-            user.changeName(name);
-        } catch (IllegalArgumentException e) {
+            user.update(userEditRequest.getName(), userEditRequest.getImage().getBytes());
+        } catch (Exception e) {
             throw new EditException(e.getMessage());
         }
+        return user;
     }
 
     public void deleteById(Long userId) {

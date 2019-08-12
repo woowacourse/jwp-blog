@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 
-<head th:replace="/fragments/main-head :: mainHead"></head>
+<head th:replace="fragments/main-head :: mainHead"></head>
 
 <body>
 <div>
@@ -16,7 +16,7 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
+                <th:block th:include="${session.user == null} ? 'includes/login-nav' : 'includes/logout-nav'"/>
             </ul>
         </div>
     </header>
@@ -25,7 +25,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5" th:text="#{name}">Welcome Brown!</h1>
             </div>
         </div>
     </div>
@@ -107,9 +107,9 @@
     </div>
 </div>
 
-<footer th:replace="/fragments/common-footer :: commonFooter"></footer>
+<footer th:replace="fragments/common-footer :: commonFooter"></footer>
 
-<th:block th:include="/fragments/main-js :: mainJs"/>
+<th:block th:include="fragments/main-js :: mainJs"/>
 
 </body>
 </html>

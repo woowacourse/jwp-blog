@@ -2,14 +2,10 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -17,7 +13,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTest {
+class ArticleControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
@@ -41,7 +37,6 @@ public class ArticleControllerTest {
         String title = "titleTest";
         String coverUrl = "coverUrlTest";
         String contents = "contentsTest";
-        String cookie = getCookie("test@gmail.com");
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -155,13 +150,17 @@ public class ArticleControllerTest {
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
-                .isFound();
+                .isOk();
     }
 
     @Test
     void 내가쓴글_수정_시도() {
         webTestClient.put().uri("/articles/1")
                 .header("Cookie", cookie)
+                .body(BodyInserters
+                        .fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
                 .exchange()
                 .expectStatus()
                 .isFound();

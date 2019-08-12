@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 
-<head th:replace="/fragments/mypage-head :: mypageHead"></head>
+<head th:replace="fragments/mypage-head :: mypageHead"></head>
 
 <body>
 <div th:if="${error} != null" class="alert alert-danger" th:text="${error.errorMessage}"></div>
@@ -19,7 +19,7 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <th:block th:include="/includes/logout-nav"/>
+                <th:block th:include="includes/logout-nav"/>
             </ul>
         </div>
     </header>
@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
-                    <form th:action="@{'/users/' + ${session.user.id}}" method="post" th:object="${userEditRequest}">
+                    <form th:action="@{'/users/' + ${session.user.id}}" method="post" th:object="${userEditRequest}" enctype="multipart/form-data">
                         <input type="hidden" name="_method" value="put"/>
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
@@ -70,10 +70,11 @@
                                 <div class="col-md-6">
                                     <div>
                                         <label for="img-upload" class="pointer">
-                                            <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                            <img th:src="${session.user.image} ? 'data:image/png;base64,' + ${session.user.getImageEncodeBase64()} :
+                                            'https://m2bob-forum.net/wcf/images/avatars/3e/2720-3e546be0b0701e0cb670fa2f4fcb053d4f7e1ba5.jpg'"
                                                  width="117" alt="">
                                             <span class="btn btn-default display-block no-mrg-btm">Choose file</span>
-                                            <input class="d-none" type="file" name="uploadedimages0" multiple
+                                            <input class="d-none" type="file" name="image" multiple
                                                    id="img-upload">
                                         </label>
                                     </div>
@@ -124,7 +125,7 @@
     </div>
 </div>
 
-<th:block th:include="/fragments/main-js :: mainJs"/>
+<th:block th:include="fragments/main-js :: mainJs"/>
 
 </body>
 </html>

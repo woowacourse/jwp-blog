@@ -2,29 +2,19 @@ package techcourse.myblog.domain;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.service.exception.InvalidAuthorException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
-@EntityListeners(value = {AuditingEntityListener.class})
-public class Comment {
+public class Comment extends DateTimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 500)
     private String contents;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_user"))
@@ -40,9 +30,16 @@ public class Comment {
 
     public Comment(String contents, Article article, User user) {
         checkContents(contents);
+        checkUser(user);
         this.contents = contents;
         this.article = article;
         this.commenter = user;
+    }
+
+    private void checkUser(User user) {
+        if (user == null) {
+            throw new InvalidAuthorException("로그인 후 댓글을 작성할 수 있습니다.");
+        }
     }
 
     private void checkContents(String contents) {
@@ -65,10 +62,6 @@ public class Comment {
         return contents;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
     public User getCommenter() {
         return commenter;
     }
@@ -77,8 +70,32 @@ public class Comment {
         return article;
     }
 
-    public Comment updateContents(String contents) {
+    public void updateContents(String contents) {
         this.contents = contents;
-        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", contents='" + contents + '\'' +
+                ", createdDate=" + getCreatedDate() +
+                ", modifiedDate=" + getModifiedDate() +
+                ", commenter=" + commenter +
+                ", article=" + article +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -1,0 +1,70 @@
+// comment.adoc
+= Comment
+
+== GET
+
+=== Example request
+
+include::{snippets}/comment/get/curl-request.adoc[]
+
+==== Path parameter
+
+include::{snippets}/comment/get/path-parameters.adoc[]
+
+=== Example response
+
+include::{snippets}/comment/get/http-response.adoc[]
+
+==== Response body description
+
+include::{snippets}/comment/get/response-fields.adoc[]
+
+== POST
+
+=== Example request
+
+include::{snippets}/comment/post/curl-request.adoc[]
+
+==== Request body description
+
+include::{snippets}/comment/post/request-fields.adoc[]
+
+=== Example response
+
+include::{snippets}/comment/post/http-response.adoc[]
+
+==== Response body description
+
+include::{snippets}/comment/post/response-fields.adoc[]
+
+== PUT
+
+=== Example request
+
+include::{snippets}/comment/put/curl-request.adoc[]
+
+==== Request body description
+
+include::{snippets}/comment/put/request-fields.adoc[]
+
+=== Example response
+
+include::{snippets}/comment/put/http-response.adoc[]
+
+==== Response body description
+
+include::{snippets}/comment/put/response-fields.adoc[]
+
+== DELETE
+
+=== Example request
+
+include::{snippets}/comment/delete/curl-request.adoc[]
+
+==== Path parameter
+
+include::{snippets}/comment/delete/path-parameters.adoc[]
+
+=== Example response
+
+include::{snippets}/comment/delete/http-response.adoc[]

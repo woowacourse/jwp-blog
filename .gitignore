@@ -30,3 +30,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### ignore log ###
+log/
+
+
+### my sql file ###
+blog.sql
+*.log

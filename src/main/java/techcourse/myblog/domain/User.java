@@ -1,16 +1,20 @@
 package techcourse.myblog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.support.encryptor.EncryptConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.Base64;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Entity
-@EntityListeners(value = {AuditingEntityListener.class})
+@EntityListeners(value = AuditingEntityListener.class)
 public class User {
     private static final int MAX_NAME_LENGTH = 10;
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]*$");
@@ -28,8 +32,14 @@ public class User {
     private String email;
 
     @NotBlank
+    @JsonIgnore
     @Column(nullable = false)
+    @Convert(converter = EncryptConverter.class)
     private String password;
+
+    @Lob
+    @Column
+    private byte[] image;
 
     private User() {
     }
@@ -52,13 +62,11 @@ public class User {
         }
     }
 
-    public void changeName(String name) {
+    public User update(String name, byte[] image) {
         validateName(name);
         this.name = name;
-    }
-
-    public boolean matchEmail(User user) {
-        return this.email.equals(user.email);
+        this.image = image;
+        return this;
     }
 
     public Long getId() {
@@ -77,6 +85,14 @@ public class User {
         return password;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public String getImageEncodeBase64() {
+        return Optional.ofNullable(image).isPresent() ? Base64.getEncoder().encodeToString(image) : "";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,5 +104,14 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(email);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

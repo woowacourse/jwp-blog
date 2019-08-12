@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head th:replace="/fragments/article-head :: articleHead">
-
+<head th:replace="fragments/article-head :: articleHead">
 </head>
 <body>
 <div>
@@ -10,44 +9,46 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div id="logo-dark" class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div id="logo-white" class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                        <div id="logo-dark" class="logo logo-dark d-none"
+                             style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div id="logo-white" class="logo logo-white"
+                             style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
             <ul class="nav-right">
-                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
+                <th:block th:include="${session.user == null} ? 'includes/login-nav' : 'includes/logout-nav'"/>
             </ul>
         </div>
     </header>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style = "
-                                            'background-image: url(' + ${#strings.isEmpty(article.coverUrl) ? '/static/images/pages/index/study.jpg' : article.coverUrl} + ');'">
+        <div class="cover-img overlay-dark bg">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
+                <h1 class="text-center cover-title" id="article-title"></h1>
             </div>
         </div>
     </div>
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{'/articles/' + ${article.id} + '/edit'}" class="float-right pointer btn btn-icon">
+                <a id="article-edit-button" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form method="post" th:action="'/articles/' + ${article.id}">
-                    <input name="_method" type="hidden" value="delete" />
+                <form id="article-delete-form" method="post">
+                    <input name="_method" type="hidden" value="delete"/>
                     <button class="btn btn-icon float-right pointer" id="delete-button" type="submit">
-                        <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+                        <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                     </button>
                 </form>
                 <div id="viewerSection"></div>
-                <input id="article-contents" th:value="${article.contents}" name="contents" type="hidden">
+                <input id="article-contents" name="contents" type="hidden">
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
                     <div class="col-md-2 col-sm-4">
-                        <img class="border-radius-round" width="80px" src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
+                        <img class="border-radius-round" width="80px"
+                             src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
                         <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
@@ -74,54 +75,37 @@
                 <div class="width-100 border bottom mrg-btm-2
                 0 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
+                    <span id="comment-size" class="font-size-16 text-info">0</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block" th:text="${comment.commenter.name}">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span class="elapsed-time" th:text="${comment.elapsedTime}">6</span>
-                                </span>
-                                <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
-                                <th:block th:if="${comment.commenter.id == session.user?.id}">
-                                    <a th:href="@{'/comments/' + ${comment.id}}">수정</a>
-                                    <form th:action="@{'/comments/' + ${comment.id}}" method="post">
-                                        <input type="hidden" name="_method" value="delete"/>
-                                        <button type="submit" class="warning">삭제</button>
-                                    </form>
-                                </th:block>
-                            </div>
-                        </li>
+                    <ul id="comments" class="list-unstyled list-info">
                     </ul>
-                    <th:block th:if="${session.user != null}">
+                    <div th:class="${session.user != null} ? '' : 'hidden'">
                         <div class="add-comment">
                             <div id="editSection"></div>
                         </div>
-                        <form action="/comments" method="post">
+                        <div>
                             <button id="comment-submit" type="submit" class="button">댓글달기</button>
-                            <input id="comment-contents" name="contents" type="hidden"/>
-                            <input name="articleId" type="hidden" th:value="${article.id}"/>
-                        </form>
-                    </th:block>
+                            <input id="comment-contents" name="contents" type="hidden" value=""/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<th:block th:include="/fragments/article-js :: articleJs"/>
+<th:block th:include="fragments/article-js :: articleJs"/>
 
-<script>
+<script th:inline="javascript">
+    const articleId = [[${articleId}]];
+
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
         initialValue: document.getElementById('article-contents').value
-    })
+    });
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -135,21 +119,174 @@
         height: '200px'
     });
 
-    document.getElementById("comment-submit").addEventListener('click', function() {
-        document.getElementById("comment-contents").value =  editor.el.value;
+    document.getElementById("comment-submit").addEventListener('click', function () {
+        document.getElementById("comment-contents").value = editor.getValue();
     });
 
-    const convertTime = function(elapsedtime) {
-        let hours = Math.floor(elapsedtime / 3600000);
-        return hours > 24 ? hours / 24 + "일전" : hours + "시간 전";
+    // AJAX 수정 / 삭제
+    document.getElementById("comments").addEventListener("click", (event) => {
+        const target = event.target;
+        const parent = target.closest('.comment-box');
+
+        if (target.classList.contains("modify-button")) {
+            parent.children[0].classList.add("hidden");
+            parent.children[1].classList.remove("hidden");
+            target.classList.add("hidden");
+            return;
+        }
+
+        if (target.classList.contains("update-button")) {
+            let id = parent.dataset.id;
+            let commentRequest = {
+                "id": id,
+                "contents": parent.getElementsByTagName('input')[0].value,
+            };
+
+            fetch('/api/comments/' + id, {
+                method: "PUT",
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                body: JSON.stringify(commentRequest),
+            })
+                .then(response => response.json())
+                .then(body => {
+                    const comment = document.getElementById("comment" + body.id);
+                    comment.children[1].classList.toggle("hidden");
+                    comment.children[2].classList.toggle("hidden");
+
+                    const contents = comment.children[0];
+                    contents.children[0].textContent = body.contents;
+                    contents.classList.toggle("hidden");
+                });
+            return;
+        }
+
+        if (target.classList.contains("remove-button")) {
+            let id = parent.dataset.id;
+
+            fetch('/api/comments/' + id, {
+                method: "DELETE",
+            }).then(() => {
+                parent.closest('li').remove();
+
+                updateCommentSize();
+            });
+        }
+    });
+
+    // 댓글 생성
+    document.getElementById('comment-submit').addEventListener('click', event => {
+        let commentRequest = {
+            articleId: articleId,
+            contents: document.getElementById('comment-contents').value,
+        };
+
+        fetch('/api/comments', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            body: JSON.stringify(commentRequest),
+        }).then(response => response.json())
+            .then(data => {
+                let template = document.getElementById('template');
+
+                let resultHtml = template.innerHTML.replace(/{id}/g, data.id)
+                    .replace(/{name}/g, data.commenter.name)
+                    .replace(/{contents}/g, data.contents)
+                    .replace(/{image}/g, getByteToImage(data.commenter.image))
+                    .replace(/{elapsedTime}/g, convertTime(data.createdDate));
+
+                document.getElementById('comments').innerHTML += resultHtml;
+                editor.setValue("");
+
+                updateCommentSize();
+            });
+    });
+
+    const convertTime = function (createdDate) {
+        let minute = Math.floor((new Date() - new Date(createdDate)) / 60000);
+        if (minute === 0) {
+            return "방금 전"
+        }
+        if (minute < 60) {
+            return minute + "분 전";
+        }
+        return minute > 24 * 60 ? minute / 24 * 60 + "일 전" : minute / 60 + "시간 전";
     };
 
-    window.addEventListener("load", function(){
-        let span = document.getElementsByClassName("elapsed-time");
-        Array.from(span).forEach(function(s) {
-            s.textContent = convertTime(s.textContent);
-        });
+    function getByteToImage(image) {
+        return image === null ?
+            "https://m2bob-forum.net/wcf/images/avatars/3e/2720-3e546be0b0701e0cb670fa2f4fcb053d4f7e1ba5.jpg" : "data:image/png;base64," + image;
+    }
+
+    // 댓글 불러오기
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/articles/' + articleId + '/comments/', {
+            method: "GET",
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        }).then(response => response.json())
+            .then(data => {
+                let template = document.getElementById('template');
+
+                data.comments.forEach(comment => {
+                    let resultHtml = template.innerHTML.replace(/{id}/g, comment.id)
+                        .replace(/{name}/g, comment.commenter.name)
+                        .replace(/{contents}/g, comment.contents)
+                        .replace(/{image}/g, getByteToImage(comment.commenter.image))
+                        .replace(/{elapsedTime}/g, convertTime(comment.createdDate));
+
+                    document.getElementById('comments').innerHTML += resultHtml;
+                });
+
+                updateCommentSize();
+            });
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/articles/' + articleId, {
+            method: "GET",
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        }).then(response => response.json())
+            .then(article => {
+                document.getElementById('article-title').innerText = article.title;
+                document.getElementById('article-delete-form').action = "/articles/" + article.id;
+                document.getElementById('article-edit-button').href = "/articles/" + article.id + "/edit";
+                viewer.setValue(article.contents);
+
+                if (article.coverUrl !== null) {
+                    document.getElementsByClassName("cover-img").item(0).style.backgroundImage = 'url(' + article.coverUrl + ')';
+                }
+            });
+    });
+
+    const updateCommentSize = function () {
+        const size = document.getElementById('comments').childElementCount;
+
+        document.getElementById('comment-size').innerText = size;
+    }
+</script>
+
+<script id="template" type="text/template">
+    <li class="comment-item border bottom mrg-btm-15 mrg-top-15">
+        <img class="thumb-img img-circle" src="{image}"
+             alt="{name}">
+        <div class="info">
+            <span class="text-bold inline-block">{name}</span>
+            <span class="sub-title inline-block pull-right">
+                    <i class="ti-timer pdd-right-5"></i>
+                    <span class="elapsed-time">{elapsedTime}</span>
+                </span>
+            <div id="comment{id}" class="comment-box" data-id="{id}">
+                <div>
+                    <p class="width-80">{contents}</p>
+                </div>
+                <div class="hidden">
+                    <input type="text" value="{contents}">
+                    <button type="button" class="btn-sm btn-dark update-button">update</button>
+                </div>
+                <button class="modify-button btn-sm btn-dark">edit</button>
+                <button type="button" class="btn-sm btn-dark remove-button">remove</button>
+            </div>
+        </div>
+    </li>
 </script>
 </body>
 </html>
