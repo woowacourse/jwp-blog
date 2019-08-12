@@ -40,15 +40,3 @@
 .divider {
     width: 100%;
 }
-
-.comment-buttons{
-    margin-bottom:50px;
-    text-align:right;
-}
-
-.comment-buttons button{
-    display: inline;
-}
-.comment-buttons form{
-    display:inline;
-}

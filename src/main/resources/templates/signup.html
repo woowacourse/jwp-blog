@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorator="~{layout/login-layout}"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>우아한 크루의 블로그</title>
+    <link href="/css/index.css" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+    <th:block layout:fragment="content">
+        <div class="authentication">
+            <div class="sign-in-2">
+                <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                     style="background-image: url('/images/default/bg.jpg')">
+                    <div class="row">
+                        <div class="col-md-10 mr-auto ml-auto">
+                            <div class="row">
+                                <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
+                                    <div class="vertical-align full-height">
+                                        <div class="table-cell">
+                                            <div class="card min-width-480px">
+                                                <div class="card-body">
+                                                    <div class="pdd-horizon-30 pdd-vertical-30">
+                                                        <div class="mrg-btm-30">
+                                                            <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
+                                                                회원가입</h2>
+                                                        </div>
+                                                        <form action="/users" method="post" name="userForm">
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark"
+                                                                       for="userName">Username</label>
+                                                                <input class="form-control" id="userName"
+                                                                       name="userName"
+                                                                       type="text">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark" for="email">Email
+                                                                    Address</label>
+                                                                <input class="form-control" id="email" name="email"
+                                                                       type="email">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark"
+                                                                       for="password">Password</label>
+                                                                <input class="form-control" id="password"
+                                                                       name="password"
+                                                                       onkeyup="checkPassword()"
+                                                                       placeholder="Password"
+                                                                       type="password">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="text-normal text-dark">Confirm
+                                                                    Password</label>
+                                                                <input class="form-control" id="confirmPassword"
+                                                                       name="confirmPassword"
+                                                                       onkeyup="checkPassword()"
+                                                                       placeholder="Password"
+                                                                       type="password">
+                                                                <span id="message"></span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
+                                                                        onclick="checkUserForm()"
+                                                                        type="submit">
+                                                                    가입하기
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        <div class="text-dark">
+                                                            <span>이미 회원이신가요?</span>
+                                                            <a class="text-info pointer mrg-left-5"
+                                                               href="/login">로그인</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</div>
+<th:block layout:fragment="addScript">
+    <script th:if="${signUpStatus != null}" th:inline="javascript">
+        /* <![CDATA[ */
+        const error = [[ ${signUpStatus}]];
+        alert(error)
+        /* ]]> */
+    </script>
+    <script th:inline="javascript" th:unless="${signUpStatus != null}">
+    </script>
+    <script>
+        function checkUserForm() {
+            var namePattern = /^[a-z]{2,10}$/i;
+            var passwordPattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+            var email = document.getElementById("email");
+            var username = document.getElementById("userName");
+            var password = document.getElementById("password");
+            var confirmPassword = document.getElementById("confirmPassword");
+
+            if (email.validity.typeMismatch) {
+                email.setCustomValidity("이메일 형식이 아닙니다.");
+            } else {
+                email.setCustomValidity("");
+            }
+
+            if (!namePattern.test(username.value)) {
+                username.setCustomValidity("아이디는 2~10자의 영문자 이어야 합니다.");
+            } else {
+                username.setCustomValidity("");
+            }
+
+            if (!passwordPattern.test(password.value)) {
+                password.setCustomValidity("비밀번호는 8자이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.");
+                document.querySelector('input[name="password"]').value = "";
+                document.querySelector('input[name="confirmPassword"]').value = "";
+            } else {
+                password.setCustomValidity("");
+            }
+
+            if (confirmPassword.value !== password.value) {
+                confirmPassword.setCustomValidity("비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                document.querySelector('input[name="password"]').value = "";
+                document.querySelector('input[name="confirmPassword"]').value = "";
+            } else {
+                confirmPassword.setCustomValidity("");
+            }
+        }
+
+        var checkPassword = function () {
+            if (document.userForm.password.value === document.userForm.confirmPassword.value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'matching';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'not matching';
+            }
+        }
+    </script>
+</th:block>
+</body>
+</html>

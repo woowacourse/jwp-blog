@@ -1,52 +1,63 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.lang.NonNull;
+import techcourse.myblog.exception.UnauthenticatedUserException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
-@Getter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Comment {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    public Comment() {
+    }
 
-    @CreationTimestamp
-    private LocalDateTime createdTimeAt;
-    @UpdateTimestamp
-    private LocalDateTime updateTimeAt;
+    public Comment(String contents, Article article, User author) {
+        this.contents = contents;
+        this.article = article;
+        this.author = author;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    @Id
+    @Column(name = "COMMENT_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NonNull
+    @Column
+    private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "ARTICLE_ID")
+    @NonNull
     private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "USER_ID")
+    @NonNull
     private User author;
 
-    @Column(nullable = false, length = 5000)
-    private String contents;
-
-    public Comment(Article article, User author, String contents) {
-        this.article = Optional.ofNullable(article).orElseThrow(IllegalArgumentException::new);
-        this.author = Optional.ofNullable(author).orElseThrow(IllegalArgumentException::new);
-        this.contents = Optional.ofNullable(contents).orElseThrow(IllegalArgumentException::new);
+    public void update(Comment comment) {
+        this.contents = comment.contents;
     }
 
-    public boolean isSameAuthor(User user) {
-        return this.author.equals(user);
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void validate(User user) {
+        if (author.equals(user) == false) {
+            throw new UnauthenticatedUserException();
+        }
     }
 }

@@ -1,60 +1,90 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
+import techcourse.myblog.exception.UnauthenticatedUserException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Article {
+    public Article() {
+    }
+
+    public Article(String title, String contents, String coverUrl, User author) {
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = coverUrl;
+        this.author = author;
+    }
+
     @Id
-    @Column(name = "id")
+    @Column(name = "ARTICLE_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    private User author;
-
-    @Column(nullable = false, length = 50)
+    @NonNull
+    @Column(length = 100)
     private String title;
 
-    @Column(nullable = false)
-    private String coverUrl;
-
-    @Column(nullable = false, length = 50)
+    @NonNull
+    @Column(length = 1000)
     private String contents;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    @NonNull
+    @Column(length = 100)
+    private String coverUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    @NonNull
+    private User author;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    public Article(User author, String title, String coverUrl, String contents) {
-        this.author = author;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public Long getId() {
+        return id;
     }
 
-    public boolean isSameAuthor(Article article) {
-        return this.author.equals(article.author);
+    public String getTitle() {
+        return title;
     }
 
-    public boolean isSameAuthor(User user) {
-        return this.author.equals(user);
+    public String getContents() {
+        return contents;
     }
 
-    public void writeComment(Comment comment) {
-        comments.add(comment);
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     public void update(Article article) {
         this.title = article.title;
-        this.coverUrl = article.coverUrl;
         this.contents = article.contents;
+        this.coverUrl = article.coverUrl;
+    }
+
+    public void add(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void remove(Comment comment) {
+        comments.remove(comment);
+    }
+
+    public void validate(User user) {
+        if (author.equals(user) == false) {
+            throw new UnauthenticatedUserException();
+        }
     }
 }

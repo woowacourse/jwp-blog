@@ -1,53 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" lang="ko">
+<html lang="ko" layout:decorator="~{layout/mypage-layout}"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/css/mypage.css">
+    <title>우아한테크코스 기술블로그</title>
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
 </head>
-
-<th:block layout:fragment="content">
-    <div>
-        <th:block th:replace="layout/header :: header"></th:block>
-        <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
-                <div class="display-block height-100"></div>
-            </div>
-        </div>
-        <div th:object="${user}" class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
+<body>
+<div>
+    <th:block layout:fragment="content">
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
             <div class="row">
                 <div class="col-md-7 mx-auto">
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <a href="/profile/edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                            <a class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
+                               href="/mypage/edit">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
                         </div>
                         <div class="card-block">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <p class="mrg-top-10 text-dark"><b>이름</b></p>
+                                    <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="${user.name}"></p>
+                                    <p class="mrg-top-10" th:text="${user.userName}">Brown</p>
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <p class="mrg-top-10 text-dark"><b>이메일</b></p>
+                                    <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="${user.email}"></p>
+                                    <p class="mrg-top-10" th:text="${user.email}">gracefulBrown@woowahan.com</p>
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <p class="mrg-top-10 text-dark"><b>아바타</b></p>
+                                    <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" width="117" alt="">
+                                        <img alt="" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                             width="117">
                                     </div>
                                 </div>
                             </div>
@@ -59,11 +59,11 @@
                                 <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <span class="btn-dark border-radius-4 inline-block">
-                                                <span class="pdd-horizon-10 lh-2-5 display-block">
-                                                    <i class="fa fa-github"></i>
-                                                </span>
+                                        <span class="btn-dark border-radius-4 inline-block">
+                                            <span class="pdd-horizon-10 lh-2-5 display-block">
+                                                <i class="fa fa-github"></i>
                                             </span>
+                                        </span>
                                             <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                         </div>
                                         <div class="col-md-8 text-right">
@@ -73,11 +73,11 @@
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-4">
-                                        <span class="btn-facebook border-radius-4 inline-block">
-                                            <span class="pdd-horizon-10 lh-2-5 display-block">
-                                                <i class="ti-facebook"></i>
-                                            </span>
+                                    <span class="btn-facebook border-radius-4 inline-block">
+                                        <span class="pdd-horizon-10 lh-2-5 display-block">
+                                            <i class="ti-facebook"></i>
                                         </span>
+                                    </span>
                                             <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                         </div>
                                         <div class="col-md-8 text-right">
@@ -85,16 +85,19 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <form class="col-12" action="/profile" th:method="delete">
-                                        <button class="col-12 btn btn-danger">회원 탈퇴</button>
-                                    </form>
                                 </div>
                             </div>
+                            <form action="/users" method="post">
+                                <button class="btn btn-tumblr" id="remove_btn" type="submit">회원탈퇴</button>
+                                <input name="_method" type="hidden" value="delete"/>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</th:block>
+    </th:block>
+</div>
+
+</body>
 </html>

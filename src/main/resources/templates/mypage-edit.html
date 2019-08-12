@@ -1,55 +1,81 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" lang="ko">
+<html lang="ko" layout:decorator="~{layout/mypage-layout}"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/css/mypage.css">
+    <title>우아한테크코스 기술블로그</title>
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
 </head>
-<th:block layout:fragment="content">
-    <div>
-        <th:block th:replace="layout/header :: header"></th:block>
-        <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
-                <div class="display-block height-100"></div>
-            </div>
-        </div>
+<body>
+<div>
+    <th:block layout:fragment="content">
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
             <div class="row">
                 <div class="col-md-7 mx-auto">
-                    <div th:object="${user}" class="card">
-                        <form action="/profile/edit" method="post">
+                    <div class="card">
+                        <form action="/mypage" method="post" name="userForm">
                             <div class="card-heading pdd-btm-5 border bottom">
                                 <h4 class="card-title d-inline-block">profile</h4>
-                                <input type="hidden" name="_method"  value="put">
-                                <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
+                                <button class="btn btn-info float-right mrg-btm-0 relative bottom-5"
+                                        onclick="checkUserForm()" type="submit">수정
+                                </button>
                             </div>
                             <div class="card-block">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"><b>이름</b></p>
+                                        <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="name" class="form-control" th:value="*{name}">
+                                        <input class="form-control" id="userName" name="userName"
+                                               th:value="${user.userName}" type="text">
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"><b>이메일</b></p>
+                                        <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p th:text = "*{email}" type="email" class="mrg-top-10" name="email" />
+                                        <p class="mrg-top-10" th:text="${user.email}">gracefulBrown@woowahan.com</p>
+                                        <input class="form-control" name="email" th:value="${user.email}" type="hidden">
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <p class="mrg-top-10 text-dark"><b>아바타</b></p>
+                                        <p class="mrg-top-10 text-dark"><b>Password</b></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input class="form-control" id="password" name="password"
+                                               onkeyup="checkPassword()" placeholder="Password" type="password">
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p class="mrg-top-10 text-dark"><b>Confirm Password</b></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input class="form-control" id="confirmPassword" name="confirmPassword"
+                                               onkeyup="checkPassword()" placeholder="Confirm Password" type="password">
+                                        <span id="message"></span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
                                     </div>
                                     <div class="col-md-6">
                                         <div>
-                                            <label for="img-upload" class="pointer">
-                                                <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" width="117" alt="">
+                                            <label class="pointer" for="img-upload">
+                                                <img alt=""
+                                                     src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                                     width="117">
                                                 <span class="btn btn-default display-block no-mrg-btm">Choose file</span>
-                                                <input class="d-none" type="file" name="uploadedimages0" multiple id="img-upload">
+                                                <input class="d-none" id="img-upload" multiple name="uploadedimages0"
+                                                       type="file">
                                             </label>
                                         </div>
                                     </div>
@@ -62,32 +88,32 @@
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <span class="btn-dark border-radius-4 inline-block">
-                                                    <span class="pdd-horizon-10 lh-2-5 display-block">
-                                                        <i class="fa fa-github"></i>
-                                                    </span>
-                                                </span>
+                                        <span class="btn-dark border-radius-4 inline-block">
+                                            <span class="pdd-horizon-10 lh-2-5 display-block">
+                                                <i class="fa fa-github"></i>
+                                            </span>
+                                        </span>
                                                 <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                             </div>
                                             <div class="col-md-8 text-right">
-                                                <input type="text" class="form-control" value="https://www.github.com/profile">
+                                                <input class="form-control" type="text"
+                                                       value="https://www.github.com/profile">
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="row">
                                             <div class="col-md-4">
-                                            <span class="btn-facebook border-radius-4 inline-block">
-                                                <span class="pdd-horizon-10 lh-2-5 display-block">
-                                                    <i class="ti-facebook"></i>
-                                                </span>
-                                            </span>
+                                    <span class="btn-facebook border-radius-4 inline-block">
+                                        <span class="pdd-horizon-10 lh-2-5 display-block">
+                                            <i class="ti-facebook"></i>
+                                        </span>
+                                    </span>
                                                 <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                             </div>
                                             <div class="col-md-8 text-right">
-                                                <input type="text" class="form-control" value="https://www.facebook.com/profile">
+                                                <input class="form-control" type="text"
+                                                       value="https://www.facebook.com/profile">
                                             </div>
-                                            <hr>
-                                            <div class="col-12 alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -97,6 +123,50 @@
                 </div>
             </div>
         </div>
-    </div>
+    </th:block>
+</div>
+<th:block layout:fragment="addScript">
+    <script>
+        function checkUserForm() {
+            var namePattern = /^[a-z]{2,10}$/i;
+            var passwordPattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+            var username = document.getElementById("userName");
+            var password = document.getElementById("password");
+            var confirmPassword = document.getElementById("confirmPassword");
+
+            if (!namePattern.test(username.value)) {
+                username.setCustomValidity("아이디는 2~10자의 영문자 이어야 합니다.");
+            } else {
+                username.setCustomValidity("");
+            }
+
+            if (!passwordPattern.test(password.value)) {
+                password.setCustomValidity("비밀번호는 8자이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.");
+                document.querySelector('input[name="password"]').value = "";
+                document.querySelector('input[name="confirmPassword"]').value = "";
+            } else {
+                password.setCustomValidity("");
+            }
+
+            if (confirmPassword.value !== password.value) {
+                confirmPassword.setCustomValidity("비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                document.querySelector('input[name="password"]').value = "";
+                document.querySelector('input[name="confirmPassword"]').value = "";
+            } else {
+                password.setCustomValidity("");
+            }
+        }
+
+        var checkPassword = function () {
+            if (document.userForm.password.value === document.userForm.confirmPassword.value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'matching';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'not matching';
+            }
+        }
+    </script>
 </th:block>
+</body>
 </html>
