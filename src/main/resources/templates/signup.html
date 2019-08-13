@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-
-<head th:replace="/fragments/signup-head :: signUpHead"></head>
+<html xmlns:th="http://thymeleaf.org" lang="ko">
+<head>
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
 
 <body>
 <div class="app">
@@ -10,8 +13,10 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -19,7 +24,8 @@
     </div>
     <div class="authentication">
         <div class="sign-in-2">
-            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/static/images/default/bg.jpg')">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                 style="background-image: url('/images/default/bg.jpg')">
                 <div class="row">
                     <div class="col-md-10 mr-auto ml-auto">
                         <div class="row">
@@ -30,36 +36,47 @@
                                             <div class="card-body">
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
-                                                        <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">회원가입</h2>
+                                                        <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
+                                                            회원가입</h2>
                                                     </div>
-                                                    <form id="signupForm" method="post" action="/users" th:object="${userRequest}">
+                                                    <form action="/users" method="post" th:object="${userDto}">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input id="name" type="text" name="name" class="form-control" required th:field="*{name}">
+                                                            <input id="name" type="text" name="name" class="form-control" required th:field="*{name}"/>
                                                             <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input id="email" type="email" name="email" class="form-control"  required th:field="*{email}">
+                                                            <input id="email" type="email" name="email" class="form-control" required th:field="*{email}">
                                                             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input id="submitPassword"type="password" name="password" class="form-control" placeholder="Password" required th:field="*{password}">
+                                                            <input id="password" type="password" name="password" class="form-control" required th:field="*{password}"
+                                                                   placeholder="Password" onchange="passwordOnChangeHandler()">
                                                             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="text-normal text-dark">Confirm Password</label>
-                                                            <input id="confirmPassword" type="password" class="form-control" placeholder="Password" required>
-                                                            <small class="none" id="unmatchedPassword" style="color: darkred;">비밀번호가 일치하지 않습니다.</small>
+                                                            <label class="text-normal text-dark">Confirm
+                                                                Password</label>
+                                                            <input id="input-pwcheck" type="password" class="form-control" required
+                                                                   placeholder="Password" onchange="passwordOnChangeHandler()">
+                                                            <span id="password-check-error-message" style="color:red"></span>
+                                                        </div>
+                                                        <div style="padding-bottom: 20px;" th:if="${error}">
+                                                            <span th:text = "${error}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="button" id="submitButton" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
+                                                            <button onclick ="return isSamePasswordAndCheckPassword()" type="submit"
+                                                                    class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                                가입하기
+                                                            </button>
                                                         </div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
-                                                        <a href="/login" class="text-info pointer mrg-left-5">로그인</a>
+                                                        <a href="/login"
+                                                           class="text-info pointer mrg-left-5">로그인</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -74,23 +91,15 @@
         </div>
     </div>
 </div>
-
-<th:block th:include="/fragments/main-js :: mainJs"/>
-
-</body>
+<th:block th:include="includes/js :: common_js"></th:block>
 <script>
-    document.getElementById("submitButton").addEventListener("click", () => {
-        let signupForm = document.getElementById("signupForm");
-        let password = document.getElementById("submitPassword").value;
-        let confirmPassword = document.getElementById("confirmPassword").value;
 
-        if (password !== confirmPassword) {
-            document.getElementById("unmatchedPassword").setAttribute("class", '');
-            return;
-        }
+    const isSamePasswordAndCheckPassword = () => document.getElementById('password').value === document.getElementById('input-pwcheck').value
 
-        signupForm.submit();
-    });
-
+    const passwordOnChangeHandler = () => {
+        document.getElementById('password-check-error-message').innerText = isSamePasswordAndCheckPassword() ? '' : '비밀번호를 확인해주세요'
+    }
 </script>
+</body>
+
 </html>

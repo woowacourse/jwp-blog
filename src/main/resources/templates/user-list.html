@@ -1,28 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-
-<head th:replace="/fragments/main-head.html :: mainHead"></head>
-
+<head>
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
+    <th:block th:include="includes/article_js :: article_js"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
 <body>
 <div>
-    <header id="header" class="header navbar bg-transparent no-border">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-                <th:block th:include="/includes/logout-nav"/>
-            </ul>
-        </div>
-    </header>
+    <th:block th:include="includes/header :: header"></th:block>
 
     <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
             </div>
         </div>
@@ -36,14 +25,14 @@
                         <h4 class="card-title">User List</h4>
                     </div>
                     <div class="card-body">
-                        <ul class="list-unstyled list-info">
-                            <li th:each="user : ${users}">
+                        <ul th:each="user: ${users}" class="list-unstyled list-info">
+                            <li>
                                 <div class="pdd-vertical-10">
                                     <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
                                     <div class="info">
-                                        <a th:text="${user.name}" th:href="${session.user.email == user.email} ? '/mypage' : ''" class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
+                                        <a th:utext="${user.name}" href="/mypage" class="title no-pdd-vertical text-semibold inline-block lh-1"></a>
                                         <span class="sub-title">
-                                            <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
+                                            <span th:utext="${user.email}"></span>
                                         </span>
                                     </div>
                                 </div>
@@ -55,10 +44,7 @@
         </div>
     </div>
 </div>
-
-<footer th:replace="/fragments/common-footer.html :: commonFooter"></footer>
-
-<th:block th:include="/fragments/main-js :: mainJs"/>
-
+<th:block th:include="includes/footer :: footer"></th:block>
+<th:block th:include="includes/js :: common_js"></th:block>
 </body>
 </html>

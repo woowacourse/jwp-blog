@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-
-<head th:replace="/fragments/mypage-head :: mypageHead"></head>
-
+<html xmlns:th="http://thymeleaf.org" lang="ko">
+<head>
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/mypage.css">
+    <style>
+        .remove-user-btn {
+            width: 100%;
+            height: 30px;
+            border-radius: 30px;
+            border: 0px;
+            background-color: red;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
 <div>
-    <header id="header" class="header navbar bg-transparent no-border">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-                <th:block th:include="/includes/logout-nav"/>
-            </ul>
-        </div>
-    </header>
+    <th:block th:include="includes/header :: header"></th:block>
 
     <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
 
             </div>
@@ -35,17 +35,17 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="/mypage-edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                        <a href="/mypage/edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
                     </div>
                     <div class="card-block">
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>Name</b></p>
+                                <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${user.name}" class="mrg-top-10">Brown</p>
+                                <p class="mrg-top-10" th:text="${session.user.name}">Brown</p>
                             </div>
                         </div>
                         <hr>
@@ -54,7 +54,7 @@
                                 <p class="mrg-top-10 text-dark"> <b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${user.email}" class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text="${session.user.email}">gracefulBrown@woowahan.com</p>
                             </div>
                         </div>
                         <hr>
@@ -106,12 +106,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-7 mx-auto">
+                    <form action="/mypage" method="post">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="remove-user-btn" >탈퇴하기</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<th:block th:include="/fragments/main-js :: mainJs"/>
-
+<th:block th:include="includes/js :: common_js"></th:block>
 </body>
 </html>

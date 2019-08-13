@@ -1,50 +1,42 @@
 package techcourse.myblog.application.dto;
 
-import techcourse.myblog.support.validator.TitleConstraint;
+import lombok.Getter;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@Getter
 public class ArticleDto {
-    private Long id;
-    @TitleConstraint
+    private final static String TITLE_CONSTRAINT_MESSAGE = "제목을 입력해주세요.";
+    private final static String CONTENTS_CONSTRAINT_MESSAGE = "내용을 입력해주세요.";
+
+    @NotBlank(message = TITLE_CONSTRAINT_MESSAGE)
     private String title;
+
+    @NotNull
     private String coverUrl;
+
+    @NotBlank(message = CONTENTS_CONSTRAINT_MESSAGE)
     private String contents;
-
-    public ArticleDto(Long id, String title, String coverUrl, String contents) {
-        this.id = id;
+    
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public Long getId() {
-        return id;
+    public Article toArticle(User author) {
+        return new Article(title, coverUrl, contents, author);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
+    @Override
+    public String toString() {
+        return "ArticleDto{" +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
     }
 }

@@ -1,33 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-
-<head th:replace="/fragments/main-head :: mainHead"></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
 
 <body>
 <div>
-    <header id="header" class="header navbar bg-transparent no-border">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
-            </ul>
-        </div>
-    </header>
-
+    <th:block th:include="includes/header :: header"></th:block>
     <div class="about-cover card no-border mrg-btm-0">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
-        <div class="welcome-text-container">
-            <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
-            </div>
-        </div>
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
+        <!--        <div class="welcome-text-container">-->
+        <!--            <div class="welcome-txt">-->
+        <!--                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>-->
+        <!--            </div>-->
+        <!--        </div>-->
     </div>
 
     <div class="container-fluid width-100 mrg-btm-30">
@@ -46,22 +35,24 @@
                             <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
                         </li>
                     </ul>
-                    <div class="width-100 fixed left-0 border bottom"></div>
+                    <div class="width-100 absolute left-0 border bottom"></div>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
+                        <div th:if="${articles}" th:each="article: ${articles}" role="tabpanel"
+                             class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a th:each="article : ${articles}" th:href="@{'/articles/' + ${article.id}}" class="card article-container">
+                                <a th:href="'/articles/' + ${article.id}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
-                                            <div class="background-holder has-content" th:style = "
-                                            'background-image: url(' + ${#strings.isEmpty(article.coverUrl) ? '/static/images/pages/index/study.jpg' : article.coverUrl} + ');'"></div>
+                                            <div class="background-holder has-content"
+                                                 th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h2>
-                                                        <p th:text="${article.contents}">우아한테크코스의 선발 과정을 목적의식 있는 연습으로 설계한 내용과 목적의식 있는 연습으로 진행했을 때의 학습 효과에 대해 다루고 있습니다.</p>
+                                                        <h2 th:text="${article.title}" class="mrg-btm-20 text-bold">
+                                                            title</h2>
+                                                        <p th:text="${article.contents}">contents</p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
@@ -86,16 +77,15 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="/writing" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+        <a href="/articles/writing"
+           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
 
     </div>
 </div>
 
-<footer th:replace="/fragments/common-footer :: commonFooter"></footer>
-
-<th:block th:include="/fragments/main-js :: mainJs"/>
-
+<th:block th:include="includes/footer :: footer"></th:block>
+<th:block th:include="includes/js :: common_js"></th:block>
 </body>
 </html>
