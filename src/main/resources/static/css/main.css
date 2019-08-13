@@ -59,6 +59,10 @@
     }
 }
 
+.none {
+    display: none;
+}
+
 @media only screen and (max-width: 480px) {
     .mobile-menu-btn {
         display: block;

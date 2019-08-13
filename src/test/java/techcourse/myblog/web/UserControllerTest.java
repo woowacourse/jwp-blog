@@ -115,6 +115,7 @@ public class UserControllerTest extends LoggedInTemplate {
     @Test
     void 회원정보_수정_성공_테스트() {
         loggedInPutRequest("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", NAME_TO_UPDATE)
                         .with("email", EMAIL_TO_UPDATE))
@@ -129,6 +130,7 @@ public class UserControllerTest extends LoggedInTemplate {
     void 회원정보_수정_실패_이메일_중복_테스트() {
         signUpUser();
         loggedInPutRequest("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", NAME_TO_UPDATE)
                         .with("email", EMAIL))

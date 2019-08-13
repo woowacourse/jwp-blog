@@ -24,6 +24,6 @@ public class ArticleAssembler {
     }
 
     private static User getAuthorWithoutPassword(User author) {
-        return new User(author.getName(), author.getEmail());
+        return new User(author.getId(), author.getName(), author.getEmail());
     }
 }

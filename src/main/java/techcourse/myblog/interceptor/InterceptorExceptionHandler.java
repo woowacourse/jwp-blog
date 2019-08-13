@@ -13,6 +13,6 @@ public class InterceptorExceptionHandler {
 
     @ExceptionHandler(IOException.class)
     public void handleIOException(IOException e) {
-        log.info(e.getMessage());
+        log.error(e.getMessage());
     }
 }

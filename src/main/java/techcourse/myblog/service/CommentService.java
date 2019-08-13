@@ -9,6 +9,7 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentAssembler;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.comment.CommentRequest;
+import techcourse.myblog.dto.comment.CommentResponse;
 import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.exception.comment.CommentAuthenticationException;
 import techcourse.myblog.exception.comment.CommentException;
@@ -28,20 +29,25 @@ public class CommentService {
     }
 
     @Transactional
-    public void addComment(CommentRequest commentRequest, UserResponse userResponse, Long articleId) {
+    public CommentResponse addComment(CommentRequest commentRequest, UserResponse userResponse, Long articleId) {
         String contents = commentRequest.getContents();
         User commenter = userService.getUserByEmail(userResponse);
         Article article = articleService.findArticleById(articleId);
 
         Comment comment = commentRepository.save(new Comment(contents, commenter, article));
         article.addComment(comment);
+
+        return CommentAssembler.toDto(comment);
     }
 
     @Transactional
-    public void update(Long commentId, CommentRequest commentRequest, UserResponse userResponse) {
+    public CommentResponse update(Long commentId, CommentRequest commentRequest, UserResponse userResponse) {
         checkAuthentication(commentId, userResponse);
         Comment comment = getCommentFindById(commentId);
+
         comment.update(CommentAssembler.toEntity(commentRequest));
+
+        return CommentAssembler.toDto(comment);
     }
 
     private Comment getCommentFindById(Long commentId) {

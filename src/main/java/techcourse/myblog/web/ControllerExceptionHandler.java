@@ -2,11 +2,11 @@ package techcourse.myblog.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.exception.article.ArticleException;
 import techcourse.myblog.exception.comment.CommentAuthenticationException;
 import techcourse.myblog.exception.user.LoginException;
@@ -25,10 +25,11 @@ public class ControllerExceptionHandler {
      * @return 인덱스 페이지로 이동
      */
     @ExceptionHandler(ArticleException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleArticleException(ArticleException e) {
+    public ResponseEntity<String> handleArticleException(ArticleException e) {
         log.error(EXCEPTION, e.getMessage());
-        return "/";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("index", "/");
+        return new ResponseEntity<>("error", headers, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -39,13 +40,11 @@ public class ControllerExceptionHandler {
      * @return 다시 로그인
      */
     @ExceptionHandler(LoginException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handleLoginException(LoginException e) {
-        log.error(EXCEPTION, e.getMessage());
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("error", e.getMessage());
-        mav.setViewName("/login");
-        return mav;
+    public ResponseEntity<String> handleLoginException(LoginException e) {
+        log.error(e.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("login", "/login");
+        return new ResponseEntity<>("error", headers, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -56,13 +55,11 @@ public class ControllerExceptionHandler {
      * @return 다시 회원가입 페이지로
      */
     @ExceptionHandler(SignUpException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView handleSignUpException(SignUpException e) {
-        log.error(EXCEPTION, e.getMessage());
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("error", e.getMessage());
-        mav.setViewName("/signup");
-        return mav;
+    public ResponseEntity<String> handleSignUpException(SignUpException e) {
+        log.error(e.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("signup", "/signup");
+        return new ResponseEntity<>("error", headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -73,10 +70,9 @@ public class ControllerExceptionHandler {
      * @return 인덱스 페이지로
      */
     @ExceptionHandler(CommentAuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public String handleCommentAuthenticationException(CommentAuthenticationException e) {
+    public ResponseEntity<String> handleCommentAuthenticationException(CommentAuthenticationException e) {
         log.error(EXCEPTION, e.getMessage());
-        return "/";
+        return new ResponseEntity<>("error", HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UserException.class)

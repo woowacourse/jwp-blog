@@ -22,5 +22,5 @@ class URL {
     static final String USER_LIST = "/user-list";
 
     /* Comment */
-    static final String COMMENT = "/comment";
+    static final String COMMENT = "/comments";
 }

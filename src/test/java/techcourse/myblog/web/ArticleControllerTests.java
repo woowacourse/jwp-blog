@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -73,6 +74,7 @@ public class ArticleControllerTests extends LoggedInTemplate {
         String articleId = getArticleID();
 
         loggedInPutRequest("/articles/" + articleId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(BodyInserters
                         .fromFormData("title", UPDATED_TITLE)
                         .with("contents", UPDATED_CONTENTS)
@@ -98,6 +100,7 @@ public class ArticleControllerTests extends LoggedInTemplate {
 
     WebTestClient.ResponseSpec 게시글_작성() {
         return loggedInPostRequest("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", TITLE)
                         .with("contents", CONTENTS)

@@ -4,89 +4,81 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.dto.comment.CommentRequest;
 
 public class CommentControllerTest extends LoggedInTemplate {
 
     private static final Logger log = LoggerFactory.getLogger(CommentControllerTest.class);
 
     private static final String CONTENTS = "comment";
-    private static final String NEW_CONTENTS = "new comment";
 
     private static final String OTHER_USER_NAME = "bob";
     private static final String OTHER_USER_PASSWORD = "Password1!";
     private static final String OTHER_USER_EMAIL = "bob@gmail.com";
 
+    private static final String COMMENT_ID = "1";
+
+    private CommentRequest commentRequest;
+    private String articleId;
+
     @BeforeEach
     void setUp() {
         signUpUser();
+        commentRequest = new CommentRequest(CONTENTS);
+        articleId = getArticleId();
+        댓글_작성(articleId);
     }
 
     @Test
-    void 댓글_작성_성공_테스트() {
-        String articleId = getArticleId();
-        댓글_작성(articleId)
-                .expectStatus()
-                .is3xxRedirection()
-                .expectHeader()
-                .valueMatches("location", ".+/articles/" + articleId);
+    void 댓글_작성_성공() {
+        댓글_작성(articleId).expectStatus()
+                .isOk();
     }
 
     @Test
     void 댓글_수정_성공_테스트() {
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-
-        loggedInPutRequest("/comment/" + articleId + "/" + commentId)
-                .body(BodyInserters
-                        .fromFormData("contents", NEW_CONTENTS))
+        loggedInPutRequest("/comments/" + articleId + "/" + COMMENT_ID)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
-                .expectHeader()
-                .valueMatches("location", ".+/articles/" + articleId);
+                .isOk();
     }
 
     @Test
     void 작성자가_아닌_경우_댓글_수정_살패_테스트() {
         signUpUser(OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_EMAIL);
 
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-        loggedInPutRequest("/comment/" + articleId + "/" + commentId, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
-                .body(BodyInserters
-                        .fromFormData("contents", NEW_CONTENTS))
+        loggedInPutRequest("/comments/" + articleId + "/" + COMMENT_ID, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
+                .is4xxClientError()
                 .expectHeader()
                 .valueMatches("location", ".+/");
     }
 
     @Test
     void 댓글_삭제_성공_테스트() {
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-
-        loggedInDeleteRequest("/comment/" + articleId + "/" + commentId)
+        loggedInDeleteRequest("/comments/" + articleId + "/" + COMMENT_ID)
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
-                .expectHeader()
-                .valueMatches("location", ".+/articles/" + articleId);
+                .isOk();
     }
 
     @Test
     void 작성자가_아닌_경우_댓글_삭제_실패_테스트() {
         signUpUser(OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_EMAIL);
 
-        String articleId = getArticleId();
-        String commentId = getCommentId(articleId);
-        loggedInDeleteRequest("/comment/" + articleId + "/" + commentId, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
+        loggedInDeleteRequest("/comments/" + articleId + "/" + COMMENT_ID, OTHER_USER_EMAIL, OTHER_USER_PASSWORD)
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
+                .is4xxClientError()
                 .expectHeader()
                 .valueMatches("location", ".+/");
     }
@@ -109,6 +101,7 @@ public class CommentControllerTest extends LoggedInTemplate {
         String coverUrl = "coverUrl";
 
         return loggedInPostRequest("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", title)
                         .with("contents", contents)
@@ -117,21 +110,9 @@ public class CommentControllerTest extends LoggedInTemplate {
     }
 
     private WebTestClient.ResponseSpec 댓글_작성(String articleId) {
-        return loggedInPostRequest("/comment/" + articleId)
-                .body(BodyInserters
-                        .fromFormData("contents", CONTENTS))
+        return loggedInPostRequest("/comments/" + articleId + "/" + COMMENT_ID)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange();
-    }
-
-    private String getCommentId(String articleId) {
-        String path = 댓글_작성(articleId)
-                .expectBody()
-                .returnResult()
-                .getResponseHeaders()
-                .getLocation()
-                .getPath();
-
-        log.debug("comment path : {} ", path);
-        return path.split("/")[2];
     }
 }

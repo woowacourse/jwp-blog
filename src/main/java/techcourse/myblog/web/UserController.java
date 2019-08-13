@@ -15,6 +15,7 @@ import techcourse.myblog.dto.user.UpdateUserRequest;
 import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.utils.annotation.LoginUser;
 import techcourse.myblog.utils.model.ModelUtil;
 import techcourse.myblog.utils.session.SessionUtil;
 
@@ -96,22 +97,20 @@ public class UserController {
     }
 
     @PutMapping(USERS)
-    public String updateUser(@Valid UpdateUserRequest updateUserRequestDto, BindingResult result) {
+    public String updateUser(@Valid UpdateUserRequest updateUserRequestDto, BindingResult result, @LoginUser UserResponse originUser) {
         if (result.hasErrors()) {
             log.error("updateUser : not logged in");
             return MYPAGE;
         }
-        UserResponse origin = (UserResponse) SessionUtil.getAttribute(session, USER);
-        UserResponse userResponse = userService.updateUser(updateUserRequestDto, origin);
-        SessionUtil.setAttribute(session, USER, userResponse);
+        UserResponse updatedUser = userService.updateUser(updateUserRequestDto, originUser);
+        SessionUtil.setAttribute(session, USER, updatedUser);
 
         return REDIRECT + MYPAGE;
     }
 
     @DeleteMapping("/users")
-    public String deleteUser() {
-        UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
-        userService.deleteUser(userResponse);
+    public String deleteUser(@LoginUser UserResponse loginUser) {
+        userService.deleteUser(loginUser);
         SessionUtil.removeAttribute(session, USER);
 
         return REDIRECT + INDEX;

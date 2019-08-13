@@ -1,24 +1,23 @@
 package techcourse.myblog.dto.comment;
 
-import org.springframework.data.annotation.CreatedDate;
 import techcourse.myblog.domain.user.User;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class CommentResponse {
     private Long id;
     private String contents;
     private User commenter;
-    @CreatedDate
-    private Date date;
+    private LocalDateTime updatedTime;
 
     public CommentResponse() {
     }
 
-    public CommentResponse(Long id, String contents, User commenter) {
+    public CommentResponse(Long id, String contents, User commenter, LocalDateTime updatedTime) {
         this.id = id;
         this.contents = contents;
         this.commenter = commenter;
+        this.updatedTime = updatedTime;
     }
 
     public Long getId() {
@@ -45,7 +44,11 @@ public class CommentResponse {
         this.commenter = commenter;
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDateTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 }

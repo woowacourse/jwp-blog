@@ -1,11 +1,12 @@
 package techcourse.myblog.domain.comment;
 
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -26,8 +27,11 @@ public class Comment {
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_comment_to_article"), nullable = false)
     private Article article;
 
-    @CreatedDate
-    private Date date;
+    @CreationTimestamp
+    private LocalDateTime createdTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedTime;
 
     public Comment() {
     }
@@ -58,12 +62,16 @@ public class Comment {
         return commenter;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
     public Article getArticle() {
         return article;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return updatedTime;
     }
 
     @Override
