@@ -9,6 +9,7 @@ import techcourse.myblog.domain.utils.UserAssembler;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
+import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.support.encryptor.EncryptHelper;
 
@@ -46,7 +47,7 @@ public class UserService {
 
     @Transactional
     public User editUserName(Long userId, String name) {
-        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
         changeName(name, user);
         return user;
     }

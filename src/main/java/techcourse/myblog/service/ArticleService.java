@@ -9,7 +9,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.ArticleRequest;
-import techcourse.myblog.service.exception.NoArticleException;
+import techcourse.myblog.service.exception.NotFoundArticleException;
 
 import javax.transaction.Transactional;
 
@@ -36,12 +36,12 @@ public class ArticleService {
 
     public Article findById(long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException(NoArticleException.NO_ARTICLE_MSG));
+                .orElseThrow(() -> new NotFoundArticleException(NotFoundArticleException.NO_ARTICLE_MSG));
     }
 
     public Article findByIdWithUser(long articleId, User user) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException(NoArticleException.NO_ARTICLE_MSG));
+                .orElseThrow(() -> new NotFoundArticleException(NotFoundArticleException.NO_ARTICLE_MSG));
         article.checkAuthor(user);
 
         return article;

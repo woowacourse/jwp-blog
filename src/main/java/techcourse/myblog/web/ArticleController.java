@@ -12,7 +12,7 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequest;
 import techcourse.myblog.service.dto.CommentsResponse;
-import techcourse.myblog.service.exception.NoArticleException;
+import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.web.argumentResolver.SessionUser;
 
 import javax.validation.Valid;
@@ -64,7 +64,7 @@ public class ArticleController {
 
         try {
             return ResponseEntity.ok(articleService.findById(articleId));
-        } catch (NoArticleException ex) {
+        } catch (NotFoundArticleException ex) {
             return ResponseEntity.noContent()
                     .build();
         }

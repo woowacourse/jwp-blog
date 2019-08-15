@@ -11,7 +11,7 @@ import techcourse.myblog.service.dto.CommentRequest;
 import techcourse.myblog.service.dto.CommentResponse;
 import techcourse.myblog.service.dto.CommentsResponse;
 import techcourse.myblog.service.exception.InvalidAuthorException;
-import techcourse.myblog.service.exception.NoCommentException;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import javax.transaction.Transactional;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class CommentService {
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
-    private static final NoCommentException NO_COMMENT_EXCEPTION = new NoCommentException("존재하지 않는 댓글입니다.");
+    private static final NotFoundCommentException NO_COMMENT_EXCEPTION = new NotFoundCommentException("존재하지 않는 댓글입니다.");
 
     private final ArticleService articleService;
     private final CommentRepository commentRepository;
@@ -53,7 +53,7 @@ public class CommentService {
 
     private Comment findByIdWithUser(User user, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NoCommentException("존재하지 않는 댓글입니다."));
+                .orElseThrow(() -> new NotFoundCommentException("존재하지 않는 댓글입니다."));
         // 검사하면 좋을 위치는??
         comment.checkCommenter(user);
         return comment;

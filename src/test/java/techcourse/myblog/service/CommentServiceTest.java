@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.domain.*;
-import techcourse.myblog.service.exception.NoCommentException;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import java.util.Optional;
 
@@ -103,7 +103,7 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
 
-        assertThrows(NoCommentException.class, () -> commentService.findById(commentId));
+        assertThrows(NotFoundCommentException.class, () -> commentService.findById(commentId));
     }
 
     @Test
