@@ -2,17 +2,12 @@ package techcourse.myblog.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.service.exception.InvalidAuthorException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@EntityListeners(value = {AuditingEntityListener.class})
-public class Article {
+public class Article extends DateTime {
     private static final Logger log = LoggerFactory.getLogger(Article.class);
 
     @Id
@@ -27,12 +22,6 @@ public class Article {
 
     @Lob
     private String contents;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_article_user"))
@@ -99,8 +88,6 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
-                ", createdDate=" + createdDate +
-                ", modifiedDate=" + modifiedDate +
                 ", author=" + author +
                 '}';
     }

@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.support.encryptor.EncryptHelper;
 
 import javax.persistence.*;
@@ -12,8 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Entity
-@EntityListeners(value = {AuditingEntityListener.class})
-public class User {
+public class User extends DateTime {
     private static final int MAX_NAME_LENGTH = 10;
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]*$");
 

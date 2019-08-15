@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String createLoginForm(@SessionUser User user, UserLoginRequest userLoginRequest) {
+    public String createLoginForm(UserLoginRequest userLoginRequest) {
         log.debug("begin");
 
         return "login";

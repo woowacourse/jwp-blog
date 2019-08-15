@@ -2,29 +2,18 @@ package techcourse.myblog.domain;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.service.exception.InvalidAuthorException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@EntityListeners(value = {AuditingEntityListener.class})
-public class Comment {
+public class Comment extends DateTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 500)
     private String contents;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_user"))
@@ -70,10 +59,6 @@ public class Comment {
 
     public String getContents() {
         return contents;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
     }
 
     public User getCommenter() {
