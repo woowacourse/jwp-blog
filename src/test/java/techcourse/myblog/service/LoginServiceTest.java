@@ -1,11 +1,13 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Any;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.exception.LoginException;
@@ -15,25 +17,30 @@ import javax.servlet.http.HttpSession;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest()
+//@SpringBootTest()
+@ExtendWith(SpringExtension.class)
 class LoginServiceTest {
-    @Autowired
+    // @Autowired
+    @InjectMocks
     private LoginService loginService;
 
-    @MockBean(name = "httpSession")
+//    @MockBean(name = "httpSession")
+    @Mock
     private HttpSession httpSession;
 
-    @MockBean(name = "user")
+//    @MockBean(name = "user")
+    @Mock
     private User user;
 
-    @MockBean(name = "userService")
+//    @MockBean(name = "userService")
+    @Mock
     private UserService userService;
 
-    @MockBean(name = "encryptHelper")
+//    @MockBean(name = "encryptHelper")
+    @Mock
     private EncryptHelper encryptHelper;
 
     @Test
@@ -57,7 +64,6 @@ class LoginServiceTest {
         userLoginRequest.setPassword(validPassword);
         given(user.isWrongPassword(validPassword, encryptHelper)).willReturn(false);
         given(userService.findUserByEmail(any())).willReturn(user);
-
 
         loginService.login(httpSession, userLoginRequest);
 

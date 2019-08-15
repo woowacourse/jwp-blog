@@ -88,4 +88,12 @@ public class Comment {
         this.contents = contents;
         return this;
     }
+
+    public boolean isCommentor(User user) {
+        return commenter.equals(user);
+    }
+
+    void setId(Long id) {
+        this.id = id;
+    }
 }

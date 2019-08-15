@@ -1,8 +1,11 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.domain.utils.UserAssembler;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
@@ -14,26 +17,18 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
-    private final EncryptHelper encryptHelper;
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    public UserService(UserRepository userRepository, EncryptHelper encryptHelper) {
+    private final UserRepository userRepository;
+    private final UserAssembler userAssembler;
+
+    public UserService(UserRepository userRepository, UserAssembler userAssembler) {
         this.userRepository = userRepository;
-        this.encryptHelper = encryptHelper;
+        this.userAssembler = userAssembler;
     }
 
     public User saveUser(UserRequest userRequest) {
-        User user = createUser(userRequest);
-        return userRepository.save(user);
-    }
-
-    private User createUser(UserRequest userRequest) {
-        try {
-            String encryptedPassword = encryptHelper.encrypt(userRequest.getPassword());
-            return new User(userRequest.getName(), userRequest.getEmail(), encryptedPassword);
-        } catch (IllegalArgumentException e) {
-            throw new SignUpException(e.getMessage());
-        }
+        return userRepository.save(userAssembler.toUserFromUserRequest(userRequest));
     }
 
     public List<User> findAll() {
@@ -41,6 +36,8 @@ public class UserService {
     }
 
     public User findUserByEmail(String email) {
+        log.debug("begin");
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new LoginException("email 없음"));
 

@@ -88,6 +88,10 @@ public class Article {
         this.author = user;
     }
 
+    void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Article{" +

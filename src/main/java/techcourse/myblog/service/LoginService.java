@@ -9,6 +9,7 @@ import techcourse.myblog.service.exception.LoginException;
 import techcourse.myblog.support.encryptor.EncryptHelper;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Service
 public class LoginService {
@@ -43,5 +44,13 @@ public class LoginService {
         log.debug("begin");
 
         session.removeAttribute(USER_KEY_IN_SESSION);
+    }
+
+    public Optional<User> retrieveLoggedInUser(HttpSession session) {
+        if (session == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable((User) session.getAttribute(USER_KEY_IN_SESSION));
     }
 }
