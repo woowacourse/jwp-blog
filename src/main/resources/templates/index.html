@@ -14,7 +14,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 th:text="${session.user} == null ? 'Welcome' : 'Welcome, ' + ${session.user.name}" class="text-white border bottom font-size-35 padding-5"></h1>
+                <h1 type="hidden" th:text="${session.user} == null ? 'Welcome' : 'Welcome, ' + ${session.user.name}" class="text-white border bottom font-size-35 padding-5"></h1>
             </div>
         </div>
     </div>
