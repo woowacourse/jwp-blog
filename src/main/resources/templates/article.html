@@ -97,8 +97,10 @@
 
 <th:block th:include="/fragments/article-js :: articleJs"/>
 
+<!--<script src=""-->
 <script th:inline="javascript">
     const articleId = [[${articleId}]];
+    const COMMENT_API_BASE_URL = '/api/comments';
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -119,86 +121,6 @@
         height: '200px'
     });
 
-    document.getElementById("comment-submit").addEventListener('click', function () {
-        document.getElementById("comment-contents").value = editor.getValue();
-    });
-
-    // AJAX 수정 / 삭제
-    document.getElementById("comments").addEventListener("click", (event) => {
-        const target = event.target;
-        const parent = target.closest('.comment-box');
-
-        if (target.classList.contains("modify-button")) {
-            parent.children[0].classList.add("hidden");
-            parent.children[1].classList.remove("hidden");
-            target.classList.add("hidden");
-            return;
-        }
-
-        if (target.classList.contains("update-button")) {
-            let id = parent.dataset.id;
-            let commentRequest = {
-                "id": id,
-                "contents": parent.getElementsByTagName('input')[0].value,
-            };
-
-            fetch('/api/comments/' + id, {
-                method: "PUT",
-                headers: {'Content-Type': 'application/json; charset=UTF-8'},
-                body: JSON.stringify(commentRequest),
-            })
-                .then(response => response.json())
-                .then(body => {
-                    const comment = document.getElementById("comment" + body.id);
-                    comment.children[1].classList.toggle("hidden");
-                    comment.children[2].classList.toggle("hidden");
-
-                    const contents = comment.children[0];
-                    contents.children[0].textContent = body.contents;
-                    contents.classList.toggle("hidden");
-                });
-            return;
-        }
-
-        if (target.classList.contains("remove-button")) {
-            let id = parent.dataset.id;
-
-            fetch('/api/comments/' + id, {
-                method: "DELETE",
-            }).then(() => {
-                parent.closest('li').remove();
-
-                updateCommentSize();
-            });
-        }
-    });
-
-    // 댓글 생성
-    document.getElementById('comment-submit').addEventListener('click', event => {
-        let commentRequest = {
-            articleId: articleId,
-            contents: document.getElementById('comment-contents').value,
-        };
-
-        fetch('/api/comments', {
-            method: "POST",
-            headers: {'Content-Type': 'application/json; charset=UTF-8'},
-            body: JSON.stringify(commentRequest),
-        }).then(response => response.json())
-            .then(data => {
-                let template = document.getElementById('template');
-                let resultHtml = template.innerHTML.replace(/{id}/g, data.id)
-                    .replace(/{name}/g, data.commenter.name)
-                    .replace(/{contents}/g, data.contents)
-                    .replace(/{elapsedTime}/g, convertTime(data.createdDate));
-
-                document.getElementById('comments').innerHTML += resultHtml;
-                editor.setValue("");
-
-                updateCommentSize();
-            });
-    });
-
     const convertTime = function (createdDate) {
         let minute = Math.floor((new Date() - new Date(createdDate)) / 60000);
         if (minute === 0) {
@@ -209,6 +131,179 @@
         }
         return minute > 24 * 60 ? minute / 24 * 60 + "일 전" : minute / 60 + "시간 전";
     };
+
+    const updateCommentSize = function () {
+        const size = document.getElementById('comments').childElementCount;
+
+        document.getElementById('comment-size').innerText = size;
+    }
+
+
+    const CommentApp = (function () {
+            const comments = document.getElementById('comments');
+
+            const CommentController = function () {
+                const commentService = new CommentService();
+
+                const canAddComment = function () {
+                    const commentSubmitButton = document.getElementById('comment-submit');
+                    commentSubmitButton.addEventListener('click', commentService.add);
+                };
+
+                const canEditComment = function () {
+                    comments.addEventListener("click", (event) => {
+                        const target = event.target;
+                        const comment = target.closest('.comment-box');
+                        if (target.classList.contains('edit-button')) {
+                            commentService.toggleEditMode(comment);
+                        }
+                    });
+                };
+
+                const canUpdateComment = function () {
+                    comments.addEventListener("click", (event) => {
+                        const target = event.target;
+                        const comment = target.closest('.comment-box');
+                        if (target.classList.contains('update-button')) {
+                            commentService.update(comment);
+                        }
+                    });
+                };
+
+                const canRemoveComment = function () {
+                    comments.addEventListener("click", (event) => {
+                        const target = event.target;
+                        const comment = target.closest('.comment-box');
+                        if (target.classList.contains('remove-button')) {
+                            commentService.remove(comment);
+                        }
+                    });
+                };
+
+                // register eventListeners
+                const init = function () {
+                    canAddComment();
+                    canEditComment();
+                    canUpdateComment();
+                    canRemoveComment();
+                };
+
+                return {
+                    init: init,
+                };
+            };
+
+            const CommentService = function () {
+
+                const add = function (event) {
+                    alert("add called");
+
+                    const commentContents = editor.getValue();
+                    const commentRequest = {
+                        articleId: articleId,
+                        contents: commentContents,
+                    };
+
+                    fetch(COMMENT_API_BASE_URL, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                        body: JSON.stringify(commentRequest),
+                    }).then(response => response.json())
+                        .then(data => {
+                            addCommentWithData(data);
+                            cleanEditor();
+                            updateCommentSize();
+                        });
+                };
+
+                const addCommentWithData = function (data) {
+                    const template = document.getElementById('template');
+                    const resultHtml = template.innerHTML
+                        .replace(/{id}/g, data.id)
+                        .replace(/{name}/g, data.commenter.name)
+                        .replace(/{contents}/g, data.contents)
+                        .replace(/{elapsedTime}/g, convertTime(data.createdDate));
+
+                    comments.innerHTML += resultHtml;
+                };
+
+                const cleanEditor = function () {
+                    editor.setValue("");
+                };
+
+                const toggleEditMode = function (comment) {
+                    console.log('[toggleEditMode] called');
+
+                    const commentContents = comment.children[0];
+                    const commentUpdateForm = comment.children[1];
+                    const commentEditButton = comment.children[2];
+
+                    commentContents.classList.toggle("hidden");
+                    commentUpdateForm.classList.toggle("hidden");
+                    commentEditButton.classList.toggle("hidden");
+                };
+
+                const update = function (comment) {
+                    const id = comment.dataset.id;
+                    let commentRequest = {
+                        "id": id,
+                        "contents": comment.getElementsByTagName('input')[0].value,
+                    };
+
+                    console.log("[update]" + commentRequest.contents);
+
+                    fetch(COMMENT_API_BASE_URL + '/' + id, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                        body: JSON.stringify(commentRequest),
+                    }).then(response => response.json())
+                        .then(data => {
+                            // 에공... update 에 존재하는 comment 를 사용할 수 없는 것 같다.
+                            // 비동기 처리 후.. 접근할 수 없는 상태여서 그런가?
+                            console.log("[update] contents from server: " + data.contents);
+
+                            const comment = document.getElementById("comment" + data.id);
+
+                            const contents = comment.children[0];
+                            contents.textContent = data.contents;
+
+                            toggleEditMode(comment);
+                        });
+                };
+
+                const remove = function (comment) {
+                    const id = comment.dataset.id;
+
+                    fetch(COMMENT_API_BASE_URL + '/' + id, {
+                        method: 'DELETE',
+                    }).then(() => {
+                        comment.closest('li').remove();
+
+                        updateCommentSize();
+                    });
+                };
+
+                return {
+                    add: add,
+                    toggleEditMode: toggleEditMode,
+                    update: update,
+                    remove: remove,
+                };
+            };
+
+            const init = function () {
+                const commentController = new CommentController();
+                commentController.init();
+            };
+
+            return {
+                init: init,
+            };
+        }
+    )
+    ();
+
+    CommentApp.init();
 
     // 댓글 불러오기
     window.addEventListener('DOMContentLoaded', () => {
@@ -248,12 +343,6 @@
                 }
             });
     });
-
-    const updateCommentSize = function () {
-        const size = document.getElementById('comments').childElementCount;
-
-        document.getElementById('comment-size').innerText = size;
-    }
 </script>
 
 <script id="template" type="text/template">
@@ -274,7 +363,7 @@
                     <input type="text" value="{contents}">
                     <button type="button" class="btn-sm btn-dark update-button">update</button>
                 </div>
-                <button class="modify-button btn-sm btn-dark">edit</button>
+                <button class="edit-button btn-sm btn-dark">edit</button>
                 <button type="button" class="btn-sm btn-dark remove-button">remove</button>
             </div>
         </div>
