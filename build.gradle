@@ -13,28 +13,20 @@ repositories {
     mavenCentral()
 }
 
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-}
-
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.8'
-    annotationProcessor 'org.projectlombok:lombok:1.18.8'
-    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.6'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java'
+    implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.h2database:h2'
-    implementation 'mysql:mysql-connector-java'
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }

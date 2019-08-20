@@ -1,91 +1,81 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.persistence.UserRepository;
-import techcourse.myblog.service.dto.UserRequestDto;
-import techcourse.myblog.service.exception.AuthenticationFailException;
+import techcourse.myblog.service.dto.UserLoginRequest;
+import techcourse.myblog.service.exception.LoginException;
+import techcourse.myblog.support.encryptor.EncryptHelper;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest(classes = {LoginService.class, UserRepository.class})
+//@SpringBootTest()
+@ExtendWith(SpringExtension.class)
 class LoginServiceTest {
-    private static final String TEST_NAME = "hello";
-    private static final String TEST_PASSWORD = "aQ!123123";
-    private static final String TEST_EMAIL = "hello@world.com";
-
-    @Autowired
+    // @Autowired
+    @InjectMocks
     private LoginService loginService;
 
-    @MockBean(name = "userRepository")
-    private UserRepository userRepository;
+//    @MockBean(name = "httpSession")
+    @Mock
+    private HttpSession httpSession;
+
+//    @MockBean(name = "user")
+    @Mock
+    private User user;
+
+//    @MockBean(name = "userService")
+    @Mock
+    private UserService userService;
+
+//    @MockBean(name = "encryptHelper")
+    @Mock
+    private EncryptHelper encryptHelper;
 
     @Test
-    void authenticate_userIsCorrectToUserRequestDto_returnUser() {
-        User user = new User(TEST_NAME, TEST_PASSWORD, TEST_EMAIL);
-        UserRequestDto dto = new UserRequestDto(user);
+    void login_잘못된_비밀번호_예외발생() {
+        String wrongPassword = "wrongPassword";
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        UserLoginRequest userLoginRequest = new UserLoginRequest();
+        userLoginRequest.setPassword(wrongPassword);
+        given(user.isWrongPassword(wrongPassword, encryptHelper)).willReturn(true);
+        given(userService.findUserByEmail(any())).willReturn(user);
 
 
-        assertThat(loginService.authenticate(dto)).isEqualTo(user);
+        assertThrows(LoginException.class, () -> loginService.login(httpSession, userLoginRequest));
     }
 
     @Test
-    void authenticate_notSavedUser_throwsAuthenticationFailException() {
-        User notExistUser = new User(TEST_NAME, TEST_PASSWORD, TEST_EMAIL);
-        UserRequestDto dto = new UserRequestDto(notExistUser);
+    void login_올바른_비밀번호_세션에_등록() {
+        String validPassword = "validPassword";
 
-        given(userRepository.findByEmail(notExistUser.getEmail())).willReturn(Optional.empty());
+        UserLoginRequest userLoginRequest = new UserLoginRequest();
+        userLoginRequest.setPassword(validPassword);
+        given(user.isWrongPassword(validPassword, encryptHelper)).willReturn(false);
+        given(userService.findUserByEmail(any())).willReturn(user);
+
+        loginService.login(httpSession, userLoginRequest);
 
 
-        assertThrows(AuthenticationFailException.class, () -> loginService.authenticate(dto));
+        verify(httpSession).setAttribute(LoginService.USER_KEY_IN_SESSION, user);
     }
 
     @Test
-    void authenticate_wrongDto_throwsAuthenticationFailException() {
-        User user = new User(TEST_NAME, TEST_PASSWORD, TEST_EMAIL);
-        UserRequestDto wrongDto = new UserRequestDto(user);
-        wrongDto.setPassword("wrong password");
-
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
+    void logout_세션에서_제거() {
+        loginService.logout(httpSession);
 
 
-        assertThrows(AuthenticationFailException.class, () -> loginService.authenticate(wrongDto));
-    }
-
-    @Test
-    void login_called_sessionSetAttribute() {
-        User user = new User(TEST_NAME, TEST_PASSWORD, TEST_EMAIL);
-        UserRequestDto dto = new UserRequestDto(user);
-
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-        HttpSession session = mock(HttpSession.class);
-
-        loginService.login(session, new UserRequestDto(user));
-
-
-        verify(session).setAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY, user);
-    }
-
-    @Test
-    void logout_called_sessionRemoveAttribute() {
-        HttpSession session = mock(HttpSession.class);
-
-
-        loginService.logout(session);
-
-
-        verify(session).removeAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY);
+        verify(httpSession).removeAttribute(LoginService.USER_KEY_IN_SESSION);
     }
 }

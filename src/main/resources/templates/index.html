@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
-</head>
-</html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head th:replace="/fragments/main-head :: mainHead"></head>
+
 <body>
 <div>
-    <div th:replace="fragments/main/header :: header"></div>
+    <header id="header" class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
+            </ul>
+        </div>
+    </header>
+
     <div class="about-cover card no-border mrg-btm-0">
-        <div class="cover-img overlay-dark bg"
-             style="background-image: url('/images/pages/index/bg.jpg')"></div>
+        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Hello</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
             </div>
         </div>
     </div>
@@ -36,77 +49,67 @@
                     <div class="width-100 fixed left-0 border bottom"></div>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
-                            <div th:each="article : ${articles}">
-                                <div class="pdd-horizon-15 pdd-vertical-20">
-                                    <a th:href="@{/articles/{id}(id=${article.id})}" class="card article-container">
-                                        <div class="card-horizon">
-                                            <div class="image-container col-md-4">
-                                                <div class="background-holder has-content"
-                                                     th:style="'background-image: url(' + ${article.coverUrl} + '), url(\'/images/pages/index/study.jpg\');'"></div>
-                                            </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-md-8 ml-auto">
-                                                        <div class="pdd-vertical-30 pdd-horizon-25">
-                                                            <h2 class="mrg-btm-20 text-bold"
-                                                                th:text="${article.title}"></h2>
-                                                            <p th:text="${article.contents}"></p>
-                                                            <ul class="list-style-none pdd-left-0">
-                                                                <li class="inline-block mrg-right-5">
-                                                                    <i class="ti-heart text-danger pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">33</span>
-                                                                </li>
-                                                                <li class="inline-block">
-                                                                    <i class="ti-comments text-primary pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">3</span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                            <div class="pdd-horizon-15 pdd-vertical-20">
+                                <a th:each="article : ${articles}" th:href="@{'/articles/' + ${article.id}}" class="card article-container">
+                                    <div class="card-horizon">
+                                        <div class="image-container col-md-4">
+                                            <div class="background-holder has-content" th:style = "
+                                            'background-image: url(' + ${#strings.isEmpty(article.coverUrl) ? '/static/images/pages/index/study.jpg' : article.coverUrl} + ');'"></div>
+                                        </div>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-md-8 ml-auto">
+                                                    <div class="pdd-vertical-30 pdd-horizon-25">
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h2>
+                                                        <p th:text="${article.contents}">우아한테크코스의 선발 과정을 목적의식 있는 연습으로 설계한 내용과 목적의식 있는 연습으로 진행했을 때의 학습 효과에 대해 다루고 있습니다.</p>
+                                                        <ul class="list-style-none pdd-left-0">
+                                                            <li class="inline-block mrg-right-5">
+                                                                <i class="ti-heart text-danger pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">33</span>
+                                                            </li>
+                                                            <li class="inline-block">
+                                                                <i class="ti-comments text-primary pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">3</span>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
-                                </div>
+                                    </div>
+                                </a>
                             </div>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
-                        <div class="pdd-horizon-15 pdd-vertical-20">
-
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="tab-centered-3">
-                        <div class="pdd-horizon-15 pdd-vertical-20">
+                            <nav aria-label="...">
+                                <ul class="pagination justify-content-center">
+                                    <li th:class="${articles.first} ? 'page-item disabled' : 'page-item'">
+                                        <a th:href="@{/(page=${articles.number})}" class="page-link">
+                                            Prev
+                                        </a>
+                                    </li>
+                                    <li th:class="${articles.last} ? 'page-item disabled' : 'page-item'">
+                                        <a th:href="@{/(page=${articles.number + 2})}" class="page-link">
+                                            Next
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3"></div>
         </div>
-        <div class="col-lg-3"></div>
+
+        <a href="/articles/edit" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+            <i class="ti-plus"></i>
+        </a>
+
     </div>
-
-    <a href="/writing"
-       class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
-        <i class="ti-plus"></i>
-    </a>
-
-</div>
 </div>
 
-<footer class="content-footer">
-    <div class="footer">
-        <div class="copyright">
-            <img class="d-inline-block logo relative right-5" src="/images/logo/logo_full_dark.png">
-            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.
-            </p>
-        </div>
-        <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들
-            기술블로그</a>
-    </div>
-</footer>
+<footer th:replace="/fragments/common-footer :: commonFooter"></footer>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
+<th:block th:include="/fragments/main-js :: mainJs"/>
+
 </body>
 </html>

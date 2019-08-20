@@ -1,41 +1,53 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
-    <link rel="stylesheet" href="/css/article-edit.css">
-    <link rel="stylesheet" href="/css/article.css">
-    <link rel="stylesheet" href="/css/comment.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head th:replace="/fragments/article-head :: articleHead">
 </head>
 <body>
 <div>
-    <div th:replace="fragments/main/header :: header"></div>
+    <header id="header" class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div id="logo-dark" class="logo logo-dark d-none"
+                             style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div id="logo-white" class="logo logo-white"
+                             style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
+            </ul>
+        </div>
+    </header>
+
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background-image: url(' + ${article.coverUrl} + '), url(\'/images/pages/index/study.jpg\');'">
+        <div class="cover-img overlay-dark bg">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}"></h1>
+                <h1 class="text-center cover-title" id="article-title"></h1>
             </div>
         </div>
     </div>
-
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{/articles/{id}/edit(id=${article.id})}" class="float-right pointer btn btn-icon">
+                <a id="article-edit-button" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form th:action="@{/articles/{id}(id=${article.id})}" name="article" method="post"
-                      accept-charset="utf-8">
-                    <input type="hidden" name="_method" value="delete"/>
-                    <button id="delete-btn" type="submit" class="float-right pointer btn btn-icon">
-                        <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                <form id="article-delete-form" method="post">
+                    <input name="_method" type="hidden" value="delete"/>
+                    <button class="btn btn-icon float-right pointer" id="delete-button" type="submit">
+                        <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                     </button>
                 </form>
                 <div id="viewerSection"></div>
+                <input id="article-contents" name="contents" type="hidden">
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
                     <div class="col-md-2 col-sm-4">
-                        <img class="width-80px border-radius-round"
+                        <img class="border-radius-round" width="80px"
                              src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
@@ -60,73 +72,42 @@
                 </div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
-                <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
+                <div class="width-100 border bottom mrg-btm-2
+                0 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
+                    <span id="comment-size" class="font-size-16 text-info">0</span>
                 </div>
                 <div class="comment">
-                    <ul id="comment-list" class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
-                            <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <span th:text="${comment.getCommenter().getName()}" href="" class="text-bold inline-block"></span>
-                            <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                            </span>
-
-                            <!--평소에 보여지는 것-->
-                            <div class="view info">
-                                <p th:text="${comment.getComment()}" class="width-80 target"></p>
-
-                                <form th:action="@{/comments/{id}(id=${comment.getId()})}" th:method="delete">
-                                    <button id="remove-btn" type="submit" class="btn btn-default">
-                                        <i class="ti-close"></i>
-                                    </button>
-                                </form>
-                            </div>
-
-                            <!--클릭하면 보여지는 것-->
-                            <div class="edit info">
-                                <form th:action="@{/comments/{id}(id=${comment.id})}" th:method="put">
-                                    <input name="comment" type="text" th:value="${comment.getComment()}">
-                                    <button id="modify-btn" type="submit" class="btn btn-default">
-                                        <i class="ti-save"></i>
-                                    </button>
-                                </form>
-                            </div>
-
-                        </li>
+                    <ul id="comments" class="list-unstyled list-info">
                     </ul>
-                    <form th:action="@{/articles/{id}/comments(id=${article.id})}" method="post">
+                    <th:block th:if="${session.user != null}">
                         <div class="add-comment">
-                            <input id="article-contents" name="comment" type="hidden">
                             <div id="editSection"></div>
                         </div>
-                        <button id="save-btn" type="submit" class="btn btn-default">
-                            <i class="ti-save"></i>
-                        </button>
-                    </form>
-
+                        <div>
+                            <button id="comment-submit" type="submit" class="button">댓글달기</button>
+                            <input id="comment-contents" name="contents" type="hidden" value=""/>
+                        </div>
+                    </th:block>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
-<script src="/js/comment.js"></script>
+<th:block th:include="/fragments/article-js :: articleJs"/>
+
+<!--<script src=""-->
 <script th:inline="javascript">
-    /*<![CDATA[*/
-    const initValue = /*[[${article.contents}]]*/ 'default';
+    const articleId = [[${articleId}]];
+    const COMMENT_API_BASE_URL = '/api/comments';
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
-        initialValue: initValue
-    })
+        initialValue: document.getElementById('article-contents').value
+    });
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -134,12 +115,259 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
-                document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown());
             }
         },
         height: '200px'
     });
-    /*]]>*/
+
+    const convertTime = function (createdDate) {
+        let minute = Math.floor((new Date() - new Date(createdDate)) / 60000);
+        if (minute === 0) {
+            return "방금 전"
+        }
+        if (minute < 60) {
+            return minute + "분 전";
+        }
+        return minute > 24 * 60 ? minute / 24 * 60 + "일 전" : minute / 60 + "시간 전";
+    };
+
+    const updateCommentSize = function () {
+        const size = document.getElementById('comments').childElementCount;
+
+        document.getElementById('comment-size').innerText = size;
+    }
+
+
+    const CommentApp = (function () {
+            const comments = document.getElementById('comments');
+
+            const CommentController = function () {
+                const commentService = new CommentService();
+
+                const canAddComment = function () {
+                    const commentSubmitButton = document.getElementById('comment-submit');
+                    commentSubmitButton.addEventListener('click', commentService.add);
+                };
+
+                const canEditComment = function () {
+                    comments.addEventListener("click", (event) => {
+                        const target = event.target;
+                        const comment = target.closest('.comment-box');
+                        if (target.classList.contains('edit-button')) {
+                            commentService.toggleEditMode(comment);
+                        }
+                    });
+                };
+
+                const canUpdateComment = function () {
+                    comments.addEventListener("click", (event) => {
+                        const target = event.target;
+                        const comment = target.closest('.comment-box');
+                        if (target.classList.contains('update-button')) {
+                            commentService.update(comment);
+                        }
+                    });
+                };
+
+                const canRemoveComment = function () {
+                    comments.addEventListener("click", (event) => {
+                        const target = event.target;
+                        const comment = target.closest('.comment-box');
+                        if (target.classList.contains('remove-button')) {
+                            commentService.remove(comment);
+                        }
+                    });
+                };
+
+                // register eventListeners
+                const init = function () {
+                    canAddComment();
+                    canEditComment();
+                    canUpdateComment();
+                    canRemoveComment();
+                };
+
+                return {
+                    init: init,
+                };
+            };
+
+            const CommentService = function () {
+
+                const add = function (event) {
+                    alert("add called");
+
+                    const commentContents = editor.getValue();
+                    const commentRequest = {
+                        articleId: articleId,
+                        contents: commentContents,
+                    };
+
+                    fetch(COMMENT_API_BASE_URL, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                        body: JSON.stringify(commentRequest),
+                    }).then(response => response.json())
+                        .then(data => {
+                            addCommentWithData(data);
+                            cleanEditor();
+                            updateCommentSize();
+                        });
+                };
+
+                const addCommentWithData = function (data) {
+                    const template = document.getElementById('template');
+                    const resultHtml = template.innerHTML
+                        .replace(/{id}/g, data.id)
+                        .replace(/{name}/g, data.commenter.name)
+                        .replace(/{contents}/g, data.contents)
+                        .replace(/{elapsedTime}/g, convertTime(data.createdDate));
+
+                    comments.innerHTML += resultHtml;
+                };
+
+                const cleanEditor = function () {
+                    editor.setValue("");
+                };
+
+                const toggleEditMode = function (comment) {
+                    console.log('[toggleEditMode] called');
+
+                    const commentContents = comment.children[0];
+                    const commentUpdateForm = comment.children[1];
+                    const commentEditButton = comment.children[2];
+
+                    commentContents.classList.toggle("hidden");
+                    commentUpdateForm.classList.toggle("hidden");
+                    commentEditButton.classList.toggle("hidden");
+                };
+
+                const update = function (comment) {
+                    const id = comment.dataset.id;
+                    let commentRequest = {
+                        "id": id,
+                        "contents": comment.getElementsByTagName('input')[0].value,
+                    };
+
+                    console.log("[update]" + commentRequest.contents);
+
+                    fetch(COMMENT_API_BASE_URL + '/' + id, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                        body: JSON.stringify(commentRequest),
+                    }).then(response => response.json())
+                        .then(data => {
+                            // 에공... update 에 존재하는 comment 를 사용할 수 없는 것 같다.
+                            // 비동기 처리 후.. 접근할 수 없는 상태여서 그런가?
+                            console.log("[update] contents from server: " + data.contents);
+
+                            const comment = document.getElementById("comment" + data.id);
+
+                            const contents = comment.children[0];
+                            contents.textContent = data.contents;
+
+                            toggleEditMode(comment);
+                        });
+                };
+
+                const remove = function (comment) {
+                    const id = comment.dataset.id;
+
+                    fetch(COMMENT_API_BASE_URL + '/' + id, {
+                        method: 'DELETE',
+                    }).then(() => {
+                        comment.closest('li').remove();
+
+                        updateCommentSize();
+                    });
+                };
+
+                return {
+                    add: add,
+                    toggleEditMode: toggleEditMode,
+                    update: update,
+                    remove: remove,
+                };
+            };
+
+            const init = function () {
+                const commentController = new CommentController();
+                commentController.init();
+            };
+
+            return {
+                init: init,
+            };
+        }
+    )
+    ();
+
+    CommentApp.init();
+
+    // 댓글 불러오기
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/articles/' + articleId + '/comments/', {
+            method: "GET",
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        }).then(response => response.json())
+            .then(data => {
+                let template = document.getElementById('template');
+
+                data.comments.forEach(comment => {
+                    let resultHtml = template.innerHTML.replace(/{id}/g, comment.id)
+                        .replace(/{name}/g, comment.commenter.name)
+                        .replace(/{contents}/g, comment.contents)
+                        .replace(/{elapsedTime}/g, convertTime(comment.createdDate));
+
+                    document.getElementById('comments').innerHTML += resultHtml;
+                });
+
+                updateCommentSize();
+            });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/articles/' + articleId, {
+            method: "GET",
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        }).then(response => response.json())
+            .then(article => {
+                document.getElementById('article-title').innerText = article.title;
+                document.getElementById('article-delete-form').action = "/articles/" + article.id;
+                document.getElementById('article-edit-button').href = "/articles/" + article.id + "/edit";
+                viewer.setValue(article.contents);
+
+                if (article.coverUrl !== null) {
+                    document.getElementsByClassName("cover-img").item(0).style.backgroundImage = 'url(' + article.coverUrl + ')';
+                }
+            });
+    });
+</script>
+
+<script id="template" type="text/template">
+    <li class="comment-item border bottom mrg-btm-15 mrg-top-15">
+        <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
+             alt="">
+        <div class="info">
+            <span class="text-bold inline-block">{name}</span>
+            <span class="sub-title inline-block pull-right">
+                    <i class="ti-timer pdd-right-5"></i>
+                    <span class="elapsed-time">{elapsedTime}</span>
+                </span>
+            <div id="comment{id}" class="comment-box" data-id="{id}">
+                <div>
+                    <p class="width-80">{contents}</p>
+                </div>
+                <div class="hidden">
+                    <input type="text" value="{contents}">
+                    <button type="button" class="btn-sm btn-dark update-button">update</button>
+                </div>
+                <button class="edit-button btn-sm btn-dark">edit</button>
+                <button type="button" class="btn-sm btn-dark remove-button">remove</button>
+            </div>
+        </div>
+    </li>
 </script>
 </body>
 </html>

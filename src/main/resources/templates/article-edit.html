@@ -1,27 +1,33 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
-    <link rel="stylesheet" href="/css/article-edit.css">
-    <link rel="stylesheet" href="/css/article.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head th:replace="/fragments/article-edit-head :: articleEditHead">
 </head>
+
 <body>
 <div>
-    <div th:replace="fragments/main/header :: header"></div>
-    <form action="/articles" name="article" th:method="${article != null ? 'put' : 'post'}"
-          accept-charset="utf-8">
-        <input type="hidden" name="id" th:if="${article}" th:value="${article.id}"/>
+    <div class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
+            </ul>
+        </div>
+    </div>
+    <form th:action="${article != null ? '/articles/' + article.id : '/articles'}" name="article" method="post" accept-charset="utf-8" >
+        <input th:if="${article != null}" type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg"
-                 style="background-image: url('/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title"
-                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               th:value="${article != null ? article.title : ''}" placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl"
-                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               th:value="${article != null ? article.coverUrl : ''}" placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input type="text" th:value="${article != null ? article.title : ''}" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input type="text" th:value="${article != null ? article.coverUrl : ''}" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -31,7 +37,7 @@
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
-                    <input id="article-contents" name="contents" type="hidden">
+                    <input id="article-contents" th:value="${article != null ? article.contents : ''}" name="contents" type="hidden">
                     <div id="editSection"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
@@ -39,7 +45,7 @@
                         <button id="save-btn" type="submit" class="btn btn-default">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/" class="btn btn-default">
+                        <a th:href="${article == null ? '/' : '/articles/' + article.id}" class="btn btn-default">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -49,27 +55,21 @@
     </form>
 </div>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
-<script th:inline="javascript">
-    var initValue = "";
+<th:block th:include="/fragments/article-js :: articleJs"/>
 
+<script type="text/javascript">
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
+        initialValue: document.getElementById('article-contents').value,
         previewStyle: 'vertical',
         events: {
             change: function () {
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)',
-        initialValue: initValue
+        height: 'calc(100vh - 360px)'
     });
-
-    if([[${article}]]) {
-        editor.setValue([[${article?.contents}]]);
-    }
 </script>
 </body>
 </html>
