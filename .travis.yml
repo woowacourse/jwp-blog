@@ -1,0 +1,52 @@
+language: java
+jdk:
+  - openjdk8
+
+branches:
+  only:
+    - step4
+
+# Travis CI 서버의 Home
+caches:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+before_deploy:
+  - zip -r jwp-blog *
+  - mkdir -p deploy
+  - mv jwp-blog.zip deploy/jwp-blog.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: jwp-blog # S3 버킷
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip 파일 접근을 private으로
+    local_dir: deploy # before_deploy에서 생성한 디렉토리
+    wait-until-deployed: true
+    on:
+      branch: step4
+    -
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: jwp-blog # S3 버킷
+    key: jwp-blog.zip # 빌드 파일을 압축해서 전달
+    bundle_type: zip
+    application: jwp-blog # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
+    deployment_group: jwp-blog-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      branch: step4
+
+# CI 실행 완료 시 메일로 알람
+notifications:
+  email:
+    recipients:
+      - dpudpu11@gmail.com

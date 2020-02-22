@@ -1,4 +1,4 @@
-REPOSITORY="/home/ubuntu/"
+REPOSITORY="/home/ec2-user"
 cd $REPOSITORY/jwp-blog
 
 BRANCH="step4"
